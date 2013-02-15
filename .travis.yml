@@ -5,6 +5,9 @@ php:
     - 5.4
 
 before_script:
-    - composer install --dev
+    - "wget https://github.com/nicolasff/phpredis/archive/2.2.2.zip -O php-redis.zip && unzip php-redis.zip"
+    - "cd phpredis-2.2.2/ && phpize && ./configure && make && make install"
+    - "echo \"extension=redis.so\" >> `php --ini | grep \"Loaded Configuration\" | sed -e \"s|.*:\s*||\"`"
+    - "composer install --dev"
 
-script: vendor/bin/phpspec run -v -f p
+script: "vendor/bin/phpspec run -v -f p"
