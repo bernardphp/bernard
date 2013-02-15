@@ -4,6 +4,8 @@ php:
     - 5.3
     - 5.4
 
+services: redis
+
 before_script:
     - "wget https://github.com/nicolasff/phpredis/archive/2.2.2.zip -O php-redis.zip && unzip php-redis.zip"
     - "cd phpredis-2.2.2/ && phpize && ./configure && make && make install"
