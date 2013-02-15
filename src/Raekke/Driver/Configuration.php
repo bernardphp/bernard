@@ -1,6 +1,6 @@
 <?php
 
-namespace Raekke;
+namespace Raekke\Driver;
 
 use Raekke\Util\Collection;
 

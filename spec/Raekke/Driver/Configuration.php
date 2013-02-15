@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Raekke;
+namespace spec\Raekke\Driver;
 
 use PHPSpec2\ObjectBehavior;
 
