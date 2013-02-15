@@ -13,11 +13,12 @@ class Collection implements \Countable, \IteratorAggregate
 
     /**
      * @param string $key
+     * @param mixed $default
      * @return mixed
      */
-    public function get($key)
+    public function get($key, $default = null)
     {
-        return $this->has($key) ? $this->elements[$key] : null;
+        return $this->has($key) ? $this->elements[$key] : $default;
     }
 
     /**

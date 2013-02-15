@@ -12,6 +12,11 @@ class Collection extends ObjectBehavior
         $this->shouldHaveType('IteratorAggregate');
     }
 
+    function it_returns_default_value_if_key_isnt_set()
+    {
+        $this->get('key0', 'default0')->shouldReturn('default0');
+    }
+
     function it_should_allow_to_recieve_remove_and_get_elements()
     {
         $this->has('key0')->shouldReturn(false);
