@@ -6,7 +6,7 @@ use PHPSpec2\ObjectBehavior;
 
 class Collection extends ObjectBehavior
 {
-    function it_should_behave_like_an_array()
+    function it_behaves_like_an_array()
     {
         $this->shouldHaveType('Countable');
         $this->shouldHaveType('IteratorAggregate');
@@ -17,7 +17,7 @@ class Collection extends ObjectBehavior
         $this->get('key0', 'default0')->shouldReturn('default0');
     }
 
-    function it_should_allow_to_recieve_remove_and_get_elements()
+    function it_allows_to_recieve_remove_and_get_elements()
     {
         $this->has('key0')->shouldReturn(false);
         $this->get('key0')->shouldReturn(null);
@@ -36,7 +36,7 @@ class Collection extends ObjectBehavior
     /**
      * @param ArrayIterator $iterator
      */
-    function it_should_allow_to_get_all_values_at_once($iterator)
+    function it_allows_to_get_all_values_at_once($iterator)
     {
         $this->all()->shouldReturnAnInstanceOf('ArrayIterator');
 
