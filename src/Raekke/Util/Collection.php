@@ -1,6 +1,6 @@
 <?php
 
-namespace Raekke\Utils;
+namespace Raekke\Util;
 
 /**
  * Object Oriented Array.

@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Raekke\Utils;
+namespace spec\Raekke\Util;
 
 use PHPSpec2\ObjectBehavior;
 

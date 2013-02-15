@@ -2,7 +2,7 @@
 
 namespace Raekke;
 
-use Raekke\Utils\Collection;
+use Raekke\Util\Collection;
 
 /**
  * Configuration class. Contains metadata for the project.
