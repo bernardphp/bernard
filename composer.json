@@ -1,0 +1,14 @@
+{
+    "name"        : "henrikbjorn/raekke",
+    "description" : "Message queue implemented with Redis and PHP",
+    "license"     : "MIT",
+
+    "autoload" : {
+        "psr-0" : { "Raekke" : "src/" }
+    },
+
+    "require" : {
+        "php"       : ">=5.3.3",
+        "ext-redis" : "~2.0"
+    }
+}
