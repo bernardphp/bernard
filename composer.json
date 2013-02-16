@@ -9,7 +9,7 @@
 
     "require" : {
         "php"       : ">=5.3.3",
-        "ext-redis" : "~2.0"
+        "predis/predis" : "~0.8"
     },
     "require-dev" : {
         "phpspec/phpspec2" : "dev-develop",

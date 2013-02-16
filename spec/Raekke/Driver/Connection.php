@@ -8,54 +8,34 @@ class Connection extends ObjectBehavior
 {
     /**
      * @param Raekke\Driver\Configuration $configuration
+     * @param Predis\Client $predis
      */
-    function let($configuration)
+    function let($configuration, $predis)
     {
-        $configuration->getNamespace()->willReturn('phpspec');
+        $configuration->getPrefix()->willReturn('phpspec');
 
-        $this->beConstructedWith('localhost', $configuration);
+        $this->beConstructedWith($predis, $configuration);
     }
 
-    function letgo()
+    function it_creates_a_configuration_if_none_given($predis)
     {
-        $redis = new \Redis;
-        $redis->connect('localhost');
-        $redis->flushAll();
-    }
-
-    function it_creates_a_configuration_if_none_given()
-    {
-        $this->beConstructedWith('localhost', null);
+        $this->beConstructedWith($predis, null);
 
         $this->getConfiguration()->shouldReturnAnInstanceOf('Raekke\Driver\Configuration');
     }
 
-    function it_hangson_to_the_configuration_given($configuration)
+    function it_hangson_to_the_configuration_and_client_given($predis, $configuration)
     {
-        $this->beConstructedWith('localhost', $configuration);
+        $this->beConstructedWith($predis, $configuration);
+
         $this->getConfiguration()->shouldReturn($configuration);
+        $this->getClient()->shouldReturn($predis);
     }
 
-    function it_has_a_redis_connection()
+    function it_creates_a_client_if_given_parameters_instead_of_client()
     {
-        $this->beConstructedWith('localhost');
-        $this->getRedis()->shouldReturnAnInstanceOf('Redis');
-    }
+        $this->beConstructedWith('tcp://localhost');
 
-    function it_manipulates_sets()
-    {
-        $this->add('test', '1');
-
-        $this->count('test')->shouldReturn(1);
-
-        $this->add('test', '2', '3');
-        $this->count('test')->shouldReturn(3);
-
-        $this->remove('test', '2');
-        $this->count('test')->shouldReturn(2);
-
-        $this->all('test')->shouldReturn(array('1', '3'));
-
-        $this->has('test', '1')->shouldReturn(true);
+        $this->getClient()->shouldReturnAnInstanceOf('Predis\Client');
     }
 }
