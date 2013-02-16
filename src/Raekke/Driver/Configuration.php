@@ -2,7 +2,7 @@
 
 namespace Raekke\Driver;
 
-use Raekke\Util\Collection;
+use Raekke\Util\ArrayCollection;
 
 /**
  * Configuration class. Contains metadata for the project.
@@ -18,7 +18,7 @@ class Configuration
      */
     public function __construct()
     {
-        $this->attributes = new Collection;
+        $this->attributes = new ArrayCollection;
     }
 
     /**
