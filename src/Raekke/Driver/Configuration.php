@@ -22,18 +22,18 @@ class Configuration
     }
 
     /**
-     * @param string $namespace
+     * @param string $prefix
      */
-    public function setNamespace($namespace)
+    public function setPrefix($prefix)
     {
-        $this->attributes->set('namespace', $namespace);
+        $this->attributes->set('prefix', $prefix);
     }
 
     /**
      * @return string
      */
-    public function getNamespace()
+    public function getPrefix()
     {
-        return $this->attributes->get('namespace', 'raekke');
+        return $this->attributes->get('prefix', 'raekke');
     }
 }
