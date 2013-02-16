@@ -3,10 +3,9 @@
 namespace Raekke\Driver;
 
 use Predis\Client;
+use Predis\Command\Processor\KeyPrefixProcessor;
 
 /**
- * ext-redis wrapper.
- *
  * @package Raekke
  */
 class Connection
@@ -15,18 +14,13 @@ class Connection
     protected $configuration;
 
     /**
-     * @param string|array|Client $server
+     * @param string|array $server
      * @param Configuration $configuration
      */
-    public function __construct($server = null, Configuration $configuration = null)
+    public function __construct($server, Configuration $configuration)
     {
-        $this->configuration = $configuration ?: new Configuration;
-
-        if (false == $server instanceof Client) {
-            $server = new Client($server, array('prefix' => $this->configuration->getPrefix()));
-        }
-
-        $this->client = $server;
+        $this->configuration = $configuration;
+        $this->client = new Client($server, array('prefix' => $configuration));
     }
 
     /**
