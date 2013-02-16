@@ -8,9 +8,9 @@ class Configuration extends ObjectBehavior
 {
     function it_returns_a_namespace()
     {
-        $this->getPrefix()->shouldReturn('raekke');
+        $this->getPrefix()->shouldReturn('raekke:');
 
         $this->setPrefix('custom-prefix');
-        $this->getPrefix()->shouldReturn('custom-prefix');
+        $this->getPrefix()->shouldReturn('custom-prefix:');
     }
 }

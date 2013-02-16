@@ -34,6 +34,6 @@ class Configuration
      */
     public function getPrefix()
     {
-        return $this->attributes->get('prefix', 'raekke');
+        return rtrim($this->attributes->get('prefix', 'raekke'), ':') . ':';
     }
 }
