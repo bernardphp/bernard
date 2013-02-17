@@ -19,6 +19,13 @@ class DefaultMessage extends ObjectBehavior
         $this->getName()->shouldReturn('MyMessageName');
     }
 
+    function it_uses_normalized_name_for_queue()
+    {
+        $this->beConstructedWith('MyMessageName');
+
+        $this->getQueue()->shouldReturn('my-message-name');
+    }
+
     function it_supports_a_dynamic_number_of_properties()
     {
     }

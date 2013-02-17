@@ -42,6 +42,6 @@ abstract class Message implements MessageInterface
      */
     public function getQueue()
     {
-        return strtolower(preg_replace('/[A-Z]/', '-\\0', $this->getName()));
+        return trim(strtolower(preg_replace('/[A-Z]/', '-\\0', $this->getName())), '-');
     }
 }
