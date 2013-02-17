@@ -3,11 +3,12 @@
 namespace Raekke\Message;
 
 use Raekke\Util\Util;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * @author Benjamin Eberlei
  */
-final class MessageHeader
+class MessageHeader
 {
     private $id;
     private $date;

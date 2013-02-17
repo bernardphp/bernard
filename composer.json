@@ -10,7 +10,8 @@
     "require" : {
         "php"                  : ">=5.3.3",
         "predis/predis"        : "~0.8",
-        "doctrine/collections" : "~1.0"
+        "doctrine/collections" : "~1.0",
+        "jms/serializer"   : "dev-master"
     },
     "require-dev" : {
         "phpspec/phpspec2" : "dev-develop",

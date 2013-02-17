@@ -19,8 +19,41 @@ class Connection
      */
     public function __construct($server, Configuration $configuration)
     {
+        $this->client = new Client($server, array('prefix' => $configuration->getPrefix()));
         $this->configuration = $configuration;
-        $this->client = new Client($server, array('prefix' => $configuration));
+    }
+
+    public function count($set)
+    {
+        return $this->client->llen($set);
+    }
+
+    public function all($set)
+    {
+        return $this->client->smembers($set);
+    }
+
+    public function push($set, $member)
+    {
+        $this->client->rpush($set, $member);
+    }
+
+    /**
+     * @param string $set
+     * @param mixed $member
+     */
+    public function insert($set, $member)
+    {
+        $this->client->sadd($set, $member);
+    }
+
+    /**
+     * @param string $set
+     * @param mixed $member
+     */
+    public function remove($set, $member)
+    {
+        $this->client->srem($set, $member);
     }
 
     /**

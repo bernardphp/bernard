@@ -5,26 +5,43 @@ namespace Raekke\Message;
 /**
  * @package Raekke
  */
-class Message extends AbstractMessage
+abstract class Message implements MessageInterface
 {
-    protected $messageName;
+    protected $header;
 
     /**
-     * @param string $messageName
      * @param array $parameters
      */
-    public function __construct($messageName, array $parameters = array())
+    public function __construct(array $parameters = array())
     {
-        $this->messageName = $messageName;
+        foreach ($parameters as $k => $v) {
+            $this->$k = $v;
+        }
 
-        parent::__construct($parameters);
+        $this->header = new MessageHeader;
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
-    public function getMessageName()
+    public function getHeader()
     {
-        return $this->messageName;
+        return $this->header;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return end(explode('\\', get_class()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getQueue()
+    {
+        return strtolower(preg_replace('/[A-Z]/', '-\\0', $this->getName()));
     }
 }
