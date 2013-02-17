@@ -7,6 +7,8 @@ namespace Raekke\Message;
  */
 abstract class AbstractMessage
 {
+    protected $header;
+
     /**
      * @param array $parameters
      */
@@ -15,6 +17,16 @@ abstract class AbstractMessage
         foreach ($parameters as $k => $v) {
             $this->$k = $v;
         }
+
+        $this->header = new MessageHeader;
+    }
+
+    /**
+     * @return MessageHeader
+     */
+    public function getHeader()
+    {
+        return $this->header;
     }
 
     /**
