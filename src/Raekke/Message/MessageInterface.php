@@ -8,11 +8,6 @@ namespace Raekke\Message;
 interface MessageInterface
 {
     /**
-     * @return MessageHeader
-     */
-    public function getHeader();
-
-    /**
      * @return string
      */
     public function getName();

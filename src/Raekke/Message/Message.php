@@ -7,8 +7,6 @@ namespace Raekke\Message;
  */
 abstract class Message implements MessageInterface
 {
-    protected $header;
-
     /**
      * @param array $parameters
      */
@@ -17,16 +15,6 @@ abstract class Message implements MessageInterface
         foreach ($parameters as $k => $v) {
             $this->$k = $v;
         }
-
-        $this->header = new MessageHeader;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getHeader()
-    {
-        return $this->header;
     }
 
     /**
