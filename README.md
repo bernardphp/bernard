@@ -1,6 +1,8 @@
 Raekke
 ======
 
+__NOT READY YET__
+
 "Raekke" is a message queue implemented in PHP using a Redis backend. It is very similiar to Resque but uses a more 
 service objected approach instead of static worker classes.
 
@@ -13,7 +15,6 @@ It is easy to get started using Raekke and sending messages to it.
 <?php
 
 use Raekke\Driver\Connection;
-use Raekke\Driver\Configuration;
 use Raekke\QueueManager;
 
 $queueManager = new QueueManager(new Connection('tcp://localhost'));
