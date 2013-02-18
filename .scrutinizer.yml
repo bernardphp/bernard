@@ -5,5 +5,5 @@ tools:
     php_mess_detector: true
 
 filter:
-    - paths: ["src/*"]
-    - excluded_paths: ["spec/*"]
+    paths: ["src/*"]
+    excluded_paths: ["spec/*"]
