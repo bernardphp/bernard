@@ -46,7 +46,7 @@ class DefaultMessage extends ObjectBehavior implements CustomMatchersProviderInt
     {
         return array(
             new InlineMatcher('haveAttributeWithValue', function ($subject, $property, $value) {
-                return property_exists($subject, $property) && $subject->$property == $value;
+                return property_exists($subject, $property) && $subject->$property === $value;
             }),
         );
     }

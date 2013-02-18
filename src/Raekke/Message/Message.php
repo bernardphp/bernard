@@ -8,16 +8,6 @@ namespace Raekke\Message;
 abstract class Message implements MessageInterface
 {
     /**
-     * @param array $parameters
-     */
-    public function __construct(array $parameters = array())
-    {
-        foreach ($parameters as $k => $v) {
-            $this->$k = $v;
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getName()
