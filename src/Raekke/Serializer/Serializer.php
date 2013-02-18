@@ -14,14 +14,29 @@ class Serializer
      */
     public function serialize(MessageInterface $message)
     {
-        return serialize($message);
+        return json_encode(array(
+            'class'     => get_class($message),
+            'data'      => serialize($message),
+            'timestamp' => time(),
+        ));
     }
 
     /**
      * @param string $content
+     * @Param boolean $onlyObject
      */
-    public function deserialize($content)
+    public function deserialize($content, $onlyObject = true)
     {
-        return unserialize($content);
+        $json = json_decode($content);
+
+        if ($onlyObject) {
+            return unserialize($json->data);
+        }
+
+        return array(
+            'class' => $json->class,
+            'message' => unserialize($json->data),
+            'timestamp' => $json->timestamp,
+        );
     }
 }
