@@ -15,9 +15,9 @@ class DefaultMessage extends Message
      */
     public function __construct($messageName, array $parameters = array())
     {
-        $this->messageName = $messageName;
-
         parent::__construct($parameters);
+
+        $this->messageName = $messageName;
     }
 
     /**
