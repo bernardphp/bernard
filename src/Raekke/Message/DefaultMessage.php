@@ -27,9 +27,4 @@ class DefaultMessage extends Message
     {
         return $this->messageName;
     }
-
-    public function getMessageName()
-    {
-        // TODO: implement
-    }
 }
