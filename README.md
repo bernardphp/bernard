@@ -16,7 +16,7 @@ use Raekke\Driver\Connection;
 use Raekke\Driver\Configuration;
 use Raekke\QueueManager;
 
-$queueManager = new QueueManager(new Connection('tcp://localhost', new Configuration()));
+$queueManager = new QueueManager(new Connection('tcp://localhost'));
 
 $message = new DefaultMessage("Import", array(
     'file' => '/path/to/file.xml',
