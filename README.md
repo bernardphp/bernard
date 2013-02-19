@@ -67,3 +67,22 @@ $manager->enqueue($message);
 $queue = $manager->get('custom-queue');
 $queue->push($message);
 ```
+
+Integration with Frameworks
+---------------------------
+
+To make it easier to start up and have it "just work" with sending messages a number of integrations have
+been created.
+
+* Somebody should do this part...
+
+Monitoring
+----------
+
+Having a message queue where it is not possible to what whats in queue and the contents of the messages is not
+very handy. And for that there is [Juno](https://github.com/henrikbjorn/Juno).
+
+It is implemented in Silex and is very lightweight. Also if needed it can be embedded in other Silex or Flint
+applications.
+
+![Juno](http://i.imgur.com/oZFzfKq.png)
