@@ -1,6 +1,6 @@
 {
     "name"        : "henrikbjorn/raekke",
-    "description" : "Message queue implemented with Redis and PHP",
+    "description" : "Message queue implemented in PHP with Redis as a backend.",
     "license"     : "MIT",
 
     "autoload" : {
@@ -13,6 +13,7 @@
         "doctrine/collections" : "~1.0",
         "jms/serializer"   : "dev-master"
     },
+
     "require-dev" : {
         "phpspec/phpspec2" : "dev-develop",
         "phpspec/php-diff" : "dev-master"
