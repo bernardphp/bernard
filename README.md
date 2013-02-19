@@ -4,8 +4,8 @@ Raekke
 "Raekke" is a message queue implemented in PHP using a Redis backend. It is very similiar to Resque but uses a more 
 service objected approach instead of static worker classes.
 
-Configuring
------------
+Getting Started
+---------------
 
 Raekke allows you as Resque to create messages and place them on a queue. And later on
 pull thoose off the queue and process them. It is not a a complete solution to have
@@ -30,8 +30,7 @@ $predis = new Client('tcp://localhost', array(
 $connection = new Connection($predis);
 ```
 
-Sending Messages
-----------------
+### Sending Messages
 
 Any message sent to Raekke must be an instance of `Raekke\Message\MessageInterface` which have a 
 `getName` and `getQueue` method. `getName` is used when working on messages and identifies
