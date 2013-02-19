@@ -11,7 +11,7 @@ class DefaultMessage extends Message
 
     /**
      * @param string $messageName
-     * @param array $parameters
+     * @param array  $parameters
      */
     public function __construct($messageName, array $parameters = array())
     {
