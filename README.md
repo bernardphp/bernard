@@ -1,8 +1,8 @@
 Raekke
 ======
 
-"Raekke" is a message queue implemented in PHP using a Redis backend. It is very similiar to Resque but uses a more 
-service objected approach instead of static worker classes.
+Raekke is a message queue implemented in php. It is very similiar to Resque and allows for easy creation of workers
+and creating distributed systems.
 
 Getting Started
 ---------------
@@ -85,6 +85,16 @@ It is implemented in Silex and is very lightweight. Also if needed it can be emb
 applications.
 
 ![Juno](http://i.imgur.com/oZFzfKq.png)
+
+Alternatives
+------------
+
+If this is not your cup of tea there exists other alternatives that might be better for your needs.
+
+* php-resque
+* Resque
+* RabbitMQ
+* ZeroMQ
 
 Happy Customers
 ---------------
