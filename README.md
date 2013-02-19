@@ -60,11 +60,67 @@ $message = new DefaultMessage("SendNewsletter", array(
     'newsletterId' => 12,
 ));
 
-$manager->enqueue($message);
+$manager->push($message);
 
 // or get the queue and specify the queue name freely
 $queue = $manager->get('custom-queue');
 $queue->push($message);
+```
+
+### Working on Messages
+
+A single message represents a job that needs to be performed. And as described earlier a message's name is used
+to determaine what worker should have that message. For that a worker manager is needed.
+
+``` php
+<?php
+
+use Raekke\WorkerManager;
+
+// create a $queueManager instance.
+
+$workerManager = new WorkerManager($queueManager);
+```
+
+The worker manager also needs to know what workers it can send messages to. A worker is an object or a closure. If it is an
+object and the worker is registered to `SendNewsletter` the manager will call the method `$workerService->onSendNewsletter`.
+This allows for a WorkerService to handle more than one job.
+
+``` php
+<?php
+
+class NewsletterWorker
+{
+    public function onSendNewsletter(DefaultMessage $message)
+    {
+        // Do some work on DefaultMessage here.
+    }
+}
+
+$workerManager->register('SendNewsletter', new NewsletterWorker);
+```
+
+The worker manager would normally be abstracted out and populated by a container of some sort like the Symfony Dependency Injection
+container.
+
+Anyone who have created a deamon in php and tried handling signal's they know it is hard. Therefor Raekke comes with a worker command
+for Symfony's Console component. The command should be registered on your console application.
+
+``` php
+<?php
+
+use Raekke\Command\WorkerCommand;
+
+// .. create an instance of Symfony\Console\Application as $app
+// .. create a Raekke\WorkerManager as $workerManager
+$app->register(new WorkerCommand($workerManager));
+```
+
+It can then be used as any other console command. The argument given should be the queue that your messages is on. If we use
+the earlier example with sending newsletter it would look like this.
+
+``` bash
+$ /path/to/console raekke:worker 'send-newsletter'
 ```
 
 Integration with Frameworks
