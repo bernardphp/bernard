@@ -98,6 +98,11 @@ class NewsletterWorker
 }
 
 $workerManager->register('SendNewsletter', new NewsletterWorker);
+
+// or register multiple services at once.
+$workerManager->registerServices(array(
+    'SendNewsletter' => new NewsletterWorker(),
+));
 ```
 
 The worker manager would normally be abstracted out and populated by a container of some sort like the [Symfony Dependency
