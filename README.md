@@ -82,9 +82,9 @@ use Raekke\WorkerManager;
 $workerManager = new WorkerManager($queueManager);
 ```
 
-The worker manager also needs to know what workers it can send messages to. A worker is an object or a closure. If it is an
-object and the worker is registered to `SendNewsletter` the manager will call the method `$workerService->onSendNewsletter`.
-This allows for a WorkerService to handle more than one job.
+The worker manager also needs to know what workers it can send messages to. A worker is an object or a closure.
+If it is an object and the worker is registered to `SendNewsletter` the manager will call the method
+`$workerService->onSendNewsletter`. This allows for a WorkerService to handle more than one job.
 
 ``` php
 <?php
@@ -100,11 +100,12 @@ class NewsletterWorker
 $workerManager->register('SendNewsletter', new NewsletterWorker);
 ```
 
-The worker manager would normally be abstracted out and populated by a container of some sort like the Symfony Dependency Injection
-container.
+The worker manager would normally be abstracted out and populated by a container of some sort like the [Symfony Dependency
+Injection](http://symfony.com/doc/current/components/dependency_injection).
 
-Anyone who have created a deamon in php and tried handling signal's they know it is hard. Therefor Raekke comes with a worker command
-for Symfony's Console component. The command should be registered on your console application.
+Anyone who have created a deamon in php and tried handling signal's they know it is hard. Therefor Raekke comes with a
+worker command for [Symfony Console](http://symfony.com/doc/current/components/console) component. The command should
+be added to your console application.
 
 ``` php
 <?php
@@ -113,11 +114,11 @@ use Raekke\Command\WorkerCommand;
 
 // .. create an instance of Symfony\Console\Application as $app
 // .. create a Raekke\WorkerManager as $workerManager
-$app->register(new WorkerCommand($workerManager));
+$app->add(new WorkerCommand($workerManager));
 ```
 
-It can then be used as any other console command. The argument given should be the queue that your messages is on. If we use
-the earlier example with sending newsletter it would look like this.
+It can then be used as any other console command. The argument given should be the queue that your messages is on.
+If we use the earlier example with sending newsletter it would look like this.
 
 ``` bash
 $ /path/to/console raekke:worker 'send-newsletter'
@@ -147,10 +148,9 @@ Alternatives
 
 If this is not your cup of tea there exists other alternatives that might be better for your needs.
 
-* php-resque
-* Resque
-* RabbitMQ
-* ZeroMQ
+* [php-resque](https://github.com/chrisboulton/php-resque)
+* [Resque](https://github.com/defunkt/resque)
+
 
 Happy Customers
 ---------------
