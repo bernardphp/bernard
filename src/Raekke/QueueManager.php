@@ -67,7 +67,7 @@ class QueueManager implements \IteratorAggregate, \ArrayAccess, \Countable
         return $this->connection->count('queues');
     }
 
-    public function enqueue(MessageInterface $message)
+    public function push(MessageInterface $message)
     {
         $this->get($message->getQueue())->push($message);
     }

@@ -14,7 +14,7 @@ class QueueManagerTest extends \PHPUnit_Framework_TestCase
         $this->manager = new QueueManager($this->connection);
     }
 
-    public function testItEnqueuesMessages()
+    public function testItPushesMessages()
     {
         $message = $this->getMock('Raekke\Message\MessageInterface');
         $message->expects($this->once())->method('getQueue')->will($this->returnValue('queue'));
@@ -30,7 +30,7 @@ class QueueManagerTest extends \PHPUnit_Framework_TestCase
         $manager->expects($this->once())->method('get')->with($this->equalTo('queue'))
             ->will($this->returnValue($queue));
 
-        $manager->enqueue($message);
+        $manager->push($message);
     }
 
     public function testItSavesQueueObjects()
