@@ -1,11 +1,11 @@
 Raekke
 ======
 
-"Raekke" is a message queue implemented in PHP using a Redis backend. It is very similiar to Resque but uses a more 
-service objected approach instead of static worker classes.
+Raekke is a message queue implemented in php. It is very similiar to Resque and allows for easy creation of workers
+and creating distributed systems.
 
-Configuring
------------
+Getting Started
+---------------
 
 Raekke allows you as Resque to create messages and place them on a queue. And later on
 pull thoose off the queue and process them. It is not a a complete solution to have
@@ -30,8 +30,7 @@ $predis = new Client('tcp://localhost', array(
 $connection = new Connection($predis);
 ```
 
-Sending Messages
-----------------
+### Sending Messages
 
 Any message sent to Raekke must be an instance of `Raekke\Message\MessageInterface` which have a 
 `getName` and `getQueue` method. `getName` is used when working on messages and identifies
@@ -61,11 +60,73 @@ $message = new DefaultMessage("SendNewsletter", array(
     'newsletterId' => 12,
 ));
 
-$manager->enqueue($message);
+$manager->push($message);
 
 // or get the queue and specify the queue name freely
 $queue = $manager->get('custom-queue');
 $queue->push($message);
+```
+
+### Working on Messages
+
+A single message represents a job that needs to be performed. And as described earlier a message's name is used
+to determaine what worker should have that message. For that a worker manager is needed.
+
+``` php
+<?php
+
+use Raekke\WorkerManager;
+
+// create a $queueManager instance.
+
+$workerManager = new WorkerManager($queueManager);
+```
+
+The worker manager also needs to know what workers it can send messages to. A worker is an object or a closure.
+If it is an object and the worker is registered to `SendNewsletter` the manager will call the method
+`$workerService->onSendNewsletter`. This allows for a WorkerService to handle more than one job.
+
+``` php
+<?php
+
+class NewsletterWorker
+{
+    public function onSendNewsletter(DefaultMessage $message)
+    {
+        // Do some work on DefaultMessage here.
+    }
+}
+
+$workerManager->register('SendNewsletter', new NewsletterWorker);
+
+// or register multiple services at once.
+$workerManager->registerServices(array(
+    'SendNewsletter' => new NewsletterWorker(),
+));
+```
+
+The worker manager would normally be abstracted out and populated by a container of some sort like the [Symfony Dependency
+Injection](http://symfony.com/doc/current/components/dependency_injection).
+
+Anyone who have created a deamon in php and tried handling signal's they know it is hard. Therefor Raekke comes with a
+worker command for [Symfony Console](http://symfony.com/doc/current/components/console) component. The command should
+be added to your console application.
+
+``` php
+<?php
+
+use Raekke\Command\WorkerCommand;
+
+// .. create an instance of Symfony\Console\Application as $app
+// .. create a Raekke\WorkerManager as $workerManager
+$app->add(new WorkerCommand($workerManager));
+```
+
+It can then be used as any other console command. The argument given should be the queue that your messages is on.
+If we use the earlier example with sending newsletter it would look like this.
+
+``` bash
+$ /path/to/console raekke:worker 'send-newsletter'
 ```
 
 Integration with Frameworks
@@ -86,3 +147,18 @@ It is implemented in Silex and is very lightweight. Also if needed it can be emb
 applications.
 
 ![Juno](http://i.imgur.com/oZFzfKq.png)
+
+Alternatives
+------------
+
+If this is not your cup of tea there exists other alternatives that might be better for your needs.
+
+* [php-resque](https://github.com/chrisboulton/php-resque)
+* [Resque](https://github.com/defunkt/resque)
+
+
+Happy Customers
+---------------
+
+Not really anybody as it is not completly finished. If you need something like this i encourage you to contact
+me and we will figure out how we can work together on this.
