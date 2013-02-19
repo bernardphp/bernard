@@ -86,3 +86,9 @@ It is implemented in Silex and is very lightweight. Also if needed it can be emb
 applications.
 
 ![Juno](http://i.imgur.com/oZFzfKq.png)
+
+Happy Customers
+---------------
+
+Not really anybody as it is not completly finished. If you need something like this i encourage you to contact
+me and we will figure out how we can work together on this.
