@@ -6,5 +6,3 @@ php:
 
 before_script:
     - "composer install --dev"
-
-script: "vendor/bin/phpspec run -v -f p && phpunit --coverage-text"
