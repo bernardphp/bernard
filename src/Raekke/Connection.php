@@ -2,7 +2,7 @@
 
 namespace Raekke;
 
-use Predis\Client;
+use Predis\ClientInterface;
 
 /**
  * @package Raekke
@@ -14,7 +14,7 @@ class Connection
     /**
      * @param Client $client
      */
-    public function __construct(Client $client)
+    public function __construct(ClientInterface $client)
     {
         $this->client = $client;
     }
@@ -32,6 +32,13 @@ class Connection
     public function slice($set, $index = 0, $limit = 20)
     {
         return $this->client->lrange($set, $index, $index + $limit - 1);
+    }
+
+    public function pop($set, $interval = 5)
+    {
+        list($set, $message) = $this->client->blpop($set, $interval);
+
+        return $message;
     }
 
     public function push($set, $member)
