@@ -126,8 +126,10 @@ It can then be used as any other console command. The argument given should be t
 If we use the earlier example with sending newsletter it would look like this.
 
 ``` bash
-$ /path/to/console raekke:worker 'send-newsletter'
+$ /path/to/console raekke:worker --interval=10 'send-newsletter'
 ```
+
+`--interval` is the time it will wait for a single message to be returned from the backend before assuming null and it being empty it defaults to 5 and is optional.
 
 Integration with Frameworks
 ---------------------------
