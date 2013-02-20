@@ -36,7 +36,7 @@ class Connection
 
     public function pop($set, $interval = 5)
     {
-        list($set, $message) = $this->client->blpop($set, $interval);
+        list(, $message) = $this->client->blpop($set, $interval);
 
         return $message;
     }
