@@ -8,11 +8,18 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        // Because predis uses __call all methods that needs mocking must be
+        // explicitly defined.
         $this->predis = $this->getMock('Predis\Client', array(
             'llen',
             'smembers',
             'lrange',
             'blpop',
+            'srem',
+            'del',
+            'sadd',
+            'sismember',
+            'rpush',
         ));
 
         $this->connection = new Connection($this->predis);
@@ -47,6 +54,57 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('message1'), $this->connection->slice('queues', 10, 10));
         $this->assertEquals(array('message2'), $this->connection->slice('queues'));
 
+    }
+
+    public function testItRemovesAKeyFromASet()
+    {
+        $this->predis->expects($this->once())->method('srem')->with($this->equalTo('queues'), $this->equalTo('queue'));
+
+        $this->connection->remove('queues', 'queue');
+    }
+
+    public function testItDeletesASet()
+    {
+        $this->predis->expects($this->once())->method('del')->with($this->equalTo('queue:name'));
+        $this->connection->delete('queue:name');
+    }
+
+    public function testItInsertsToSet()
+    {
+        $this->predis->expects($this->once())->method('sadd')->with($this->equalTo('queues'), $this->equalTo('queue'));
+
+        $this->connection->insert('queues', 'queue');
+    }
+
+    public function testItChecksSetForMemeber()
+    {
+        $this->predis->expects($this->at(0))->method('sismember')->with($this->equalTo('queues'), $this->equalTo('queue:name'))
+            ->will($this->returnValue(true));
+
+        $this->predis->expects($this->at(1))->method('sismember')->with($this->equalTo('queues'), $this->equalTo('queue:name-2'))
+            ->will($this->returnValue(false));
+
+        $this->assertTrue($this->connection->has('queues', 'queue:name'));
+        $this->assertFalse($this->connection->has('queues', 'queue:name-2'));
+    }
+
+    public function testItPushesMember()
+    {
+        $this->predis->expects($this->once())->method('rpush')->with($this->equalTo('queues'), $this->equalTo('my-queue'));
+
+        $this->connection->push('queues', 'my-queue');
+    }
+
+    public function testItPopMessages()
+    {
+        $this->predis->expects($this->at(0))->method('blpop')->with($this->equalTo('queues'))
+            ->will($this->returnValue(array('my-queue', 'message1')));
+
+        $this->predis->expects($this->at(1))->method('blpop')->with($this->equalTo('queues2'), $this->equalTo(30))
+            ->will($this->returnValue(array('my-queue2', 'message2')));
+
+        $this->assertEquals('message1', $this->connection->pop('queues'));
+        $this->assertEquals('message2', $this->connection->pop('queues2', 30));
     }
 
     public function testItCanUseAnInterface()
