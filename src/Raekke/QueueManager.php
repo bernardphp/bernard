@@ -19,6 +19,7 @@ class QueueManager implements \IteratorAggregate, \ArrayAccess, \Countable
     protected $queues;
     protected $connection;
     protected $serializer;
+    protected $dispatcher;
 
     public function __construct(
         Connection $connection,
