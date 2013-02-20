@@ -12,7 +12,17 @@ abstract class Message implements MessageInterface
      */
     public function getName()
     {
-        return end(explode('\\', get_class()));
+        $class = get_class($this);
+
+        if (substr($class, -7) == 'Message') {
+            $class = substr($class, 0, -7);
+        }
+
+        if (!strpos($class, '\\')) {
+            return $class;
+        }
+
+        return current(array_reverse(explode('\\', $class)));
     }
 
     /**
