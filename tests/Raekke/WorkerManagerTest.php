@@ -20,8 +20,10 @@ class WorkerManagerTest extends \PHPUnit_Framework_TestCase
     {
         $manager = new WorkerManager;
         $manager->register('SendNewsletter', $class = new \stdClass);
+        $manager->register('SendAnotherEmail', $class2 = new \stdClass);
 
         $this->assertSame($class, $manager->getService('SendNewsletter'));
+        $this->assertSame($class2, $manager->getService('sendanotheremail'));
     }
 
     public function testItThrowsExceptionWhenMethodIsUncallable()
@@ -36,13 +38,17 @@ class WorkerManagerTest extends \PHPUnit_Framework_TestCase
     public function testItInvokesMethodOnServiceWithMessageAsParameter()
     {
         $message = new DefaultMessage('SendNewsletter');
+        $message2 = new DefaultMessage('registerUser');
 
-        $mock = $this->getMock('stdClass', array('onSendNewsletter'));
-        $mock->expects($this->once())->method('onSendNewsletter')->with($this->equalTo($message));
+        $mock = $this->getMock('stdClass', array('onSendNewsletter', 'onRegisterUser'));
+        $mock->expects($this->at(0))->method('onSendNewsletter')->with($this->equalTo($message));
+        $mock->expects($this->at(1))->method('onRegisterUser')->with($this->equalTo($message2));
 
         $manager = new WorkerManager;
         $manager->register('SendNewsletter', $mock);
+        $manager->register('RegisterUser', $mock);
 
         $manager->handle($message);
+        $manager->handle($message2);
     }
 }

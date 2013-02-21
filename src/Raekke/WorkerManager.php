@@ -15,11 +15,13 @@ class WorkerManager
 
     public function register($name, $service)
     {
-        $this->services[$name] = $service;
+        $this->services[strtolower($name)] = $service;
     }
 
     public function getService($messageName)
     {
+        $messageName = strtolower($messageName);
+
         if (isset($this->services[$messageName])) {
             return $this->services[$messageName];
         }
