@@ -3,25 +3,25 @@
 namespace Raekke\Serializer;
 
 use Raekke\Message\MessageWrapper;
-use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\SerializerInterface as JMSSerializerInterface;
 
 /**
  * @package Raekke
  */
-class Serializer
+class Serializer implements SerializerInterface
 {
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(JMSSerializerInterface $serializer)
     {
         $this->serializer = $serializer;
     }
 
-    public function serialize(MessageWrapper $wrapper)
+    public function serialize(MessageWrapper $message)
     {
-        return $this->serializer->serialize($wrapper, 'json');
+        return $this->serializer->serialize($message, 'json');
     }
 
-    public function deserialize($content)
+    public function deserialize($deserialized)
     {
-        return $this->serializer->deserialize($content, 'Raekke\Message\MessageWrapper', 'json');
+        return $this->serializer->deserialize($deserialized, 'Raekke\Message\MessageWrapper', 'json');
     }
 }

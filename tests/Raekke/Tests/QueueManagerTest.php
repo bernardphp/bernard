@@ -11,7 +11,7 @@ class QueueManagerTest extends \PHPUnit_Framework_TestCase
         $this->connection = $this->getMockBuilder('Raekke\Connection')
             ->disableOriginalConstructor()->getMock();
 
-        $this->manager = new QueueManager($this->connection);
+        $this->manager = new QueueManager($this->connection, $this->getMock('Raekke\Serializer\SerializerInterface'));
     }
 
     public function testItPushesMessages()
@@ -64,11 +64,11 @@ class QueueManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testItHaveASerializerAndEventDispatcher()
     {
-        $this->assertInstanceOf('Raekke\Serializer\Serializer', $this->manager->getSerializer());
+        $this->assertInstanceOf('Raekke\Serializer\SerializerInterface', $this->manager->getSerializer());
         $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventDispatcherInterface', $this->manager->getDispatcher());
 
         $manager = new QueueManager($this->connection,
-            $serializer = $this->getMock('Raekke\Serializer\Serializer'),
+            $serializer = $this->getMock('Raekke\Serializer\SerializerInterface'),
             $dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface'));
 
         $this->assertSame($serializer, $manager->getSerializer());
