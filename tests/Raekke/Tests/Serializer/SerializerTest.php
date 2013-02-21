@@ -17,6 +17,14 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     {
         $json = '{"message":{"message_name":"SendNewsletter"},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
         $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter')));
+
+        $json = '{"message":{"message_name":"SendNewsletter","newsletterId":1,"users":["henrikbjorn"]},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
+        $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter', array(
+            'newsletterId' => 1,
+            'users' => array(
+                'henrikbjorn'
+            ),
+        ))));
     }
 
     public function testItDeserializes()
