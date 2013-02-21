@@ -66,4 +66,9 @@ class MessageWrapper
     {
         return $this->retries;
     }
+
+    public function incrementRetries()
+    {
+        $this->retries += 1;
+    }
 }
