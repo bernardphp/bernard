@@ -4,22 +4,17 @@ namespace Raekke\Tests\Message;
 
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @dataProvider dataProviderClassNames
-     */
-    public function testItUsesClassNameAsNameAndQueueNameNormalized($mockClassName, $messageName, $queueName)
+    public function testItUsesClassNameAsNameAndQueueNameNormalized()
     {
-        $message = $this->getMockForAbstractClass('Raekke\Message\Message', array(), $mockClassName);
+        $message = $this->getMockForAbstractClass('Raekke\Message\Message', array(), 'MyCustomMessage');
+        $this->assertEquals('MyCustom', $message->getName());
+        $this->assertEquals('my-custom', $message->getQueue());
 
-        $this->assertEquals($messageName, $message->getName());
-        $this->assertEquals($queueName, $message->getQueue());
-    }
-
-    public function dataProviderClassNames()
-    {
-        return array(
-            array('SendNewsletter', 'SendNewsletter', 'send-newsletter'),
-            array('SendNewsletterMessage', 'SendNewsletter', 'send-newsletter'),
-        );
+        $message =  new \CustomVendor\SendNewsletterMessage();
+        $this->assertEquals('SendNewsletter', $message->getName());
+        $this->assertEquals('send-newsletter', $message->getQueue());
     }
 }
+
+namespace CustomVendor;
+class SendNewsletterMessage extends \Raekke\Message\Message {}

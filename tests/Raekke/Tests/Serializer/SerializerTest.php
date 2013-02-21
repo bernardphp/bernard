@@ -13,7 +13,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $this->serializer = new Serializer($this->createJMSSerializer());
     }
 
-    public function testItSerializes()
+    public function testItSerializesDefaultMessage()
     {
         $json = '{"message":{"message_name":"SendNewsletter"},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
         $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter')));
@@ -27,7 +27,23 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         ))));
     }
 
-    public function testItDeserializes()
+    public function testItSerializesACustomImplementedMessage()
+    {
+        $this->markTestIncomplete('Custom messages are not yet implemented.');
+
+        $json = '{"message":[],"name":"SendNewsletter","class":"Application\\\\SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
+        $this->assertEquals($json, $this->serializer->serialize(new MessageWrapper(new \Application\SendNewsletterMessage())));
+    }
+
+    public function testItDeserializesACustomImplementedMessage()
+    {
+        $this->markTestIncomplete('Custom messages are not yet implemented.');
+
+        $json = '{"message":[],"name":"SendNewsletter","class":"Application\\\\SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
+        $this->assertEquals($json, $this->serializer->serialize(new MessageWrapper(new \Application\SendNewsletterMessage())));
+    }
+
+    public function testItDeserializesDefaultMessage()
     {
         $message = $this->createWrappedDefaultMessage('SendNewsletter');
         $json = $this->serializer->serialize($message);
@@ -49,3 +65,6 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         return $builder->build();
     }
 }
+
+namespace Application;
+class SendNewsletterMessage extends \Raekke\Message\Message {}
