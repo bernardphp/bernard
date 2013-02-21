@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer>
+    <class name="Raekke\Message\MessageWrapper">
+        <property name="timestamp" type="integer" />
+        <property name="retries"   type="integer" />
+        <property name="class"     type="string" />
+        <property name="name"      type="string" />
+        <property name="message"   type="Raekke\Message\DefaultMessage" />
+    </class>
+</serializer>

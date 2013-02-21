@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer>
+    <class name="Raekke\Message\DefaultMessage">
+        <property name="messageName" type="string" exclude="false" expose="true" />
+    </class>
+</serializer>

@@ -2,41 +2,26 @@
 
 namespace Raekke\Serializer;
 
-use Raekke\Message\MessageInterface;
+use Raekke\Message\MessageWrapper;
+use JMS\Serializer\SerializerInterface;
 
 /**
  * @package Raekke
  */
 class Serializer
 {
-    /**
-     * @param MessageInterface $message
-     */
-    public function serialize(MessageInterface $message)
+    public function __construct(SerializerInterface $serializer)
     {
-        return json_encode(array(
-            'class'     => get_class($message),
-            'data'      => serialize($message),
-            'timestamp' => time(),
-        ));
+        $this->serializer = $serializer;
     }
 
-    /**
-     * @param string $content
-     * @Param boolean $onlyObject
-     */
-    public function deserialize($content, $onlyObject = true)
+    public function serialize(MessageWrapper $wrapper)
     {
-        $json = json_decode($content);
+        return $this->serializer->serialize($wrapper, 'json');
+    }
 
-        if ($onlyObject) {
-            return unserialize($json->data);
-        }
-
-        return array(
-            'class' => $json->class,
-            'message' => unserialize($json->data),
-            'timestamp' => $json->timestamp,
-        );
+    public function deserialize($content)
+    {
+        return $this->serializer->deserialize($content, 'Raekke\Message\MessageWrapper', 'json');
     }
 }
