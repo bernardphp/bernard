@@ -8,9 +8,10 @@
     },
 
     "require" : {
-        "php"                  : ">=5.3.3",
-        "predis/predis"        : "~0.8",
-        "doctrine/collections" : "~1.0",
-        "jms/serializer"       : "dev-master"
+        "php"                      : ">=5.3.3",
+        "predis/predis"            : "~0.8",
+        "doctrine/collections"     : "~1.0",
+        "jms/serializer"           : "dev-master",
+        "symfony/event-dispatcher" : "~2.0"
     }
 }
