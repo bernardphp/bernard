@@ -2,6 +2,9 @@
 
 namespace Raekke\Message;
 
+use JMS\Serializer\AbstractVisitor;
+use JMS\Serializer\Metadata\PropertyMetadata;
+
 /**
  * @package Raekke
  */
@@ -9,10 +12,6 @@ class DefaultMessage extends Message
 {
     protected $messageName;
 
-    /**
-     * @param string $messageName
-     * @param array  $parameters
-     */
     public function __construct($messageName, array $parameters = array())
     {
         foreach ($parameters as $k => $v) {
@@ -22,11 +21,26 @@ class DefaultMessage extends Message
         $this->messageName = $messageName;
     }
 
-    /**
-     * @return string
-     */
     public function getName()
     {
         return $this->messageName;
+    }
+
+    public function serializeToJson(AbstractVisitor $visitor)
+    {
+        $data = array();
+
+        foreach (get_object_vars($this) as $k => $v) {
+            $data[$k == 'messageName' ? 'message_name' : $k] = $v;
+        }
+
+        return $data;
+    }
+
+    public function deserializeFromJson(AbstractVisitor $visitor, array $data)
+    {
+        foreach ($data as $k => $v) {
+            $this->{$k == 'message_name' ? 'messageName' : $k} = $v;
+        }
     }
 }
