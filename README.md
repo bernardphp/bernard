@@ -49,17 +49,23 @@ class a `Raekke\Message\DefaultMessage` is provided. It can hold any number of p
 needs a name for the message. The queue name is then generated from that. When generating the queue
 name it will insert a "_" before any uppercase letters and then lowercase everything.
 
-Because every message is serialized with `serialize` it must support being that and should only
-contain simple values.
+Messages are serialized to json using [JMS Serializer](http://jmsyst.com/libs/serializer). Therefor
+an instance of that is required. Also if custom message classes are used it is needed to add metadata
+for being able to serialize and deserialize them.
 
 ``` php
 <?php
 
 use Raekke\Message\DefaultMessage;
 use Raekke\QueueManager;
+use Raekke\Serializer\Serializer;
+
+// .. create serializer instance where src/Raekke/Resources/serializer is registered as
+// a metadata dir with "Raekke" as prefix.
+$serializer = new Serializer($jmsSerializer);
 
 // .. create connection
-$manager = new QueueManager($connection);
+$manager = new QueueManager($connection, $serializer);
 
 $message = new DefaultMessage("SendNewsletter", array(
     'newsletterId' => 12,
