@@ -4,6 +4,11 @@ Raekke
 Raekke is a message queue implemented in php. It is very similiar to Resque and allows for easy creation of workers
 and creating distributed systems.
 
+__NOTE: This readme is a collection of thoughts about how this will eventually be used. Not everything is implemented
+yet and it is properly broken.__
+
+[![Build Status](https://travis-ci.org/henrikbjorn/Raekke.png?branch=master)](https://travis-ci.org/henrikbjorn/Raekke)
+
 Getting Started
 ---------------
 
