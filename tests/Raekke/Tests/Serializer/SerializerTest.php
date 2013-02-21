@@ -2,6 +2,7 @@
 
 namespace Raekke\Tests;
 
+use Raekke\Message\MessageWrapper;
 use Raekke\Message\DefaultMessage;
 use Raekke\Serializer\Serializer;
 
@@ -9,35 +10,34 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->serializer = new Serializer;
-    }
-
-    public function testItSerializesToJson()
-    {
-        $message = new DefaultMessage('SendNewsletter');
-        $serialized = serialize($message);
-
-        $this->assertEquals(json_encode(array(
-            'class' => 'Raekke\Message\DefaultMessage',
-            'data' => $serialized,
-            'timestamp' => time(),
-        )), $this->serializer->serialize($message));
+        $this->serializer = new Serializer($this->createJMSSerializer());
     }
 
     public function testItSerializes()
     {
-        $message = new DefaultMessage('SendNewsletter', array(
-            'newsletterId' => 10,
-        ));
+        $json = '{"message":{"message_name":"SendNewsletter"},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
+        $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter')));
+    }
 
+    public function testItDeserializes()
+    {
+        $message = $this->createWrappedDefaultMessage('SendNewsletter');
         $json = $this->serializer->serialize($message);
 
         $this->assertEquals($message, $this->serializer->deserialize($json));
+    }
 
-        $this->assertEquals(array(
-            'class' => get_class($message),
-            'message' => $message,
-            'timestamp' => time(),
-        ), $this->serializer->deserialize($json, false));
+    public function createWrappedDefaultMessage($name, array $properties = array())
+    {
+        return new MessageWrapper(new DefaultMessage($name, $properties));
+    }
+
+    public function createJMSSerializer()
+    {
+        $class = new \ReflectionClass('Raekke\Serializer\Serializer');
+        $builder = new \JMS\Serializer\SerializerBuilder();
+        $builder->addMetadataDir(dirname($class->getFilename()) . '/../Resources/serializer', 'Raekke');
+
+        return $builder->build();
     }
 }
