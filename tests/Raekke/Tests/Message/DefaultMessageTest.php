@@ -24,11 +24,11 @@ class DefaultMessageTest extends \PHPUnit_Framework_TestCase
     {
         $message = new DefaultMessage('SendNewsletter');
 
-        $this->assertObjectHasAttribute('messageName', $message);
+        $this->assertObjectHasAttribute('name', $message);
         $this->assertEquals('SendNewsletter', $message->getName());
 
         $message = new DefaultMessage('SendNewsletter', array(
-            'messageName' => 'NotSendNewsletter',
+            'name' => 'NotSendNewsletter',
         ));
 
         $this->assertEquals('SendNewsletter', $message->getName());

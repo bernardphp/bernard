@@ -10,40 +10,31 @@ use JMS\Serializer\Metadata\PropertyMetadata;
  */
 class DefaultMessage extends Message
 {
-    protected $messageName;
+    protected $name;
 
-    public function __construct($messageName, array $parameters = array())
+    public function __construct($name, array $parameters = array())
     {
         foreach ($parameters as $k => $v) {
             $this->$k = $v;
         }
 
-        $this->messageName = preg_replace(array(
-            '/([^[:alnum:]-_+])/i',
-            '/^([0-9]+)/',
-        ), '', $messageName);
+        $this->name = preg_replace('/(^([0-9]+))|([^[:alnum:]-_+])/i', '', $name);
     }
 
     public function getName()
     {
-        return $this->messageName;
+        return $this->name;
     }
 
     public function serializeToJson(AbstractVisitor $visitor)
     {
-        $data = array();
-
-        foreach (get_object_vars($this) as $k => $v) {
-            $data[$k == 'messageName' ? 'message_name' : $k] = $v;
-        }
-
-        return $data;
+        return get_object_vars($this);
     }
 
     public function deserializeFromJson(AbstractVisitor $visitor, array $data)
     {
         foreach ($data as $k => $v) {
-            $this->{$k == 'message_name' ? 'messageName' : $k} = $v;
+            $this->$k = $v;
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Raekke\Tests;
+namespace Raekke\Tests\Serializer;
 
 use Raekke\Message\MessageWrapper;
 use Raekke\Message\DefaultMessage;
@@ -15,10 +15,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
     public function testItSerializesDefaultMessage()
     {
-        $json = '{"message":{"message_name":"SendNewsletter"},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"message":{"name":"SendNewsletter"},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
         $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter')));
 
-        $json = '{"message":{"message_name":"SendNewsletter","newsletterId":1,"users":["henrikbjorn"]},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"message":{"name":"SendNewsletter","newsletterId":1,"users":["henrikbjorn"]},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
         $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter', array(
             'newsletterId' => 1,
             'users' => array(
