@@ -3,7 +3,6 @@
 namespace Raekke\Message;
 
 use JMS\Serializer\AbstractVisitor;
-use JMS\Serializer\Metadata\PropertyMetadata;
 
 /**
  * @package Raekke
