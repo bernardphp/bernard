@@ -62,17 +62,14 @@ class QueueManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->manager, $this->manager->get('queue')->getManager());
     }
 
-    public function testItHaveASerializerAndEventDispatcher()
+    public function testItHaveASerializer()
     {
         $this->assertInstanceOf('Raekke\Serializer\SerializerInterface', $this->manager->getSerializer());
-        $this->assertInstanceOf('Symfony\Component\EventDispatcher\EventDispatcherInterface', $this->manager->getDispatcher());
 
         $manager = new QueueManager($this->connection,
-            $serializer = $this->getMock('Raekke\Serializer\SerializerInterface'),
-            $dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface'));
+            $serializer = $this->getMock('Raekke\Serializer\SerializerInterface'));
 
         $this->assertSame($serializer, $manager->getSerializer());
-        $this->assertSame($dispatcher, $manager->getDispatcher());
     }
 
     public function testArrayAccess()
@@ -115,8 +112,7 @@ class QueueManagerTest extends \PHPUnit_Framework_TestCase
         $all = $this->manager->all();
 
         $this->assertInstanceOf('Raekke\Util\ArrayCollection', $all);
-        $this->assertCount(3, $all);
-        $this->assertTrue($all->containsKey('failed'));
+        $this->assertCount(2, $all);
 
         $this->assertInstanceOf('IteratorAggregate', $this->manager);
         $this->assertEquals($all->getIterator(), $this->manager->getIterator());

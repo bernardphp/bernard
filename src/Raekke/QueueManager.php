@@ -6,8 +6,6 @@ use Raekke\Message\MessageInterface;
 use Raekke\Queue\Queue;
 use Raekke\Serializer\SerializerInterface;
 use Raekke\Util\ArrayCollection;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Contains a collection of queues.
@@ -19,19 +17,14 @@ class QueueManager implements \IteratorAggregate, \ArrayAccess, \Countable
     protected $queues;
     protected $connection;
     protected $serializer;
-    protected $dispatcher;
 
     public function __construct(
         Connection $connection,
-        SerializerInterface $serializer,
-        EventDispatcherInterface $dispatcher = null
+        SerializerInterface $serializer
     ) {
         $this->queues     = new ArrayCollection;
         $this->connection = $connection;
         $this->serializer = $serializer;
-        $this->dispatcher = $dispatcher ?: new EventDispatcher;
-
-        $this->get('failed');
     }
 
     public function get($queueName)
@@ -119,11 +112,6 @@ class QueueManager implements \IteratorAggregate, \ArrayAccess, \Countable
     public function getSerializer()
     {
         return $this->serializer;
-    }
-
-    public function getDispatcher()
-    {
-        return $this->dispatcher;
     }
 
     protected function createQueueObject($queueName)
