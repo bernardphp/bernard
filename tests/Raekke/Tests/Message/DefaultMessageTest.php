@@ -33,4 +33,22 @@ class DefaultMessageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('SendNewsletter', $message->getName());
     }
+
+    /**
+     * @dataProvider dataProviderNames
+     */
+    public function testItNormalizesName($original, $normalized)
+    {
+        $message = new DefaultMessage($original);
+        $this->assertEquals($normalized, $message->getName());
+    }
+
+    public function dataProviderNames()
+    {
+        return array(
+            array('Send Newsletter', 'SendNewsletter'),
+            array('1Send Newsletter', 'SendNewsletter'),
+            array('Send_Newsletter', 'Send_Newsletter'),
+        );
+    }
 }

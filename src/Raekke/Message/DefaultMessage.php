@@ -18,7 +18,10 @@ class DefaultMessage extends Message
             $this->$k = $v;
         }
 
-        $this->messageName = $messageName;
+        $this->messageName = preg_replace(array(
+            '/([^[:alnum:]-_+])/i',
+            '/^([0-9]+)/',
+        ), '', $messageName);
     }
 
     public function getName()
