@@ -9,6 +9,13 @@ yet and it is properly broken.__
 
 [![Build Status](https://travis-ci.org/henrikbjorn/Raekke.png?branch=master)](https://travis-ci.org/henrikbjorn/Raekke)
 
+Coming Changes
+--------------
+
+As we send and recieve messages the naming for pushing / pulling messages from a queue should be named `send` and `recieve`.
+Currently a predis client is needed this should be abstracted out into an adapter pattern. It will be okay for not all drivers
+to support every single feature redis does.
+
 Getting Started
 ---------------
 
