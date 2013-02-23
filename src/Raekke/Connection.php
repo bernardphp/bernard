@@ -11,9 +11,6 @@ class Connection
 {
     protected $client;
 
-    /**
-     * @param Client $client
-     */
     public function __construct(ClientInterface $client)
     {
         $this->client = $client;
@@ -56,27 +53,27 @@ class Connection
         $this->client->del($set);
     }
 
-    /**
-     * @param string $set
-     * @param mixed  $member
-     */
     public function insert($set, $member)
     {
         $this->client->sadd($set, $member);
     }
 
-    /**
-     * @param string $set
-     * @param mixed  $member
-     */
     public function remove($set, $member)
     {
         $this->client->srem($set, $member);
     }
 
-    /**
-     * @return Client
-     */
+    public function info()
+    {
+        $info = array_change_key_case($this->client->info());
+
+        if (!isset($info['server'])) {
+            return $info;
+        }
+
+        return new \RecursiveIteratorIterator(new \RecursiveArrayIterator($info));
+    }
+
     public function getClient()
     {
         return $this->client;
