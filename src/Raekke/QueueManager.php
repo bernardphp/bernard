@@ -12,7 +12,7 @@ use Raekke\Util\ArrayCollection;
  *
  * @package Raekke
  */
-class QueueManager implements \IteratorAggregate, \ArrayAccess, \Countable
+class QueueManager implements \ArrayAccess, \Countable
 {
     protected $queues;
     protected $connection;
@@ -61,11 +61,6 @@ class QueueManager implements \IteratorAggregate, \ArrayAccess, \Countable
         return $this->connection->count('queues');
     }
 
-    public function push(MessageInterface $message)
-    {
-        $this->get($message->getQueue())->push($message);
-    }
-
     public function remove($queueName)
     {
         if (!$this->has($queueName)) {
@@ -77,11 +72,6 @@ class QueueManager implements \IteratorAggregate, \ArrayAccess, \Countable
         $this->queues->remove($queueName);
 
         return true;
-    }
-
-    public function getIterator()
-    {
-        return $this->all()->getIterator();
     }
 
     public function offsetSet($queueName, $value)

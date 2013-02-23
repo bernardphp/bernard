@@ -48,8 +48,9 @@ Any message sent to Raekke must be an instance of `Raekke\Message\MessageInterfa
 `getName` and `getQueue` method. `getName` is used when working on messages and identifies
 the worker service that should work on it. More on this later on.
 
-A message is given to a manager that handles queues or directly to a queue object. The easiest
-is to give it to the manager as the queue name is taken from the message object.
+A message is given to a publisher that send the message to the right queue. It is also possible
+ot get the queue directly from the queue manager and push the message there. The easiest is to
+give it to the publisher as the queue name is taken from the message object.
 
 To make it easier to send messages and not require every type to be implemented in a seperate
 class a `Raekke\Message\DefaultMessage` is provided. It can hold any number of proberties and only
@@ -65,6 +66,7 @@ for being able to serialize and deserialize them.
 
 use Raekke\Message\DefaultMessage;
 use Raekke\QueueManager;
+use Raekke\MessagePublisher;
 use Raekke\Serializer\Serializer;
 
 // .. create serializer instance where src/Raekke/Resources/serializer is registered as
@@ -73,12 +75,13 @@ $serializer = new Serializer($jmsSerializer);
 
 // .. create connection
 $manager = new QueueManager($connection, $serializer);
+$publisher = new MessagePublisher($manager);
 
 $message = new DefaultMessage("SendNewsletter", array(
     'newsletterId' => 12,
 ));
 
-$manager->push($message);
+$publisher->send($message);
 
 // or get the queue and specify the queue name freely
 $queue = $manager->get('custom-queue');

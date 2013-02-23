@@ -14,25 +14,6 @@ class QueueManagerTest extends \PHPUnit_Framework_TestCase
         $this->manager = new QueueManager($this->connection, $this->getMock('Raekke\Serializer\SerializerInterface'));
     }
 
-    public function testItPushesMessages()
-    {
-        $message = $this->getMock('Raekke\Message\MessageInterface');
-        $message->expects($this->once())->method('getQueue')->will($this->returnValue('queue'));
-
-        $queue = $this->getMockBuilder('Raekke\Queue\Queue')->disableOriginalConstructor()
-            ->getMock();
-
-        $queue->expects($this->once())->method('push')->with($this->equalTo($message));
-
-        $manager = $this->getMockBuilder('Raekke\QueueManager')->disableOriginalConstructor()
-            ->setMethods(array('get'))->getMock();
-
-        $manager->expects($this->once())->method('get')->with($this->equalTo('queue'))
-            ->will($this->returnValue($queue));
-
-        $manager->push($message);
-    }
-
     public function testItSavesQueueObjects()
     {
         $this->connection->expects($this->once())->method('insert')
@@ -96,7 +77,6 @@ class QueueManagerTest extends \PHPUnit_Framework_TestCase
     public function testItsCountable()
     {
         $this->assertInstanceOf('Countable', $this->manager);
-        $this->assertInstanceOf('IteratorAggregate', $this->manager);
 
         $this->connection->expects($this->once())->method('count')->with($this->equalTo('queues'))
             ->will($this->returnValue(4));
@@ -106,15 +86,12 @@ class QueueManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testItGetsAllQueues()
     {
-        $this->connection->expects($this->exactly(2))->method('all')->with($this->equalTo('queues'))
+        $this->connection->expects($this->once())->method('all')->with($this->equalTo('queues'))
             ->will($this->returnValue(array('queue1', 'queue2')));
 
         $all = $this->manager->all();
 
         $this->assertInstanceOf('Raekke\Util\ArrayCollection', $all);
         $this->assertCount(2, $all);
-
-        $this->assertInstanceOf('IteratorAggregate', $this->manager);
-        $this->assertEquals($all->getIterator(), $this->manager->getIterator());
     }
 }
