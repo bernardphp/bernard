@@ -65,13 +65,16 @@ class Connection
 
     public function info()
     {
-        $info = array_change_key_case($this->client->info());
+        // Temporarily change the command use to get info as earlier and newer redis
+        // versions breaks it into sections.
+        $commandClass = $this->client->getProfile()->getCommandClass('info');
+        $this->client->getProfile()->defineCommand('info', 'Predis\Command\ServerInfo');
 
-        if (!isset($info['server'])) {
-            return $info;
-        }
+        $info = $this->client->info();
 
-        return new \RecursiveIteratorIterator(new \RecursiveArrayIterator($info));
+        $this->client->getProfile()->defineCommand('info', $commandClass);
+
+        return $info;
     }
 
     public function getClient()
