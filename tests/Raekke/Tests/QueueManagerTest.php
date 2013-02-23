@@ -76,12 +76,10 @@ class QueueManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testItsCountable()
     {
-        $this->assertInstanceOf('Countable', $this->manager);
+        $this->connection->expects($this->once())->method('all')->with($this->equalTo('queues'))
+            ->will($this->returnValue(array('failed', 'something', 'queue-ness')));
 
-        $this->connection->expects($this->once())->method('count')->with($this->equalTo('queues'))
-            ->will($this->returnValue(4));
-
-        $this->assertCount(4, $this->manager);
+        $this->assertCount(3, $this->manager);
     }
 
     public function testItGetsAllQueues()

@@ -58,7 +58,7 @@ class QueueManager implements \ArrayAccess, \Countable
 
     public function count()
     {
-        return $this->connection->count('queues');
+        return count($this->connection->all('queues'));
     }
 
     public function remove($queueName)
