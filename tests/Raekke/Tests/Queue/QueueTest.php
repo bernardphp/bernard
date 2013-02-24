@@ -19,6 +19,12 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('queue:send-newsletter', $queue->getKey());
     }
 
+    public function testNameIsAccessible()
+    {
+        $queue = new Queue('send-newsletter', $this->connection, $this->serializer);
+        $this->assertEquals('send-newsletter', $queue->getName());
+    }
+
     /**
      * @dataProvider dataClosedMethods
      */
