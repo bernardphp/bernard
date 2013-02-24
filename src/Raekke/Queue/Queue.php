@@ -6,6 +6,7 @@ use Raekke\Connection;
 use Raekke\Message\MessageWrapper;
 use Raekke\Serializer\SerializerInterface;
 use Raekke\Util\ArrayCollection;
+use Raekke\Exception\QueueClosedException;
 
 /**
  * @package Raekke
@@ -26,10 +27,10 @@ class Queue implements \Countable
         $this->connection = $connection;
         $this->serializer = $serializer;
 
-        $this->attach();
+        $this->register();
     }
 
-    public function attach()
+    public function register()
     {
         $this->errorIfClosed();
 
@@ -52,8 +53,6 @@ class Queue implements \Countable
 
     public function close()
     {
-        $this->errorIfClosed();
-
         $this->closed = true;
 
         $this->connection->remove('queues', $this->name);
@@ -94,7 +93,7 @@ class Queue implements \Countable
     protected function errorIfClosed()
     {
         if ($this->closed) {
-            throw new \LogicException('The Queue is closed.');
+            throw new QueueClosedException($this->name);
         }
     }
 }
