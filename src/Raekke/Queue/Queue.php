@@ -2,11 +2,10 @@
 
 namespace Raekke\Queue;
 
-use Raekke\Message\MessageInterface;
+use Raekke\Connection;
 use Raekke\Message\MessageWrapper;
-use Raekke\Serializer\Serializer;
+use Raekke\Serializer\SerializerInterface;
 use Raekke\Util\ArrayCollection;
-use Raekke\QueueManager;
 
 /**
  * @package Raekke
@@ -14,39 +13,41 @@ use Raekke\QueueManager;
 class Queue implements \Countable
 {
     protected $key;
-    protected $manager;
-    protected $closed;
+    protected $connection;
+    protected $serializer;
+    protected $closed = false;
 
-    public function __construct($name, QueueManager $manager)
-    {
-        $this->closed     = false;
-        $this->key        = 'queue:' . $name;
+    public function __construct(
+        $name,
+        Connection $connection,
+        SerializerInterface $serializer
+    ) {
         $this->name       = $name;
-        $this->manager    = $manager;
+        $this->connection = $connection;
+        $this->serializer = $serializer;
+
+        $this->attach();
     }
 
     public function attach()
     {
         $this->errorIfClosed();
 
-        $this->manager->getConnection()->insert('queues', $this->name);
+        $this->connection->insert('queues', $this->name);
     }
 
     public function count()
     {
         $this->errorIfClosed();
 
-        return $this->manager->getConnection()->count($this->key);
+        return $this->connection->count($this->key);
     }
 
-    public function push(MessageInterface $message)
+    public function push(MessageWrapper $message)
     {
         $this->errorIfClosed();
 
-        $wrapper = new MessageWrapper($message);
-
-        $payload = $this->manager->getSerializer()->serialize($wrapper);
-        $this->manager->getConnection()->push($this->key, $payload);
+        $this->connection->push($this->getKey(), $this->serializer->serialize($wrapper));
     }
 
     public function close()
@@ -55,8 +56,8 @@ class Queue implements \Countable
 
         $this->closed = true;
 
-        $this->manager->getConnection()->remove('queues', $this->name);
-        $this->manager->getConnection()->delete($this->key);
+        $this->connection->remove('queues', $this->name);
+        $this->connection->delete($this->getKey());
 
         return $this->closed;
     }
@@ -65,10 +66,8 @@ class Queue implements \Countable
     {
         $this->errorIfClosed();
 
-        $messages = $this->manager->getConnection()->slice($this->key, $index, $length);
+        $messages = $this->connection->slice($this->key, $index, $length);
         $messages = new ArrayCollection($messages);
-
-        $serializer = $this->manager->getSerializer();
 
         return $messages->map(function ($payload) use ($serializer) {
             return $serializer->deserialize($payload, false);
@@ -77,7 +76,7 @@ class Queue implements \Countable
 
     public function pop($interval = 5)
     {
-        if (null === $message = $this->manager->getConnection()->pop($this->key, $interval)) {
+        if (null === $message = $this->connection->pop($this->getKey(), $interval)) {
             return null;
         }
 
@@ -96,12 +95,7 @@ class Queue implements \Countable
 
     public function getKey()
     {
-        return $this->key;
-    }
-
-    public function getManager()
-    {
-        return $this->manager;
+        return 'queues:' . $this->name;
     }
 
     protected function errorIfClosed()

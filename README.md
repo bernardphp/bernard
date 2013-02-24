@@ -65,7 +65,7 @@ for being able to serialize and deserialize them.
 <?php
 
 use Raekke\Message\DefaultMessage;
-use Raekke\QueueManager;
+use Raekke\QueueFactory;
 use Raekke\MessagePublisher;
 use Raekke\Serializer\Serializer;
 
@@ -74,7 +74,7 @@ use Raekke\Serializer\Serializer;
 $serializer = new Serializer($jmsSerializer);
 
 // .. create connection
-$manager = new QueueManager($connection, $serializer);
+$manager = new QueueFactory($connection, $serializer);
 $publisher = new MessagePublisher($manager);
 
 $message = new DefaultMessage("SendNewsletter", array(

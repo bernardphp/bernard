@@ -2,8 +2,9 @@
 
 namespace Raekke;
 
-use Raekke\QueueManager;
+use Raekke\QueueFactory;
 use Raekke\Message\MessageInterface;
+use Raekke\Message\MessageWrapper;
 
 /**
  * @package Raekke
@@ -13,9 +14,9 @@ class MessagePublisher
     protected $queues;
 
     /**
-     * @param QueueManager $queues
+     * @param QueueFactory $queues
      */
-    public function __construct(QueueManager $queues)
+    public function __construct(QueueFactory $queues)
     {
         $this->queues = $queues;
     }
@@ -25,6 +26,7 @@ class MessagePublisher
      */
     public function send(MessageInterface $message)
     {
-        $this->queues->get($message->getQueue())->push($message);
+        $message = new MessageWrapper($message);
+        $this->queues->create($message->getMessage()->getQueue())->push($message);
     }
 }

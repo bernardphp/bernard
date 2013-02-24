@@ -8,11 +8,12 @@ use Raekke\Serializer\SerializerInterface;
 use Raekke\Util\ArrayCollection;
 
 /**
- * Contains a collection of queues.
+ * Knows how to create queues and retrieve them from the used connection.
+ * Every queue it creates is saved locally.
  *
  * @package Raekke
  */
-class QueueManager implements \ArrayAccess, \Countable
+class QueueFactory implements \Countable
 {
     protected $queues;
     protected $connection;
@@ -27,22 +28,22 @@ class QueueManager implements \ArrayAccess, \Countable
         $this->serializer = $serializer;
     }
 
-    public function get($queueName)
+    public function create($queueName)
     {
         if ($this->queues->containsKey($queueName)) {
             return $this->queues->get($queueName);
         }
 
-        $this->queues->set($queueName, $queue = $this->createQueueObject($queueName));
+        $queue = new Queue($queueName, $this->connection, $this->serializer);
+        $this->queues->set($queueName, $queue);
 
         return $queue;
     }
 
     public function all()
     {
-        foreach ($this->connection->all('queues') as $queue) {
-            $this->get($queue);
-        }
+        // Calls $this->create on every name returned from the connection
+        array_map(array($this, 'create'), $this->connection->all('queues'));
 
         return $this->queues;
     }
@@ -67,31 +68,11 @@ class QueueManager implements \ArrayAccess, \Countable
             return false;
         }
 
-        $this->get($queueName)->close();
+        $this->create($queueName)->close();
 
         $this->queues->remove($queueName);
 
         return true;
-    }
-
-    public function offsetSet($queueName, $value)
-    {
-        throw new \BadMethodCallException('"offsetSet" is not supported.');
-    }
-
-    public function offsetGet($queueName)
-    {
-        return $this->get($queueName);
-    }
-
-    public function offsetExists($queueName)
-    {
-        return $this->has($queueName);
-    }
-
-    public function offsetUnset($queueName)
-    {
-        return $this->remove($queueName);
     }
 
     public function getConnection()
@@ -102,13 +83,5 @@ class QueueManager implements \ArrayAccess, \Countable
     public function getSerializer()
     {
         return $this->serializer;
-    }
-
-    protected function createQueueObject($queueName)
-    {
-        $queue = new Queue($queueName, $this);
-        $queue->attach();
-
-        return $queue;
     }
 }

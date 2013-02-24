@@ -3,6 +3,7 @@
 namespace Raekke\Tests;
 
 use Raekke\MessagePublisher;
+use Raekke\Message\MessageWrapper;
 
 class MessagePublisherTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,11 +14,11 @@ class MessagePublisherTest extends \PHPUnit_Framework_TestCase
 
         $queue = $this->getMockBuilder('Raekke\Queue\Queue')->disableOriginalConstructor()
             ->getMock();
-        $queue->expects($this->once())->method('push')->with($this->equalTo($message));
+        $queue->expects($this->once())->method('push')->with($this->equalTo(new MessageWrapper($message)));
 
-        $manager = $this->getMockBuilder('Raekke\QueueManager')->disableOriginalConstructor()
+        $manager = $this->getMockBuilder('Raekke\QueueFactory')->disableOriginalConstructor()
             ->getMock();
-        $manager->expects($this->once())->method('get')->with($this->equalTo('my-queue'))
+        $manager->expects($this->once())->method('create')->with($this->equalTo('my-queue'))
             ->will($this->returnValue($queue));
 
         $publisher = new MessagePublisher($manager);
