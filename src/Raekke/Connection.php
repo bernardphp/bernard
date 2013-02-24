@@ -31,6 +31,11 @@ class Connection
         return $this->client->lrange($set, $index, $index + $limit - 1);
     }
 
+    public function get($set)
+    {
+        return $this->client->get($set);
+    }
+
     public function pop($set, $interval = 5)
     {
         list(, $message) = $this->client->blpop($set, $interval);
