@@ -40,7 +40,7 @@ class Queue implements \Countable
     {
         $this->errorIfClosed();
 
-        return $this->connection->count($this->key);
+        return $this->connection->count($this->getKey());
     }
 
     public function enqueue(MessageWrapper $message)
@@ -66,7 +66,7 @@ class Queue implements \Countable
     {
         $this->errorIfClosed();
 
-        $messages = $this->connection->slice($this->key, $index, $length);
+        $messages = $this->connection->slice($this->getKey(), $index, $length);
         $messages = new ArrayCollection($messages);
 
         $serializer = $this->serializer;
@@ -88,7 +88,7 @@ class Queue implements \Countable
 
     public function getKey()
     {
-        return 'queues:' . $this->name;
+        return 'queue:' . $this->name;
     }
 
     protected function errorIfClosed()
