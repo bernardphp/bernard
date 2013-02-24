@@ -24,9 +24,9 @@ class MessagePublisher
     /**
      * @param MessageInterface $message
      */
-    public function send(MessageInterface $message)
+    public function publish(MessageInterface $message)
     {
         $message = new MessageWrapper($message);
-        $this->queues->create($message->getMessage()->getQueue())->push($message);
+        $this->queues->create($message->getMessage()->getQueue())->enqueue($message);
     }
 }

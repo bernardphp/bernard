@@ -43,7 +43,7 @@ class Queue implements \Countable
         return $this->connection->count($this->key);
     }
 
-    public function push(MessageWrapper $message)
+    public function enqueue(MessageWrapper $message)
     {
         $this->errorIfClosed();
 
@@ -62,7 +62,7 @@ class Queue implements \Countable
         return $this->closed;
     }
 
-    public function peek($index, $length)
+    public function slice($index, $length)
     {
         $this->errorIfClosed();
 
@@ -72,15 +72,6 @@ class Queue implements \Countable
         return $messages->map(function ($payload) use ($serializer) {
             return $serializer->deserialize($payload, false);
         });
-    }
-
-    public function pop($interval = 5)
-    {
-        if (null === $message = $this->connection->pop($this->getKey(), $interval)) {
-            return null;
-        }
-
-        return $this->manager->getSerializer()->deserialize($message);
     }
 
     public function isClosed()

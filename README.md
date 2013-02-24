@@ -64,9 +64,9 @@ for being able to serialize and deserialize them.
 ``` php
 <?php
 
+use Raekke\MessagePublisher;
 use Raekke\Message\DefaultMessage;
 use Raekke\QueueFactory;
-use Raekke\MessagePublisher;
 use Raekke\Serializer\Serializer;
 
 // .. create serializer instance where src/Raekke/Resources/serializer is registered as
@@ -74,18 +74,14 @@ use Raekke\Serializer\Serializer;
 $serializer = new Serializer($jmsSerializer);
 
 // .. create connection
-$manager = new QueueFactory($connection, $serializer);
-$publisher = new MessagePublisher($manager);
+$factory = new QueueFactory($connection, $serializer);
+$publisher = new MessagePublisher($factory);
 
 $message = new DefaultMessage("SendNewsletter", array(
     'newsletterId' => 12,
 ));
 
-$publisher->send($message);
-
-// or get the queue and specify the queue name freely
-$queue = $manager->get('custom-queue');
-$queue->push($message);
+$publisher->publish($message);
 ```
 
 ### Working on Messages

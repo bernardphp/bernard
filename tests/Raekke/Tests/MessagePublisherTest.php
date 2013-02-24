@@ -14,7 +14,7 @@ class MessagePublisherTest extends \PHPUnit_Framework_TestCase
 
         $queue = $this->getMockBuilder('Raekke\Queue\Queue')->disableOriginalConstructor()
             ->getMock();
-        $queue->expects($this->once())->method('push')->with($this->equalTo(new MessageWrapper($message)));
+        $queue->expects($this->once())->method('enqueue')->with($this->equalTo(new MessageWrapper($message)));
 
         $manager = $this->getMockBuilder('Raekke\QueueFactory')->disableOriginalConstructor()
             ->getMock();
@@ -22,6 +22,6 @@ class MessagePublisherTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($queue));
 
         $publisher = new MessagePublisher($manager);
-        $publisher->send($message);
+        $publisher->publish($message);
     }
 }
