@@ -74,14 +74,4 @@ class QueueFactory implements \Countable
 
         return true;
     }
-
-    public function getConnection()
-    {
-        return $this->connection;
-    }
-
-    public function getSerializer()
-    {
-        return $this->serializer;
-    }
 }
