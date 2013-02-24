@@ -69,6 +69,8 @@ class Queue implements \Countable
         $messages = $this->connection->slice($this->key, $index, $length);
         $messages = new ArrayCollection($messages);
 
+        $serializer = $this->serializer;
+
         return $messages->map(function ($payload) use ($serializer) {
             return $serializer->deserialize($payload, false);
         });
