@@ -42,16 +42,6 @@ class QueueFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Raekke\Queue\Queue', $this->factory->create('queue'));
     }
 
-    public function testItHaveASerializer()
-    {
-        $this->assertInstanceOf('Raekke\Serializer\SerializerInterface', $this->factory->getSerializer());
-
-        $manager = new QueueFactory($this->connection,
-            $serializer = $this->getMock('Raekke\Serializer\SerializerInterface'));
-
-        $this->assertSame($serializer, $manager->getSerializer());
-    }
-
     public function testItsCountable()
     {
         $this->connection->expects($this->once())->method('all')->with($this->equalTo('queues'))
