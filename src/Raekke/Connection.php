@@ -48,7 +48,7 @@ class Connection
         $this->client->rpush($set, $member);
     }
 
-    public function has($set, $member)
+    public function contains($set, $member)
     {
         return $this->client->sismember($set, $member);
     }

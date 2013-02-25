@@ -28,7 +28,7 @@ class QueueFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $queue = $this->factory->create('queue');
 
-        $this->assertTrue($this->factory->has('queue'));
+        $this->assertTrue($this->factory->exists('queue'));
         $this->assertTrue($this->factory->remove('queue'));
         $this->assertTrue($queue->isClosed());
 

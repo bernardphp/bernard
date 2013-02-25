@@ -84,8 +84,8 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $this->predis->expects($this->at(1))->method('sismember')->with($this->equalTo('queues'), $this->equalTo('queue:name-2'))
             ->will($this->returnValue(false));
 
-        $this->assertTrue($this->connection->has('queues', 'queue:name'));
-        $this->assertFalse($this->connection->has('queues', 'queue:name-2'));
+        $this->assertTrue($this->connection->contains('queues', 'queue:name'));
+        $this->assertFalse($this->connection->contains('queues', 'queue:name-2'));
     }
 
     public function testItPushesMember()

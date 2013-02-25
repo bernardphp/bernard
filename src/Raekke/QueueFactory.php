@@ -48,13 +48,13 @@ class QueueFactory implements \Countable
         return $this->queues;
     }
 
-    public function has($queueName)
+    public function exists($queueName)
     {
         if ($this->queues->containsKey($queueName)) {
             return true;
         }
 
-        return (boolean) $this->connection->has('queues', $queueName) ? true : false;
+        return (boolean) $this->connection->contains('queues', $queueName);
     }
 
     public function count()
@@ -64,7 +64,7 @@ class QueueFactory implements \Countable
 
     public function remove($queueName)
     {
-        if (!$this->has($queueName)) {
+        if (!$this->exists($queueName)) {
             return false;
         }
 
