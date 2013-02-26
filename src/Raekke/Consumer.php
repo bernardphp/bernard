@@ -4,7 +4,6 @@ namespace Raekke;
 
 use Raekke\Queue\Queue;
 use Raekke\Consumer\Job;
-use Raekke\Message\MessageInterface;
 
 /**
  * @package Consumer
@@ -42,6 +41,10 @@ class Consumer implements ConsumerInterface
                 $job = new Job($service, $message);
                 $job->invoke();
             } catch (\Exception $e) {
+                if (!$this->failed) {
+                    continue;
+                }
+
                 $this->failed->enqueue($wrapper);
             }
         }
