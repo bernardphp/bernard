@@ -53,9 +53,11 @@ class Queue implements \Countable
 
     public function dequeue()
     {
-        $message = $this->connection->pop($this->getKey());
+        if ($message = $this->connection->pop($this->getKey())) {
+            return $this->serializer->deserializeWrapper($message);
+        }
 
-        return $this->serializer->deserializeWrapper($message);
+        return null;
     }
 
     public function close()
