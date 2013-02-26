@@ -11,10 +11,11 @@ use Raekke\Consumer\Job;
 class Consumer implements ConsumerInterface
 {
     protected $failed;
+    protected $services;
 
     /**
      * @param ServiceResolverInterface $services
-     * @param Queue $failed Failed messages will be enqueued on this.
+     * @param Queue                    $failed   Failed messages will be enqueued on this.
      */
     public function __construct(
         ServiceResolverInterface $services,

@@ -10,7 +10,7 @@ use Raekke\Message\MessageWrapper;
 interface SerializerInterface
 {
     /**
-     * @param MessageWrapper $message
+     * @param  MessageWrapper $message
      * @return string
      */
     public function serializeWrapper(MessageWrapper $message);

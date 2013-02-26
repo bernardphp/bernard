@@ -13,7 +13,7 @@ use Raekke\Exception\QueueClosedException;
  */
 class Queue implements \Countable
 {
-    protected $key;
+    protected $name;
     protected $connection;
     protected $serializer;
     protected $closed = false;
@@ -44,7 +44,7 @@ class Queue implements \Countable
         return $this->connection->count($this->getKey());
     }
 
-    public function enqueue(MessageWrapper $message)
+    public function enqueue(MessageWrapper $wrapper)
     {
         $this->errorIfClosed();
 

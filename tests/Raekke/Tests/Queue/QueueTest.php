@@ -3,7 +3,6 @@
 namespace Raekke\Tests\Queue;
 
 use Raekke\Message\MessageWrapper;
-use Raekke\Message\DefaultMessage;
 use Raekke\Queue\Queue;
 
 class QueueTest extends \PHPUnit_Framework_TestCase

@@ -11,7 +11,7 @@ interface ServiceResolverInterface
 {
     /**
      * @param string $name
-     * @param mixed $service
+     * @param mixed  $service
      */
     public function register($name, $service);
 

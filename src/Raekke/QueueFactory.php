@@ -2,7 +2,6 @@
 
 namespace Raekke;
 
-use Raekke\Message\MessageInterface;
 use Raekke\Queue\Queue;
 use Raekke\Serializer\SerializerInterface;
 use Raekke\Util\ArrayCollection;
