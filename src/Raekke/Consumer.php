@@ -51,6 +51,13 @@ class Consumer implements ConsumerInterface
                 $job = new Job($service, $message);
                 $job->invoke();
             } catch (\Exception $e) {
+                if ($wrapper->getRetries() < 5) {
+                    $wrapper->incrementRetries();
+                    $queue->enqueue($wrapper);
+
+                    continue;
+                }
+
                 if (!$this->failed) {
                     continue;
                 }
