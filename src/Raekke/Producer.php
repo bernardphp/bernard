@@ -8,7 +8,7 @@ use Raekke\Message\MessageWrapper;
 /**
  * @package Raekke
  */
-class Producer
+class Producer implements ProducerInterface
 {
     protected $factory;
 
@@ -21,10 +21,7 @@ class Producer
     }
 
     /**
-     * Wraps the given message with MessageWrapper and sends
-     * it to the queue by its `getQueue` method.
-     *
-     * @param MessageInterface $message
+     * {@inheritDoc}
      */
     public function produce(MessageInterface $message)
     {
