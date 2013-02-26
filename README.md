@@ -116,8 +116,9 @@ use Raekke\Consumer;
 $serviceResolver = new ServiceResolver;
 $serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
 
-// Create a Consumer and start the loop.
-$consumer = new Consumer($serviceResolver);
+// Create a Consumer and start the loop. The second argument is optional and
+// is the queue failed messages should be added to.
+$consumer = new Consumer($serviceResolver, $queueFactory->create('failed'));
 $consumer->consume($queueFactory->create('send-newsletter'));
 ```
 
