@@ -2,11 +2,19 @@
 
 namespace Raekke\Tests;
 
-use Raekke\MessagePublisher;
+use Raekke\Producer;
 use Raekke\Message\MessageWrapper;
 
 class MessagePublisherTest extends \PHPUnit_Framework_TestCase
 {
+    public function testItImplementsProducerInterface()
+    {
+        $factory = $this->getMockBuilder('Raekke\QueueFactory')->disableOriginalConstructor()
+            ->getMock();
+
+        $this->assertInstanceOf('Raekke\ProducerInterface', new Producer($factory));
+    }
+
     public function testItSendsToTestsToQueue()
     {
         $message = $this->getMock('Raekke\Message\MessageInterface');
@@ -16,12 +24,12 @@ class MessagePublisherTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $queue->expects($this->once())->method('enqueue')->with($this->equalTo(new MessageWrapper($message)));
 
-        $manager = $this->getMockBuilder('Raekke\QueueFactory')->disableOriginalConstructor()
+        $factory = $this->getMockBuilder('Raekke\QueueFactory')->disableOriginalConstructor()
             ->getMock();
-        $manager->expects($this->once())->method('create')->with($this->equalTo('my-queue'))
+        $factory->expects($this->once())->method('create')->with($this->equalTo('my-queue'))
             ->will($this->returnValue($queue));
 
-        $publisher = new MessagePublisher($manager);
-        $publisher->publish($message);
+        $publisher = new Producer($factory);
+        $publisher->produce($message);
     }
 }

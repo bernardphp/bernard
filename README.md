@@ -6,6 +6,16 @@ allows for easy creation of workers and creating distributed systems.
 
 [![Build Status](https://travis-ci.org/henrikbjorn/Raekke.png?branch=master)](https://travis-ci.org/henrikbjorn/Raekke)
 
+Todo
+----
+
+* JMS Serializer integration does not support having custom message classes.
+* The `Consumer` class does not understand signals. This mean that a kill signal
+is necesarry for it to die.
+* The `Consumer` class does not fork its jobs.
+* Consumers does not report what they are working on, or that they have begun
+working.
+
 Getting Started
 ---------------
 
@@ -43,16 +53,16 @@ $predis = new Client('tcp://localhost', array(
 $connection = new Connection($predis);
 ```
 
-### Sending Messages
+### Producing Messages
 
 Any message sent to Raekke must be an instance of `Raekke\Message\MessageInterface`
 which have a `getName` and `getQueue` method. `getName` is used when working on
 messages and identifies the worker service that should work on it.
 
-A message is given to a publisher that send the message to the right queue.
+A message is given to a producer that send the message to the right queue.
 It is also possible to get the queue directly from the queue factory and push
 the message there. But remember to wrap the message in a `MessageWrapper` object.
-The easiest is to give it to the publisher as the queue name
+The easiest is to give it to the producer as the queue name
 is taken from the message object.
 
 To make it easier to send messages and not require every type to be implemented
@@ -68,7 +78,7 @@ used it is needed to add metadata for being able to serialize and deserialize th
 ``` php
 <?php
 
-use Raekke\MessagePublisher;
+use Raekke\Producer;
 use Raekke\Message\DefaultMessage;
 use Raekke\Message\MessageWrapper;
 use Raekke\QueueFactory;
@@ -80,73 +90,58 @@ $serializer = new Serializer($jmsSerializer);
 
 // .. create connection
 $factory = new QueueFactory($connection, $serializer);
-$publisher = new MessagePublisher($factory);
+$producer = new Producer($factory);
 
 $message = new DefaultMessage("SendNewsletter", array(
     'newsletterId' => 12,
 ));
 
-$publisher->publish($message);
+$producer->publish($message);
 
 // or give it to a queue directly
 $factory->get('my-queue')->enqueue(new MessageWrapper($message));
 ```
 
-### Working on Messages
+### Consuming Messages
 
 A single message represents a job that needs to be performed. And as described
-earlier a message's name is used to determaine what worker should have that
-message. For that a worker manager is needed.
+earlier a message's name is used to determaine what service object should have
+that message.
+
+A service object can be any object that have a method corresponding to the message
+name prefixed with on. So `new DefaultMessage('SendNewsletter')` will trigger a
+call to `$serviceObject->onSendNewsletter`. For the system to know what service
+object should handle what messages it is need to register them first.
 
 ``` php
 <?php
 
-use Raekke\WorkerManager;
+use Raekke\ServiceResolver;
+use Raekke\Consumer;
 
-// create a $queueManager instance.
+// .. create connection and a queuefactory
+// NewsletterMessageHandler is a pseudo service object that responds to
+// onSendNewsletter.
 
-$workerManager = new WorkerManager($queueManager);
+$serviceResolver = new ServiceResolver;
+$serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
+
+// Create a Consumer and start the loop. The second argument is optional and
+// is the queue failed messages should be added to.
+$consumer = new Consumer($serviceResolver, $queueFactory->create('failed'));
+$consumer->consume($queueFactory->create('send-newsletter'));
 ```
 
-The worker manager also needs to know what workers it can send messages to.
-A worker is a server class. If it is an object and the worker is registered to
-`SendNewsletter` the manager will call the method `$workerService->onSendNewsletter`.
-This allows for a single service class to handle more than one message.
+Raekke comes with a `ConsumeCommand` which can be used with Symfony Console 
+component.
 
 ``` php
 <?php
 
-class NewsletterWorker
-{
-    public function onSendNewsletter(DefaultMessage $message)
-    {
-        // Do some work on DefaultMessage here.
-    }
-}
+use Raekke\Command\ConsumeCommand;
 
-$workerManager->register('SendNewsletter', new NewsletterWorker);
-
-// or register multiple services at once.
-$workerManager->registerServices(array(
-    'SendNewsletter' => new NewsletterWorker(),
-));
-```
-
-The worker manager would normally be abstracted out and populated by a container
-of some sort like the [Symfony Dependency Injection](http://symfony.com/doc/current/components/dependency_injection).
-
-Anyone who have created a deamon in php and tried handling signal's they know
-it is hard. Therefor Raekke comes with a worker command for [Symfony Console](http://symfony.com/doc/current/components/console)
-component. The command should be added to your console application.
-
-``` php
-<?php
-
-use Raekke\Command\WorkerCommand;
-
-// .. create an instance of Symfony\Console\Application as $app
-// .. create a Raekke\WorkerManager as $workerManager
-$app->add(new WorkerCommand($workerManager));
+// create $console application
+$console->add(new ConsumeCommand($services, $queueManager));
 ```
 
 It can then be used as any other console command. The argument given should be
@@ -154,12 +149,8 @@ the queue that your messages is on. If we use the earlier example with sending
 newsletter it would look like this.
 
 ``` bash
-$ /path/to/console raekke:worker --interval=10 'send-newsletter'
+$ /path/to/console raekke:consume 'send-newsletter'
 ```
-
-`--interval` is the time it will wait for a single message to be returned from
-the backend before assuming null and it being empty it defaults to 5 and is
-optional.
 
 Integration with Frameworks
 ---------------------------
