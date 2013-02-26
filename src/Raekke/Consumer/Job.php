@@ -26,7 +26,7 @@ class Job
      */
     public function getMethodName()
     {
-        return 'on' . ucfirst($message->getName());
+        return 'on' . ucfirst($this->message->getName());
     }
 
     /**
