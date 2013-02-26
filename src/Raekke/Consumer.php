@@ -14,11 +14,15 @@ class Consumer implements ConsumerInterface
     protected $failed;
 
     /**
+     * @param ServiceResolverInterface $services
      * @param Queue $failed Failed messages will be enqueued on this.
      */
-    public function __construct(Queue $failed = null)
-    {
+    public function __construct(
+        ServiceResolverInterface $services,
+        Queue $failed = null
+    ) {
         $this->failed = $failed;
+        $this->services = $services;
     }
 
     /**
@@ -32,19 +36,14 @@ class Consumer implements ConsumerInterface
             }
 
             try {
-                $job = new Job(new ServiceObject, $wrapper->getMessage());
+                $message = $wrapper->getMessage();
+                $service = $this->services->resolve($message);
+
+                $job = new Job($service, $message);
                 $job->invoke();
             } catch (\Exception $e) {
                 $this->failed->enqueue($wrapper);
             }
         }
-    }
-}
-
-class ServiceObject
-{
-    public function onSendNewsletter(MessageInterface $message)
-    {
-        sleep(10);
     }
 }
