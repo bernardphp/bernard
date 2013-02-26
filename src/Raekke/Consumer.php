@@ -41,7 +41,6 @@ class Consumer implements ConsumerInterface
                 $failed = false;
 
                 if ($e instanceof \ReflectionException) {
-                    $this->failed->enqueue($wrapper);
                     $failed = true;
                 }
 
@@ -49,11 +48,14 @@ class Consumer implements ConsumerInterface
                     $failed = true;
                 }
 
-                if (!$failed) {
-                    // Increment retries and requeue
-                    $wrapper->incrementRetries();
-                    $queue->enqueue($wrapper);
+                if ($failed) {
+                    $this->failed->enqueue($wrapper);
+                    continue;
                 }
+
+                // Increment retries and requeue
+                $wrapper->incrementRetries();
+                $queue->enqueue($wrapper);
             }
         }
     }
