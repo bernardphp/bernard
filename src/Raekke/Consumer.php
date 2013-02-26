@@ -16,7 +16,7 @@ class Consumer implements ConsumerInterface
     /**
      * @param Queue $failed Failed messages will be enqueued on this.
      */
-    public function __construct(Queue $failed)
+    public function __construct(Queue $failed = null)
     {
         $this->failed = $failed;
     }
@@ -27,15 +27,11 @@ class Consumer implements ConsumerInterface
     public function consume(Queue $queue)
     {
         while (true) {
-            if (is_null($wrapper = $queue)) {
-                usleep(100);
+            if (null === $wrapper = $queue) {
                 continue;
             }
 
             try {
-                // Try and invoke the job, if it exists with \ReflectionException the error
-                // is most likely that the method cannot be called on the service object.
-                // It should then instantly be marked as failed.
                 $job = new Job(new ServiceObject, $wrapper->getMessage());
                 $job->invoke();
             } catch (\Exception $e) {
@@ -50,7 +46,10 @@ class Consumer implements ConsumerInterface
                 }
 
                 if ($failed) {
-                    $this->failed->enqueue($wrapper);
+                    if ($this->failed) {
+                        $this->failed->enqueue($wrapper);
+                    }
+
                     continue;
                 }
 
