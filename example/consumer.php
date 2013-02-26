@@ -10,4 +10,6 @@ $services = new ServiceResolver;
 $services->register('EchoTime', new EchoTimeService);
 
 $consumer = new Consumer($services, $queues->create('failed'));
-$consumer->consume($queues->create('echo-time'));
+$consumer->consume($queues->create('echo-time'), array(
+    'max_retries' => 5,
+));
