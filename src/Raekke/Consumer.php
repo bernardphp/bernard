@@ -13,6 +13,9 @@ class Consumer implements ConsumerInterface
     protected $failed;
     protected $services;
     protected $shutdown = false;
+    protected $defaults = array(
+        'max_retries' => 5,
+    );
 
     /**
      * @param ServiceResolverInterface $services
@@ -29,8 +32,10 @@ class Consumer implements ConsumerInterface
     /**
      * {@inheritDoc}
      */
-    public function consume(Queue $queue)
+    public function consume(Queue $queue, array $options = array())
     {
+        $options = array_merge($this->defaults, array_filter($options));
+
         // register with monitoring object class thing
 
         $this->registerSignalHandlers();
@@ -51,7 +56,7 @@ class Consumer implements ConsumerInterface
                 $job = new Job($service, $message);
                 $job->invoke();
             } catch (\Exception $e) {
-                if ($wrapper->getRetries() < 5) {
+                if ($wrapper->getRetries() < $options['max_retries']) {
                     $wrapper->incrementRetries();
                     $queue->enqueue($wrapper);
 

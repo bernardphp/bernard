@@ -14,6 +14,7 @@ interface ConsumerInterface
 {
     /**
      * @param Queue $queue
+     * @param array $options
      */
-    public function consume(Queue $queue);
+    public function consume(Queue $queue, array $options = array());
 }
