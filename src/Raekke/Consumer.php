@@ -12,13 +12,16 @@ use Raekke\Message\MessageInterface;
 class Consumer implements ConsumerInterface
 {
     protected $failed;
+    protected $maxRetries;
 
     /**
      * @param Queue $failed Failed messages will be enqueued on this.
+     * $param integer $maxRetries Limit of times a single message will be retried.
      */
-    public function __construct(Queue $failed = null)
+    public function __construct(Queue $failed = null, $maxRetries = 1)
     {
         $this->failed = $failed;
+        $this->maxRetries = $maxRetries;
     }
 
     /**
@@ -41,7 +44,7 @@ class Consumer implements ConsumerInterface
                     $failed = true;
                 }
 
-                if ($wrapper->getRetries() < 5) {
+                if ($wrapper->getRetries() < $this->maxRetries) {
                     $failed = true;
                 }
 
