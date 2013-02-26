@@ -2,12 +2,14 @@
 
 namespace Raekke;
 
+use Raekke\Message\MessageInterface;
+
 /**
  * Responsible for distributing a message to the correct queue.
  *
  * @package Raekke
  */
-interface Producer
+interface ProducerInterface
 {
     /**
      * @param MessageInterface $message

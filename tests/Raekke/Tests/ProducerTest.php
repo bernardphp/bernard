@@ -7,6 +7,14 @@ use Raekke\Message\MessageWrapper;
 
 class MessagePublisherTest extends \PHPUnit_Framework_TestCase
 {
+    public function testItImplementsProducerInterface()
+    {
+        $factory = $this->getMockBuilder('Raekke\QueueFactory')->disableOriginalConstructor()
+            ->getMock();
+
+        $this->assertInstanceOf('Raekke\ProducerInterface', new Producer($factory));
+    }
+
     public function testItSendsToTestsToQueue()
     {
         $message = $this->getMock('Raekke\Message\MessageInterface');
