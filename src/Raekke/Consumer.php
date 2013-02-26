@@ -30,7 +30,7 @@ class Consumer implements ConsumerInterface
     public function consume(Queue $queue)
     {
         while (true) {
-            if (null === $wrapper = $queue) {
+            if (null === $wrapper = $queue->dequeue()) {
                 continue;
             }
 
