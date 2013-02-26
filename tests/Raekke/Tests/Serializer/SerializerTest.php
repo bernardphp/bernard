@@ -62,7 +62,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $builder = new \JMS\Serializer\SerializerBuilder();
         $builder->addMetadataDir(dirname($class->getFilename()) . '/../Resources/serializer', 'Raekke');
         $builder->configureListeners(function ($dispatcher) {
-            $dispatcher->addSubscriber(new \Raekke\Serializer\EventListener\MessageWrapperListener());
+//            $dispatcher->addSubscriber(new \Raekke\Serializer\EventListener\MessageWrapperListener());
         });
 
         return $builder->build();
