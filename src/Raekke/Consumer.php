@@ -69,6 +69,8 @@ class Consumer implements ConsumerInterface
 
     public function registerSignalHandlers()
     {
+        declare(ticks=1);
+
         pcntl_signal(\SIGTERM, array($this, 'shutdown'));
         pcntl_signal(\SIGINT, array($this, 'shutdown'));
     }
