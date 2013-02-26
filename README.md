@@ -100,9 +100,25 @@ that message.
 
 A service object can be any object that have a method corresponding to the message
 name prefixed with on. So `new DefaultMessage('SendNewsletter')` will trigger a
-call to `$serviceObject->onSendNewsletter`.
+call to `$serviceObject->onSendNewsletter`. For the system to know what service
+object should handle what messages it is need to register them first.
 
-__MISSING INFORMATION__
+``` <?php
+
+// Register a service object for message handling
+```
+
+Raekke comes with a `ConsumeCommand` which can be used with Symfony Console 
+component.
+
+``` php
+<?php
+
+use Raekke\Command\ConsumeCommand;
+
+// create $console application
+$console->add(new ConsumeCommand($services, $queueManager));
+```
 
 It can then be used as any other console command. The argument given should be
 the queue that your messages is on. If we use the earlier example with sending
