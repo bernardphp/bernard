@@ -103,9 +103,22 @@ name prefixed with on. So `new DefaultMessage('SendNewsletter')` will trigger a
 call to `$serviceObject->onSendNewsletter`. For the system to know what service
 object should handle what messages it is need to register them first.
 
-``` <?php
+``` php
+<?php
 
-// Register a service object for message handling
+use Raekke\ServiceResolver;
+use Raekke\Consumer;
+
+// .. create connection and a queuefactory
+// NewsletterMessageHandler is a pseudo service object that responds to
+// onSendNewsletter.
+
+$serviceResolver = new ServiceResolver;
+$serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
+
+// Create a Consumer and start the loop.
+$consumer = new Consumer($serviceResolver);
+$consumer->consume($queueFactory->create('send-newsletter'));
 ```
 
 Raekke comes with a `ConsumeCommand` which can be used with Symfony Console 
