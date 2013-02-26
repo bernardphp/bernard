@@ -80,7 +80,7 @@ class Queue implements \Countable
         $serializer = $this->serializer;
 
         return $messages->map(function ($payload) use ($serializer) {
-            return $serializer->deserializeWrapper($payload, false);
+            return $serializer->deserializeWrapper($payload);
         });
     }
 
