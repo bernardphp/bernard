@@ -48,7 +48,7 @@ class Queue implements \Countable
     {
         $this->errorIfClosed();
 
-        $this->connection->push($this->getKey(), $this->serializer->serialize($wrapper));
+        $this->connection->push($this->getKey(), $this->serializer->serializeWrapper($wrapper));
     }
 
     public function close()
@@ -71,7 +71,7 @@ class Queue implements \Countable
         $serializer = $this->serializer;
 
         return $messages->map(function ($payload) use ($serializer) {
-            return $serializer->deserialize($payload, false);
+            return $serializer->deserializeWrapper($payload, false);
         });
     }
 

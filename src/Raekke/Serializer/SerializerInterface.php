@@ -13,10 +13,10 @@ interface SerializerInterface
      * @param MessageWrapper $message
      * @return string
      */
-    public function serialize(MessageWrapper $message);
+    public function serializeWrapper(MessageWrapper $message);
 
     /**
      * @return MessageWrapper
      */
-    public function deserialize($serialized);
+    public function deserializeWrapper($serialized);
 }

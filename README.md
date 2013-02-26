@@ -51,7 +51,8 @@ messages and identifies the worker service that should work on it.
 
 A message is given to a publisher that send the message to the right queue.
 It is also possible to get the queue directly from the queue factory and push
-the message there. The easiest is to give it to the publisher as the queue name
+the message there. But remember to wrap the message in a `MessageWrapper` object.
+The easiest is to give it to the publisher as the queue name
 is taken from the message object.
 
 To make it easier to send messages and not require every type to be implemented
@@ -69,6 +70,7 @@ used it is needed to add metadata for being able to serialize and deserialize th
 
 use Raekke\MessagePublisher;
 use Raekke\Message\DefaultMessage;
+use Raekke\Message\MessageWrapper;
 use Raekke\QueueFactory;
 use Raekke\Serializer\Serializer;
 
@@ -85,6 +87,9 @@ $message = new DefaultMessage("SendNewsletter", array(
 ));
 
 $publisher->publish($message);
+
+// or give it to a queue directly
+$factory->get('my-queue')->enqueue(new MessageWrapper($message));
 ```
 
 ### Working on Messages

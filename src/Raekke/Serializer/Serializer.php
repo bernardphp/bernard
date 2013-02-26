@@ -15,12 +15,12 @@ class Serializer implements SerializerInterface
         $this->serializer = $serializer;
     }
 
-    public function serialize(MessageWrapper $message)
+    public function serializeWrapper(MessageWrapper $message)
     {
         return $this->serializer->serialize($message, 'json');
     }
 
-    public function deserialize($deserialized)
+    public function deserializeWrapper($deserialized)
     {
         return $this->serializer->deserialize($deserialized, 'Raekke\Message\MessageWrapper', 'json');
     }
