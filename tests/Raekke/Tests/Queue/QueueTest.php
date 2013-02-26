@@ -3,6 +3,7 @@
 namespace Raekke\Tests\Queue;
 
 use Raekke\Message\MessageWrapper;
+use Raekke\Message\DefaultMessage;
 use Raekke\Queue\Queue;
 
 class QueueTest extends \PHPUnit_Framework_TestCase
@@ -11,6 +12,20 @@ class QueueTest extends \PHPUnit_Framework_TestCase
     {
         $this->connection = $this->getMockBuilder('Raekke\Connection')->disableOriginalConstructor()->getMock();
         $this->serializer = $this->getMock('Raekke\Serializer\SerializerInterface');
+    }
+
+    public function testDequeue()
+    {
+        $messageWrapper = new MessageWrapper($this->getMock('Raekke\Message\MessageInterface'));
+
+        $this->connection->expects($this->once())->method('pop')->with($this->equalTo('queue:send-newsletter'))
+            ->will($this->returnValue('deserialized'));
+
+        $this->serializer->expects($this->once())->method('deserializeWrapper')->with($this->equalTo('deserialized'))
+            ->will($this->returnValue($messageWrapper));
+
+        $queue = new Queue('send-newsletter', $this->connection, $this->serializer);
+        $this->assertSame($messageWrapper, $queue->dequeue());
     }
 
     public function testKeyIsPrefixedWithQueue()
