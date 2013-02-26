@@ -12,6 +12,6 @@ class EchoTimeService
 
         echo "Time is: " . $message->time . "\n";
 
-        sleep(1);
+        usleep(100, 500);
     }
 }
