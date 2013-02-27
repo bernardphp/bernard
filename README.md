@@ -10,8 +10,6 @@ Todo
 ----
 
 * JMS Serializer integration does not support having custom message classes.
-* The `Consumer` class does not understand signals. This mean that a kill signal
-is necesarry for it to die.
 * The `Consumer` class does not fork its jobs.
 * Consumers does not report what they are working on, or that they have begun
 working.
