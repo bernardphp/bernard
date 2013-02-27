@@ -14,7 +14,7 @@
         "jms/serializer"           : "dev-master"
     },
 
-    "suggest" : {
-        "symfony/console" : "Console eases the creation of beautiful and testable command line interfaces."
+    "require-dev" : {
+        "symfony/console" : "~2.0"
     }
 }
