@@ -12,5 +12,9 @@
         "predis/predis"            : "~0.8",
         "doctrine/collections"     : "~1.0",
         "jms/serializer"           : "dev-master"
+    },
+
+    "suggest" : {
+        "symfony/console" : "Console eases the creation of beautiful and testable command line interfaces."
     }
 }
