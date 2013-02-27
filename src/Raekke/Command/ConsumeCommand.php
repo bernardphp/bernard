@@ -40,9 +40,13 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $consumer = new Consumer($this->services, $this->queues->create('failed'));
-        $consumer->consume($this->queues->create($input->getArgument('queue')), array(
+        $this->getConsumer()->consume($this->queues->create($input->getArgument('queue')), array(
             'max_retries' => $input->getOption('max-retries'),
         ));
+    }
+
+    public function getConsumer()
+    {
+        return new Consumer($this->services, $this->queues->create('failed'));
     }
 }
