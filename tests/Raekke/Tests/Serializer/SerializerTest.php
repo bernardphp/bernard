@@ -15,10 +15,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
     public function testItSerializesDefaultMessage()
     {
-        $json = '{"message":{"name":"SendNewsletter"},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"args":{"name":"SendNewsletter"},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
         $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter')));
 
-        $json = '{"message":{"name":"SendNewsletter","newsletterId":1,"users":["henrikbjorn"]},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"args":{"name":"SendNewsletter","newsletterId":1,"users":["henrikbjorn"]},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
         $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter', array(
             'newsletterId' => 1,
             'users' => array(
@@ -31,7 +31,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     {
         $this->markTestIncomplete('Custom messages are not yet implemented.');
 
-        $json = '{"message":[],"name":"SendNewsletter","class":"Application\\\\SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"args":[],"name":"SendNewsletter","class":"Application\\\\SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
         $this->assertEquals($json, $this->serializer->serialize(new Envelope(new \Application\SendNewsletterMessage())));
     }
 
@@ -39,7 +39,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     {
         $this->markTestIncomplete('Custom messages are not yet implemented.');
 
-        $json = '{"message":[],"name":"SendNewsletter","class":"Application\\\\SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"args":[],"name":"SendNewsletter","class":"Application\\\\SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
         $this->assertEquals($json, $this->serializer->serialize(new Envelope(new \Application\SendNewsletterMessage())));
     }
 

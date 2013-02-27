@@ -5,6 +5,6 @@
         <property name="retries"   type="integer" />
         <property name="class"     type="string" />
         <property name="name"      type="string" />
-        <property name="message"   type="Raekke\Message\DefaultMessage" />
+        <property name="message"   type="Raekke\Message\DefaultMessage" serialized-name="args" />
     </class>
 </serializer>
