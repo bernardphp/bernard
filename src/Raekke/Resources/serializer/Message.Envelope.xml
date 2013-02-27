@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <serializer>
-    <class name="Raekke\Message\MessageWrapper">
+    <class name="Raekke\Message\Envelope">
         <property name="timestamp" type="integer" />
         <property name="retries"   type="integer" />
         <property name="class"     type="string" />

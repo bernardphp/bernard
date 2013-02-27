@@ -2,7 +2,7 @@
 
 namespace Raekke\Tests\Serializer;
 
-use Raekke\Message\MessageWrapper;
+use Raekke\Message\Envelope;
 use Raekke\Message\DefaultMessage;
 use Raekke\Serializer\Serializer;
 
@@ -16,10 +16,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     public function testItSerializesDefaultMessage()
     {
         $json = '{"message":{"name":"SendNewsletter"},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serializeWrapper($this->createWrappedDefaultMessage('SendNewsletter')));
+        $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter')));
 
         $json = '{"message":{"name":"SendNewsletter","newsletterId":1,"users":["henrikbjorn"]},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serializeWrapper($this->createWrappedDefaultMessage('SendNewsletter', array(
+        $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter', array(
             'newsletterId' => 1,
             'users' => array(
                 'henrikbjorn'
@@ -32,7 +32,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete('Custom messages are not yet implemented.');
 
         $json = '{"message":[],"name":"SendNewsletter","class":"Application\\\\SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serializeWrapper(new MessageWrapper(new \Application\SendNewsletterMessage())));
+        $this->assertEquals($json, $this->serializer->serialize(new Envelope(new \Application\SendNewsletterMessage())));
     }
 
     public function testItDeserializesACustomImplementedMessage()
@@ -40,20 +40,20 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete('Custom messages are not yet implemented.');
 
         $json = '{"message":[],"name":"SendNewsletter","class":"Application\\\\SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serialize(new MessageWrapper(new \Application\SendNewsletterMessage())));
+        $this->assertEquals($json, $this->serializer->serialize(new Envelope(new \Application\SendNewsletterMessage())));
     }
 
     public function testItDeserializesDefaultMessage()
     {
         $message = $this->createWrappedDefaultMessage('SendNewsletter');
-        $json = $this->serializer->serializeWrapper($message);
+        $json = $this->serializer->serialize($message);
 
-        $this->assertEquals($message, $this->serializer->deserializeWrapper($json));
+        $this->assertEquals($message, $this->serializer->deserialize($json));
     }
 
     public function createWrappedDefaultMessage($name, array $properties = array())
     {
-        return new MessageWrapper(new DefaultMessage($name, $properties));
+        return new Envelope(new DefaultMessage($name, $properties));
     }
 
     public function createJMSSerializer()
@@ -62,7 +62,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $builder = new \JMS\Serializer\SerializerBuilder();
         $builder->addMetadataDir(dirname($class->getFilename()) . '/../Resources/serializer', 'Raekke');
         $builder->configureListeners(function ($dispatcher) {
-//            $dispatcher->addSubscriber(new \Raekke\Serializer\EventListener\MessageWrapperListener());
+//            $dispatcher->addSubscriber(new \Raekke\Serializer\EventListener\EnvelopeListener());
         });
 
         return $builder->build();

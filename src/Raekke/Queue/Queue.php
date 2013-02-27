@@ -3,7 +3,7 @@
 namespace Raekke\Queue;
 
 use Raekke\Connection;
-use Raekke\Message\MessageWrapper;
+use Raekke\Message\Envelope;
 use Raekke\Serializer\SerializerInterface;
 use Raekke\Util\ArrayCollection;
 use Raekke\Exception\QueueClosedException;
@@ -44,17 +44,17 @@ class Queue implements \Countable
         return $this->connection->count($this->getKey());
     }
 
-    public function enqueue(MessageWrapper $wrapper)
+    public function enqueue(Envelope $envelope)
     {
         $this->errorIfClosed();
 
-        $this->connection->push($this->getKey(), $this->serializer->serializeWrapper($wrapper));
+        $this->connection->push($this->getKey(), $this->serializer->serialize($envelope));
     }
 
     public function dequeue()
     {
         if ($message = $this->connection->pop($this->getKey())) {
-            return $this->serializer->deserializeWrapper($message);
+            return $this->serializer->deserialize($message);
         }
 
         return null;
@@ -80,7 +80,7 @@ class Queue implements \Countable
         $serializer = $this->serializer;
 
         return $messages->map(function ($payload) use ($serializer) {
-            return $serializer->deserializeWrapper($payload);
+            return $serializer->deserialize($payload);
         });
     }
 

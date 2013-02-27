@@ -45,20 +45,20 @@ class Consumer implements ConsumerInterface
                 break;
             }
 
-            if (null === $wrapper = $queue->dequeue()) {
+            if (null === $envelope = $queue->dequeue()) {
                 continue;
             }
 
             try {
-                $message = $wrapper->getMessage();
+                $message = $envelope->getMessage();
                 $service = $this->services->resolve($message);
 
                 $job = new Job($service, $message);
                 $job->invoke();
             } catch (\Exception $e) {
-                if ($wrapper->getRetries() < $options['max_retries']) {
-                    $wrapper->incrementRetries();
-                    $queue->enqueue($wrapper);
+                if ($envelope->getRetries() < $options['max_retries']) {
+                    $envelope->incrementRetries();
+                    $queue->enqueue($envelope);
 
                     continue;
                 }
@@ -67,7 +67,7 @@ class Consumer implements ConsumerInterface
                     continue;
                 }
 
-                $this->failed->enqueue($wrapper);
+                $this->failed->enqueue($envelope);
             }
         }
 

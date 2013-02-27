@@ -2,7 +2,7 @@
 
 namespace Raekke\Tests\Queue;
 
-use Raekke\Message\MessageWrapper;
+use Raekke\Message\Envelope;
 use Raekke\Queue\Queue;
 
 class QueueTest extends \PHPUnit_Framework_TestCase
@@ -15,7 +15,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
 
     public function testDequeue()
     {
-        $messageWrapper = new MessageWrapper($this->getMock('Raekke\Message\MessageInterface'));
+        $messageWrapper = new Envelope($this->getMock('Raekke\Message\MessageInterface'));
 
         $this->connection->expects($this->at(1))->method('pop')->with($this->equalTo('queue:send-newsletter'))
             ->will($this->returnValue('deserialized'));
@@ -23,7 +23,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $this->connection->expects($this->at(2))->method('pop')->with($this->equalTo('queue:send-newsletter'))
             ->will($this->returnValue(null));
 
-        $this->serializer->expects($this->once())->method('deserializeWrapper')->with($this->equalTo('deserialized'))
+        $this->serializer->expects($this->once())->method('deserialize')->with($this->equalTo('deserialized'))
             ->will($this->returnValue($messageWrapper));
 
         $queue = new Queue('send-newsletter', $this->connection, $this->serializer);
@@ -63,7 +63,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
             array('slice', array(0, 10)),
             array('register'),
             array('count'),
-            array('enqueue', array(new MessageWrapper($this->getMock('Raekke\Message\MessageInterface')))),
+            array('enqueue', array(new Envelope($this->getMock('Raekke\Message\MessageInterface')))),
         );
     }
 }

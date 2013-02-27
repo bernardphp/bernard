@@ -2,7 +2,7 @@
 
 namespace Raekke\Serializer;
 
-use Raekke\Message\MessageWrapper;
+use Raekke\Message\Envelope;
 
 /**
  * @package Raekke
@@ -10,13 +10,13 @@ use Raekke\Message\MessageWrapper;
 interface SerializerInterface
 {
     /**
-     * @param  MessageWrapper $message
+     * @param  Envelope $message
      * @return string
      */
-    public function serializeWrapper(MessageWrapper $message);
+    public function serialize(Envelope $message);
 
     /**
-     * @return MessageWrapper
+     * @return Envelope
      */
-    public function deserializeWrapper($serialized);
+    public function deserialize($serialized);
 }

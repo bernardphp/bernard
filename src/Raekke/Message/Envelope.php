@@ -8,7 +8,7 @@ namespace Raekke\Message;
  *
  * @package Raekke
  */
-class MessageWrapper
+class Envelope
 {
     protected $message;
     protected $name;

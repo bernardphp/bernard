@@ -3,7 +3,7 @@
 namespace Raekke;
 
 use Raekke\Message\MessageInterface;
-use Raekke\Message\MessageWrapper;
+use Raekke\Message\Envelope;
 
 /**
  * @package Raekke
@@ -26,6 +26,6 @@ class Producer implements ProducerInterface
     public function produce(MessageInterface $message)
     {
         $queue = $this->factory->create($message->getQueue());
-        $queue->enqueue(new MessageWrapper($message));
+        $queue->enqueue(new Envelope($message));
     }
 }
