@@ -10,8 +10,6 @@ Todo
 ----
 
 * JMS Serializer integration does not support having custom message classes.
-* The `Consumer` class does not understand signals. This mean that a kill signal
-is necesarry for it to die.
 * The `Consumer` class does not fork its jobs.
 * Consumers does not report what they are working on, or that they have begun
 working.
@@ -168,8 +166,6 @@ contents of the messages is not very handy. And for that there is [Juno](https:/
 
 It is implemented in Silex and is very lightweight. Also if needed it can be
 embedded in other Silex or Flint applications.
-
-![Juno](http://i.imgur.com/oZFzfKq.png)
 
 Alternatives
 ------------
