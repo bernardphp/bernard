@@ -169,8 +169,6 @@ contents of the messages is not very handy. And for that there is [Juno](https:/
 It is implemented in Silex and is very lightweight. Also if needed it can be
 embedded in other Silex or Flint applications.
 
-![Juno](http://i.imgur.com/oZFzfKq.png)
-
 Alternatives
 ------------
 
