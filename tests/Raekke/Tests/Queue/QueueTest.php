@@ -49,7 +49,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
      */
     public function testNotAllowedWhenClosed($method, array $arguments = array())
     {
-        $this->setExpectedException('Raekke\Exception\QueueClosedException');
+        $this->setExpectedException('Raekke\Exception\InvalidOperationexception', 'Queue "send-newsletter" is closed.');
 
         $queue = new Queue('send-newsletter', $this->connection, $this->serializer);
         $queue->close();

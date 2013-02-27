@@ -3,10 +3,10 @@
 namespace Raekke\Queue;
 
 use Raekke\Connection;
+use Raekke\Exception\InvalidOperationException;
 use Raekke\Message\Envelope;
 use Raekke\Serializer\SerializerInterface;
 use Raekke\Util\ArrayCollection;
-use Raekke\Exception\QueueClosedException;
 
 /**
  * @package Raekke
@@ -102,7 +102,7 @@ class Queue implements \Countable
     protected function errorIfClosed()
     {
         if ($this->closed) {
-            throw new QueueClosedException($this->name);
+            throw new InvalidOperationException(sprintf('Queue "%s" is closed.', $this->name));
         }
     }
 }
