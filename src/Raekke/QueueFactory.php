@@ -4,7 +4,6 @@ namespace Raekke;
 
 use Raekke\Queue\Queue;
 use Raekke\Serializer\SerializerInterface;
-use Raekke\Util\ArrayCollection;
 
 /**
  * Knows how to create queues and retrieve them from the used connection.
@@ -22,21 +21,20 @@ class QueueFactory implements \Countable
         Connection $connection,
         SerializerInterface $serializer
     ) {
-        $this->queues     = new ArrayCollection;
+        $this->queues     = array();
         $this->connection = $connection;
         $this->serializer = $serializer;
     }
 
     public function create($queueName)
     {
-        if ($this->queues->containsKey($queueName)) {
-            return $this->queues->get($queueName);
+        if (isset($this->queues[$queueName])) {
+            return $this->queues[$queueName];
         }
 
         $queue = new Queue($queueName, $this->connection, $this->serializer);
-        $this->queues->set($queueName, $queue);
 
-        return $queue;
+        return $this->queues[$queueName] = $queue;
     }
 
     public function all()
@@ -49,11 +47,11 @@ class QueueFactory implements \Countable
 
     public function exists($queueName)
     {
-        if ($this->queues->containsKey($queueName)) {
+        if (isset($this->queues[$queueName])) {
             return true;
         }
 
-        return (boolean) $this->connection->contains('queues', $queueName);
+        return $this->connection->contains('queues', $queueName);
     }
 
     public function count()
@@ -69,7 +67,7 @@ class QueueFactory implements \Countable
 
         $this->create($queueName)->close();
 
-        $this->queues->remove($queueName);
+        unset($this->queues[$queueName]);
 
         return true;
     }

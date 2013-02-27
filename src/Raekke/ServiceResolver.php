@@ -3,19 +3,13 @@
 namespace Raekke;
 
 use Raekke\Message\MessageInterface;
-use Raekke\Util\ArrayCollection;
 
 /**
  * @package Raekke
  */
 class ServiceResolver implements ServiceResolverInterface
 {
-    protected $services;
-
-    public function __construct()
-    {
-        $this->services = new ArrayCollection;
-    }
+    protected $services = array();
 
     /**
      * {@inheritDoc}
@@ -26,7 +20,7 @@ class ServiceResolver implements ServiceResolverInterface
             throw new \InvalidArgumentException('The given service is not an object.');
         }
 
-        $this->services->set($name, $service);
+        $this->services[$name] = $service;
     }
 
     /**
@@ -34,8 +28,8 @@ class ServiceResolver implements ServiceResolverInterface
      */
     public function resolve(MessageInterface $message)
     {
-        if ($this->services->containsKey($message->getName())) {
-            return $this->services->get($message->getName());
+        if (isset($this->services[$message->getName()])) {
+            return $this->services[$message->getName()];
         }
 
         throw new \InvalidArgumentException('No service registered for message "' . $message->getName() . '".');

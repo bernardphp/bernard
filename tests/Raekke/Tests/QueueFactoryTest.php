@@ -57,7 +57,7 @@ class QueueFactoryTest extends \PHPUnit_Framework_TestCase
 
         $all = $this->factory->all();
 
-        $this->assertInstanceOf('Raekke\Util\ArrayCollection', $all);
         $this->assertCount(2, $all);
+        $this->assertContainsOnly('Raekke\Queue\Queue', $all);
     }
 }

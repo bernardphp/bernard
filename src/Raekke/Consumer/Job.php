@@ -43,4 +43,14 @@ class Job
         $method = new \ReflectionMethod($this->object, $this->getMethodName());
         $method->invoke($this->object, $this->message);
     }
+
+    /**
+     * Makes it possible to have this being a callable.
+     *
+     * @see Job::invoke()
+     */
+    public function __invoke()
+    {
+        $this->invoke();
+    }
 }

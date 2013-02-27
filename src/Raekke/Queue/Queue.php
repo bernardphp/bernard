@@ -6,7 +6,6 @@ use Raekke\Connection;
 use Raekke\Exception\InvalidOperationException;
 use Raekke\Message\Envelope;
 use Raekke\Serializer\SerializerInterface;
-use Raekke\Util\ArrayCollection;
 
 /**
  * @package Raekke
@@ -74,14 +73,7 @@ class Queue implements \Countable
     {
         $this->errorIfClosed();
 
-        $messages = $this->connection->slice($this->getKey(), $index, $length);
-        $messages = new ArrayCollection($messages);
-
-        $serializer = $this->serializer;
-
-        return $messages->map(function ($payload) use ($serializer) {
-            return $serializer->deserialize($payload);
-        });
+        return array_map(array($this->serializer, 'deserialize'), $this->connection->slice($this->getKey(), $index, $length));
     }
 
     public function isClosed()
