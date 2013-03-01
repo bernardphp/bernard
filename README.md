@@ -6,12 +6,6 @@ allows for easy creation of workers and creating distributed systems.
 
 [![Build Status](https://travis-ci.org/henrikbjorn/Raekke.png?branch=master)](https://travis-ci.org/henrikbjorn/Raekke)
 
-Todo
-----
-
-* JMS Serializer integration does not support having custom message classes.
-* The `Consumer` class does not fork its jobs.
-* Consumers does not report what they are working on, or that they have begun
 working.
 
 Getting Started
