@@ -4,7 +4,7 @@ use JMS\Serializer\SerializerBuilder;
 use Predis\Client;
 use Raekke\Connection;
 use Raekke\Serializer\Serializer;
-use Raekke\QueueFactory;
+use Raekke\QueueFactory\QueueFactoryInterface;
 
 require __DIR__ . '/../vendor/autoload.php';
 

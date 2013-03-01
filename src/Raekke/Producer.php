@@ -4,6 +4,7 @@ namespace Raekke;
 
 use Raekke\Message\MessageInterface;
 use Raekke\Message\Envelope;
+use Raekke\QueueFactory\QueueFactoryInterface;
 
 /**
  * @package Raekke
@@ -15,7 +16,7 @@ class Producer implements ProducerInterface
     /**
      * @param QueueFactory $factory
      */
-    public function __construct(QueueFactory $factory)
+    public function __construct(QueueFactoryInterface $factory)
     {
         $this->factory = $factory;
     }

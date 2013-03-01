@@ -5,7 +5,7 @@ namespace Raekke\Tests\Queue;
 use Raekke\Message\Envelope;
 use Raekke\Queue\Queue;
 
-class QueueTest extends \PHPUnit_Framework_TestCase
+class QueueTest extends AbstractQueueTest
 {
     public function setUp()
     {
@@ -26,7 +26,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
         $this->serializer->expects($this->once())->method('deserialize')->with($this->equalTo('deserialized'))
             ->will($this->returnValue($messageWrapper));
 
-        $queue = new Queue('send-newsletter', $this->connection, $this->serializer);
+        $queue = $this->createQueue('send-newsletter');
 
         $this->assertSame($messageWrapper, $queue->dequeue());
         $this->assertInternalType('null', $queue->dequeue());
@@ -34,36 +34,19 @@ class QueueTest extends \PHPUnit_Framework_TestCase
 
     public function testKeyIsPrefixedWithQueue()
     {
-        $queue = new Queue('send-newsletter', $this->connection, $this->serializer);
-        $this->assertEquals('queue:send-newsletter', $queue->getKey());
-    }
-
-    public function testNameIsAccessible()
-    {
-        $queue = new Queue('send-newsletter', $this->connection, $this->serializer);
-        $this->assertEquals('send-newsletter', $queue->getName());
-    }
-
-    /**
-     * @dataProvider dataClosedMethods
-     */
-    public function testNotAllowedWhenClosed($method, array $arguments = array())
-    {
-        $this->setExpectedException('Raekke\Exception\InvalidOperationexception', 'Queue "send-newsletter" is closed.');
-
-        $queue = new Queue('send-newsletter', $this->connection, $this->serializer);
-        $queue->close();
-
-        call_user_func_array(array($queue, $method), $arguments);
+        $this->assertEquals('queue:send-newsletter', $this->createQueue('send-newsletter')->getKey());
     }
 
     public function dataClosedMethods()
     {
-        return array(
-            array('slice', array(0, 10)),
-            array('register'),
-            array('count'),
-            array('enqueue', array(new Envelope($this->getMock('Raekke\Message\MessageInterface')))),
-        );
+        $methods = parent::dataClosedMethods();
+        $methods[] = array('register', array());
+
+        return $methods;
+    }
+
+    protected function createQueue($name)
+    {
+        return new Queue($name, $this->connection, $this->serializer);
     }
 }

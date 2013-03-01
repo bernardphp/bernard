@@ -10,19 +10,18 @@ use Raekke\Serializer\SerializerInterface;
 /**
  * @package Raekke
  */
-class Queue implements \Countable
+class Queue extends AbstractQueue
 {
-    protected $name;
     protected $connection;
     protected $serializer;
-    protected $closed = false;
 
     public function __construct(
         $name,
         Connection $connection,
         SerializerInterface $serializer
     ) {
-        $this->name       = $name;
+        parent::__construct($name);
+
         $this->connection = $connection;
         $this->serializer = $serializer;
 
@@ -52,21 +51,13 @@ class Queue implements \Countable
 
     public function dequeue()
     {
+        $this->errorIfClosed();
+
         if ($message = $this->connection->pop($this->getKey())) {
             return $this->serializer->deserialize($message);
         }
 
         return null;
-    }
-
-    public function close()
-    {
-        $this->closed = true;
-
-        $this->connection->remove('queues', $this->name);
-        $this->connection->delete($this->getKey());
-
-        return $this->closed;
     }
 
     public function slice($index, $length)
@@ -76,25 +67,8 @@ class Queue implements \Countable
         return array_map(array($this->serializer, 'deserialize'), $this->connection->slice($this->getKey(), $index, $length));
     }
 
-    public function isClosed()
-    {
-        return $this->closed;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
     public function getKey()
     {
         return 'queue:' . $this->name;
-    }
-
-    protected function errorIfClosed()
-    {
-        if ($this->closed) {
-            throw new InvalidOperationException(sprintf('Queue "%s" is closed.', $this->name));
-        }
     }
 }

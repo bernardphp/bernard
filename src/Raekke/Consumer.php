@@ -2,7 +2,7 @@
 
 namespace Raekke;
 
-use Raekke\Queue\Queue;
+use Raekke\Queue\QueueInterface;
 use Raekke\Consumer\Job;
 
 /**
@@ -32,7 +32,7 @@ class Consumer implements ConsumerInterface
     /**
      * {@inheritDoc}
      */
-    public function consume(Queue $queue, array $options = array())
+    public function consume(QueueInterface $queue, array $options = array())
     {
         $options = array_merge($this->defaults, array_filter($options));
 

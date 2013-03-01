@@ -2,7 +2,7 @@
 
 namespace Raekke\Tests;
 
-use Raekke\QueueFactory;
+use Raekke\QueueFactory\QueueFactory;
 
 class QueueFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,10 +29,13 @@ class QueueFactoryTest extends \PHPUnit_Framework_TestCase
         $queue = $this->factory->create('queue');
 
         $this->assertTrue($this->factory->exists('queue'));
+        $this->assertCount(0, $this->factory);
+
         $this->assertTrue($this->factory->remove('queue'));
-        $this->assertTrue($queue->isClosed());
+        $this->assertCount(0, $this->factory);
 
         $this->assertFalse($this->factory->remove('queue-nonexistant'));
+
     }
 
     public function testItLazyCreatesQueuesAndAttaches()

@@ -12,9 +12,11 @@ class JobTest extends \PHPUnit_Framework_TestCase
         $message = new DefaultMessage('SendNewsletter');
 
         $service = $this->getMock('stdClass', array('onSendNewsletter'));
-        $service->expects($this->once())->method('onSendNewsletter')->with($this->equalTo($message));
+        $service->expects($this->exactly(2))->method('onSendNewsletter')->with($this->equalTo($message));
 
         $job = new Job($service, $message);
         $job->invoke();
+
+        $job();
     }
 }
