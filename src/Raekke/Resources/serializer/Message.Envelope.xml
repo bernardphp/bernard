@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <serializer>
-    <class name="Raekke\Message\Envelope">
-        <property name="timestamp" type="integer" />
-        <property name="retries"   type="integer" />
-        <property name="class"     type="string" />
-        <property name="name"      type="string" />
-        <property name="message"   type="Raekke\Message\DefaultMessage" serialized-name="args" />
+    <class name="Raekke\Message\Envelope" exclusion-policy="ALL">
+        <callback-method name="serializeToJson" type="handler" direction="serialization" format="json" />
+        <callback-method name="deserializeFromJson" type="handler" direction="deserialization" format="json" />
     </class>
 </serializer>

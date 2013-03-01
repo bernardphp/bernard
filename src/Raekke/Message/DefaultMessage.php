@@ -3,6 +3,7 @@
 namespace Raekke\Message;
 
 use JMS\Serializer\AbstractVisitor;
+use JMS\Serializer\Context;
 
 /**
  * @package Raekke
@@ -25,9 +26,12 @@ class DefaultMessage extends Message
         return $this->name;
     }
 
-    public function serializeToJson(AbstractVisitor $visitor)
+    public function serializeToJson(AbstractVisitor $visitor, $data, Context $context)
     {
-        return get_object_vars($this);
+        $data = get_object_vars($this);
+        $data['name'] = null;
+
+        return array_filter($data);
     }
 
     public function deserializeFromJson(AbstractVisitor $visitor, array $data)
