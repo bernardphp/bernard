@@ -10,7 +10,7 @@
     "require" : {
         "php"                      : ">=5.3.3",
         "predis/predis"            : "~0.8",
-        "jms/serializer"           : "0.12.*"
+        "jms/serializer"           : "0.12.*@dev"
     },
 
     "require-dev" : {
