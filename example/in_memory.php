@@ -29,5 +29,5 @@ $resolver->register('EchoTime', new EchoTimeService());
 
 $consumer = new Consumer($resolver);
 $consumer->consume($queues->create('echo-time'), array(
-    'max_runtime' => 2,
+    'max_runtime' => 0.5,
 ));
