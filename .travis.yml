@@ -4,5 +4,10 @@ php:
     - 5.3
     - 5.4
 
+env:
+    global:
+        - secure: "yG0j+buog/Sxdm3nAnnCv0s5F6msMW4t976dHsfRb6uvUGJuGzuTXiuThjhJ\nJaLDou35gYYVNGBHXKwT6umVTe6wYbGWOvBAgbDlKHKO0Cyq4n2zp7hHn08/\ni+YpITvWJP/Se52J8et6q4s4gH0pVUMibaKqizpjpPjqZhQsFec="
+
 before_script:
+    - "mkdir ~/.composer && echo COMPOSER_CONFIG > ~/.composer/config.json"
     - "composer install --dev"
