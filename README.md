@@ -6,8 +6,6 @@ allows for easy creation of workers and creating distributed systems.
 
 [![Build Status](https://travis-ci.org/henrikbjorn/Raekke.png?branch=master)](https://travis-ci.org/henrikbjorn/Raekke)
 
-working.
-
 Getting Started
 ---------------
 
