@@ -100,6 +100,12 @@ $producer->publish($message);
 $factory->get('my-queue')->enqueue(new Envelope($message));
 ```
 
+#### In Memory Queues
+
+Raekke comes with a implemention for `SplQueue` which is completly in memory
+It is useful for development and/or testing. As you dont want actions to be
+performed.
+
 ### Consuming Messages
 
 A single message represents a job that needs to be performed. And as described
