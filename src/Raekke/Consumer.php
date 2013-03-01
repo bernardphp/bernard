@@ -85,7 +85,7 @@ class Consumer implements ConsumerInterface
     {
         declare(ticks=1);
 
-        pcntl_signal(\SIGTERM, array($this, 'shutdown'));
-        pcntl_signal(\SIGINT, array($this, 'shutdown'));
+        pcntl_signal(SIGTERM, array($this, 'shutdown'));
+        pcntl_signal(SIGINT, array($this, 'shutdown'));
     }
 }
