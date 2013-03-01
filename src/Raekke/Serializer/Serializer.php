@@ -4,6 +4,7 @@ namespace Raekke\Serializer;
 
 use Raekke\Message\Envelope;
 use JMS\Serializer\SerializerInterface as JMSSerializerInterface;
+use JMS\Serializer\SerializationContext;
 
 /**
  * @package Raekke
@@ -17,7 +18,10 @@ class Serializer implements SerializerInterface
 
     public function serialize(Envelope $message)
     {
-        return $this->serializer->serialize($message, 'json');
+        $context = SerializationContext::create()
+            ->setSerializeNull(true);
+
+        return $this->serializer->serialize($message, 'json', $context);
     }
 
     public function deserialize($deserialized)

@@ -29,9 +29,10 @@ class DefaultMessage extends Message
     public function serializeToJson(AbstractVisitor $visitor, $data, Context $context)
     {
         $data = get_object_vars($this);
-        $data['name'] = null;
 
-        return array_filter($data);
+        unset($data['name']);
+
+        return $data;
     }
 
     public function deserializeFromJson(AbstractVisitor $visitor, array $data)
