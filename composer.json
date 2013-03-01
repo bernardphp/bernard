@@ -15,5 +15,11 @@
 
     "require-dev" : {
         "symfony/console" : "~2.0"
+    },
+
+    "extra" : {
+        "branch-alias" : {
+            "dev-master" : "0.1.x-dev"
+        }
     }
 }
