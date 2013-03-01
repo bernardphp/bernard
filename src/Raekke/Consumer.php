@@ -24,7 +24,7 @@ class Consumer implements ConsumerInterface
      */
     public function __construct(
         ServiceResolverInterface $services,
-        Queue $failed = null
+        QueueInterface $failed = null
     ) {
         $this->failed = $failed;
         $this->services = $services;
