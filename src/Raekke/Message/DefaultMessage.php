@@ -32,7 +32,7 @@ class DefaultMessage extends Message
 
         unset($data['name']);
 
-        return $data;
+        return $data ?: new \ArrayObject();
     }
 
     public function deserializeFromJson(AbstractVisitor $visitor, array $data)
