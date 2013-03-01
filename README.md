@@ -76,10 +76,10 @@ used it is needed to add metadata for being able to serialize and deserialize th
 ``` php
 <?php
 
-use Raekke\Producer;
 use Raekke\Message\DefaultMessage;
 use Raekke\Message\Envelope;
-use Raekke\QueueFactory;
+use Raekke\Producer;
+use Raekke\QueueFactory\QueueFactory;
 use Raekke\Serializer\Serializer;
 
 // .. create serializer instance where src/Raekke/Resources/serializer
