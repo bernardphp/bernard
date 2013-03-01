@@ -15,7 +15,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
     public function testItSerializesDefaultMessage()
     {
-        $json = '{"args":[],"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"args":{},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
         $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter')));
 
         $json = '{"args":{"newsletterId":1,"users":["henrikbjorn"]},"name":"SendNewsletter","class":"Raekke\\\\Message\\\\DefaultMessage","timestamp":' . time() . ',"retries":0}';
