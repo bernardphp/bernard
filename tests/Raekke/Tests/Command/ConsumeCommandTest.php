@@ -29,6 +29,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
         $consumer = $this->getMock('Raekke\ConsumerInterface');
         $consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo(array(
             'max_retries' => 5,
+            'max_runtime' => null,
         )));
 
         $command = $this->getMockBuilder('Raekke\Command\ConsumeCommand')
@@ -38,7 +39,8 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
 
         $input = $this->getMock('Symfony\Component\Console\Input\InputInterface');
         $input->expects($this->any())->method('getArgument')->with($this->equalTo('queue'))->will($this->returnValue('send-newsletter'));
-        $input->expects($this->any())->method('getOption')->with($this->equalTo('max-retries'))->will($this->returnValue(5));
+        $input->expects($this->at(1))->method('getOption')->with($this->equalTo('max-retries'))->will($this->returnValue(5));
+        $input->expects($this->at(2))->method('getOption')->with($this->equalTo('max-runtime'))->will($this->returnValue(null));
 
         $command->execute($input, new NullOutput());
     }
