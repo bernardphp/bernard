@@ -83,7 +83,6 @@ class Envelope
     public function serializeToJson(AbstractVisitor $visitor, $data, Context $context)
     {
         $type = array('name' => $this->class, 'params' => array());
-
         $data = $visitor->visitArray(array(
             'args'      => $context->accept($this->message, $type),
             'name'      => $this->name,
@@ -95,8 +94,6 @@ class Envelope
         $visitor->setRoot($data);
 
         return $data;
-
-        return $visitor->visitArray($data, array(), $context);
     }
 
     /**
