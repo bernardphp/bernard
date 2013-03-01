@@ -3,7 +3,6 @@
 namespace Raekke\Queue;
 
 use Raekke\Connection;
-use Raekke\Exception\InvalidOperationException;
 use Raekke\Message\Envelope;
 use Raekke\Serializer\SerializerInterface;
 
