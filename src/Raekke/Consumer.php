@@ -36,13 +36,13 @@ class Consumer implements ConsumerInterface
     public function consume(QueueInterface $queue, array $options = array())
     {
         $options = array_merge($this->defaults, array_filter($options));
-        $runtime = time() + $options['max_runtime'];
+        $runtime = microtime(true) + $options['max_runtime'];
 
         // register with monitoring object class thing
 
         $this->registerSignalHandlers();
 
-        while (time() < $runtime) {
+        while (microtime(true) < $runtime) {
             if ($this->shutdown) {
                 break;
             }
