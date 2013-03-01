@@ -22,6 +22,15 @@ If your projects do not already use this, it is highly recommended to start.
 $ composer require henrikbjorn/raekke:dev-master
 ```
 
+### Examples
+
+In the `example` directory there are two examples of running Raekke. `producer.php` will
+connect to redis on localhost and produce `EchoTime` messages. `consumer.php` will consume
+theese and print the timestamp.
+
+`in_memory.php` will produce 20 `EchoTime` messages and consume them right they
+have been sent. It uses `SplQueue` and does not need a redis backend.
+
 ### Configuring Predis
 
 For storing messages Redis is used together with Predis as the communication
