@@ -86,7 +86,7 @@ class Envelope
         $data = array(
             'args'      => $context->accept($this->message, $type),
             'name'      => $this->name,
-            'class'     => $this->class,
+            'class'     => str_replace('\\', ':', $this->class),
             'timestamp' => $this->timestamp,
             'retries'   => $this->retries,
         );
@@ -103,7 +103,7 @@ class Envelope
      */
     public function deserializeFromJson(AbstractVisitor $visitor, array $data, Context $context)
     {
-        $this->class     = $data['class'];
+        $this->class     = str_replace(':', '\\', $data['class']);
         $this->name      = $data['name'];
         $this->timestamp = $data['timestamp'];
         $this->retries   = $data['retries'];
