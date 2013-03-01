@@ -47,6 +47,8 @@ class InMemoryQueue extends AbstractQueue
             return $this->queue->dequeue();
         }
 
+        usleep(350);
+
         return null;
     }
 
