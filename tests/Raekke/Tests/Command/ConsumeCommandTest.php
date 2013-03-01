@@ -9,8 +9,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->queues = $this->getMockBuilder('Raekke\QueueFactory')->disableOriginalConstructor()
-            ->getMock();
+        $this->queues = $this->getMock('Raekke\QueueFactory\QueueFactoryInterface');
         $this->services = $this->getMock('Raekke\ServiceResolverInterface');
     }
 

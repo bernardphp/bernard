@@ -1,7 +1,8 @@
 <?php
 
-namespace Raekke;
+namespace Raekke\QueueFactory;
 
+use Raekke\Connection;
 use Raekke\Queue\Queue;
 use Raekke\Serializer\SerializerInterface;
 
@@ -11,7 +12,7 @@ use Raekke\Serializer\SerializerInterface;
  *
  * @package Raekke
  */
-class QueueFactory implements \Countable
+class QueueFactory implements QueueFactoryInterface
 {
     protected $queues;
     protected $connection;

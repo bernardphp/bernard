@@ -2,7 +2,7 @@
 
 namespace Raekke;
 
-use Raekke\Queue\Queue;
+use Raekke\Queue\QueueInterface;
 
 /**
  * Consumes messages from a queue by dequeing messages
@@ -16,5 +16,5 @@ interface ConsumerInterface
      * @param Queue $queue
      * @param array $options
      */
-    public function consume(Queue $queue, array $options = array());
+    public function consume(QueueInterface $queue, array $options = array());
 }
