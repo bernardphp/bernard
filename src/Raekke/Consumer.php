@@ -15,6 +15,7 @@ class Consumer implements ConsumerInterface
     protected $shutdown = false;
     protected $defaults = array(
         'max_retries' => 5,
+        'max_runtime' => PHP_INT_MAX,
     );
 
     /**
@@ -35,12 +36,13 @@ class Consumer implements ConsumerInterface
     public function consume(QueueInterface $queue, array $options = array())
     {
         $options = array_merge($this->defaults, array_filter($options));
+        $runtime = time() + $options['max_runtime'];
 
         // register with monitoring object class thing
 
         $this->registerSignalHandlers();
 
-        while (true) {
+        while (time() < $runtime) {
             if ($this->shutdown) {
                 break;
             }
