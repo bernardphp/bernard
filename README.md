@@ -163,7 +163,7 @@ Integration with Frameworks
 To make it easier to start up and have it "just work" with sending messages a
 number of integrations have been created.
 
-* Somebody should do this part...
+* __Silex__: [RaekkeServiceProvider](https://github.com/henrikbjorn/RaekkeServiceProvider)
 
 Monitoring
 ----------
