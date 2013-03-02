@@ -5,6 +5,8 @@ namespace Raekke;
 use Raekke\Queue\QueueInterface;
 use Raekke\Consumer\Job;
 
+declare(ticks=1);
+
 /**
  * @package Consumer
  */
@@ -40,7 +42,8 @@ class Consumer implements ConsumerInterface
 
         // register with monitoring object class thing
 
-        $this->registerSignalHandlers();
+        pcntl_signal(SIGTERM, array($this, 'shutdown'), true);
+        pcntl_signal(SIGINT, array($this, 'shutdown'), true);
 
         while (microtime(true) < $runtime) {
             if ($this->shutdown) {
@@ -56,7 +59,7 @@ class Consumer implements ConsumerInterface
                 $service = $this->services->resolve($message);
 
                 $job = new Job($service, $message);
-                $job->invoke();
+                $job();
             } catch (\Exception $e) {
                 if ($envelope->getRetries() < $options['max_retries']) {
                     $envelope->incrementRetries();
@@ -79,13 +82,5 @@ class Consumer implements ConsumerInterface
     public function shutdown()
     {
         $this->shutdown = true;
-    }
-
-    public function registerSignalHandlers()
-    {
-        declare(ticks=1);
-
-        pcntl_signal(SIGTERM, array($this, 'shutdown'));
-        pcntl_signal(SIGINT, array($this, 'shutdown'));
     }
 }
