@@ -29,11 +29,6 @@ interface QueueFactoryInterface extends \Countable
     public function exists($queueName);
 
     /**
-     * @return integer
-     */
-    public function count();
-
-    /**
      * @param string $queueName
      */
     public function remove($queueName);
