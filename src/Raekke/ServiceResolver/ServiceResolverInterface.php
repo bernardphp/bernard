@@ -10,7 +10,7 @@ use Raekke\Message\MessageInterface;
 interface ServiceResolverInterface
 {
     /**
-     * @param string $name
+     * @param string          $name
      * @param object|callable $service
      */
     public function register($name, $service);

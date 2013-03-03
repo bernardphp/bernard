@@ -2,7 +2,6 @@
 
 namespace Raekke\QueueFactory;
 
-
 /**
  * Knows how to create queues and retrieve them from the used connection.
  * Every queue it creates is saved locally.
@@ -12,7 +11,7 @@ namespace Raekke\QueueFactory;
 interface QueueFactoryInterface extends \Countable
 {
     /**
-     * @param string $queueName
+     * @param  string             $queueName
      * @return Raekke\Queue\Queue
      */
     public function create($queueName);
@@ -23,7 +22,7 @@ interface QueueFactoryInterface extends \Countable
     public function all();
 
     /**
-     * @param string $queueName
+     * @param  string  $queueName
      * @return boolean
      */
     public function exists($queueName);

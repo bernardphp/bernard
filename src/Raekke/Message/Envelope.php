@@ -77,8 +77,8 @@ class Envelope
 
     /**
      * @param AbstractVisitor $visitor
-     * @param array $data
-     * @param Context $context
+     * @param array           $data
+     * @param Context         $context
      */
     public function serializeToJson(AbstractVisitor $visitor, $data, Context $context)
     {
@@ -98,8 +98,8 @@ class Envelope
 
     /**
      * @param AbstractVisitor $visitor
-     * @param array $data
-     * @param Context $context
+     * @param array           $data
+     * @param Context         $context
      */
     public function deserializeFromJson(AbstractVisitor $visitor, array $data, Context $context)
     {

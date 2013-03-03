@@ -31,8 +31,8 @@ interface QueueInterface extends \Countable
     public function close();
 
     /**
-     * @param integer $index
-     * @param integer $length
+     * @param  integer $index
+     * @param  integer $length
      * @return array
      */
     public function slice($index, $length);
