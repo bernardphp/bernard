@@ -7,7 +7,7 @@
 use Raekke\Consumer;
 use Raekke\Message\DefaultMessage;
 use Raekke\Producer;
-use Raekke\ServiceResolver;
+use Raekke\ServiceResolver\ServiceResolver;
 use Raekke\QueueFactory\InMemoryQueueFactory;
 
 require __DIR__ . '/../vendor/autoload.php';

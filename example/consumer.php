@@ -1,6 +1,6 @@
 <?php
 
-use Raekke\ServiceResolver;
+use Raekke\ServiceResolver\ServiceResolver;
 use Raekke\Consumer;
 
 require __DIR__ . '/bootstrap.php';
