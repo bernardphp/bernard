@@ -10,7 +10,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->queues = $this->getMock('Raekke\QueueFactory\QueueFactoryInterface');
-        $this->services = $this->getMock('Raekke\ServiceResolverInterface');
+        $this->services = $this->getMock('Raekke\ServiceResolver\ServiceResolverInterface');
     }
 
     public function testItCanCreateAConsumer()

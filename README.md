@@ -121,7 +121,7 @@ object should handle what messages it is need to register them first.
 ``` php
 <?php
 
-use Raekke\ServiceResolver;
+use Raekke\ServiceResolver\ServiceResolver;
 use Raekke\Consumer;
 
 // .. create connection and a queuefactory
@@ -130,6 +130,17 @@ use Raekke\Consumer;
 
 $serviceResolver = new ServiceResolver;
 $serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
+
+// Raekke also comes with a ServiceResolver for Pimple (Silex) which allows you
+// to use service ids and have your service object lazy loader.
+//
+// $serviceResolver = new PimpleAwareServiceResolver($pimple);
+// $serviceResolver->register('SendNewsletter', 'my.service.id');
+//
+// Symfony DependencyInjection component is also supported.
+//
+// $serviceResolver = new ContainerAwareServiceResolver($container);
+// $serviceResolver->register('SendNewsletter', 'my.service.id');
 
 // Create a Consumer and start the loop. The second argument is optional and
 // is the queue failed messages should be added to.

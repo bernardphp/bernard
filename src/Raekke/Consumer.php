@@ -2,8 +2,9 @@
 
 namespace Raekke;
 
-use Raekke\Queue\QueueInterface;
 use Raekke\Consumer\Job;
+use Raekke\Queue\QueueInterface;
+use Raekke\ServiceResolver\ServiceResolverInterface;
 
 declare(ticks=1);
 

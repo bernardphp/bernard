@@ -1,14 +1,14 @@
 <?php
 
-namespace Raekke\Tests;
+namespace Raekke\Tests\ServiceResolver;
 
-use Raekke\ServiceResolver;
+use Raekke\ServiceResolver\ServiceResolver;
 
 class ServiceResolverTest extends \PHPUnit_Framework_TestCase
 {
     public function itImplementsServiceResolverInterface()
     {
-        $this->assertInstanceOf('Raekke\ServiceResolverInterface', new ServiceResolver);
+        $this->assertInstanceOf('Raekke\ServiceResolver\ServiceResolverInterface', new ServiceResolver);
     }
 
     /**

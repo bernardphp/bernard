@@ -5,8 +5,9 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnFailure="false"
+         stopOnFailure="true"
          syntaxCheck="false"
+         strict="true"
          bootstrap="tests/bootstrap.php">
 
     <testsuites>
@@ -18,7 +19,9 @@
     <filter>
         <whitelist>
             <directory>src</directory>
-            <exclude />
+            <exclude>
+                <directory>src/Raekke/Resources</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

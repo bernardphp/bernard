@@ -1,6 +1,6 @@
 <?php
 
-namespace Raekke;
+namespace Raekke\ServiceResolver;
 
 use Raekke\Message\MessageInterface;
 
@@ -11,7 +11,7 @@ interface ServiceResolverInterface
 {
     /**
      * @param string $name
-     * @param mixed  $service
+     * @param object|callable $service
      */
     public function register($name, $service);
 

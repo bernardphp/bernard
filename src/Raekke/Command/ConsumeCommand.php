@@ -4,7 +4,7 @@ namespace Raekke\Command;
 
 use Raekke\Consumer;
 use Raekke\QueueFactory\QueueFactoryInterface;
-use Raekke\ServiceResolverInterface;
+use Raekke\ServiceResolver\ServiceResolverInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;

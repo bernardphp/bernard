@@ -1,6 +1,6 @@
 <?php
 
-namespace Raekke;
+namespace Raekke\ServiceResolver;
 
 use Raekke\Message\MessageInterface;
 
