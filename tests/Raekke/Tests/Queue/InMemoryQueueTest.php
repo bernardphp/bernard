@@ -23,6 +23,9 @@ class InMemoryQueueTest extends AbstractQueueTest
     public function testSlice()
     {
         $queue = new InMemoryQueue('send-newsletter');
+
+        $this->assertEquals(array(), $queue->slice(0, 10));
+
         $queue->enqueue($envelope  = $this->getEnvelope());
         $queue->enqueue($envelope1 = $this->getEnvelope());
         $queue->enqueue($envelope2 = $this->getEnvelope());

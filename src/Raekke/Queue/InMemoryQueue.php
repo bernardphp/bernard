@@ -56,6 +56,10 @@ class InMemoryQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
+        if (!$this->count()) {
+            return array();
+        }
+
         $envelopes = array();
         $queue = clone $this->queue;
         $key = -1;
