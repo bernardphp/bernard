@@ -11,11 +11,17 @@ use JMS\Serializer\SerializationContext;
  */
 class Serializer implements SerializerInterface
 {
+    /**
+     * @param JMSSerializerInterface $serializer
+     */
     public function __construct(JMSSerializerInterface $serializer)
     {
         $this->serializer = $serializer;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function serialize(Envelope $message)
     {
         $context = SerializationContext::create()
@@ -24,6 +30,9 @@ class Serializer implements SerializerInterface
         return $this->serializer->serialize($message, 'json', $context);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function deserialize($deserialized)
     {
         return $this->serializer->deserialize($deserialized, 'Raekke\Message\Envelope', 'json');

@@ -15,7 +15,7 @@ class InMemoryQueue extends AbstractQueue
     protected $queue;
 
     /**
-     * @param string $name
+     * {@inheritDoc}
      */
     public function __construct($name)
     {
@@ -25,6 +25,9 @@ class InMemoryQueue extends AbstractQueue
         $this->queue->setIteratorMode(SplQueue::IT_MODE_DELETE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function count()
     {
         $this->errorIfClosed();
@@ -32,6 +35,9 @@ class InMemoryQueue extends AbstractQueue
         return $this->queue->count();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function enqueue(Envelope $envelope)
     {
         $this->errorIfClosed();
@@ -39,6 +45,9 @@ class InMemoryQueue extends AbstractQueue
         $this->queue->enqueue($envelope);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function dequeue()
     {
         $this->errorIfClosed();
@@ -52,6 +61,9 @@ class InMemoryQueue extends AbstractQueue
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function slice($index, $length)
     {
         $this->errorIfClosed();

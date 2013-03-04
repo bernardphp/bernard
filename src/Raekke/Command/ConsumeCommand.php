@@ -18,6 +18,10 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     protected $services;
     protected $queues;
 
+    /**
+     * @param ServiceResolverInterface $services
+     * @param QueueFactoryInterface    $queues
+     */
     public function __construct(
         ServiceResolverInterface $services,
         QueueFactoryInterface $queues
@@ -28,6 +32,9 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
         parent::__construct();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function configure()
     {
         $this
@@ -38,6 +45,9 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
         ;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->getConsumer()->consume($this->queues->create($input->getArgument('queue')), array(
@@ -46,6 +56,9 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
         ));
     }
 
+    /**
+     * @return Consumer
+     */
     public function getConsumer()
     {
         return new Consumer($this->services, $this->queues->create('failed'));

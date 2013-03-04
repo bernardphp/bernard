@@ -14,6 +14,11 @@ class Queue extends AbstractQueue
     protected $connection;
     protected $serializer;
 
+    /**
+     * @param string              $name
+     * @param Connection          $connection
+     * @param SerializerInterface $serializer
+     */
     public function __construct(
         $name,
         Connection $connection,
@@ -27,6 +32,9 @@ class Queue extends AbstractQueue
         $this->register();
     }
 
+    /**
+     * Register with the connection
+     */
     public function register()
     {
         $this->errorIfClosed();
@@ -34,6 +42,9 @@ class Queue extends AbstractQueue
         $this->connection->insert('queues', $this->name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function count()
     {
         $this->errorIfClosed();
@@ -41,6 +52,9 @@ class Queue extends AbstractQueue
         return $this->connection->count($this->getKey());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function enqueue(Envelope $envelope)
     {
         $this->errorIfClosed();
@@ -48,6 +62,9 @@ class Queue extends AbstractQueue
         $this->connection->push($this->getKey(), $this->serializer->serialize($envelope));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function dequeue()
     {
         $this->errorIfClosed();
@@ -59,6 +76,9 @@ class Queue extends AbstractQueue
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function slice($index, $length)
     {
         $this->errorIfClosed();
@@ -66,6 +86,9 @@ class Queue extends AbstractQueue
         return array_map(array($this->serializer, 'deserialize'), $this->connection->slice($this->getKey(), $index, $length));
     }
 
+    /**
+     * @return string
+     */
     public function getKey()
     {
         return 'queue:' . $this->name;

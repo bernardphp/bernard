@@ -18,6 +18,10 @@ class QueueFactory implements QueueFactoryInterface
     protected $connection;
     protected $serializer;
 
+    /**
+     * @param Connection          $connection
+     * @param SerializerInterface $serializer
+     */
     public function __construct(
         Connection $connection,
         SerializerInterface $serializer
@@ -27,6 +31,10 @@ class QueueFactory implements QueueFactoryInterface
         $this->serializer = $serializer;
     }
 
+    /**
+     * @param  string $queueName
+     * @return Queue
+     */
     public function create($queueName)
     {
         if (isset($this->queues[$queueName])) {
@@ -38,6 +46,9 @@ class QueueFactory implements QueueFactoryInterface
         return $this->queues[$queueName] = $queue;
     }
 
+    /**
+     * @return Queue[]
+     */
     public function all()
     {
         // Calls $this->create on every name returned from the connection
@@ -46,6 +57,10 @@ class QueueFactory implements QueueFactoryInterface
         return $this->queues;
     }
 
+    /**
+     * @param  string  $queueName
+     * @return boolean
+     */
     public function exists($queueName)
     {
         if (isset($this->queues[$queueName])) {
@@ -55,11 +70,17 @@ class QueueFactory implements QueueFactoryInterface
         return $this->connection->contains('queues', $queueName);
     }
 
+    /**
+     * @return integer
+     */
     public function count()
     {
         return count($this->connection->all('queues'));
     }
 
+    /**
+     * @param string $queueName
+     */
     public function remove($queueName)
     {
         if (!$this->exists($queueName)) {

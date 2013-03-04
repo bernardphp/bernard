@@ -80,6 +80,9 @@ class Consumer implements ConsumerInterface
         // Unregister with consumer monitoring thing
     }
 
+    /**
+     * Mark consumer as terminating
+     */
     public function shutdown()
     {
         $this->shutdown = true;

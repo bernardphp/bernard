@@ -14,6 +14,10 @@ class InMemoryQueueFactory implements QueueFactoryInterface
 {
     protected $queues;
 
+    /**
+     * @param  string               $queueName
+     * @return InMemoryQueueFactory
+     */
     public function create($queueName)
     {
         if (!$this->exists($queueName)) {
@@ -23,21 +27,34 @@ class InMemoryQueueFactory implements QueueFactoryInterface
         return $this->queues[$queueName];
     }
 
+    /**
+     * @return InMemoryQueue[]
+     */
     public function all()
     {
         return $this->queues;
     }
 
+    /**
+     * @return integer
+     */
     public function count()
     {
         return count($this->queues);
     }
 
+    /**
+     * @param  string  $queueName
+     * @return boolean
+     */
     public function exists($queueName)
     {
         return isset($this->queues[$queueName]);
     }
 
+    /**
+     * @param string $queueName
+     */
     public function remove($queueName)
     {
         if ($this->exists($queueName)) {

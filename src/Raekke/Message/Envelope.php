@@ -70,15 +70,19 @@ class Envelope
         return $this->retries;
     }
 
+    /**
+     * Increment number of retries
+     */
     public function incrementRetries()
     {
         $this->retries += 1;
     }
 
     /**
-     * @param AbstractVisitor $visitor
-     * @param array           $data
-     * @param Context         $context
+     * @param  AbstractVisitor $visitor
+     * @param  null            $data
+     * @param  Context         $context
+     * @return array
      */
     public function serializeToJson(AbstractVisitor $visitor, $data, Context $context)
     {
