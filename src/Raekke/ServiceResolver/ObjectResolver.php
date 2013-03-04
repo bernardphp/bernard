@@ -2,12 +2,12 @@
 
 namespace Raekke\ServiceResolver;
 
-use Raekke\Message\MessageInterface;
+use Raekke\Message;
 
 /**
  * @package Raekke
  */
-class ServiceResolver implements ServiceResolverInterface
+class ObjectResolver implements \Raekke\ServiceResolver
 {
     protected $services = array();
 
@@ -26,7 +26,7 @@ class ServiceResolver implements ServiceResolverInterface
     /**
      * {@inheritDoc}
      */
-    public function resolve(MessageInterface $message)
+    public function resolve(Message $message)
     {
         if (isset($this->services[$message->getName()])) {
             return $this->services[$message->getName()];

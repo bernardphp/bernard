@@ -7,7 +7,7 @@ use Raekke\Exception\InvalidOperationException;
 /**
  * @package Raekke
  */
-abstract class AbstractQueue implements QueueInterface
+abstract class AbstractQueue implements \Raekke\Queue
 {
     protected $closed;
     protected $name;
@@ -42,7 +42,7 @@ abstract class AbstractQueue implements QueueInterface
     protected function errorIfClosed()
     {
         if ($this->closed) {
-            throw new InvalidOperationException(sprintf('Queue "%s" is closed.', $this->getName()));
+            throw new InvalidOperationException(sprintf('Queue "%s" is closed.', $this->name));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Raekke\Consumer;
 
-use Raekke\Message\MessageInterface;
+use Raekke\Message;
 
 /**
  * @package Raekke
@@ -15,7 +15,7 @@ class Job
     /**
      * @param object $object
      */
-    public function __construct($object, MessageInterface $message)
+    public function __construct($object, Message $message)
     {
         $this->object  = $object;
         $this->message = $message;

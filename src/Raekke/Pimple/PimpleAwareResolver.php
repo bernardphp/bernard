@@ -1,14 +1,15 @@
 <?php
 
-namespace Raekke\ServiceResolver;
+namespace Raekke\Pimple;
 
 use Pimple;
-use Raekke\Message\MessageInterface;
+use Raekke\Message;
+use Raekke\ServiceResolver;
 
 /**
  * @package Raekke
  */
-class PimpleAwareServiceResolver implements ServiceResolverInterface
+class PimpleAwareResolver implements ServiceResolver
 {
     protected $services = array();
     protected $container;
@@ -32,7 +33,7 @@ class PimpleAwareServiceResolver implements ServiceResolverInterface
     /**
      * {@inheritDoc}
      */
-    public function resolve(MessageInterface $message)
+    public function resolve(Message $message)
     {
         if (!isset($this->services[$message->getName()])) {
             throw new \InvalidArgumentException('No service registered for message "' . $message->getName() . '".');

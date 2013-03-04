@@ -2,16 +2,21 @@
 
 namespace Raekke\Tests;
 
-use Raekke\QueueFactory\QueueFactory;
+use Raekke\QueueFactory\PersistentFactory;
 
-class QueueFactoryTest extends \PHPUnit_Framework_TestCase
+class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->connection = $this->getMockBuilder('Raekke\Connection')
             ->disableOriginalConstructor()->getMock();
 
-        $this->factory = new QueueFactory($this->connection, $this->getMock('Raekke\Serializer\SerializerInterface'));
+        $this->factory = new PersistentFactory($this->connection, $this->getMock('Raekke\Serializer'));
+    }
+
+    public function testImplementsQueueFactory()
+    {
+        $this->assertInstanceOf('Raekke\QueueFactory', $this->factory);
     }
 
     public function testItSavesQueueObjects()
@@ -42,7 +47,7 @@ class QueueFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->connection->expects($this->once())->method('insert')->with($this->equalTo('queues'), $this->equalTo('queue'));
 
-        $this->assertInstanceOf('Raekke\Queue\Queue', $this->factory->create('queue'));
+        $this->assertInstanceOf('Raekke\Queue\PersistentQueue', $this->factory->create('queue'));
     }
 
     public function testItsCountable()
@@ -61,6 +66,6 @@ class QueueFactoryTest extends \PHPUnit_Framework_TestCase
         $all = $this->factory->all();
 
         $this->assertCount(2, $all);
-        $this->assertContainsOnly('Raekke\Queue\Queue', $all);
+        $this->assertContainsOnly('Raekke\Queue\PersistentQueue', $all);
     }
 }

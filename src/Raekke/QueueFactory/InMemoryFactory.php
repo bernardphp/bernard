@@ -10,7 +10,7 @@ use Raekke\Queue\InMemoryQueue;
  *
  * @package Raekke
  */
-class InMemoryQueueFactory implements QueueFactoryInterface
+class InMemoryFactory implements \Raekke\QueueFactory
 {
     protected $queues;
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace Raekke\ServiceResolver;
+namespace Raekke\Symfony;
 
-use Raekke\Message\MessageInterface;
+use Raekke\Message;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
  * @package Raekke
  */
-class ContainerAwareServiceResolver implements ServiceResolverInterface
+class ContainerAwareResolver implements \Raekke\ServiceResolver
 {
     protected $services = array();
     protected $container;
@@ -32,7 +32,7 @@ class ContainerAwareServiceResolver implements ServiceResolverInterface
     /**
      * {@inheritDoc}
      */
-    public function resolve(MessageInterface $message)
+    public function resolve(Message $message)
     {
         if (!isset($this->services[$message->getName()])) {
             throw new \InvalidArgumentException('No service registered for message "' . $message->getName() . '".');

@@ -2,13 +2,13 @@
 
 namespace Raekke\Tests\ServiceResolver;
 
-use Raekke\ServiceResolver\ServiceResolver;
+use Raekke\ServiceResolver\ObjectResolver;
 
-class ServiceResolverTest extends \PHPUnit_Framework_TestCase
+class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 {
-    public function itImplementsServiceResolverInterface()
+    public function testImplementsServiceResolver()
     {
-        $this->assertInstanceOf('Raekke\ServiceResolver\ServiceResolverInterface', new ServiceResolver);
+        $this->assertInstanceOf('Raekke\ServiceResolver', new ObjectResolver);
     }
 
     /**
@@ -17,18 +17,18 @@ class ServiceResolverTest extends \PHPUnit_Framework_TestCase
     public function testItThrowsExceptionWhenServiceIsNotAnObject($name, $type)
     {
         $this->setExpectedException('InvalidArgumentException');
-        $resolver = new ServiceResolver;
+        $resolver = new ObjectResolver;
         $resolver->register($name, $type);
     }
 
     public function testItResolvesBasedOnMessageName()
     {
-        $message = $this->getMock('Raekke\Message\MessageInterface');
+        $message = $this->getMock('Raekke\Message');
         $message->expects($this->any())->method('getName')->will($this->returnValue('SendNewsletter'));
 
         $service = new \stdClass;
 
-        $resolver = new ServiceResolver;
+        $resolver = new ObjectResolver;
         $resolver->register('SendNewsletter', $service);
 
         $this->assertSame($service, $resolver->resolve($message));
@@ -38,10 +38,10 @@ class ServiceResolverTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('InvalidArgumentException');
 
-        $message = $this->getMock('Raekke\Message\MessageInterface');
+        $message = $this->getMock('Raekke\Message');
         $message->expects($this->any())->method('getName')->will($this->returnValue('SendNewsletter'));
 
-        $resolver = new ServiceResolver;
+        $resolver = new ObjectResolver;
         $resolver->resolve($message);
     }
 

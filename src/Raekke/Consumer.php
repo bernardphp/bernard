@@ -3,8 +3,7 @@
 namespace Raekke;
 
 use Raekke\Consumer\Job;
-use Raekke\Queue\QueueInterface;
-use Raekke\ServiceResolver\ServiceResolverInterface;
+use Exception;
 
 declare(ticks=1);
 
@@ -22,12 +21,12 @@ class Consumer implements ConsumerInterface
     );
 
     /**
-     * @param ServiceResolverInterface $services
-     * @param Queue                    $failed   Failed messages will be enqueued on this.
+     * @param ServiceResolver $services
+     * @param Queue           $failed
      */
     public function __construct(
-        ServiceResolverInterface $services,
-        QueueInterface $failed = null
+        ServiceResolver $services,
+        Queue $failed = null
     ) {
         $this->failed = $failed;
         $this->services = $services;
@@ -36,7 +35,7 @@ class Consumer implements ConsumerInterface
     /**
      * {@inheritDoc}
      */
-    public function consume(QueueInterface $queue, array $options = array())
+    public function consume(Queue $queue, array $options = array())
     {
         $options = array_merge($this->defaults, array_filter($options));
         $runtime = microtime(true) + $options['max_runtime'];
@@ -61,7 +60,7 @@ class Consumer implements ConsumerInterface
 
                 $job = new Job($service, $message);
                 $job();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 if ($envelope->getRetries() < $options['max_retries']) {
                     $envelope->incrementRetries();
                     $queue->enqueue($envelope);

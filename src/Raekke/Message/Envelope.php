@@ -2,16 +2,17 @@
 
 namespace Raekke\Message;
 
+use Raekke\Message;
 use JMS\Serializer\AbstractVisitor;
 use JMS\Serializer\Context;
 
 /**
- * Wraps a MessageInterface with metadata that can be used for automatic retry
+ * Wraps a Message with metadata that can be used for automatic retry
  * or inspection.
  *
  * @package Raekke
  */
-class Envelope
+final class Envelope
 {
     protected $message;
     protected $name;
@@ -20,9 +21,9 @@ class Envelope
     protected $retries = 0;
 
     /**
-     * @param MessageInterface $message
+     * @param Message $message
      */
-    public function __construct(MessageInterface $message)
+    public function __construct(Message $message)
     {
         $this->message   = $message;
         $this->class     = get_class($message);
@@ -31,7 +32,7 @@ class Envelope
     }
 
     /**
-     * @return MessageInterface
+     * @return Message
      */
     public function getMessage()
     {
@@ -117,6 +118,8 @@ class Envelope
             'params' => array(),
         );
 
+        // This will allow DefaultMessage to be used for introspection where the default classes
+        // are not available (like when viewed in Juno)
         if (class_exists($this->class)) {
             $type['name'] = $this->class;
         }

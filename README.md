@@ -42,19 +42,19 @@ sure your sets does not conflict with others of the same same.
 ``` php
 <?php
 
-use Raekke\Connection;
+use Raekke\Connection\PredisConnection;
 use Predis\Client;
 
 $predis = new Client('tcp://localhost', array(
     'prefix' => 'raekke:',
 ));
 
-$connection = new Connection($predis);
+$connection = new PredisConnection($predis);
 ```
 
 ### Producing Messages
 
-Any message sent to Raekke must be an instance of `Raekke\Message\MessageInterface`
+Any message sent to Raekke must be an instance of `Raekke\Message`
 which have a `getName` and `getQueue` method. `getName` is used when working on
 messages and identifies the worker service that should work on it.
 
@@ -80,15 +80,15 @@ used it is needed to add metadata for being able to serialize and deserialize th
 use Raekke\Message\DefaultMessage;
 use Raekke\Message\Envelope;
 use Raekke\Producer;
-use Raekke\QueueFactory\QueueFactory;
-use Raekke\Serializer\Serializer;
+use Raekke\QueueFactory\PersistentFactory;
+use Raekke\Serializer\JMSSerializer;
 
 // .. create serializer instance where src/Raekke/Resources/serializer
 // is registered as a metadata dir with "Raekke" as prefix.
-$serializer = new Serializer($jmsSerializer);
+$serializer = new JMSSerializer($jmsSerializer);
 
 // .. create connection
-$factory = new QueueFactory($connection, $serializer);
+$factory = new PersistentFactory($connection, $serializer);
 $producer = new Producer($factory);
 
 $message = new DefaultMessage("SendNewsletter", array(
@@ -121,25 +121,25 @@ object should handle what messages it is need to register them first.
 ``` php
 <?php
 
-use Raekke\ServiceResolver\ServiceResolver;
+use Raekke\ServiceResolver\ObjectResolver;
 use Raekke\Consumer;
 
 // .. create connection and a queuefactory
 // NewsletterMessageHandler is a pseudo service object that responds to
 // onSendNewsletter.
 
-$serviceResolver = new ServiceResolver;
+$serviceResolver = new ObjectResolver;
 $serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
 
-// Raekke also comes with a ServiceResolver for Pimple (Silex) which allows you
+// Raekke also comes with a service resolver for Pimple (Silex) which allows you
 // to use service ids and have your service object lazy loader.
 //
-// $serviceResolver = new PimpleAwareServiceResolver($pimple);
+// $serviceResolver = new \Raekke\Pimple\PimpleAwareResolver($pimple);
 // $serviceResolver->register('SendNewsletter', 'my.service.id');
 //
 // Symfony DependencyInjection component is also supported.
 //
-// $serviceResolver = new ContainerAwareServiceResolver($container);
+// $serviceResolver = new \Raekke\Symfony\ContainerAwareServiceResolver($container);
 // $serviceResolver->register('SendNewsletter', 'my.service.id');
 
 // Create a Consumer and start the loop. The second argument is optional and
@@ -194,10 +194,8 @@ better for your needs.
 * [php-resque](https://github.com/chrisboulton/php-resque)
 * [Resque](https://github.com/defunkt/resque)
 
+Special Thanks
+--------------
 
-Happy Customers
----------------
-
-Not really anybody as it is not completly finished. If you need something like
-this i encourage you to contact me and we will figure out how we can work
-together on this.
+* [Benjamin Eberlei](http://whitewashing.de) for advice regarding architeture
+* [Peytz & Co](http://peytz.dk)

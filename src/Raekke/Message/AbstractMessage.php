@@ -5,7 +5,7 @@ namespace Raekke\Message;
 /**
  * @package Raekke
  */
-abstract class Message implements MessageInterface
+abstract class AbstractMessage implements \Raekke\Message
 {
     /**
      * {@inheritDoc}

@@ -9,7 +9,7 @@ class InMemoryQueueTest extends AbstractQueueTest
 {
     public function testDequeue()
     {
-        $envelope = new Envelope($this->getMock('Raekke\Message\MessageInterface'));
+        $envelope = new Envelope($this->getMock('Raekke\Message'));
 
         $queue = $this->createQueue('send-newsletter');
         $queue->enqueue($envelope);
@@ -41,7 +41,7 @@ class InMemoryQueueTest extends AbstractQueueTest
 
     protected function getEnvelope()
     {
-        return new Envelope($this->getMock('Raekke\Message\MessageInterface'));
+        return new Envelope($this->getMock('Raekke\Message'));
     }
 
     protected function createQueue($name)

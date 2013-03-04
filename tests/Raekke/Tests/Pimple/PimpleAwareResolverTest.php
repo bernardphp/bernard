@@ -3,16 +3,16 @@
 namespace Raekke\Tests\ServiceResolver;
 
 use Raekke\Message\DefaultMessage;
-use Raekke\ServiceResolver\ContainerAwareServiceResolver;
-use Symfony\Component\DependencyInjection\Container;
+use Raekke\Pimple\PimpleAwareResolver;
+use Pimple;
 
-class ContainerAwareServiceResolverTest extends \PHPUnit_Framework_TestCase
+class PimpleAwareResolverTest extends \PHPUnit_Framework_TestCase
 {
     protected function createResolver()
     {
-        $this->container = new Container;
+        $this->container = new \Pimple;
 
-        return new ContainerAwareServiceResolver($this->container);
+        return new PimpleAwareResolver($this->container);
     }
 
     public function testExceptionWhenMessageCannotBeResolved()
@@ -22,7 +22,7 @@ class ContainerAwareServiceResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolver = $this->createResolver();
 
-        $this->assertEquals(array('service_container'), $this->container->getServiceIds());
+        $this->assertEquals(array(), $this->container->keys());
 
         $resolver->resolve(new DefaultMessage('SendNewsletter'));
     }
@@ -31,7 +31,7 @@ class ContainerAwareServiceResolverTest extends \PHPUnit_Framework_TestCase
     {
         $resolver = $this->createResolver();
 
-        $this->container->set('my.service.id', $service = new \stdClass);
+        $this->container['my.service.id'] = $service = new \stdClass;
 
         $resolver->register('SendNewsletter', 'my.service.id');
 
@@ -40,7 +40,8 @@ class ContainerAwareServiceResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionWhenServiceDosentExistOnContainer()
     {
-        $this->setExpectedException('Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException');
+        $this->setExpectedException('InvalidArgumentException',
+            'Identifier "non_existant_service_id" is not defined.'); 
 
         $resolver = $this->createResolver();
         $resolver->register('SendNewsletter', 'non_existant_service_id');

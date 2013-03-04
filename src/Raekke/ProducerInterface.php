@@ -2,7 +2,7 @@
 
 namespace Raekke;
 
-use Raekke\Message\MessageInterface;
+use Raekke\Message;
 
 /**
  * Responsible for distributing a message to the correct queue.
@@ -12,7 +12,7 @@ use Raekke\Message\MessageInterface;
 interface ProducerInterface
 {
     /**
-     * @param MessageInterface $message
+     * @param Message $message
      */
-    public function produce(MessageInterface $message);
+    public function produce(Message $message);
 }
