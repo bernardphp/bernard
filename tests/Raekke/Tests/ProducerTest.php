@@ -16,7 +16,7 @@ class MessagePublisherTest extends \PHPUnit_Framework_TestCase
 
     public function testItSendsToTestsToQueue()
     {
-        $message = $this->getMock('Raekke\Message\MessageInterface');
+        $message = $this->getMock('Raekke\Message');
         $message->expects($this->once())->method('getQueue')->will($this->returnValue('my-queue'));
 
         $queue = $this->getMockBuilder('Raekke\Queue')->disableOriginalConstructor()

@@ -66,4 +66,4 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 }
 
 namespace Application;
-class SendNewsletterMessage extends \Raekke\Message\Message {}
+class SendNewsletterMessage extends \Raekke\Message\AbstractMessage {}

@@ -2,7 +2,7 @@
 
 namespace Raekke\Symfony;
 
-use Raekke\Message\MessageInterface;
+use Raekke\Message;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -32,7 +32,7 @@ class ContainerAwareResolver implements \Raekke\ServiceResolver
     /**
      * {@inheritDoc}
      */
-    public function resolve(MessageInterface $message)
+    public function resolve(Message $message)
     {
         if (!isset($this->services[$message->getName()])) {
             throw new \InvalidArgumentException('No service registered for message "' . $message->getName() . '".');

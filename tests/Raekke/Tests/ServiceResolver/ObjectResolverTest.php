@@ -23,7 +23,7 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testItResolvesBasedOnMessageName()
     {
-        $message = $this->getMock('Raekke\Message\MessageInterface');
+        $message = $this->getMock('Raekke\Message');
         $message->expects($this->any())->method('getName')->will($this->returnValue('SendNewsletter'));
 
         $service = new \stdClass;
@@ -38,7 +38,7 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('InvalidArgumentException');
 
-        $message = $this->getMock('Raekke\Message\MessageInterface');
+        $message = $this->getMock('Raekke\Message');
         $message->expects($this->any())->method('getName')->will($this->returnValue('SendNewsletter'));
 
         $resolver = new ObjectResolver;

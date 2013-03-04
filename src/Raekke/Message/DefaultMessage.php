@@ -8,7 +8,7 @@ use JMS\Serializer\Context;
 /**
  * @package Raekke
  */
-class DefaultMessage extends Message
+class DefaultMessage extends AbstractMessage
 {
     protected $name;
 

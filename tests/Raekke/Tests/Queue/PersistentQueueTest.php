@@ -15,7 +15,7 @@ class QueueTest extends AbstractQueueTest
 
     public function testDequeue()
     {
-        $messageWrapper = new Envelope($this->getMock('Raekke\Message\MessageInterface'));
+        $messageWrapper = new Envelope($this->getMock('Raekke\Message'));
 
         $this->connection->expects($this->at(1))->method('pop')->with($this->equalTo('queue:send-newsletter'))
             ->will($this->returnValue('deserialized'));

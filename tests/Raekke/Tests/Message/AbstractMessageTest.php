@@ -2,11 +2,16 @@
 
 namespace Raekke\Tests\Message;
 
-class MessageTest extends \PHPUnit_Framework_TestCase
+class AbstractMessageTest extends \PHPUnit_Framework_TestCase
 {
+    public function testImplementsMessage()
+    {
+        $this->assertInstanceOf('Raekke\Message', $this->getMockForAbstractClass('Raekke\Message\AbstractMessage'));
+    }
+
     public function testItUsesClassNameAsNameAndQueueNameNormalized()
     {
-        $message = $this->getMockForAbstractClass('Raekke\Message\Message', array(), 'MyCustomMessage');
+        $message = $this->getMockForAbstractClass('Raekke\Message\AbstractMessage', array(), 'MyCustomMessage');
         $this->assertEquals('MyCustom', $message->getName());
         $this->assertEquals('my-custom', $message->getQueue());
 
@@ -17,4 +22,4 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 }
 
 namespace CustomVendor;
-class SendNewsletterMessage extends \Raekke\Message\Message {}
+class SendNewsletterMessage extends \Raekke\Message\AbstractMessage {}

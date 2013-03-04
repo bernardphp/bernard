@@ -1,11 +1,11 @@
 <?php
 
-namespace Raekke\Message;
+namespace Raekke;
 
 /**
  * @package Raekke
  */
-interface MessageInterface
+interface Message
 {
     /**
      * @return string
