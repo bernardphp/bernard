@@ -12,7 +12,7 @@ use JMS\Serializer\Context;
  *
  * @package Raekke
  */
-class Envelope
+final class Envelope
 {
     protected $message;
     protected $name;
