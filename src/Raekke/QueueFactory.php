@@ -1,6 +1,6 @@
 <?php
 
-namespace Raekke\QueueFactory;
+namespace Raekke;
 
 /**
  * Knows how to create queues and retrieve them from the used connection.
@@ -8,7 +8,7 @@ namespace Raekke\QueueFactory;
  *
  * @package Raekke
  */
-interface QueueFactoryInterface extends \Countable
+interface QueueFactory extends \Countable
 {
     /**
      * @param  string             $queueName

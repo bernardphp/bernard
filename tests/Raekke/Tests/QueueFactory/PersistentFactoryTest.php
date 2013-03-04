@@ -2,16 +2,21 @@
 
 namespace Raekke\Tests;
 
-use Raekke\QueueFactory\QueueFactory;
+use Raekke\QueueFactory\PersistentFactory;
 
-class QueueFactoryTest extends \PHPUnit_Framework_TestCase
+class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->connection = $this->getMockBuilder('Raekke\Connection')
             ->disableOriginalConstructor()->getMock();
 
-        $this->factory = new QueueFactory($this->connection, $this->getMock('Raekke\Serializer\SerializerInterface'));
+        $this->factory = new PersistentFactory($this->connection, $this->getMock('Raekke\Serializer\SerializerInterface'));
+    }
+
+    public function testImplementsQueueFactory()
+    {
+        $this->assertInstanceOf('Raekke\QueueFactory', $this->factory);
     }
 
     public function testItSavesQueueObjects()

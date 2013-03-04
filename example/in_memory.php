@@ -8,12 +8,12 @@ use Raekke\Consumer;
 use Raekke\Message\DefaultMessage;
 use Raekke\Producer;
 use Raekke\ServiceResolver\ObjectResolver;
-use Raekke\QueueFactory\InMemoryQueueFactory;
+use Raekke\QueueFactory\InMemoryFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 require 'EchoTimeService.php';
 
-$queues = new InMemoryQueueFactory();
+$queues = new InMemoryFactory;
 $producer = new Producer($queues);
 
 for ($i = 0; $i < 20;$i++) {

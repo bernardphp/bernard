@@ -9,7 +9,7 @@ class MessagePublisherTest extends \PHPUnit_Framework_TestCase
 {
     public function testItImplementsProducerInterface()
     {
-        $factory = $this->getMock('Raekke\QueueFactory\QueueFactoryInterface');
+        $factory = $this->getMock('Raekke\QueueFactory');
 
         $this->assertInstanceOf('Raekke\ProducerInterface', new Producer($factory));
     }
@@ -23,7 +23,7 @@ class MessagePublisherTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $queue->expects($this->once())->method('enqueue')->with($this->equalTo(new Envelope($message)));
 
-        $factory = $this->getMock('Raekke\QueueFactory\QueueFactoryInterface');
+        $factory = $this->getMock('Raekke\QueueFactory');
         $factory->expects($this->once())->method('create')->with($this->equalTo('my-queue'))
             ->will($this->returnValue($queue));
 

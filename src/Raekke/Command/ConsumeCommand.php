@@ -3,7 +3,7 @@
 namespace Raekke\Command;
 
 use Raekke\Consumer;
-use Raekke\QueueFactory\QueueFactoryInterface;
+use Raekke\QueueFactory;
 use Raekke\ServiceResolver;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,7 +24,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
      */
     public function __construct(
         ServiceResolver $services,
-        QueueFactoryInterface $queues
+        QueueFactory $queues
     ) {
         $this->services = $services;
         $this->queues = $queues;

@@ -4,7 +4,7 @@ use JMS\Serializer\SerializerBuilder;
 use Predis\Client;
 use Raekke\Connection\PredisConnection;
 use Raekke\Serializer\Serializer;
-use Raekke\QueueFactory\QueueFactory;
+use Raekke\QueueFactory\PersistentFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -19,4 +19,4 @@ $connection = new PredisConnection(new Client(null, array(
     'prefix' => 'raekke:',
 )));
 $serializer = new Serializer($jmsSerializer);
-$queues = new QueueFactory($connection, $serializer);
+$queues = new PersistentFactory($connection, $serializer);

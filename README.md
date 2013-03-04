@@ -80,7 +80,7 @@ used it is needed to add metadata for being able to serialize and deserialize th
 use Raekke\Message\DefaultMessage;
 use Raekke\Message\Envelope;
 use Raekke\Producer;
-use Raekke\QueueFactory\QueueFactory;
+use Raekke\QueueFactory\PersistentFactory;
 use Raekke\Serializer\Serializer;
 
 // .. create serializer instance where src/Raekke/Resources/serializer
@@ -88,7 +88,7 @@ use Raekke\Serializer\Serializer;
 $serializer = new Serializer($jmsSerializer);
 
 // .. create connection
-$factory = new QueueFactory($connection, $serializer);
+$factory = new PersistentFactory($connection, $serializer);
 $producer = new Producer($factory);
 
 $message = new DefaultMessage("SendNewsletter", array(

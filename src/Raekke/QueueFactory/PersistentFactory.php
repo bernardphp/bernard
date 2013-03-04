@@ -12,7 +12,7 @@ use Raekke\Serializer\SerializerInterface;
  *
  * @package Raekke
  */
-class QueueFactory implements QueueFactoryInterface
+class PersistentFactory implements \Raekke\QueueFactory
 {
     protected $queues;
     protected $connection;
