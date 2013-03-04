@@ -1,13 +1,13 @@
 <?php
 
-namespace Raekke\Serializer;
+namespace Raekke;
 
 use Raekke\Message\Envelope;
 
 /**
  * @package Raekke
  */
-interface SerializerInterface
+interface Serializer
 {
     /**
      * @param  Envelope $message

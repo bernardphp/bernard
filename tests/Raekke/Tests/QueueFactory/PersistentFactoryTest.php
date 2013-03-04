@@ -11,7 +11,7 @@ class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
         $this->connection = $this->getMockBuilder('Raekke\Connection')
             ->disableOriginalConstructor()->getMock();
 
-        $this->factory = new PersistentFactory($this->connection, $this->getMock('Raekke\Serializer\SerializerInterface'));
+        $this->factory = new PersistentFactory($this->connection, $this->getMock('Raekke\Serializer'));
     }
 
     public function testImplementsQueueFactory()

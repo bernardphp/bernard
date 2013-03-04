@@ -4,7 +4,7 @@ namespace Raekke\Queue;
 
 use Raekke\Connection;
 use Raekke\Message\Envelope;
-use Raekke\Serializer\SerializerInterface;
+use Raekke\Serializer;
 
 /**
  * @package Raekke
@@ -22,7 +22,7 @@ class PersistentQueue extends AbstractQueue
     public function __construct(
         $name,
         Connection $connection,
-        SerializerInterface $serializer
+        Serializer $serializer
     ) {
         parent::__construct($name);
 

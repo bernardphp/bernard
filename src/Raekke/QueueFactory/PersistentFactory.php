@@ -4,7 +4,7 @@ namespace Raekke\QueueFactory;
 
 use Raekke\Connection;
 use Raekke\Queue\PersistentQueue;
-use Raekke\Serializer\SerializerInterface;
+use Raekke\Serializer;
 
 /**
  * Knows how to create queues and retrieve them from the used connection.
@@ -24,7 +24,7 @@ class PersistentFactory implements \Raekke\QueueFactory
      */
     public function __construct(
         Connection $connection,
-        SerializerInterface $serializer
+        Serializer $serializer
     ) {
         $this->queues     = array();
         $this->connection = $connection;

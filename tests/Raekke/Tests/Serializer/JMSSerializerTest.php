@@ -4,13 +4,18 @@ namespace Raekke\Tests\Serializer;
 
 use Raekke\Message\Envelope;
 use Raekke\Message\DefaultMessage;
-use Raekke\Serializer\Serializer;
+use Raekke\Serializer\JMSSerializer;
 
 class SerializerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->serializer = new Serializer($this->createJMSSerializer());
+        $this->serializer = new JMSSerializer($this->createJMSSerializer());
+    }
+
+    public function testImplementsSerializer()
+    {
+        $this->assertInstanceOf('Raekke\Serializer', $this->serializer);
     }
 
     public function testItSerializesDefaultMessage()
@@ -54,9 +59,9 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
     public function createJMSSerializer()
     {
-        $class = new \ReflectionClass('Raekke\Serializer\Serializer');
+        $class = new \ReflectionClass('Raekke\Serializer');
         $builder = new \JMS\Serializer\SerializerBuilder();
-        $builder->addMetadataDir(dirname($class->getFilename()) . '/../Resources/serializer', 'Raekke');
+        $builder->addMetadataDir(dirname($class->getFilename()) . '/Resources/serializer', 'Raekke');
         $builder->configureListeners(function ($dispatcher) {
 //            $dispatcher->addSubscriber(new \Raekke\Serializer\EventListener\EnvelopeListener());
         });

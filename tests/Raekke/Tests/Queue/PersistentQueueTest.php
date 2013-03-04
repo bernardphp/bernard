@@ -10,7 +10,7 @@ class QueueTest extends AbstractQueueTest
     public function setUp()
     {
         $this->connection = $this->getMockBuilder('Raekke\Connection')->disableOriginalConstructor()->getMock();
-        $this->serializer = $this->getMock('Raekke\Serializer\SerializerInterface');
+        $this->serializer = $this->getMock('Raekke\Serializer');
     }
 
     public function testDequeue()

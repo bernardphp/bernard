@@ -3,20 +3,20 @@
 namespace Raekke\Serializer;
 
 use Raekke\Message\Envelope;
-use JMS\Serializer\SerializerInterface as JMSSerializerInterface;
+use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
 
 /**
  * @package Raekke
  */
-class Serializer implements SerializerInterface
+class JMSSerializer implements \Raekke\Serializer
 {
     protected $serializer;
 
     /**
      * @param JMSSerializerInterface $serializer
      */
-    public function __construct(JMSSerializerInterface $serializer)
+    public function __construct(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
     }
