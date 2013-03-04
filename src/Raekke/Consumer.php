@@ -21,8 +21,8 @@ class Consumer implements ConsumerInterface
     );
 
     /**
-     * @param ServiceResolverInterface $services
-     * @param Queue                    $failed   Failed messages will be enqueued on this.
+     * @param ServiceResolver $services
+     * @param Queue           $failed
      */
     public function __construct(
         ServiceResolver $services,

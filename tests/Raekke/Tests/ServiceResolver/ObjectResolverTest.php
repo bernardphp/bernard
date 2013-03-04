@@ -6,7 +6,7 @@ use Raekke\ServiceResolver\ObjectResolver;
 
 class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 {
-    public function testImplementsServiceResolverInterface()
+    public function testImplementsServiceResolver()
     {
         $this->assertInstanceOf('Raekke\ServiceResolver', new ObjectResolver);
     }

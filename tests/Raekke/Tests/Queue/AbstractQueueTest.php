@@ -2,6 +2,8 @@
 
 namespace Raekke\Tests\Queue;
 
+use Raekke\Message\Envelope;
+
 abstract class AbstractQueueTest  extends \PHPUnit_Framework_TestCase
 {
     public function testNameIsAccessible()
@@ -29,7 +31,7 @@ abstract class AbstractQueueTest  extends \PHPUnit_Framework_TestCase
             array('count'),
             array('dequeue'),
             array('enqueue', array(
-                $this->getMockBuilder('Raekke\Message\Envelope')->disableOriginalConstructor()->getMock()
+                new Envelope($this->getMock('Raekke\Message'))
             )),
         );
     }
