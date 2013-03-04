@@ -19,7 +19,7 @@ class MessagePublisherTest extends \PHPUnit_Framework_TestCase
         $message = $this->getMock('Raekke\Message\MessageInterface');
         $message->expects($this->once())->method('getQueue')->will($this->returnValue('my-queue'));
 
-        $queue = $this->getMockBuilder('Raekke\Queue\Queue')->disableOriginalConstructor()
+        $queue = $this->getMockBuilder('Raekke\Queue')->disableOriginalConstructor()
             ->getMock();
         $queue->expects($this->once())->method('enqueue')->with($this->equalTo(new Envelope($message)));
 

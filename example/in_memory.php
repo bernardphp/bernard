@@ -7,7 +7,7 @@
 use Raekke\Consumer;
 use Raekke\Message\DefaultMessage;
 use Raekke\Producer;
-use Raekke\ServiceResolver\ServiceResolver;
+use Raekke\ServiceResolver\ObjectResolver;
 use Raekke\QueueFactory\InMemoryQueueFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -24,7 +24,7 @@ for ($i = 0; $i < 20;$i++) {
     $producer->produce($message);
 }
 
-$resolver = new ServiceResolver;
+$resolver = new ObjectResolver;
 $resolver->register('EchoTime', new EchoTimeService());
 
 $consumer = new Consumer($resolver);

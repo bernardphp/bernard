@@ -1,12 +1,12 @@
 <?php
 
-use Raekke\ServiceResolver\ServiceResolver;
+use Raekke\ServiceResolver\ObjectResolver;
 use Raekke\Consumer;
 
 require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/EchoTimeService.php';
 
-$services = new ServiceResolver;
+$services = new ObjectResolver;
 $services->register('EchoTime', new EchoTimeService);
 
 $consumer = new Consumer($services, $queues->create('failed'));

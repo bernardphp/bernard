@@ -42,7 +42,7 @@ class QueueFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->connection->expects($this->once())->method('insert')->with($this->equalTo('queues'), $this->equalTo('queue'));
 
-        $this->assertInstanceOf('Raekke\Queue\Queue', $this->factory->create('queue'));
+        $this->assertInstanceOf('Raekke\Queue\PersistentQueue', $this->factory->create('queue'));
     }
 
     public function testItsCountable()
@@ -61,6 +61,6 @@ class QueueFactoryTest extends \PHPUnit_Framework_TestCase
         $all = $this->factory->all();
 
         $this->assertCount(2, $all);
-        $this->assertContainsOnly('Raekke\Queue\Queue', $all);
+        $this->assertContainsOnly('Raekke\Queue\PersistentQueue', $all);
     }
 }

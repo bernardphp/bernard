@@ -7,7 +7,7 @@ use Raekke\Exception\InvalidOperationException;
 /**
  * @package Raekke
  */
-abstract class AbstractQueue implements QueueInterface
+abstract class AbstractQueue implements \Raekke\Queue
 {
     protected $closed;
     protected $name;

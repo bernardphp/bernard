@@ -7,7 +7,7 @@ use Raekke\Message\MessageInterface;
 /**
  * @package Raekke
  */
-class ServiceResolver implements ServiceResolverInterface
+class ObjectResolver implements \Raekke\ServiceResolver
 {
     protected $services = array();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Raekke\ServiceResolver;
+namespace Raekke\Symfony;
 
 use Raekke\Message\MessageInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Container;
 /**
  * @package Raekke
  */
-class ContainerAwareServiceResolver implements ServiceResolverInterface
+class ContainerAwareResolver implements \Raekke\ServiceResolver
 {
     protected $services = array();
     protected $container;

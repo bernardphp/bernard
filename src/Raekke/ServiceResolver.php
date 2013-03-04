@@ -1,13 +1,13 @@
 <?php
 
-namespace Raekke\ServiceResolver;
+namespace Raekke;
 
 use Raekke\Message\MessageInterface;
 
 /**
  * @package Raekke
  */
-interface ServiceResolverInterface
+interface ServiceResolver
 {
     /**
      * @param string          $name

@@ -10,7 +10,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->queues = $this->getMock('Raekke\QueueFactory\QueueFactoryInterface');
-        $this->services = $this->getMock('Raekke\ServiceResolver\ServiceResolverInterface');
+        $this->services = $this->getMock('Raekke\ServiceResolver');
     }
 
     public function testItCanCreateAConsumer()
@@ -21,7 +21,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testItConsumes()
     {
-        $queue = $this->getMockBuilder('Raekke\Queue\Queue')->disableOriginalConstructor()->getMock();
+        $queue = $this->getMockBuilder('Raekke\Queue')->disableOriginalConstructor()->getMock();
 
         $this->queues->expects($this->once())->method('create')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue($queue));

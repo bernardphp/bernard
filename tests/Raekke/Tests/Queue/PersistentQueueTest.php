@@ -3,7 +3,7 @@
 namespace Raekke\Tests\Queue;
 
 use Raekke\Message\Envelope;
-use Raekke\Queue\Queue;
+use Raekke\Queue\PersistentQueue;
 
 class QueueTest extends AbstractQueueTest
 {
@@ -47,6 +47,6 @@ class QueueTest extends AbstractQueueTest
 
     protected function createQueue($name)
     {
-        return new Queue($name, $this->connection, $this->serializer);
+        return new PersistentQueue($name, $this->connection, $this->serializer);
     }
 }

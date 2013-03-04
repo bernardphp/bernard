@@ -1,14 +1,15 @@
 <?php
 
-namespace Raekke\ServiceResolver;
+namespace Raekke\Pimple;
 
 use Pimple;
 use Raekke\Message\MessageInterface;
+use Raekke\ServiceResolver;
 
 /**
  * @package Raekke
  */
-class PimpleAwareServiceResolver implements ServiceResolverInterface
+class PimpleAwareResolver implements ServiceResolver
 {
     protected $services = array();
     protected $container;

@@ -1,13 +1,13 @@
 <?php
 
-namespace Raekke\Queue;
+namespace Raekke;
 
 use Raekke\Message\Envelope;
 
 /**
  * @package Raekke
  */
-interface QueueInterface extends \Countable
+interface Queue extends \Countable
 {
     /**
      * @param Envelope $envelope

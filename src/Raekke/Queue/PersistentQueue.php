@@ -9,7 +9,7 @@ use Raekke\Serializer\SerializerInterface;
 /**
  * @package Raekke
  */
-class Queue extends AbstractQueue
+class PersistentQueue extends AbstractQueue
 {
     protected $connection;
     protected $serializer;
