@@ -118,6 +118,8 @@ final class Envelope
             'params' => array(),
         );
 
+        // This will allow DefaultMessage to be used for introspection where the default classes
+        // are not available (like when viewed in Juno)
         if (class_exists($this->class)) {
             $type['name'] = $this->class;
         }
