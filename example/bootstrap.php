@@ -2,7 +2,7 @@
 
 use JMS\Serializer\SerializerBuilder;
 use Predis\Client;
-use Raekke\Connection;
+use Raekke\Connection\PredisConnection;
 use Raekke\Serializer\Serializer;
 use Raekke\QueueFactory\QueueFactory;
 
@@ -15,7 +15,7 @@ $jmsSerializer = JMS\Serializer\SerializerBuilder::create()
     ->addMetadataDir(__DIR__ . '/../src/Raekke/Resources/serializer', 'Raekke')
     ->build();
 
-$connection = new Connection(new Client(null, array(
+$connection = new PredisConnection(new Client(null, array(
     'prefix' => 'raekke:',
 )));
 $serializer = new Serializer($jmsSerializer);

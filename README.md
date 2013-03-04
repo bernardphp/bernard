@@ -42,14 +42,14 @@ sure your sets does not conflict with others of the same same.
 ``` php
 <?php
 
-use Raekke\Connection;
+use Raekke\Connection\PredisConnection;
 use Predis\Client;
 
 $predis = new Client('tcp://localhost', array(
     'prefix' => 'raekke:',
 ));
 
-$connection = new Connection($predis);
+$connection = new PredisConnection($predis);
 ```
 
 ### Producing Messages

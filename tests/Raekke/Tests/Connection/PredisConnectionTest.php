@@ -1,10 +1,10 @@
 <?php
 
-namespace Raekke\Tests;
+namespace Raekke\Tests\Connection;
 
-use Raekke\Connection;
+use Raekke\Connection\PredisConnection;
 
-class ConnectionTest extends \PHPUnit_Framework_TestCase
+class PredisConnectionTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -22,7 +22,12 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
             'rpush',
         ));
 
-        $this->connection = new Connection($this->predis);
+        $this->connection = new PredisConnection($this->predis);
+    }
+
+    public function testItImplementsConnectionInterface()
+    {
+        $this->assertInstanceOf('Raekke\Connection', $this->connection);
     }
 
     public function testItCountsSetLength()
@@ -109,7 +114,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
 
     public function testItCanUseAnInterface()
     {
-        $connection = new Connection($predis = $this->getMock('Predis\ClientInterface'));
+        $connection = new PredisConnection($predis = $this->getMock('Predis\ClientInterface'));
 
         $this->assertSame($predis, $connection->getClient());
     }
