@@ -54,7 +54,7 @@ $connection = new PredisConnection($predis);
 
 ### Producing Messages
 
-Any message sent to Raekke must be an instance of `Raekke\Message\MessageInterface`
+Any message sent to Raekke must be an instance of `Raekke\Message`
 which have a `getName` and `getQueue` method. `getName` is used when working on
 messages and identifies the worker service that should work on it.
 
