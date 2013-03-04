@@ -3,6 +3,7 @@
 namespace Raekke;
 
 use Raekke\Consumer\Job;
+use Exception;
 
 declare(ticks=1);
 
@@ -59,7 +60,7 @@ class Consumer implements ConsumerInterface
 
                 $job = new Job($service, $message);
                 $job();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 if ($envelope->getRetries() < $options['max_retries']) {
                     $envelope->incrementRetries();
                     $queue->enqueue($envelope);

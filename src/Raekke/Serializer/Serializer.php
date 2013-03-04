@@ -11,6 +11,8 @@ use JMS\Serializer\SerializationContext;
  */
 class Serializer implements SerializerInterface
 {
+    protected $serializer;
+
     /**
      * @param JMSSerializerInterface $serializer
      */

@@ -42,7 +42,7 @@ abstract class AbstractQueue implements \Raekke\Queue
     protected function errorIfClosed()
     {
         if ($this->closed) {
-            throw new InvalidOperationException(sprintf('Queue "%s" is closed.', $this->getName()));
+            throw new InvalidOperationException(sprintf('Queue "%s" is closed.', $this->name));
         }
     }
 }
