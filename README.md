@@ -81,11 +81,11 @@ use Raekke\Message\DefaultMessage;
 use Raekke\Message\Envelope;
 use Raekke\Producer;
 use Raekke\QueueFactory\PersistentFactory;
-use Raekke\Serializer\Serializer;
+use Raekke\Serializer\JMSSerializer;
 
 // .. create serializer instance where src/Raekke/Resources/serializer
 // is registered as a metadata dir with "Raekke" as prefix.
-$serializer = new Serializer($jmsSerializer);
+$serializer = new JMSSerializer($jmsSerializer);
 
 // .. create connection
 $factory = new PersistentFactory($connection, $serializer);
