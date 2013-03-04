@@ -194,10 +194,8 @@ better for your needs.
 * [php-resque](https://github.com/chrisboulton/php-resque)
 * [Resque](https://github.com/defunkt/resque)
 
+Special Thanks
+--------------
 
-Happy Customers
----------------
-
-Not really anybody as it is not completly finished. If you need something like
-this i encourage you to contact me and we will figure out how we can work
-together on this.
+* [Benjamin Eberlei](http://whitewashing.de) for advice regarding architeture
+* [Peytz & Co](http://peytz.dk)
