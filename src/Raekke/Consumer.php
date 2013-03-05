@@ -3,9 +3,6 @@
 namespace Raekke;
 
 use Raekke\Consumer\Job;
-use Exception;
-
-declare(ticks=1);
 
 /**
  * @package Consumer
@@ -37,13 +34,13 @@ class Consumer implements ConsumerInterface
      */
     public function consume(Queue $queue, array $options = array())
     {
+        declare(ticks=1);
+
         $options = array_merge($this->defaults, array_filter($options));
         $runtime = microtime(true) + $options['max_runtime'];
 
-        // register with monitoring object class thing
-
-        pcntl_signal(SIGTERM, array($this, 'shutdown'), true);
-        pcntl_signal(SIGINT, array($this, 'shutdown'), true);
+        pcntl_signal(SIGTERM, array($this, 'trap'), true);
+        pcntl_signal(SIGINT, array($this, 'trap'), true);
 
         while (microtime(true) < $runtime) {
             if ($this->shutdown) {
@@ -60,7 +57,7 @@ class Consumer implements ConsumerInterface
 
                 $job = new Job($service, $message);
                 $job();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 if ($envelope->getRetries() < $options['max_retries']) {
                     $envelope->incrementRetries();
                     $queue->enqueue($envelope);
@@ -81,8 +78,10 @@ class Consumer implements ConsumerInterface
 
     /**
      * Mark consumer as terminating
+     *
+     * @param integer $signal
      */
-    public function shutdown()
+    public function trap($signal)
     {
         $this->shutdown = true;
     }
