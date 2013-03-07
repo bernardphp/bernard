@@ -15,7 +15,6 @@ use JMS\Serializer\Context;
 final class Envelope
 {
     protected $message;
-    protected $name;
     protected $class;
     protected $timestamp;
     protected $retries = 0;
@@ -27,7 +26,6 @@ final class Envelope
     {
         $this->message   = $message;
         $this->class     = get_class($message);
-        $this->name      = $message->getName();
         $this->timestamp = time();
     }
 
@@ -44,7 +42,7 @@ final class Envelope
      */
     public function getName()
     {
-        return $this->name;
+        return $this->message->getName();
     }
 
     /**
@@ -90,7 +88,6 @@ final class Envelope
         $type = array('name' => $this->class, 'params' => array());
         $data = array(
             'args'      => $context->accept($this->message, $type),
-            'name'      => $this->name,
             'class'     => str_replace('\\', ':', $this->class),
             'timestamp' => $this->timestamp,
             'retries'   => $this->retries,
@@ -109,7 +106,6 @@ final class Envelope
     public function deserializeFromJson(AbstractVisitor $visitor, array $data, Context $context)
     {
         $this->class     = str_replace(':', '\\', $data['class']);
-        $this->name      = $data['name'];
         $this->timestamp = $data['timestamp'];
         $this->retries   = $data['retries'];
 
@@ -124,6 +120,6 @@ final class Envelope
             $type['name'] = $this->class;
         }
 
-        $this->message = $context->accept(array_merge($data['args'], array('name' => $this->name)), $type);
+        $this->message = $context->accept($data['args'], $type);
     }
 }

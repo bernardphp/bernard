@@ -41,11 +41,7 @@ class DefaultMessage extends AbstractMessage
      */
     public function serializeToJson(AbstractVisitor $visitor, $data, Context $context)
     {
-        $data = get_object_vars($this);
-
-        unset($data['name']);
-
-        return $data ?: new \ArrayObject();
+        return get_object_vars($this) ?: new \ArrayObject;
     }
 
     /**
