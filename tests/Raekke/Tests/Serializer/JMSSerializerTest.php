@@ -6,7 +6,7 @@ use Raekke\Message\Envelope;
 use Raekke\Message\DefaultMessage;
 use Raekke\Serializer\JMSSerializer;
 
-class SerializerTest extends \PHPUnit_Framework_TestCase
+class JMSSerializerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

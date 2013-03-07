@@ -5,7 +5,7 @@ namespace Raekke\Tests\Queue;
 use Raekke\Message\Envelope;
 use Raekke\Queue\PersistentQueue;
 
-class QueueTest extends AbstractQueueTest
+class PersistentQueueTest extends AbstractQueueTest
 {
     public function setUp()
     {

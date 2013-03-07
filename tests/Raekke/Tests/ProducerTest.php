@@ -5,7 +5,7 @@ namespace Raekke\Tests;
 use Raekke\Producer;
 use Raekke\Message\Envelope;
 
-class MessagePublisherTest extends \PHPUnit_Framework_TestCase
+class ProducerTest extends \PHPUnit_Framework_TestCase
 {
     public function testItImplementsProducerInterface()
     {
