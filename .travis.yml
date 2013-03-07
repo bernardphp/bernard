@@ -6,4 +6,4 @@ php:
     - 5.5
 
 before_script:
-    - "composer install --dev"
+    - "composer install --dev --no-progress --no-scripts --no-custom-installers"
