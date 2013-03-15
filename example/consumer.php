@@ -1,7 +1,7 @@
 <?php
 
-use Raekke\ServiceResolver\ObjectResolver;
-use Raekke\Consumer;
+use Bernard\ServiceResolver\ObjectResolver;
+use Bernard\Consumer;
 
 require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/EchoTimeService.php';

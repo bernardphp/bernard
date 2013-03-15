@@ -2,8 +2,8 @@
 
 require __DIR__ . '/bootstrap.php';
 
-use Raekke\Message\DefaultMessage;
-use Raekke\Producer;
+use Bernard\Message\DefaultMessage;
+use Bernard\Producer;
 
 $producer = new Producer($queues);
 

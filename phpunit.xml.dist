@@ -11,7 +11,7 @@
          bootstrap="tests/bootstrap.php">
 
     <testsuites>
-        <testsuite name="Raekke TestSuite">
+        <testsuite name="Bernard TestSuite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
@@ -20,7 +20,7 @@
         <whitelist>
             <directory>src</directory>
             <exclude>
-                <directory>src/Raekke/Resources</directory>
+                <directory>src/Bernard/Resources</directory>
             </exclude>
         </whitelist>
     </filter>
