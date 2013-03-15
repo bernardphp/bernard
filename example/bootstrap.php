@@ -16,7 +16,7 @@ $jmsSerializer = SerializerBuilder::create()
     ->build();
 
 $connection = new PredisConnection(new Client(null, array(
-    'prefix' => 'raekke:',
+    'prefix' => 'bernard:',
 )));
 $serializer = new JMSSerializer($jmsSerializer);
 $queues = new PersistentFactory($connection, $serializer);

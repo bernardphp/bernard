@@ -19,7 +19,7 @@ The easiest way to install Bernard is by using [Composer](http://getcomposer.org
 If your projects do not already use this, it is highly recommended to start.
 
 ``` bash
-$ composer require henrikbjorn/raekke:dev-master
+$ composer require henrikbjorn/bernard:dev-master
 ```
 
 ### Examples
@@ -46,7 +46,7 @@ use Bernard\Connection\PredisConnection;
 use Predis\Client;
 
 $predis = new Client('tcp://localhost', array(
-    'prefix' => 'raekke:',
+    'prefix' => 'bernard:',
 ));
 
 $connection = new PredisConnection($predis);
@@ -165,7 +165,7 @@ the queue that your messages is on. If we use the earlier example with sending
 newsletter it would look like this.
 
 ``` bash
-$ /path/to/console raekke:consume 'send-newsletter'
+$ /path/to/console bernard:consume 'send-newsletter'
 ```
 
 Integration with Frameworks

@@ -38,7 +38,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     public function configure()
     {
         $this
-            ->setName('raekke:consume')
+            ->setName('bernard:consume')
             ->addOption('max-retries', null, InputOption::VALUE_OPTIONAL, 'Number of times a message will be requeued before marked as failed.', null)
             ->addOption('max-runtime', null, InputOption::VALUE_OPTIONAL, 'Maximum time in seconds the consumer will run.', null)
             ->addArgument('queue', InputArgument::REQUIRED, 'Name of queue that will be consumed.')
