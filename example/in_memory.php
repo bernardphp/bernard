@@ -4,11 +4,11 @@
 // It will produce 20 jobs and then consume every job in the queue
 // and when done it idles.
 
-use Raekke\Consumer;
-use Raekke\Message\DefaultMessage;
-use Raekke\Producer;
-use Raekke\ServiceResolver\ObjectResolver;
-use Raekke\QueueFactory\InMemoryFactory;
+use Bernard\Consumer;
+use Bernard\Message\DefaultMessage;
+use Bernard\Producer;
+use Bernard\ServiceResolver\ObjectResolver;
+use Bernard\QueueFactory\InMemoryFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 require 'EchoTimeService.php';

@@ -1,21 +1,21 @@
-Raekke
+Bernard
 ======
 
-Raekke is a message queue implemented in php. It is very similiar to Resque and
+Bernard is a message queue implemented in php. It is very similiar to Resque and
 allows for easy creation of workers and creating distributed systems.
 
-[![Build Status](https://travis-ci.org/henrikbjorn/Raekke.png?branch=master)](https://travis-ci.org/henrikbjorn/Raekke)
+[![Build Status](https://travis-ci.org/henrikbjorn/Bernard.png?branch=master)](https://travis-ci.org/henrikbjorn/Bernard)
 
 Getting Started
 ---------------
 
-Raekke allows you as Resque to create messages and place them on a queue. And
+Bernard allows you as Resque to create messages and place them on a queue. And
 later on pull thoose off the queue and process them. It is not a a complete
 solution to have any object method being called at a later time (as resque).
 
 ### Installing
 
-The easiest way to install Raekke is by using [Composer](http://getcomposer.org).
+The easiest way to install Bernard is by using [Composer](http://getcomposer.org).
 If your projects do not already use this, it is highly recommended to start.
 
 ``` bash
@@ -24,7 +24,7 @@ $ composer require henrikbjorn/raekke:dev-master
 
 ### Examples
 
-In the `example` directory there are two examples of running Raekke. `producer.php` will
+In the `example` directory there are two examples of running Bernard. `producer.php` will
 connect to redis on localhost and produce `EchoTime` messages. `consumer.php` will consume
 theese and print the timestamp.
 
@@ -42,7 +42,7 @@ sure your sets does not conflict with others of the same same.
 ``` php
 <?php
 
-use Raekke\Connection\PredisConnection;
+use Bernard\Connection\PredisConnection;
 use Predis\Client;
 
 $predis = new Client('tcp://localhost', array(
@@ -54,7 +54,7 @@ $connection = new PredisConnection($predis);
 
 ### Producing Messages
 
-Any message sent to Raekke must be an instance of `Raekke\Message`
+Any message sent to Bernard must be an instance of `Bernard\Message`
 which have a `getName` and `getQueue` method. `getName` is used when working on
 messages and identifies the worker service that should work on it.
 
@@ -65,7 +65,7 @@ The easiest is to give it to the producer as the queue name
 is taken from the message object.
 
 To make it easier to send messages and not require every type to be implemented
-in a seperate class a `Raekke\Message\DefaultMessage` is provided. It can hold
+in a seperate class a `Bernard\Message\DefaultMessage` is provided. It can hold
 any number of proberties and only needs a name for the message. The queue name
 is then generated from that. When generating the queue name it will insert a "_"
 before any uppercase letters and then lowercase everything.
@@ -77,14 +77,14 @@ used it is needed to add metadata for being able to serialize and deserialize th
 ``` php
 <?php
 
-use Raekke\Message\DefaultMessage;
-use Raekke\Message\Envelope;
-use Raekke\Producer;
-use Raekke\QueueFactory\PersistentFactory;
-use Raekke\Serializer\JMSSerializer;
+use Bernard\Message\DefaultMessage;
+use Bernard\Message\Envelope;
+use Bernard\Producer;
+use Bernard\QueueFactory\PersistentFactory;
+use Bernard\Serializer\JMSSerializer;
 
-// .. create serializer instance where src/Raekke/Resources/serializer
-// is registered as a metadata dir with "Raekke" as prefix.
+// .. create serializer instance where src/Bernard/Resources/serializer
+// is registered as a metadata dir with "Bernard" as prefix.
 $serializer = new JMSSerializer($jmsSerializer);
 
 // .. create connection
@@ -103,7 +103,7 @@ $factory->get('my-queue')->enqueue(new Envelope($message));
 
 #### In Memory Queues
 
-Raekke comes with a implemention for `SplQueue` which is completly in memory
+Bernard comes with a implemention for `SplQueue` which is completly in memory
 It is useful for development and/or testing. As you dont want actions to be
 performed.
 
@@ -121,8 +121,8 @@ object should handle what messages it is need to register them first.
 ``` php
 <?php
 
-use Raekke\ServiceResolver\ObjectResolver;
-use Raekke\Consumer;
+use Bernard\ServiceResolver\ObjectResolver;
+use Bernard\Consumer;
 
 // .. create connection and a queuefactory
 // NewsletterMessageHandler is a pseudo service object that responds to
@@ -131,15 +131,15 @@ use Raekke\Consumer;
 $serviceResolver = new ObjectResolver;
 $serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
 
-// Raekke also comes with a service resolver for Pimple (Silex) which allows you
+// Bernard also comes with a service resolver for Pimple (Silex) which allows you
 // to use service ids and have your service object lazy loader.
 //
-// $serviceResolver = new \Raekke\Pimple\PimpleAwareResolver($pimple);
+// $serviceResolver = new \Bernard\Pimple\PimpleAwareResolver($pimple);
 // $serviceResolver->register('SendNewsletter', 'my.service.id');
 //
 // Symfony DependencyInjection component is also supported.
 //
-// $serviceResolver = new \Raekke\Symfony\ContainerAwareServiceResolver($container);
+// $serviceResolver = new \Bernard\Symfony\ContainerAwareServiceResolver($container);
 // $serviceResolver->register('SendNewsletter', 'my.service.id');
 
 // Create a Consumer and start the loop. The second argument is optional and
@@ -148,13 +148,13 @@ $consumer = new Consumer($serviceResolver, $queueFactory->create('failed'));
 $consumer->consume($queueFactory->create('send-newsletter'));
 ```
 
-Raekke comes with a `ConsumeCommand` which can be used with Symfony Console 
+Bernard comes with a `ConsumeCommand` which can be used with Symfony Console 
 component.
 
 ``` php
 <?php
 
-use Raekke\Command\ConsumeCommand;
+use Bernard\Command\ConsumeCommand;
 
 // create $console application
 $console->add(new ConsumeCommand($services, $queueManager));
@@ -174,7 +174,7 @@ Integration with Frameworks
 To make it easier to start up and have it "just work" with sending messages a
 number of integrations have been created.
 
-* __Silex__: [RaekkeServiceProvider](https://github.com/henrikbjorn/RaekkeServiceProvider)
+* __Silex__: [BernardServiceProvider](https://github.com/henrikbjorn/BernardServiceProvider)
 
 Monitoring
 ----------

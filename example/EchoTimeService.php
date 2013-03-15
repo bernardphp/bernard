@@ -1,6 +1,6 @@
 <?php
 
-use Raekke\Message\DefaultMessage;
+use Bernard\Message\DefaultMessage;
 
 class EchoTimeService
 {

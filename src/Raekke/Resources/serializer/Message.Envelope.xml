@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<serializer>
-    <class name="Raekke\Message\Envelope" exclusion-policy="ALL">
-        <callback-method name="serializeToJson" type="handler" direction="serialization" format="json" />
-        <callback-method name="deserializeFromJson" type="handler" direction="deserialization" format="json" />
-    </class>
-</serializer>

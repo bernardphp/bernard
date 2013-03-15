@@ -1,10 +1,10 @@
 {
-    "name"        : "henrikbjorn/raekke",
+    "name"        : "henrikbjorn/bernard",
     "description" : "Message queue implemented in PHP with Redis as a backend.",
     "license"     : "MIT",
 
     "autoload" : {
-        "psr-0" : { "Raekke" : "src/" }
+        "psr-0" : { "Bernard" : "src/" }
     },
 
     "require" : {
