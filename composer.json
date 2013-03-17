@@ -7,6 +7,10 @@
         "psr-0" : { "Bernard" : "src/" }
     },
 
+    "replace" : {
+        "henrikbjorn/raekke" : "*"
+    },
+
     "require" : {
         "php"            : ">=5.3.3",
         "predis/predis"  : "~0.8",
