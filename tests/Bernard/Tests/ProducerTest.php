@@ -14,13 +14,12 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Bernard\ProducerInterface', new Producer($factory));
     }
 
-    public function testItSendsToTestsToQueue()
+    public function testItDelegatesMessagesToQueue()
     {
         $message = $this->getMock('Bernard\Message');
         $message->expects($this->once())->method('getQueue')->will($this->returnValue('my-queue'));
 
-        $queue = $this->getMockBuilder('Bernard\Queue')->disableOriginalConstructor()
-            ->getMock();
+        $queue = $this->getMock('Bernard\Queue');
         $queue->expects($this->once())->method('enqueue')->with($this->equalTo(new Envelope($message)));
 
         $factory = $this->getMock('Bernard\QueueFactory');
