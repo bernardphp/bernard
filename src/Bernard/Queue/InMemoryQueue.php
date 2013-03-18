@@ -22,7 +22,7 @@ class InMemoryQueue extends AbstractQueue
         parent::__construct($name);
 
         $this->queue = new SplQueue;
-        $this->queue->setIteratorMode(SplQueue::IT_MODE_DELETE);
+        $this->queue->setIteratorMode(SplQueue::IT_MODE_DELETE | SplQueue::IT_MODE_FIFO);
     }
 
     /**
