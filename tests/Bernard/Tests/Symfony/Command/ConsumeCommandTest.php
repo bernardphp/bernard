@@ -32,7 +32,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
             'max_runtime' => null,
         )));
 
-        $command = $this->getMockBuilder('Bernard\Command\ConsumeCommand')
+        $command = $this->getMockBuilder('Bernard\Symfony\Command\ConsumeCommand')
             ->setMethods(array('getConsumer'))
             ->setConstructorArgs(array($this->services, $this->queues))->getMock();
         $command->expects($this->any())->method('getConsumer')->will($this->returnValue($consumer));
