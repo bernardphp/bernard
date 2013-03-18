@@ -7,3 +7,5 @@ php:
 
 before_script:
     - "composer install --dev --no-progress --no-scripts --no-custom-installers"
+
+script: ./vendor/bin/phpunit
