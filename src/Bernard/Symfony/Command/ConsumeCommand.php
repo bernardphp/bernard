@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Command;
+namespace Bernard\Symfony\Command;
 
 use Bernard\Consumer;
 use Bernard\QueueFactory;
