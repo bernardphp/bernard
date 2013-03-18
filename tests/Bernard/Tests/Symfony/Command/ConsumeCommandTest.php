@@ -1,8 +1,8 @@
 <?php
 
-namespace Bernard\Tests\Command;
+namespace Bernard\Tests\Symfony\Command;
 
-use Bernard\Command\ConsumeCommand;
+use Bernard\Symfony\Command\ConsumeCommand;
 use Symfony\Component\Console\Output\NullOutput;
 
 class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
