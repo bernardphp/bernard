@@ -53,4 +53,12 @@ class Job
     {
         $this->invoke();
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return get_class($this->object) . '::' . $this->getMethodName();
+    }
 }
