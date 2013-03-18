@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Command;
+namespace Bernard\Symfony\Command;
 
 use Bernard\Consumer;
 use Bernard\QueueFactory;
@@ -50,7 +50,9 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getConsumer()->consume($this->queues->create($input->getArgument('queue')), array(
+        $queue = $input->getArgument('queue');
+
+        $this->getConsumer()->consume($this->queues->create($queue), $this->queues->create('failed'), array(
             'max_retries' => $input->getOption('max-retries'),
             'max_runtime' => $input->getOption('max-runtime'),
         ));
@@ -61,6 +63,6 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
      */
     public function getConsumer()
     {
-        return new Consumer($this->services, $this->queues->create('failed'));
+        return new Consumer($this->services);
     }
 }

@@ -154,7 +154,7 @@ component.
 ``` php
 <?php
 
-use Bernard\Command\ConsumeCommand;
+use Bernard\Symfony\Command\ConsumeCommand;
 
 // create $console application
 $console->add(new ConsumeCommand($services, $queueManager));

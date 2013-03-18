@@ -12,7 +12,16 @@ interface ConsumerInterface
 {
     /**
      * @param Queue $queue
+     * @param Queue $failed
      * @param array $options
      */
-    public function consume(Queue $queue, array $options = array());
+    public function consume(Queue $queue, Queue $failed = null, array $options = array());
+
+    /**
+     * Return the identification of the consumer. Like what hostname it got
+     * what queue(s) it is working.
+     *
+     * @return string
+     */
+    public function __toString();
 }
