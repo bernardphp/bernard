@@ -31,16 +31,17 @@ class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveClosesQueue()
     {
+        $this->setExpectedException('Bernard\Exception\InvalidOperationException');
+
         $queue = $this->factory->create('queue');
 
         $this->assertTrue($this->factory->exists('queue'));
         $this->assertCount(0, $this->factory);
 
-        $this->assertTrue($this->factory->remove('queue'));
+        $this->factory->remove('queue');
         $this->assertCount(0, $this->factory);
 
-        $this->assertFalse($this->factory->remove('queue-nonexistant'));
-
+        $queue->slice(0, 1);
     }
 
     public function testItLazyCreatesQueuesAndAttaches()

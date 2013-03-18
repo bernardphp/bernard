@@ -84,13 +84,11 @@ class PersistentFactory implements \Bernard\QueueFactory
     public function remove($queueName)
     {
         if (!$this->exists($queueName)) {
-            return false;
+            return;
         }
 
         $this->create($queueName)->close();
 
         unset($this->queues[$queueName]);
-
-        return true;
     }
 }
