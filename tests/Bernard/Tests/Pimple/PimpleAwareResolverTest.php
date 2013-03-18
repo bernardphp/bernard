@@ -2,6 +2,7 @@
 
 namespace Bernard\Tests\ServiceResolver;
 
+use Bernard\ServiceResolver\Invocator;
 use Bernard\Message\DefaultMessage;
 use Bernard\Pimple\PimpleAwareResolver;
 use Pimple;
@@ -35,7 +36,7 @@ class PimpleAwareResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolver->register('SendNewsletter', 'my.service.id');
 
-        $this->assertSame($service, $resolver->resolve(new DefaultMessage('SendNewsletter')));
+        $this->assertEquals(new Invocator($service, new DefaultMessage('SendNewsletter')), $resolver->resolve(new DefaultMessage('SendNewsletter')));
     }
 
     public function testExceptionWhenServiceDosentExistOnContainer()

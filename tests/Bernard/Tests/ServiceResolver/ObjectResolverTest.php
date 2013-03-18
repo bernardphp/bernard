@@ -3,6 +3,7 @@
 namespace Bernard\Tests\ServiceResolver;
 
 use Bernard\ServiceResolver\ObjectResolver;
+use Bernard\ServiceResolver\Invocator;
 
 class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +32,7 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
         $resolver = new ObjectResolver;
         $resolver->register('SendNewsletter', $service);
 
-        $this->assertSame($service, $resolver->resolve($message));
+        $this->assertEquals(new Invocator($service, $message), $resolver->resolve($message));
     }
 
     public function testItThrowsExceptionIfServiceCannotBeFound()

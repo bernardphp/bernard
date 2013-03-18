@@ -2,8 +2,6 @@
 
 namespace Bernard;
 
-use Bernard\Consumer\Job;
-
 /**
  * @package Consumer
  */
@@ -53,10 +51,9 @@ class Consumer implements ConsumerInterface
 
             try {
                 $message = $envelope->getMessage();
-                $service = $this->services->resolve($message);
 
-                $job = new Job($service, $message);
-                $job();
+                $invocator = $this->services->resolve($message);
+                $invocator->invoke();
             } catch (\Exception $e) {
                 if ($envelope->getRetries() < $options['max_retries']) {
                     $envelope->incrementRetries();

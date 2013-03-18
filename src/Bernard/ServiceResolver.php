@@ -3,6 +3,7 @@
 namespace Bernard;
 
 use Bernard\Message;
+use Bernard\ServiceResolver\Invocator;
 
 /**
  * @package Bernard
@@ -17,7 +18,7 @@ interface ServiceResolver
 
     /**
      * @param Message $message
-     * @return object
+     * @return Invocator
      */
     public function resolve(Message $message);
 }

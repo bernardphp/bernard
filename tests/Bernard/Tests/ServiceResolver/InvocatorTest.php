@@ -1,11 +1,11 @@
 <?php
 
-namespace Bernard\Tests\Consumer;
+namespace Bernard\Tests\ServiceResolver;
 
 use Bernard\Message\DefaultMessage;
-use Bernard\Consumer\Job;
+use Bernard\ServiceResolver\Invocator;
 
-class JobTest extends \PHPUnit_Framework_TestCase
+class InvocatorTest extends \PHPUnit_Framework_TestCase
 {
     public function testItInvokesServiceObject()
     {
@@ -14,9 +14,9 @@ class JobTest extends \PHPUnit_Framework_TestCase
         $service = $this->getMock('stdClass', array('onSendNewsletter'));
         $service->expects($this->exactly(2))->method('onSendNewsletter')->with($this->equalTo($message));
 
-        $job = new Job($service, $message);
-        $job->invoke();
+        $invocator = new Invocator($service, $message);
+        $invocator->invoke();
 
-        $job();
+        $invocator();
     }
 }

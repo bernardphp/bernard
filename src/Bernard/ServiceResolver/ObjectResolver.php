@@ -29,7 +29,7 @@ class ObjectResolver implements \Bernard\ServiceResolver
     public function resolve(Message $message)
     {
         if (isset($this->services[$message->getName()])) {
-            return $this->services[$message->getName()];
+            return new Invocator($this->services[$message->getName()], $message);
         }
 
         throw new \InvalidArgumentException('No service registered for message "' . $message->getName() . '".');

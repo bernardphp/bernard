@@ -3,6 +3,7 @@
 namespace Bernard\Symfony;
 
 use Bernard\Message;
+use Bernard\ServiceResolver\Invocator;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -38,6 +39,6 @@ class ContainerAwareResolver implements \Bernard\ServiceResolver
             throw new \InvalidArgumentException('No service registered for message "' . $message->getName() . '".');
         }
 
-        return $this->container->get($this->services[$message->getName()]);
+        return new Invocator($this->container->get($this->services[$message->getName()]), $message);
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace Bernard\Consumer;
+namespace Bernard\ServiceResolver;
 
 use Bernard\Message;
 
 /**
  * @package Bernard
  */
-class Job
+class Invocator
 {
     protected $object;
     protected $message;
