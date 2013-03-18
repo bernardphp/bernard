@@ -143,9 +143,13 @@ $serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
 // $serviceResolver->register('SendNewsletter', 'my.service.id');
 
 // Create a Consumer and start the loop. The second argument is optional and
-// is the queue failed messages should be added to.
-$consumer = new Consumer($serviceResolver, $queueFactory->create('failed'));
-$consumer->consume($queueFactory->create('send-newsletter'));
+// is the queue failed messages should be added to. The last argument (array) is also optional
+// and the defaults can be seen in the Consumer class.
+$consumer = new Consumer($serviceResolver);
+$consumer->consume($queueFactory->create('send-newsletter'), $queueFactory->create('failed'), array(
+    'max-runtime' => 900,
+    'max-retries' => 5,
+));
 ```
 
 Bernard comes with a `ConsumeCommand` which can be used with Symfony Console 
