@@ -3,7 +3,7 @@
 namespace Bernard\Tests\Symfony\Command;
 
 use Bernard\Symfony\Command\ConsumeCommand;
-use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Tester\CommandTester;
 
 class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,26 +22,31 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
     public function testItConsumes()
     {
         $queue = $this->getMockBuilder('Bernard\Queue')->disableOriginalConstructor()->getMock();
+        $failed = $this->getMockBuilder('Bernard\Queue')->disableOriginalConstructor()->getMock();
 
-        $this->queues->expects($this->once())->method('create')->with($this->equalTo('send-newsletter'))
+        $this->queues->expects($this->at(0))->method('create')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue($queue));
 
+        $this->queues->expects($this->at(1))->method('create')->with($this->equalTo('failed'))
+            ->will($this->returnValue($failed));
+
         $consumer = $this->getMock('Bernard\ConsumerInterface');
-        $consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo(array(
-            'max_retries' => 5,
-            'max_runtime' => null,
+        $consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo($failed), $this->equalTo(array(
+            'max-retries' => 5,
+            'max-runtime' => 100,
         )));
 
         $command = $this->getMockBuilder('Bernard\Symfony\Command\ConsumeCommand')
             ->setMethods(array('getConsumer'))
             ->setConstructorArgs(array($this->services, $this->queues))->getMock();
-        $command->expects($this->any())->method('getConsumer')->will($this->returnValue($consumer));
 
-        $input = $this->getMock('Symfony\Component\Console\Input\InputInterface');
-        $input->expects($this->any())->method('getArgument')->with($this->equalTo('queue'))->will($this->returnValue('send-newsletter'));
-        $input->expects($this->at(1))->method('getOption')->with($this->equalTo('max-retries'))->will($this->returnValue(5));
-        $input->expects($this->at(2))->method('getOption')->with($this->equalTo('max-runtime'))->will($this->returnValue(null));
+        $command->expects($this->once())->method('getConsumer')->will($this->returnValue($consumer));
 
-        $command->execute($input, new NullOutput());
+        $tester = new CommandTester($command);
+        $tester->execute(array(
+            '--max-retries' => 5,
+            '--max-runtime' => 100,
+            'queue' => 'send-newsletter',
+        ));
     }
 }

@@ -22,10 +22,8 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
      * @param ServiceResolver $services
      * @param QueueFactoryInterface    $queues
      */
-    public function __construct(
-        ServiceResolver $services,
-        QueueFactory $queues
-    ) {
+    public function __construct(ServiceResolver $services, QueueFactory $queues)
+    {
         $this->services = $services;
         $this->queues = $queues;
 
@@ -50,10 +48,9 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getConsumer()->consume($this->queues->create($input->getArgument('queue')), array(
-            'max_retries' => $input->getOption('max-retries'),
-            'max_runtime' => $input->getOption('max-runtime'),
-        ));
+        $queue = $this->queues->create($input->getArgument('queue'));
+
+        $this->getConsumer()->consume($queue, $this->queues->create('failed'), $input->getOptions());
     }
 
     /**
@@ -61,6 +58,6 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
      */
     public function getConsumer()
     {
-        return new Consumer($this->services, $this->queues->create('failed'));
+        return new Consumer($this->services);
     }
 }

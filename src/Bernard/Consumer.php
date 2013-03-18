@@ -7,35 +7,30 @@ namespace Bernard;
  */
 class Consumer implements ConsumerInterface
 {
-    protected $failed;
     protected $services;
     protected $shutdown = false;
     protected $defaults = array(
-        'max_retries' => 5,
-        'max_runtime' => PHP_INT_MAX,
+        'max-retries' => 5,
+        'max-runtime' => PHP_INT_MAX,
     );
 
     /**
      * @param ServiceResolver $services
-     * @param Queue           $failed
      */
-    public function __construct(
-        ServiceResolver $services,
-        Queue $failed = null
-    ) {
-        $this->failed = $failed;
+    public function __construct(ServiceResolver $services)
+    {
         $this->services = $services;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function consume(Queue $queue, array $options = array())
+    public function consume(Queue $queue, Queue $failed = null, array $options = array())
     {
         declare(ticks=1);
 
         $options = array_merge($this->defaults, array_filter($options));
-        $runtime = microtime(true) + $options['max_runtime'];
+        $runtime = microtime(true) + $options['max-runtime'];
 
         pcntl_signal(SIGTERM, array($this, 'trap'), true);
         pcntl_signal(SIGINT, array($this, 'trap'), true);
@@ -55,22 +50,30 @@ class Consumer implements ConsumerInterface
                 $invocator = $this->services->resolve($message);
                 $invocator->invoke();
             } catch (\Exception $e) {
-                if ($envelope->getRetries() < $options['max_retries']) {
+                if ($envelope->getRetries() < $options['max-retries']) {
                     $envelope->incrementRetries();
                     $queue->enqueue($envelope);
 
                     continue;
                 }
 
-                if (!$this->failed) {
+                if (!$failed) {
                     continue;
                 }
 
-                $this->failed->enqueue($envelope);
+                $failed->enqueue($envelope);
             }
         }
 
         // Unregister with consumer monitoring thing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return gethostname() . ':' . getmypid();
     }
 
     /**

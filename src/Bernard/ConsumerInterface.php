@@ -12,7 +12,13 @@ interface ConsumerInterface
 {
     /**
      * @param Queue $queue
+     * @param Queue $failed
      * @param array $options
      */
-    public function consume(Queue $queue, array $options = array());
+    public function consume(Queue $queue, Queue $failed = null, array $options = array());
+
+    /**
+     * @return string
+     */
+    public function getName();
 }
