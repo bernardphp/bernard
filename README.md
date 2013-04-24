@@ -31,7 +31,7 @@ theese and print the timestamp.
 `in_memory.php` will produce 20 `EchoTime` messages and consume them right they
 have been sent. It uses `SplQueue` and does not need a redis backend.
 
-### Configuring Predis
+### Configuring Predis / PhpRedis
 
 For storing messages Redis is used together with Predis as the communication
 driver between php and Redis. This means Predis and Redis is required.
@@ -50,6 +50,16 @@ $predis = new Client('tcp://localhost', array(
 ));
 
 $connection = new PredisConnection($predis);
+```
+
+If you use [PhpRedis](https://github.com/nicolasff/phpredis) instead of Predis:
+
+``` php
+<?php
+
+use Bernard\Connection\PhpRedisConnection;
+
+$connection = new PhpRedisConnection(new Redis());
 ```
 
 ### Producing Messages

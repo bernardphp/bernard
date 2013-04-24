@@ -6,6 +6,13 @@ php:
     - 5.5
 
 before_script:
-    - "composer install --dev --no-progress --no-scripts --no-custom-installers"
+    - git clone --depth=50 https://github.com/nicolasff/phpredis.git
+    - cd phpredis
+    - phpize > /dev/null
+    - ./configure > /dev/null
+    - make > /dev/null
+    - sudo make install > /dev/null
+    - cd ..
+    - composer install --dev --no-progress --no-scripts --no-custom-installers
 
 script: ./vendor/bin/phpunit
