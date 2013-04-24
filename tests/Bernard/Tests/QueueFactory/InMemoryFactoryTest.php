@@ -46,4 +46,18 @@ class InMemoryFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertContainsOnly('Bernard\Queue\InMemoryQueue', $all);
         $this->assertSame(compact('queue1', 'queue2'), $all);
     }
+
+    public function testItCannotGetAQueue()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+
+        $this->factory->get('queue');
+    }
+
+    public function testItGetsAQueue()
+    {
+        $queue = $this->factory->create('queue');
+
+        $this->assertSame($queue, $this->factory->get('queue'));
+    }
 }

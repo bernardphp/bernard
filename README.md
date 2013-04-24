@@ -105,7 +105,7 @@ $message = new DefaultMessage("SendNewsletter", array(
     'newsletterId' => 12,
 ));
 
-$producer->publish($message);
+$producer->produce($message);
 
 // or give it to a queue directly
 $factory->get('my-queue')->enqueue(new Envelope($message));
@@ -156,7 +156,7 @@ $serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
 // is the queue failed messages should be added to. The last argument (array) is also optional
 // and the defaults can be seen in the Consumer class.
 $consumer = new Consumer($serviceResolver);
-$consumer->consume($queueFactory->create('send-newsletter'), $queueFactory->create('failed'), array(
+$consumer->consume($queueFactory->get('send-newsletter'), $queueFactory->create('failed'), array(
     'max-runtime' => 900,
     'max-retries' => 5,
 ));

@@ -14,8 +14,19 @@ use Bernard\Serializer;
  */
 class PersistentFactory implements \Bernard\QueueFactory
 {
+    /**
+     * @var Queue[]
+     */
     protected $queues;
+
+    /**
+     * @var Connection
+     */
     protected $connection;
+
+    /**
+     * @var Serializer
+     */
     protected $serializer;
 
     /**
@@ -32,8 +43,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @param  string $queueName
-     * @return Queue
+     * {@inheritDoc}
      */
     public function create($queueName)
     {
@@ -47,7 +57,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @return Queue[]
+     * {@inheritDoc}
      */
     public function all()
     {
@@ -58,8 +68,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @param  string  $queueName
-     * @return boolean
+     * {@inheritDoc}
      */
     public function exists($queueName)
     {
@@ -79,7 +88,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @param string $queueName
+     * {@inheritDoc}
      */
     public function remove($queueName)
     {
@@ -90,5 +99,17 @@ class PersistentFactory implements \Bernard\QueueFactory
         $this->create($queueName)->close();
 
         unset($this->queues[$queueName]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function get($queueName)
+    {
+        if (!$this->exists($queueName)) {
+            throw new \InvalidArgumentException(sprintf('This queue "%s" does not exist.', $queueName));
+        }
+
+        return $this->create($queueName);
     }
 }
