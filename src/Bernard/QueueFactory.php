@@ -11,13 +11,13 @@ namespace Bernard;
 interface QueueFactory extends \Countable
 {
     /**
-     * @param  string             $queueName
-     * @return Bernard\Queue\Queue
+     * @param  string $queueName
+     * @return Queue
      */
     public function create($queueName);
 
     /**
-     * @return array
+     * @return Queue[]
      */
     public function all();
 
@@ -31,4 +31,12 @@ interface QueueFactory extends \Countable
      * @param string $queueName
      */
     public function remove($queueName);
+
+    /**
+     * @param  string $queueName
+     * @return Queue
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function get($queueName);
 }

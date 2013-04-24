@@ -156,7 +156,7 @@ $serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
 // is the queue failed messages should be added to. The last argument (array) is also optional
 // and the defaults can be seen in the Consumer class.
 $consumer = new Consumer($serviceResolver);
-$consumer->consume($queueFactory->create('send-newsletter'), $queueFactory->create('failed'), array(
+$consumer->consume($queueFactory->get('send-newsletter'), $queueFactory->create('failed'), array(
     'max-runtime' => 900,
     'max-retries' => 5,
 ));

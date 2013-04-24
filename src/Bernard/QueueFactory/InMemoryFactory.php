@@ -12,6 +12,9 @@ use Bernard\Queue\InMemoryQueue;
  */
 class InMemoryFactory implements \Bernard\QueueFactory
 {
+    /**
+     * @var InMemoryQueue[]
+     */
     protected $queues;
 
     /**
@@ -28,7 +31,7 @@ class InMemoryFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @return InMemoryQueue[]
+     * {@inheritDoc}
      */
     public function all()
     {
@@ -44,8 +47,7 @@ class InMemoryFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @param  string  $queueName
-     * @return boolean
+     * {@inheritDoc}
      */
     public function exists($queueName)
     {
@@ -53,7 +55,7 @@ class InMemoryFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @param string $queueName
+     * {@inheritDoc}
      */
     public function remove($queueName)
     {
@@ -62,5 +64,17 @@ class InMemoryFactory implements \Bernard\QueueFactory
 
             unset($this->queues[$queueName]);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function get($queueName)
+    {
+        if (!$this->exists($queueName)) {
+            throw new \InvalidArgumentException(sprintf('This queue "%s" does not exist.', $queueName));
+        }
+
+        return $this->create($queueName);
     }
 }

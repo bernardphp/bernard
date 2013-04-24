@@ -69,4 +69,18 @@ class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $all);
         $this->assertContainsOnly('Bernard\Queue\PersistentQueue', $all);
     }
+
+    public function testItCannotGetAQueue()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+
+        $this->factory->get('queue');
+    }
+
+    public function testItGetsAQueue()
+    {
+        $queue = $this->factory->create('queue');
+
+        $this->assertSame($queue, $this->factory->get('queue'));
+    }
 }
