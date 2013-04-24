@@ -105,7 +105,7 @@ $message = new DefaultMessage("SendNewsletter", array(
     'newsletterId' => 12,
 ));
 
-$producer->publish($message);
+$producer->produce($message);
 
 // or give it to a queue directly
 $factory->get('my-queue')->enqueue(new Envelope($message));
