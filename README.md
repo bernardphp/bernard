@@ -107,8 +107,8 @@ $message = new DefaultMessage("SendNewsletter", array(
 
 $producer->produce($message);
 
-// or give it to a queue directly
-$factory->get('my-queue')->enqueue(new Envelope($message));
+// or give it to a queue directly. The queue will be created if it doesn't exist
+$factory->create('my-queue')->enqueue(new Envelope($message));
 ```
 
 #### In Memory Queues
