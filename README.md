@@ -215,3 +215,7 @@ Special Thanks
 than Raekke.
 * [Benjamin Eberlei](http://whitewashing.de) for advice regarding architeture
 * [Peytz & Co](http://peytz.dk)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/henrikbjorn/bernard/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
