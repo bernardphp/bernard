@@ -62,9 +62,6 @@ class JMSSerializerTest extends \PHPUnit_Framework_TestCase
         $class = new \ReflectionClass('Bernard\Serializer');
         $builder = new \JMS\Serializer\SerializerBuilder();
         $builder->addMetadataDir(dirname($class->getFilename()) . '/Resources/serializer', 'Bernard');
-        $builder->configureListeners(function ($dispatcher) {
-//            $dispatcher->addSubscriber(new \Bernard\Serializer\EventListener\EnvelopeListener());
-        });
 
         return $builder->build();
     }
