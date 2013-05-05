@@ -22,6 +22,8 @@ If your projects do not already use this, it is highly recommended to start.
 $ composer require henrikbjorn/bernard:dev-master
 ```
 
+Also one of `predis/predis` or the PECL phpredis extension must be installed.
+
 ### Examples
 
 In the `example` directory there are two examples of running Bernard. `producer.php` will
