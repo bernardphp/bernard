@@ -29,14 +29,6 @@ abstract class AbstractQueue implements \Bernard\Queue
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * @throws InvalidOperationException
      */
     protected function errorIfClosed()

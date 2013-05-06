@@ -64,30 +64,20 @@ class InMemoryQueue extends AbstractQueue
     /**
      * {@inheritDoc}
      */
-    public function slice($index, $length)
+    public function peek($index = 1, $limit = 20)
     {
         $this->errorIfClosed();
-
-        if (!$this->count()) {
-            return array();
-        }
 
         $envelopes = array();
         $queue = clone $this->queue;
         $key = -1;
 
-        while ($envelope = $queue->dequeue()) {
-            $key++;
-
-            if ($key < $index) {
+        while ($this->count() && count($envelopes) < $limit && $envelope = $queue->dequeue()) {
+            if ($key++ < $index) {
                 continue;
             }
 
             $envelopes[] = $envelope;
-
-            if (count($envelopes) >= $length) {
-                break;
-            }
         }
 
         return $envelopes;

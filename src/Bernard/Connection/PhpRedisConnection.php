@@ -2,8 +2,6 @@
 
 namespace Bernard\Connection;
 
-use Redis;
-
 /**
  * Implements a Connection for use with https://github.com/nicolasff/phpredis
  *
@@ -16,7 +14,7 @@ class PhpRedisConnection implements \Bernard\Connection
     /**
      * @param Redis $client
      */
-    public function __construct(Redis $redis)
+    public function __construct(\Redis $redis)
     {
         $this->redis = $redis;
     }
@@ -24,41 +22,50 @@ class PhpRedisConnection implements \Bernard\Connection
     /**
      * {@inheritDoc}
      */
-    public function count($set)
+    public function countMessages($queueName)
     {
-        return $this->redis->lLen($set);
-    }
-
-    /**s
-     * {@inheritDoc}
-     */
-    public function all($set)
-    {
-        return $this->redis->sMembers($set);
+        return $this->redis->lLen('queue:' . $queueName);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function slice($set, $index = 0, $limit = 20)
+    public function createQueue($queueName)
     {
-        return $this->redis->lRange($set, $index, $index + $limit - 1);
+        $this->redis->sAdd('queues', $queueName);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function get($set)
+    public function removeQueue($queueName)
     {
-        return $this->redis->get($set);
+        $this->redis->sRem('queues', $queueName);
+        $this->redis->del($this->resolveKey($queueName));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function pop($set, $interval = 5)
+    public function listQueues()
     {
-        list(, $message) = $this->redis->blPop($set, $interval);
+        return $this->redis->sMembers('queues');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function pushMessage($queueName, $message)
+    {
+        $this->redis->rpush($this->resolveKey($queueName), $message);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function popMessage($queueName, $interval = 5)
+    {
+        list(, $message) = $this->redis->blpop($this->resolveKey($queueName), $interval);
 
         return $message;
     }
@@ -66,41 +73,11 @@ class PhpRedisConnection implements \Bernard\Connection
     /**
      * {@inheritDoc}
      */
-    public function push($set, $member)
+    public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        $this->redis->rPush($set, $member);
-    }
+        $limit += $index - 1;
 
-    /**
-     * {@inheritDoc}
-     */
-    public function contains($set, $member)
-    {
-        return $this->redis->sContains($set, $member);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function delete($set)
-    {
-        $this->redis->delete($set);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function insert($set, $member)
-    {
-        $this->redis->sAdd($set, $member);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function remove($set, $member)
-    {
-        $this->redis->sRemove($set, $member);
+        return $this->redis->lRange($this->resolveKey($queueName), $index, $limit);
     }
 
     /**
@@ -109,5 +86,16 @@ class PhpRedisConnection implements \Bernard\Connection
     public function info()
     {
         return $this->redis->info();
+    }
+
+    /**
+     * Transform the queueName into a key.
+     *
+     * @param string $queueName
+     * @return string
+     */
+    protected function resolveKey($queueName)
+    {
+        return 'queue:' . $queueName;
     }
 }

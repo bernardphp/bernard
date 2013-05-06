@@ -39,7 +39,7 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        $this->connection->insert('queues', $this->name);
+        $this->connection->createQueue($this->name);
     }
 
     /**
@@ -49,7 +49,14 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        return $this->connection->count($this->getKey());
+        return $this->connection->countMessages($this->name);
+    }
+
+    public function close()
+    {
+        parent::close();
+
+        $this->connection->removeQueue($this->name);
     }
 
     /**
@@ -59,7 +66,7 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        $this->connection->push($this->getKey(), $this->serializer->serialize($envelope));
+        $this->connection->pushMessage($this->name, $this->serializer->serialize($envelope));
     }
 
     /**
@@ -69,28 +76,19 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        if ($message = $this->connection->pop($this->getKey())) {
-            return $this->serializer->deserialize($message);
-        }
+        $message = $this->connection->popMessage($this->name);
 
-        return null;
+        return $message ? $this->serializer->deserialize($message) : null;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function slice($index, $length)
+    public function peek($index = 0, $limit = 20)
     {
         $this->errorIfClosed();
+        $messages = $this->connection->peekQueue($this->name, $index, $limit);
 
-        return array_map(array($this->serializer, 'deserialize'), $this->connection->slice($this->getKey(), $index, $length));
-    }
-
-    /**
-     * @return string
-     */
-    public function getKey()
-    {
-        return 'queue:' . $this->name;
+        return array_map(array($this->serializer, 'deserialize'), $message);
     }
 }

@@ -9,7 +9,7 @@ class PersistentQueueTest extends AbstractQueueTest
 {
     public function setUp()
     {
-        $this->connection = $this->getMockBuilder('Bernard\Connection')->disableOriginalConstructor()->getMock();
+        $this->connection = $this->getMock('Bernard\Connection');
         $this->serializer = $this->getMock('Bernard\Serializer');
     }
 
@@ -17,10 +17,10 @@ class PersistentQueueTest extends AbstractQueueTest
     {
         $messageWrapper = new Envelope($this->getMock('Bernard\Message'));
 
-        $this->connection->expects($this->at(1))->method('pop')->with($this->equalTo('queue:send-newsletter'))
+        $this->connection->expects($this->at(1))->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue('deserialized'));
 
-        $this->connection->expects($this->at(2))->method('pop')->with($this->equalTo('queue:send-newsletter'))
+        $this->connection->expects($this->at(2))->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue(null));
 
         $this->serializer->expects($this->once())->method('deserialize')->with($this->equalTo('deserialized'))
@@ -30,11 +30,6 @@ class PersistentQueueTest extends AbstractQueueTest
 
         $this->assertSame($messageWrapper, $queue->dequeue());
         $this->assertInternalType('null', $queue->dequeue());
-    }
-
-    public function testKeyIsPrefixedWithQueue()
-    {
-        $this->assertEquals('queue:send-newsletter', $this->createQueue('send-newsletter')->getKey());
     }
 
     public function dataClosedMethods()

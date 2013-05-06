@@ -6,11 +6,6 @@ use Bernard\Message\Envelope;
 
 abstract class AbstractQueueTest  extends \PHPUnit_Framework_TestCase
 {
-    public function testNameIsAccessible()
-    {
-        $this->assertEquals('send-newsletter', $this->createQueue('send-newsletter')->getName());
-    }
-
     /**
      * @dataProvider dataClosedMethods
      */
@@ -27,7 +22,7 @@ abstract class AbstractQueueTest  extends \PHPUnit_Framework_TestCase
     public function dataClosedMethods()
     {
         return array(
-            array('slice', array(0, 10)),
+            array('peek', array(0, 10)),
             array('count'),
             array('dequeue'),
             array('enqueue', array(

@@ -8,67 +8,59 @@ namespace Bernard;
 interface Connection
 {
     /**
-     * @param  string  $set
+     * Returns a list of all queue names.
+     *
+     * @return array
+     */
+    public function listQueues();
+
+    /**
+     * Create a queue.
+     *
+     * @param string $queueName
+     */
+    public function createQueue($queueName);
+
+    /**
+     * Count the number of messages in queue. This can be a approximately number.
+     * 
      * @return integer
      */
-    public function count($set);
+    public function countMessages($queueName);
 
     /**
-     * @param  string  $set
-     * @return mixed[]
+     * Insert a message at the top of the queue.
+     *
+     * @param string $queueName
+     * @param string $message
      */
-    public function all($set);
+    public function pushMessage($queueName, $message);
 
     /**
-     * @param  string  $set
-     * @param  integer $index
-     * @param  integer $limit
-     * @return mixed[]
+     * Remove the next message in line. And if no message is available
+     * wait $interval seconds.
+     *
+     * @param string $queueName
+     * @param integer $interval
      */
-    public function slice($set, $index = 0, $limit = 20);
+    public function popMessage($queueName, $interval = 5);
 
     /**
-     * @param  string $set
-     * @return mixed
+     * Returns a $limit numbers of messages without removing them
+     * from the queue.
+     *
+     * @param string $queueName
+     * @param integer $index
+     * @param integer $limit
      */
-    public function get($set);
+    public function peekQueue($queueName, $index = 0, $limit = 20);
 
     /**
-     * @param  string     $set
-     * @param  integer    $interval
-     * @return mixed|null
+     * Removes the queue.
+     *
+     * @param string $queueName
      */
-    public function pop($set, $interval = 5);
-
-    /**
-     * @param string $set
-     * @param mixed  $member
-     */
-    public function push($set, $member);
-
-    /**
-     * @param  string  $set
-     * @param  mixed   $member
-     * @return boolean
-     */
-    public function contains($set, $member);
-
-    /**
-     * @param string $set
-     */
-    public function delete($set);
-
-    /**
-     * @param string $set
-     * @param mixed  $member
-     */
-    public function insert($set, $member);
-
-    /**
-     * @param string $set
-     * @param mixed  $member
-     */
-    public function remove($set, $member);
+    public function removeQueue($queueName);
 
     /**
      * @return array
