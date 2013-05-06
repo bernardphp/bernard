@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Tests;
+namespace Bernard\Tests\QueueFactory;
 
 use Bernard\QueueFactory\PersistentFactory;
 
@@ -21,39 +21,38 @@ class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testItSavesQueueObjects()
     {
-        $this->connection->expects($this->once())->method('insert')
-            ->with($this->equalTo('queues'), $this->equalTo('queue'));
+        $this->connection->expects($this->once())->method('createQueue')
+            ->with($this->equalTo('send-newsletter'));
 
-        $queue = $this->factory->create('queue');
+        $queue = $this->factory->create('send-newsletter');
 
-        $this->assertSame($queue, $this->factory->create('queue'));
+        $this->assertSame($queue, $this->factory->create('send-newsletter'));
     }
 
     public function testRemoveClosesQueue()
     {
         $this->setExpectedException('Bernard\Exception\InvalidOperationException');
 
-        $queue = $this->factory->create('queue');
+        $queue = $this->factory->create('send-newsletter');
 
-        $this->assertTrue($this->factory->exists('queue'));
+        $this->assertTrue($this->factory->exists('send-newsletter'));
+
+        $this->factory->remove('send-newsletter');
         $this->assertCount(0, $this->factory);
 
-        $this->factory->remove('queue');
-        $this->assertCount(0, $this->factory);
-
-        $queue->slice(0, 1);
+        $queue->peek(0, 1);
     }
 
     public function testItLazyCreatesQueuesAndAttaches()
     {
-        $this->connection->expects($this->once())->method('insert')->with($this->equalTo('queues'), $this->equalTo('queue'));
+        $this->connection->expects($this->once())->method('createQueue')->with($this->equalTo('send-newsletter'));
 
-        $this->assertInstanceOf('Bernard\Queue\PersistentQueue', $this->factory->create('queue'));
+        $this->assertInstanceOf('Bernard\Queue\PersistentQueue', $this->factory->create('send-newsletter'));
     }
 
     public function testItsCountable()
     {
-        $this->connection->expects($this->once())->method('all')->with($this->equalTo('queues'))
+        $this->connection->expects($this->once())->method('listQueues')
             ->will($this->returnValue(array('failed', 'something', 'queue-ness')));
 
         $this->assertCount(3, $this->factory);
@@ -61,7 +60,7 @@ class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testItGetsAllQueues()
     {
-        $this->connection->expects($this->once())->method('all')->with($this->equalTo('queues'))
+        $this->connection->expects($this->once())->method('listQueues')
             ->will($this->returnValue(array('queue1', 'queue2')));
 
         $all = $this->factory->all();

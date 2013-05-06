@@ -63,7 +63,7 @@ class PersistentFactory implements \Bernard\QueueFactory
      */
     public function exists($queueName)
     {
-        return in_array($this->getName(), $this->connection->listQueues()); 
+        return isset($this->queues[$queueName]) ?: in_array($queueName, $this->connection->listQueues());
     }
 
     /**
