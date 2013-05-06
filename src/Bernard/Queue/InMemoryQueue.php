@@ -68,26 +68,16 @@ class InMemoryQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        if (!$this->count()) {
-            return array();
-        }
-
         $envelopes = array();
         $queue = clone $this->queue;
         $key = -1;
 
-        while ($envelope = $queue->dequeue()) {
-            $key++;
-
-            if ($key < $index) {
+        while ($this->count() && count($envelopes) < $limit && $envelope = $queue->dequeue()) {
+            if ($key++ < $index) {
                 continue;
             }
 
             $envelopes[] = $envelope;
-
-            if (count($envelopes) >= $length) {
-                break;
-            }
         }
 
         return $envelopes;
