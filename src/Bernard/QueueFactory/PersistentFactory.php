@@ -52,7 +52,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     public function all()
     {
         // Calls $this->create on every name returned from the connection
-        array_map(array($this, 'create'), $this->connection->all('queues'));
+        array_map(array($this, 'create'), $this->connection->listQueues());
 
         return $this->queues;
     }
@@ -63,11 +63,7 @@ class PersistentFactory implements \Bernard\QueueFactory
      */
     public function exists($queueName)
     {
-        if (isset($this->queues[$queueName])) {
-            return true;
-        }
-
-        return $this->connection->contains('queues', $queueName);
+        return in_array($this->getName(), $this->connection->listQueues()); 
     }
 
     /**
@@ -75,7 +71,7 @@ class PersistentFactory implements \Bernard\QueueFactory
      */
     public function count()
     {
-        return count($this->connection->all('queues'));
+        return count($this->connection->listQueues());
     }
 
     /**

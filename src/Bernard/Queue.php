@@ -20,11 +20,6 @@ interface Queue extends \Countable
     public function dequeue();
 
     /**
-     * @return string
-     */
-    public function getName();
-
-    /**
      * Closes the queue, a closed queue should not be able to perform
      * actions.
      */
@@ -35,5 +30,5 @@ interface Queue extends \Countable
      * @param  integer $length
      * @return array
      */
-    public function slice($index, $length);
+    public function peek($index = 1, $limit = 20);
 }

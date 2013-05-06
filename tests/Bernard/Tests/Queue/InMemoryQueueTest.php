@@ -20,11 +20,11 @@ class InMemoryQueueTest extends AbstractQueueTest
         $this->assertInternalType('null', $queue->dequeue());
     }
 
-    public function testSlice()
+    public function testPeek()
     {
         $queue = new InMemoryQueue('send-newsletter');
 
-        $this->assertEquals(array(), $queue->slice(0, 10));
+        $this->assertEquals(array(), $queue->peek(0, 10));
 
         $queue->enqueue($envelope  = $this->getEnvelope());
         $queue->enqueue($envelope1 = $this->getEnvelope());
@@ -35,7 +35,7 @@ class InMemoryQueueTest extends AbstractQueueTest
         $this->assertEquals(array(
             $envelope1,
             $envelope2,
-        ), $queue->slice(1, 2));
+        ), $queue->peek(1, 2));
         $this->assertCount(4, $queue);
     }
 

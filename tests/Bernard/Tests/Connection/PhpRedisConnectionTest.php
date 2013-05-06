@@ -14,10 +14,11 @@ class PhpRedisConnectionTest extends \PHPUnit_Framework_TestCase
             'lRange',
             'blPop',
             'sRemove',
-            'delete',
+            'del',
             'sAdd',
             'sContains',
             'rPush',
+            'sRem',
         ));
 
         $this->connection = new PhpRedisConnection($this->redis);
@@ -28,12 +29,12 @@ class PhpRedisConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Bernard\Connection', $this->connection);
     }
 
-    public function testItCountsSetLength()
+    public function testItCountsNumberOfMessagesInQueue()
     {
-        $this->redis->expects($this->once())->method('lLen')->with($this->equalTo('queues'))
+        $this->redis->expects($this->once())->method('lLen')->with($this->equalTo('queue:send-newsletter'))
             ->will($this->returnValue(4));
 
-        $this->assertEquals(4, $this->connection->count('queues'));
+        $this->assertEquals(4, $this->connection->countMessages('send-newsletter'));
     }
 
     public function testItGetsAllKeys()
@@ -41,72 +42,55 @@ class PhpRedisConnectionTest extends \PHPUnit_Framework_TestCase
         $this->redis->expects($this->once())->method('sMembers')->with($this->equalTo('queues'))
             ->will($this->returnValue(array('failed', 'queue1')));
 
-        $this->assertEquals(array('failed', 'queue1'), $this->connection->all('queues'));
+        $this->assertEquals(array('failed', 'queue1'), $this->connection->listQueues());
     }
 
-    public function testItSlicesASet()
+    public function testItPeeksInAQueue()
     {
         $this->redis->expects($this->at(0))->method('lRange')
-            ->with($this->equalTo('queues'), $this->equalTo(10), $this->equalTo(19))
+            ->with($this->equalTo('queue:my-queue'), $this->equalTo(10), $this->equalTo(19))
             ->will($this->returnValue(array('message1')));
 
         $this->redis->expects($this->at(1))->method('lRange')
-            ->with($this->equalTo('queues'), $this->equalTo(0), $this->equalTo(19))
+            ->with($this->equalTo('queue:send-newsletter'), $this->equalTo(0), $this->equalTo(19))
             ->will($this->returnValue(array('message2')));
 
-        $this->assertEquals(array('message1'), $this->connection->slice('queues', 10, 10));
-        $this->assertEquals(array('message2'), $this->connection->slice('queues'));
+        $this->assertEquals(array('message1'), $this->connection->peekQueue('my-queue', 10, 10));
+        $this->assertEquals(array('message2'), $this->connection->peekQueue('send-newsletter'));
 
     }
 
-    public function testItRemovesAKeyFromASet()
+    public function testItRemovesAQueue()
     {
-        $this->redis->expects($this->once())->method('sRemove')->with($this->equalTo('queues'), $this->equalTo('queue'));
+        $this->redis->expects($this->once())->method('del')->with($this->equalTo('queue:name'));
+        $this->redis->expects($this->once())->method('srem')->with($this->equalTo('queues'), $this->equalTo('name'));
 
-        $this->connection->remove('queues', 'queue');
+        $this->connection->removeQueue('name');
     }
 
-    public function testItDeletesASet()
+    public function testItCreatesAQueue()
     {
-        $this->redis->expects($this->once())->method('delete')->with($this->equalTo('queue:name'));
-        $this->connection->delete('queue:name');
+        $this->redis->expects($this->once())->method('sAdd')->with($this->equalTo('queues'), $this->equalTo('send-newsletter'));
+
+        $this->connection->createQueue('send-newsletter');
     }
 
-    public function testItInsertsToSet()
+    public function testItPushesMessages()
     {
-        $this->redis->expects($this->once())->method('sAdd')->with($this->equalTo('queues'), $this->equalTo('queue'));
+        $this->redis->expects($this->once())->method('rPush')->with($this->equalTo('queue:send-newsletter'), $this->equalTo('This is a message'));
 
-        $this->connection->insert('queues', 'queue');
-    }
-
-    public function testItChecksSetForMemeber()
-    {
-        $this->redis->expects($this->at(0))->method('sContains')->with($this->equalTo('queues'), $this->equalTo('queue:name'))
-            ->will($this->returnValue(true));
-
-        $this->redis->expects($this->at(1))->method('sContains')->with($this->equalTo('queues'), $this->equalTo('queue:name-2'))
-            ->will($this->returnValue(false));
-
-        $this->assertTrue($this->connection->contains('queues', 'queue:name'));
-        $this->assertFalse($this->connection->contains('queues', 'queue:name-2'));
-    }
-
-    public function testItPushesMember()
-    {
-        $this->redis->expects($this->once())->method('rPush')->with($this->equalTo('queues'), $this->equalTo('my-queue'));
-
-        $this->connection->push('queues', 'my-queue');
+        $this->connection->pushMessage('send-newsletter', 'This is a message');
     }
 
     public function testItPopMessages()
     {
-        $this->redis->expects($this->at(0))->method('blPop')->with($this->equalTo('queues'))
+        $this->redis->expects($this->at(0))->method('blPop')->with($this->equalTo('queue:send-newsletter'))
             ->will($this->returnValue(array('my-queue', 'message1')));
 
-        $this->redis->expects($this->at(1))->method('blPop')->with($this->equalTo('queues2'), $this->equalTo(30))
+        $this->redis->expects($this->at(1))->method('blPop')->with($this->equalTo('queue:ask-forgiveness'), $this->equalTo(30))
             ->will($this->returnValue(array('my-queue2', 'message2')));
 
-        $this->assertEquals('message1', $this->connection->pop('queues'));
-        $this->assertEquals('message2', $this->connection->pop('queues2', 30));
+        $this->assertEquals('message1', $this->connection->popMessage('send-newsletter'));
+        $this->assertEquals('message2', $this->connection->popMessage('ask-forgiveness', 30));
     }
 }

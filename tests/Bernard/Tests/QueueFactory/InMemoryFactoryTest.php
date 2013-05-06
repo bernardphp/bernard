@@ -28,7 +28,8 @@ class InMemoryFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory->remove('queue');
         $this->assertCount(0, $this->factory);
 
-        $queue->slice(0, 1);
+        // Trigger close
+        $queue->peek(0, 1);
     }
 
     public function testItCanCreateQueues()
