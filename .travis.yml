@@ -6,8 +6,7 @@ php:
     - 5.5
 
 before_script:
-    - "pecl install redis"
-    - "echo \"extension=<extension>.so\" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini"
+    - "pecl install redis && echo \"extension=redis.so\" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini"
     - "mkdir ~/.composer"
     - "echo '{\"config\":{\"github-oauth\": {\"github.com\":\"fa354b2f030836334eac842f8fd69a03e353d247\"}}}' > ~/.composer/config.json"
     - "composer install --dev"
