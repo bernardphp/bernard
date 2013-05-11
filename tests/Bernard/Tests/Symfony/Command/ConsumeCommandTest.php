@@ -16,7 +16,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
     public function testItCanCreateAConsumer()
     {
         $command = new ConsumeCommand($this->services, $this->queues);
-        $this->assertInstanceOf('Bernard\ConsumerInterface', $command->getConsumer());
+        $this->assertInstanceOf('Bernard\Consumer', $command->getConsumer());
     }
 
     public function testItConsumes()
@@ -30,7 +30,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
         $this->queues->expects($this->at(1))->method('create')->with($this->equalTo('failed'))
             ->will($this->returnValue($failed));
 
-        $consumer = $this->getMock('Bernard\ConsumerInterface');
+        $consumer = $this->getMockBuilder('Bernard\Consumer')->disableOriginalConstructor()->getMock();
         $consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo($failed), $this->equalTo(array(
             'max-retries' => 5,
             'max-runtime' => 100,

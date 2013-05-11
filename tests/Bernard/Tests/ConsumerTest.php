@@ -6,10 +6,14 @@ use Bernard\Consumer;
 
 class ConsumerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testNameIsHostnameAndPid()
+    public function testTrapMarksShutdown()
     {
         $consumer = new Consumer($this->getMock('Bernard\ServiceResolver'));
+        $consumer->trap(1);
 
-        $this->assertEquals(gethostname() . ':' . getmypid(), $consumer->getName());
+        $r = new \ReflectionProperty($consumer, 'shutdown');
+        $r->setAccessible(true);
+
+        $this->assertTrue($r->getValue($consumer));
     }
 }

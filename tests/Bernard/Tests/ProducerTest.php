@@ -7,13 +7,6 @@ use Bernard\Message\Envelope;
 
 class ProducerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testItImplementsProducerInterface()
-    {
-        $factory = $this->getMock('Bernard\QueueFactory');
-
-        $this->assertInstanceOf('Bernard\ProducerInterface', new Producer($factory));
-    }
-
     public function testItDelegatesMessagesToQueue()
     {
         $message = $this->getMock('Bernard\Message');

@@ -5,7 +5,7 @@ namespace Bernard;
 /**
  * @package Consumer
  */
-class Consumer implements ConsumerInterface
+class Consumer
 {
     protected $services;
     protected $shutdown = false;
@@ -54,14 +54,6 @@ class Consumer implements ConsumerInterface
                 }
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return gethostname() . ':' . getmypid();
     }
 
     /**

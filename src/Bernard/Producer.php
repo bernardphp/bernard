@@ -9,7 +9,7 @@ use Bernard\QueueFactory;
 /**
  * @package Bernard
  */
-class Producer implements ProducerInterface
+class Producer
 {
     protected $factory;
 
