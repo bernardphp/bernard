@@ -35,15 +35,7 @@ class Consumer implements ConsumerInterface
         pcntl_signal(SIGTERM, array($this, 'trap'), true);
         pcntl_signal(SIGINT, array($this, 'trap'), true);
 
-        while (microtime(true) < $runtime) {
-            if ($this->shutdown) {
-                break;
-            }
-
-            if (null === $envelope = $queue->dequeue()) {
-                continue;
-            }
-
+        while (microtime(true) < $runtime && $envelope = $queue->dequeue() && !$this->shutdown) {
             try {
                 $message = $envelope->getMessage();
 
@@ -57,15 +49,11 @@ class Consumer implements ConsumerInterface
                     continue;
                 }
 
-                if (!$failed) {
-                    continue;
+                if ($failed) {
+                    $failed->enqueue($envelope);
                 }
-
-                $failed->enqueue($envelope);
             }
         }
-
-        // Unregister with consumer monitoring thing
     }
 
     /**
