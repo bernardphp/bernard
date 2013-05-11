@@ -1,5 +1,5 @@
 Bernard
-======
+=======
 
 Bernard is a message queue implemented in php. It is very similiar to Resque and
 allows for easy creation of workers and creating distributed systems.
@@ -23,7 +23,8 @@ If your projects do not already use this, it is highly recommended to start.
 $ composer require henrikbjorn/bernard:dev-master
 ```
 
-Also one of `predis/predis` or the PECL phpredis extension must be installed.
+Then look at what kind of connections there is available and install their dependencies
+before use.
 
 ### Examples
 
@@ -34,13 +35,49 @@ theese and print the timestamp.
 `in_memory.php` will produce 20 `EchoTime` messages and consume them right they
 have been sent. It uses `SplQueue` and does not need a redis backend.
 
-### Configuring Predis / PhpRedis
+### Configuring a Connection
 
-For storing messages Redis is used together with Predis as the communication
-driver between php and Redis. This means Predis and Redis is required.
+Several different types of connections are supported. Currently theese are available:
 
-It is highly encouraged to use a prefix for Predis (but not enforced) to make
-sure your sets do not conflict with others of the same name.
+* `PhpRedisConnection` for the [redis](http://pecl.php.net/package/redis) extension.
+* `PredisConnection` for the [Predis](http://github.com/nrk/predis) library.
+
+#### PhpRedisConnection
+
+Requires the installation of the pecl extension. You can add the following to your `composer.json` file
+to make sure it is installed:
+
+``` json
+{
+    "require" : {
+        "ext-redis" : "~2.2"
+    }
+}
+```
+
+And then instanciate the correct connection object.
+
+``` php
+<?php
+
+use Bernard\Connection\PhpRedisConnection;
+
+$connection = new PhpRedisConnection(new Redis());
+```
+
+#### PredisConnection
+
+Requires the installation of predis. Add the following to your composer.json file for this:
+
+``` json
+{
+    "require" : {
+        "predis/predis" : "~0.8"
+    }
+}
+```
+
+And then instanciate the correct connection object.
 
 ``` php
 <?php
@@ -53,16 +90,6 @@ $predis = new Client('tcp://localhost', array(
 ));
 
 $connection = new PredisConnection($predis);
-```
-
-If you use [PhpRedis](https://github.com/nicolasff/phpredis) instead of Predis:
-
-``` php
-<?php
-
-use Bernard\Connection\PhpRedisConnection;
-
-$connection = new PhpRedisConnection(new Redis());
 ```
 
 ### Producing Messages
