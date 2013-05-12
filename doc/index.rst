@@ -11,4 +11,6 @@ As it is a framework it not a plug-and-play library like php-resque.
     :maxdepth: 1
 
     installation
-    producing-messages
+    producing
+    consuming
+    connections
