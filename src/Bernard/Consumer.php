@@ -35,7 +35,11 @@ class Consumer
         pcntl_signal(SIGTERM, array($this, 'trap'), true);
         pcntl_signal(SIGINT, array($this, 'trap'), true);
 
-        while (microtime(true) < $runtime && $envelope = $queue->dequeue() && !$this->shutdown) {
+        while (microtime(true) < $runtime && !$this->shutdown) {
+            if (!$envelope = $queue->dequeue()) {
+                continue;
+            }
+
             try {
                 $message = $envelope->getMessage();
 
