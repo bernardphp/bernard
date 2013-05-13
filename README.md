@@ -62,7 +62,11 @@ And then instanciate the correct connection object.
 
 use Bernard\Connection\PhpRedisConnection;
 
-$connection = new PhpRedisConnection(new Redis());
+$redis = new Redis();
+$redis->connect('127.0.0.1', 6379);
+$redis->setOption(Redis::OPT_PREFIX, 'bernard:');
+
+$connection = new PhpRedisConnection($redis);
 ```
 
 #### PredisConnection
