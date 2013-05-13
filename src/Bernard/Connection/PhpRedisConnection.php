@@ -65,7 +65,20 @@ class PhpRedisConnection implements \Bernard\Connection
      */
     public function popMessage($queueName, $interval = 5)
     {
-        list(, $message) = $this->redis->blpop($this->resolveKey($queueName), $interval);
+        /**
+         * When PhpRedis is set up with an Redis::OPT_PREFIX
+         * it does set the prefix to the key and to the timeout value something like:
+         * "BLPOP" "bernard:queue:my-queue" "bernard:5"
+         *
+         * To set the resolved key in an array seems fixing this issue. We get:
+         * "BLPOP" "bernard:queue:my-queue" "5"
+         *
+         * @see https://github.com/nicolasff/phpredis/issues/158
+         */
+        $result = $this->redis->blpop(array($this->resolveKey($queueName)), $interval);
+
+        // PhpRedis returns an empty array while Predis returns null on non existing key.
+        list(, $message) = empty($result) ? null : $result;
 
         return $message;
     }
