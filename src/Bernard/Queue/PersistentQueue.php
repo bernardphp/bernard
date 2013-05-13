@@ -15,15 +15,12 @@ class PersistentQueue extends AbstractQueue
     protected $serializer;
 
     /**
-     * @param string              $name
-     * @param Connection          $connection
-     * @param SerializerInterface $serializer
+     * @param string     $name
+     * @param Connection $connection
+     * @param Serializer $serializer
      */
-    public function __construct(
-        $name,
-        Connection $connection,
-        Serializer $serializer
-    ) {
+    public function __construct($name, Connection $connection, Serializer $serializer)
+    {
         parent::__construct($name);
 
         $this->connection = $connection;
@@ -87,8 +84,9 @@ class PersistentQueue extends AbstractQueue
     public function peek($index = 0, $limit = 20)
     {
         $this->errorIfClosed();
+
         $messages = $this->connection->peekQueue($this->name, $index, $limit);
 
-        return array_map(array($this->serializer, 'deserialize'), $message);
+        return array_map(array($this->serializer, 'deserialize'), $messages);
     }
 }
