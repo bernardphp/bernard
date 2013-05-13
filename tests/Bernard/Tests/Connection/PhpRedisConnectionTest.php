@@ -84,10 +84,10 @@ class PhpRedisConnectionTest extends \PHPUnit_Framework_TestCase
 
     public function testItPopMessages()
     {
-        $this->redis->expects($this->at(0))->method('blPop')->with($this->equalTo('queue:send-newsletter'))
+        $this->redis->expects($this->at(0))->method('blPop')->with($this->equalTo(array('queue:send-newsletter')))
             ->will($this->returnValue(array('my-queue', 'message1')));
 
-        $this->redis->expects($this->at(1))->method('blPop')->with($this->equalTo('queue:ask-forgiveness'), $this->equalTo(30))
+        $this->redis->expects($this->at(1))->method('blPop')->with($this->equalTo(array('queue:ask-forgiveness')), $this->equalTo(30))
             ->will($this->returnValue(array('my-queue2', 'message2')));
 
         $this->assertEquals('message1', $this->connection->popMessage('send-newsletter'));

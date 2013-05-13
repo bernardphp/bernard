@@ -22,6 +22,16 @@ class PredisConnection extends PhpRedisConnection
     /**
      * {@inheritDoc}
      */
+    public function popMessage($queueName, $interval = 5)
+    {
+        list(, $message) = $this->redis->blpop($this->resolveKey($queueName), $interval) ?: null;
+
+        return $message;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function info()
     {
         // Temporarily change the command use to get info as earlier and newer redis
