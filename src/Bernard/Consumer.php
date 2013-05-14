@@ -19,6 +19,14 @@ class Consumer
      */
     public function __construct(ServiceResolver $services)
     {
+        if (!extension_loaded('pcntl')) {
+            throw new \RuntimeException('The pcntl extension is missing.');
+        }
+
+        if (!extension_loaded('posix')) {
+            throw new \RuntimeException('The posix extension is missing.');
+        }
+
         $this->services = $services;
     }
 
@@ -49,9 +57,18 @@ class Consumer
                 }
 
                 if (0 < $forked) {
-                    pcntl_wait($status);
-                    if (0 !== pcntl_wexitstatus($status)) {
-                        throw new \RuntimeException;
+                    $forkedPid = pcntl_wait($status);
+
+                    if (!pcntl_wifexited($status)) {
+                        throw new \RuntimeException(sprintf(
+                            'Forked pid %s did not teminiate normally.', $forkedPid
+                        ));
+                    }
+
+                    if (0 !== $exitCode = pcntl_wexitstatus($status)) {
+                        throw new \RuntimeException(sprintf(
+                            'Forked pid %s exited with exit code %s.', $forkedPid, $exitCode
+                        ));
                     }
                 }
             } catch (\Exception $e) {
@@ -88,7 +105,7 @@ class Consumer
         $pid = pcntl_fork();
 
         if (-1 === $pid) {
-            throw new \RuntimeException;
+            throw new \RuntimeException(sprintf('Cannot fork %s.', posix_getpid()));
         }
 
         return $pid;
