@@ -2,7 +2,31 @@
 
 set -e
 
-sphinx-build -b html doc build
-git co gh-pages
-cp -Rf build/* ./
-git add -Av . && git ci -am "Build" && git push origin gh-pages && git co master
+build-documentation () {
+    sphinx-build -b html doc build
+}
+
+move-to-pages () {
+    git checkout gh-pages
+    cp -Rf build/* ./
+}
+
+commit-and-push () {
+    git add -Av .
+    git commit -am "Build"
+    git push origin gh-pages
+}
+
+checkout-master () {
+    git checkout master
+}
+
+main () {
+    build-documentation
+    move-to-pages
+    commit-and-push
+    checkout-master
+}
+
+
+main &> /dev/null
