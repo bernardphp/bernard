@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+sphinx-build -b html doc build
+git co gh-pages
+cp -Rf build/* ./
+git add -Av . && git ci -am "Build" && git push origin gh-pages && git co master
