@@ -13,8 +13,11 @@ move-to-pages () {
 
 commit-and-push () {
     git add -Av .
-    git commit -am "Build"
+    git commit -am "Build" --allow-empty
     git push origin gh-pages
+}
+
+checkout-master () {
     git checkout master
 }
 
@@ -25,4 +28,4 @@ main () {
     checkout-master
 }
 
-main
+main > /dev/null
