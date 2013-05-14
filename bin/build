@@ -15,9 +15,6 @@ commit-and-push () {
     git add -Av .
     git commit -am "Build"
     git push origin gh-pages
-}
-
-checkout-master () {
     git checkout master
 }
 
