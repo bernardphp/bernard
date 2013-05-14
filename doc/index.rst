@@ -8,9 +8,10 @@ Redis, Predis and others.
 As it is a framework it not a plug-and-play library like php-resque.
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
 
     installation
+    connections
     producing
     consuming
-    connections
+    monitoring
