@@ -32,12 +32,37 @@ class PersistentQueueTest extends AbstractQueueTest
         $this->assertInternalType('null', $queue->dequeue());
     }
 
+    /**
+     * @dataProvider peekDataProvider
+     */
+    public function testPeekDeserializesMessages($index, $limit)
+    {
+        $this->serializer->expects($this->at(0))->method('deserialize')->with($this->equalTo('message1'));
+        $this->serializer->expects($this->at(1))->method('deserialize')->with($this->equalTo('message2'));
+        $this->serializer->expects($this->at(2))->method('deserialize')->with($this->equalTo('message3'));
+
+        $this->connection->expects($this->once())->method('peekQueue')->with($this->equalTo('send-newsletter'), $this->equalTo($index), $this->equalTo($limit))
+            ->will($this->returnValue(array('message1', 'message2', 'message3')));
+
+        $queue = $this->createQueue('send-newsletter');
+        $queue->peek($index, $limit);
+    }
+
     public function dataClosedMethods()
     {
         $methods = parent::dataClosedMethods();
         $methods[] = array('register', array());
 
         return $methods;
+    }
+
+    public function peekDataProvider()
+    {
+        return array(
+            array(0, 20),
+            array(1, 10),
+            array(20, 100),
+        );
     }
 
     protected function createQueue($name)
