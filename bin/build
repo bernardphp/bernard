@@ -25,5 +25,4 @@ main () {
     checkout-master
 }
 
-
-main &> /dev/null
+main
