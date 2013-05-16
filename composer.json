@@ -23,7 +23,8 @@
         "symfony/dependency-injection" : "~2.0",
         "pimple/pimple"                : "~1.0",
         "phpunit/phpunit"              : ">=3.7,<4.0",
-        "satooshi/php-coveralls"       : "~0.6"
+        "satooshi/php-coveralls"       : "~0.6",
+        "symfony/serializer"           : "~2.2"
     },
 
     "suggest" : {
