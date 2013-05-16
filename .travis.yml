@@ -14,7 +14,3 @@ before_script:
     - "mkdir ~/.composer"
     - "echo '{\"config\":{\"github-oauth\": {\"github.com\":\"fa354b2f030836334eac842f8fd69a03e353d247\"}}}' > ~/.composer/config.json"
     - "composer install --dev --no-progress"
-
-script: "./vendor/bin/phpunit --coverage-clover ./build/logs/clover.xml"
-
-after_script: "php vendor/bin/coveralls"
