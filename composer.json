@@ -12,24 +12,26 @@
     },
 
     "require" : {
-        "php"            : ">=5.3.3",
-        "jms/serializer" : "~0.12"
+        "php" : ">=5.3.3"
     },
 
     "require-dev" : {
         "ext-redis"                    : "~2.2",
+        "jms/serializer"               : "~0.12",
+        "pimple/pimple"                : "~1.0",
         "predis/predis"                : "~0.8",
         "symfony/console"              : "~2.0",
         "symfony/dependency-injection" : "~2.0",
-        "pimple/pimple"                : "~1.0",
-        "phpunit/phpunit"              : ">=3.7,<4.0",
+        "symfony/serializer"           : "~2.2",
         "satooshi/php-coveralls"       : "~0.6",
-        "symfony/serializer"           : "~2.2"
+        "phpunit/phpunit"              : "~3.7"
     },
 
     "suggest" : {
-        "ext-redis" : "Native redis extension for php if you want to use PhpRedisConnection",
-        "predis/predis" : "PHP implementation for redis support if you want to use PredisConnection"
+        "ext-redis"          : "Native redis extension for php if you want to use PhpRedisConnection",
+        "predis/predis"      : "PHP implementation for redis support if you want to use PredisConnection",
+        "jms/serializer"     : "Powerful serialization library. If you already use this or have advanced needs",
+        "symfony/serializer" : "Simple serialization if you dont have advanced needs. Easy to get started"
     },
 
     "extra" : {
