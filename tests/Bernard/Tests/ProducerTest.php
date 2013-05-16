@@ -12,8 +12,10 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
         $message = $this->getMock('Bernard\Message');
         $message->expects($this->once())->method('getQueue')->will($this->returnValue('my-queue'));
 
+        $envelope = new Envelope($message);
+
         $queue = $this->getMock('Bernard\Queue');
-        $queue->expects($this->once())->method('enqueue')->with($this->equalTo(new Envelope($message)));
+        $queue->expects($this->once())->method('enqueue')->with($this->equalTo($envelope));
 
         $factory = $this->getMock('Bernard\QueueFactory');
         $factory->expects($this->once())->method('create')->with($this->equalTo('my-queue'))
