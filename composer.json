@@ -12,8 +12,8 @@
     },
 
     "require" : {
-        "php"            : ">=5.3.3",
-        "jms/serializer" : "~0.12"
+        "php"                : ">=5.3.3",
+        "jms/serializer"     : "0.12"
     },
 
     "require-dev" : {
