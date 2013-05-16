@@ -15,3 +15,4 @@ As it is a framework it not a plug-and-play library like php-resque.
     producing
     consuming
     monitoring
+    cookbook
