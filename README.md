@@ -5,7 +5,6 @@ Bernard is a message queue implemented in php. It is very similiar to Resque and
 allows for easy creation of workers and creating distributed systems.
 
 [![Build Status](https://travis-ci.org/henrikbjorn/Bernard.png?branch=master)](https://travis-ci.org/henrikbjorn/Bernard)
-[![Coverage Status](https://coveralls.io/repos/henrikbjorn/Bernard/badge.png?branch=master)](https://coveralls.io/r/henrikbjorn/Bernard)
 
 Getting Started
 ---------------
@@ -293,7 +292,3 @@ Special Thanks
 than Raekke.
 * [Benjamin Eberlei](http://whitewashing.de) for advice regarding architeture
 * [Peytz & Co](http://peytz.dk)
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/henrikbjorn/bernard/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
