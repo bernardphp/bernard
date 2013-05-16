@@ -24,12 +24,12 @@ class JMSSerializer implements \Bernard\Serializer
     /**
      * {@inheritDoc}
      */
-    public function serialize(Envelope $message)
+    public function serialize(Envelope $envelope)
     {
         $context = SerializationContext::create()
             ->setSerializeNull(true);
 
-        return $this->serializer->serialize($message, 'json', $context);
+        return $this->serializer->serialize($envelope, 'json', $context);
     }
 
     /**

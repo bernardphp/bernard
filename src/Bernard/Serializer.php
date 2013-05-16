@@ -10,10 +10,10 @@ use Bernard\Message\Envelope;
 interface Serializer
 {
     /**
-     * @param  Envelope $message
+     * @param  Envelope $envelope
      * @return string
      */
-    public function serialize(Envelope $message);
+    public function serialize(Envelope $envelope);
 
     /**
      * @return Envelope
