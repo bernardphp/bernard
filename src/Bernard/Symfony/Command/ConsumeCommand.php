@@ -19,8 +19,8 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     protected $queues;
 
     /**
-     * @param ServiceResolver $services
-     * @param QueueFactoryInterface    $queues
+     * @param ServiceResolver       $services
+     * @param QueueFactoryInterface $queues
      */
     public function __construct(ServiceResolver $services, QueueFactory $queues)
     {

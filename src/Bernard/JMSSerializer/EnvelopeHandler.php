@@ -42,10 +42,10 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
     }
 
     /**
-     * @param AbstractVisitor $visitor
-     * @param Envelope $envelope
-     * @param string $type
-     * @param Context $context
+     * @param  AbstractVisitor $visitor
+     * @param  Envelope        $envelope
+     * @param  string          $type
+     * @param  Context         $context
      * @return array
      */
     public function serializeEnvelope(AbstractVisitor $visitor, Envelope $envelope, $type, Context $context)
@@ -68,10 +68,10 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
     }
 
     /**
-     * @param AbstractVisitor $visitor
-     * @param array $data
-     * @param string $type
-     * @param Context $context
+     * @param  AbstractVisitor $visitor
+     * @param  array           $data
+     * @param  string          $type
+     * @param  Context         $context
      * @return Envelope
      */
     public function deserializeEnvelope(AbstractVisitor $visitor, array $data, $type, Context $context)
@@ -102,10 +102,10 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
     }
 
     /**
-     * @param AbstractVisitor $visitor
-     * @param DefaultMessage $envelope
-     * @param string $type
-     * @param Context $context
+     * @param  AbstractVisitor $visitor
+     * @param  DefaultMessage  $envelope
+     * @param  string          $type
+     * @param  Context         $context
      * @return array
      */
     public function serializeDefaultMessage(AbstractVisitor $visitor, DefaultMessage $message, $type, Context $context)
@@ -118,10 +118,10 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
     }
 
     /**
-     * @param AbstractVisitor $visitor
-     * @param array $data
-     * @param string $type
-     * @param Context $context
+     * @param  AbstractVisitor $visitor
+     * @param  array           $data
+     * @param  string          $type
+     * @param  Context         $context
      * @return Envelope
      */
     public function deserializeDefaultMessage(AbstractVisitor $visitor, array $data, $type, Context $context)

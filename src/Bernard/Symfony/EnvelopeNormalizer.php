@@ -103,7 +103,7 @@ class EnvelopeNormalizer implements NormalizerInterface, DenormalizerInterface
     }
 
     /**
-     * @param string $class
+     * @param  string $class
      * @return object
      */
     protected function createObjectWithoutConstructor($class)

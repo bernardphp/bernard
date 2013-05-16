@@ -99,7 +99,7 @@ class PhpRedisConnection implements \Bernard\Connection
     /**
      * Transform the queueName into a key.
      *
-     * @param string $queueName
+     * @param  string $queueName
      * @return string
      */
     protected function resolveKey($queueName)

@@ -17,7 +17,7 @@ interface ServiceResolver
     public function register($name, $service);
 
     /**
-     * @param Message $message
+     * @param  Message   $message
      * @return Invocator
      */
     public function resolve(Message $message);

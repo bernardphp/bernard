@@ -23,7 +23,7 @@ interface Connection
 
     /**
      * Count the number of messages in queue. This can be a approximately number.
-     * 
+     *
      * @return integer
      */
     public function countMessages($queueName);
@@ -40,7 +40,7 @@ interface Connection
      * Remove the next message in line. And if no message is available
      * wait $interval seconds.
      *
-     * @param string $queueName
+     * @param string  $queueName
      * @param integer $interval
      */
     public function popMessage($queueName, $interval = 5);
@@ -49,7 +49,7 @@ interface Connection
      * Returns a $limit numbers of messages without removing them
      * from the queue.
      *
-     * @param string $queueName
+     * @param string  $queueName
      * @param integer $index
      * @param integer $limit
      */
