@@ -23,7 +23,7 @@ If your projects do not already use this, it is highly recommended to start.
 $ composer require henrikbjorn/bernard:dev-master
 ```
 
-Then look at what kind of connections there is available and install their dependencies
+Then look at what kind of connections and serializers there is available and install their dependencies
 before use.
 
 ### Examples
