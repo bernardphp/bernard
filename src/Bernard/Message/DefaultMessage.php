@@ -2,9 +2,6 @@
 
 namespace Bernard\Message;
 
-use JMS\Serializer\AbstractVisitor;
-use JMS\Serializer\Context;
-
 /**
  * @package Bernard
  */
@@ -31,27 +28,5 @@ class DefaultMessage extends AbstractMessage
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param  AbstractVisitor $visitor
-     * @param  null            $data
-     * @param  Context         $context
-     * @return array
-     */
-    public function serializeToJson(AbstractVisitor $visitor, $data, Context $context)
-    {
-        return get_object_vars($this) ?: new \ArrayObject;
-    }
-
-    /**
-     * @param AbstractVisitor $visitor
-     * @param array           $data
-     */
-    public function deserializeFromJson(AbstractVisitor $visitor, array $data)
-    {
-        foreach ($data as $k => $v) {
-            $this->$k = $v;
-        }
     }
 }

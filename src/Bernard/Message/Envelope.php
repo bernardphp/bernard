@@ -3,8 +3,6 @@
 namespace Bernard\Message;
 
 use Bernard\Message;
-use JMS\Serializer\AbstractVisitor;
-use JMS\Serializer\Context;
 
 /**
  * Wraps a Message with metadata that can be used for automatic retry
@@ -75,51 +73,5 @@ final class Envelope
     public function incrementRetries()
     {
         $this->retries += 1;
-    }
-
-    /**
-     * @param  AbstractVisitor $visitor
-     * @param  null            $data
-     * @param  Context         $context
-     * @return array
-     */
-    public function serializeToJson(AbstractVisitor $visitor, $data, Context $context)
-    {
-        $type = array('name' => $this->class, 'params' => array());
-        $data = array(
-            'args'      => $context->accept($this->message, $type),
-            'class'     => str_replace('\\', ':', $this->class),
-            'timestamp' => $this->timestamp,
-            'retries'   => $this->retries,
-        );
-
-        $visitor->setRoot($data);
-
-        return $data;
-    }
-
-    /**
-     * @param AbstractVisitor $visitor
-     * @param array           $data
-     * @param Context         $context
-     */
-    public function deserializeFromJson(AbstractVisitor $visitor, array $data, Context $context)
-    {
-        $this->class     = str_replace(':', '\\', $data['class']);
-        $this->timestamp = $data['timestamp'];
-        $this->retries   = $data['retries'];
-
-        $type = array(
-            'name' => 'Bernard\Message\DefaultMessage',
-            'params' => array(),
-        );
-
-        // This will allow DefaultMessage to be used for introspection where the default classes
-        // are not available (like when viewed in Juno)
-        if (class_exists($this->class)) {
-            $type['name'] = $this->class;
-        }
-
-        $this->message = $context->accept($data['args'], $type);
     }
 }

@@ -243,16 +243,19 @@ $serializer = new SymfonySerializer($symfonySerializer);
 
 ### JMS Serializer
 
-Using JMS Serializer is only possible when the correct metadata directory have been added.
+Using JMS Serializer is only possible when the subscribing handler have been added.
 
 ``` php
 <?php
 
 use Bernard\Serializer\JMSSerializer;
+use Bernard\JMSSerializer\EnvelopeHandler;
 use JMS\Serializer\SerializerBuilder;
 
 $jmsSerializer = SerializerBuilder::create()
-    ->addMetadataDir('/path/to/bernard/src/Bernard/Resources/serializer', 'Bernard')
+    ->configureHandlers(function ($registry) {
+        $registry->registerSubscribingHandler(new EnvelopeHandler);
+    })
     ->build()
 ;
 

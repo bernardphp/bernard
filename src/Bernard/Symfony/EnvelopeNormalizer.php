@@ -2,7 +2,7 @@
 
 namespace Bernard\Symfony;
 
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\Envelope;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
@@ -45,24 +45,21 @@ class EnvelopeNormalizer implements NormalizerInterface, DenormalizerInterface
      */
     public function denormalize($data, $class, $format = null, array $context = array())
     {
-        $envelope = $this->createObjectWithoutConstructor('Bernard\Message\Envelope');
+        $data['class'] = $class = str_replace(':', '\\', $data['class']);
 
-        $data['class'] = str_replace(':', '\\', $data['class']);
+        if (!class_exists($class)) {
+            $class = 'Bernard\\Message\\DefaultMessage';
+        }
 
-        if (!class_exists($data['class'])) {
-            $data['class'] = 'Bernard\\Message\\DefaultMessage';
-            $data['args']['name'] = end(explode('\\', $data['class']));
+        $message = $this->createObjectWithoutConstructor($class);
+        $envelope = new Envelope($message);
+
+        foreach ($data['args'] as $name => $value) {
+            $this->setPropertyValue($message, $name, $value);
         }
 
         foreach (array('timestamp', 'retries', 'class') as $name) {
             $this->setPropertyValue($envelope, $name, $data[$name]);
-        }
-
-        $message = $this->createObjectWithoutConstructor($data['class']);
-        $this->setPropertyValue($envelope, 'message', $message);
-
-        foreach ($data['args'] as $name => $value) {
-            $this->setPropertyValue($message, $name, $value);
         }
 
         return $envelope;

@@ -3,6 +3,7 @@
 namespace Bernard\Tests\Serializer;
 
 use Bernard\Serializer\JMSSerializer;
+use Bernard\JMSSerializer\EnvelopeHandler;
 use JMS\Serializer\SerializerBuilder;
 
 class JMSSerializerTest extends AbstractSerializerTest
@@ -11,7 +12,9 @@ class JMSSerializerTest extends AbstractSerializerTest
     {
         $class = new \ReflectionClass('Bernard\Serializer');
         $builder = new SerializerBuilder();
-        $builder->addMetadataDir(dirname($class->getFilename()) . '/Resources/serializer', 'Bernard');
+        $builder->configureHandlers(function ($registry) {
+            $registry->registerSubscribingHandler(new EnvelopeHandler);
+        });
 
         return new JMSSerializer($builder->build());
     }

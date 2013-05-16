@@ -42,7 +42,20 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
     public function testItDeserializesACustomImplementedMessage()
     {
         $json = '{"args":{},"class":"SymfonySerializerApplication:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serialize(new Envelope(new \SymfonySerializerApplication\SendNewsletterMessage())));
+        $envelope = $this->serializer->deserialize($json);
+
+        $this->assertInstanceOf('SymfonySerializerApplication\SendNewsletterMessage', $envelope->getMessage());
+    }
+
+    public function testItDeserializesAnUnknownClass()
+    {
+        $time = time();
+
+        $json = '{"args":{},"class":"UnknownClass","timestamp":' . $time . ',"retries":0}';
+        $envelope = $this->serializer->deserialize($json);
+
+        $this->assertInstanceOf('Bernard\Message\DefaultMessage', $envelope->getMessage());
+        $this->assertEquals('UnknownClass', $envelope->getClass());
     }
 
     public function testItDeserializesDefaultMessage()
