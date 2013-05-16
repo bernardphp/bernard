@@ -2,71 +2,15 @@
 
 namespace Bernard\Tests\Serializer;
 
-use Bernard\Message\Envelope;
-use Bernard\Message\DefaultMessage;
 use Bernard\Serializer\SymfonySerializer;
 use Bernard\Symfony\EnvelopeNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
-class SymfonySerializerTest extends \PHPUnit_Framework_TestCase
+class SymfonySerializerTest extends AbstractSerializerTest
 {
-    public function setUp()
-    {
-        $this->serializer = new SymfonySerializer($this->createSerializer());
-    }
-
-    public function testImplementsSerializer()
-    {
-        $this->assertInstanceOf('Bernard\Serializer', $this->serializer);
-    }
-
-    public function testItSerializesDefaultMessage()
-    {
-        $json = '{"args":{"name":"SendNewsletter"},"class":"Bernard:Message:DefaultMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter')));
-
-        $json = '{"args":{"name":"SendNewsletter","newsletterId":1,"users":["henrikbjorn"]},"class":"Bernard:Message:DefaultMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter', array(
-            'newsletterId' => 1,
-            'users' => array(
-                'henrikbjorn'
-            ),
-        ))));
-    }
-
-    public function testItSerializesACustomImplementedMessage()
-    {
-        $json = '{"args":{},"class":"SymfonySerializerApplication:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serialize(new Envelope(new \SymfonySerializerApplication\SendNewsletterMessage())));
-    }
-
-    public function testItDeserializesACustomImplementedMessage()
-    {
-        $json = '{"args":{},"class":"SymfonySerializerApplication:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serialize(new Envelope(new \SymfonySerializerApplication\SendNewsletterMessage())));
-    }
-
-    public function testItDeserializesDefaultMessage()
-    {
-        $message = $this->createWrappedDefaultMessage('SendNewsletter');
-        $json = $this->serializer->serialize($message);
-
-        $this->assertEquals($message, $this->serializer->deserialize($json));
-    }
-
-    public function createWrappedDefaultMessage($name, array $properties = array())
-    {
-        return new Envelope(new DefaultMessage($name, $properties));
-    }
-
     public function createSerializer()
     {
-        return new \Symfony\Component\Serializer\Serializer(array(
-            new EnvelopeNormalizer,
-        ), array(
-            new \Symfony\Component\Serializer\Encoder\JsonEncoder,
-        ));
+        return new SymfonySerializer(new Serializer(array(new EnvelopeNormalizer), array(new JsonEncoder)));
     }
 }
-
-namespace SymfonySerializerApplication;
-class SendNewsletterMessage extends \Bernard\Message\AbstractMessage {}
