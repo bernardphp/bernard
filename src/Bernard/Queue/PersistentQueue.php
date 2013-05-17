@@ -2,7 +2,7 @@
 
 namespace Bernard\Queue;
 
-use Bernard\Connection;
+use Bernard\Driver;
 use Bernard\Message\Envelope;
 use Bernard\Serializer;
 
@@ -16,10 +16,10 @@ class PersistentQueue extends AbstractQueue
 
     /**
      * @param string     $name
-     * @param Connection $connection
+     * @param Driver $connection
      * @param Serializer $serializer
      */
-    public function __construct($name, Connection $connection, Serializer $serializer)
+    public function __construct($name, Driver $connection, Serializer $serializer)
     {
         parent::__construct($name);
 

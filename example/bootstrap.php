@@ -1,7 +1,7 @@
 <?php
 
 use Predis\Client;
-use Bernard\Connection\PredisConnection;
+use Bernard\Driver\PredisDriver;
 use Bernard\Serializer\SymfonySerializer;
 use Bernard\Symfony\EnvelopeNormalizer;
 use Bernard\QueueFactory\PersistentFactory;
@@ -15,7 +15,7 @@ error_reporting(E_ALL);
 
 $serializer = new SymfonySerializer(new Serializer(array(new EnvelopeNormalizer), array(new JsonEncoder)));
 
-$connection = new PredisConnection(new Client(null, array(
+$connection = new PredisDriver(new Client(null, array(
     'prefix' => 'bernard:',
 )));
 $queues = new PersistentFactory($connection, $serializer);

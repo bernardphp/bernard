@@ -8,7 +8,7 @@ class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->connection = $this->getMockBuilder('Bernard\Connection')
+        $this->connection = $this->getMockBuilder('Bernard\Driver')
             ->disableOriginalConstructor()->getMock();
 
         $this->factory = new PersistentFactory($this->connection, $this->getMock('Bernard\Serializer'));
