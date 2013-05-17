@@ -5,7 +5,7 @@ namespace Bernard;
 /**
  * @package Bernard
  */
-interface Connection
+interface Driver
 {
     /**
      * Returns a list of all queue names.

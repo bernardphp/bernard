@@ -2,7 +2,7 @@
 
 namespace Bernard\QueueFactory;
 
-use Bernard\Connection;
+use Bernard\Driver;
 use Bernard\Queue\PersistentQueue;
 use Bernard\Serializer;
 
@@ -19,11 +19,11 @@ class PersistentFactory implements \Bernard\QueueFactory
     protected $serializer;
 
     /**
-     * @param Connection          $connection
+     * @param Driver          $connection
      * @param SerializerInterface $serializer
      */
     public function __construct(
-        Connection $connection,
+        Driver $connection,
         Serializer $serializer
     ) {
         $this->queues     = array();

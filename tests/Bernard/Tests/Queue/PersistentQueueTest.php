@@ -9,7 +9,7 @@ class PersistentQueueTest extends AbstractQueueTest
 {
     public function setUp()
     {
-        $this->connection = $this->getMock('Bernard\Connection');
+        $this->connection = $this->getMock('Bernard\Driver');
         $this->serializer = $this->getMock('Bernard\Serializer');
     }
 
