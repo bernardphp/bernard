@@ -51,11 +51,12 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $time = time();
 
-        $json = '{"args":{},"class":"UnknownClass","timestamp":' . $time . ',"retries":0}';
+        $json = '{"args":{},"class":"UnknownNamespace:UnknownMessage","timestamp":' . $time . ',"retries":0}';
         $envelope = $this->serializer->deserialize($json);
 
         $this->assertInstanceOf('Bernard\Message\DefaultMessage', $envelope->getMessage());
-        $this->assertEquals('UnknownClass', $envelope->getClass());
+        $this->assertEquals('UnknownNamespace\\UnknownMessage', $envelope->getClass());
+        $this->assertEquals('UnknownMessage', $envelope->getMessage()->getName());
     }
 
     public function testItDeserializesDefaultMessage()

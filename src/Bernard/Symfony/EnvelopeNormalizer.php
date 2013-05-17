@@ -49,6 +49,7 @@ class EnvelopeNormalizer implements NormalizerInterface, DenormalizerInterface
 
         if (!class_exists($class)) {
             $class = 'Bernard\\Message\\DefaultMessage';
+            $data['args']['name'] = current(array_reverse(explode('\\', $data['class'])));
         }
 
         $message = $this->createObjectWithoutConstructor($class);
