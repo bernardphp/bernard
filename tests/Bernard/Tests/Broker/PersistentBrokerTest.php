@@ -1,22 +1,22 @@
 <?php
 
-namespace Bernard\Tests\QueueFactory;
+namespace Bernard\Tests\Broker;
 
-use Bernard\QueueFactory\PersistentFactory;
+use Bernard\Broker\PersistentBroker;
 
-class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
+class PersistentBrokerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->connection = $this->getMockBuilder('Bernard\Connection')
             ->disableOriginalConstructor()->getMock();
 
-        $this->factory = new PersistentFactory($this->connection, $this->getMock('Bernard\Serializer'));
+        $this->factory = new PersistentBroker($this->connection, $this->getMock('Bernard\Serializer'));
     }
 
-    public function testImplementsQueueFactory()
+    public function testImplementsBroker()
     {
-        $this->assertInstanceOf('Bernard\QueueFactory', $this->factory);
+        $this->assertInstanceOf('Bernard\Broker', $this->factory);
     }
 
     public function testItSavesQueueObjects()

@@ -5,7 +5,7 @@ require __DIR__ . '/bootstrap.php';
 use Bernard\Message\DefaultMessage;
 use Bernard\Producer;
 
-$producer = new Producer($queues);
+$producer = new Producer($broker);
 
 while (true) {
     $producer->produce(new DefaultMessage('EchoTime', array(

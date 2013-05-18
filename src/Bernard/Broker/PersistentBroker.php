@@ -1,20 +1,17 @@
 <?php
 
-namespace Bernard\QueueFactory;
+namespace Bernard\Broker;
 
 use Bernard\Connection;
 use Bernard\Queue\PersistentQueue;
 use Bernard\Serializer;
 
 /**
- * Knows how to create queues and retrieve them from the used connection.
- * Every queue it creates is saved locally.
- *
  * @package Bernard
  */
-class PersistentFactory implements \Bernard\QueueFactory
+class PersistentBroker implements \Bernard\Broker
 {
-    protected $queues;
+    protected $queues = array();
     protected $connection;
     protected $serializer;
 
@@ -22,11 +19,8 @@ class PersistentFactory implements \Bernard\QueueFactory
      * @param Connection          $connection
      * @param SerializerInterface $serializer
      */
-    public function __construct(
-        Connection $connection,
-        Serializer $serializer
-    ) {
-        $this->queues     = array();
+    public function __construct(Connection $connection, Serializer $serializer)
+    {
         $this->connection = $connection;
         $this->serializer = $serializer;
     }

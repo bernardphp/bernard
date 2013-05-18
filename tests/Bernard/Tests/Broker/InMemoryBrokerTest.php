@@ -1,19 +1,19 @@
 <?php
 
-namespace Bernard\Tests;
+namespace Bernard\Tests\Broker;
 
-use Bernard\QueueFactory\InMemoryFactory;
+use Bernard\Broker\InMemoryBroker;
 
-class InMemoryFactoryTest extends \PHPUnit_Framework_TestCase
+class InMemoryBrokerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->factory = new InMemoryFactory();
+        $this->factory = new InMemoryBroker();
     }
 
-    public function testImplementsQueueFactory()
+    public function testImplementsBroker()
     {
-        $this->assertInstanceOf('Bernard\QueueFactory', $this->factory);
+        $this->assertInstanceOf('Bernard\Broker', $this->factory);
     }
 
     public function testRemoveClosesQueue()
