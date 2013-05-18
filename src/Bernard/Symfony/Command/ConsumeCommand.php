@@ -3,7 +3,7 @@
 namespace Bernard\Symfony\Command;
 
 use Bernard\Consumer;
-use Bernard\QueueFactory;
+use Bernard\Broker;
 use Bernard\ServiceResolver;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,16 +16,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ConsumeCommand extends \Symfony\Component\Console\Command\Command
 {
     protected $services;
-    protected $queues;
+    protected $broker;
 
     /**
-     * @param ServiceResolver       $services
-     * @param QueueFactoryInterface $queues
+     * @param ServiceResolver $services
+     * @param Broker          $broker
      */
-    public function __construct(ServiceResolver $services, QueueFactory $queues)
+    public function __construct(ServiceResolver $services, Broker $broker)
     {
         $this->services = $services;
-        $this->queues = $queues;
+        $this->broker = $broker;
 
         parent::__construct();
     }
@@ -48,9 +48,9 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $queue = $this->queues->create($input->getArgument('queue'));
+        $queue = $this->broker->create($input->getArgument('queue'));
 
-        $this->getConsumer()->consume($queue, $this->queues->create('failed'), $input->getOptions());
+        $this->getConsumer()->consume($queue, $this->broker->create('failed'), $input->getOptions());
     }
 
     /**

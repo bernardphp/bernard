@@ -1,22 +1,23 @@
 <?php
 
-namespace Bernard\QueueFactory;
+namespace Bernard\Broker;
 
 use Bernard\Queue\InMemoryQueue;
 
 /**
- * This is an in memory queue factory. It creates SplQueue objects for the
- * queue. This also means it is not possible to introspect with Juno
+ * This is an in memory broker. It creates SplQueue objects for the
+ * queue. This also means it is not possible to introspect unless it is done
+ * in the same request
  *
  * @package Bernard
  */
-class InMemoryFactory implements \Bernard\QueueFactory
+class InMemoryBroker implements \Bernard\Broker
 {
     protected $queues;
 
     /**
-     * @param  string               $queueName
-     * @return InMemoryQueueFactory
+     * @param  string        $queueName
+     * @return InMemoryQueue
      */
     public function create($queueName)
     {

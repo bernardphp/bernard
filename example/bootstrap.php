@@ -4,7 +4,7 @@ use Predis\Client;
 use Bernard\Connection\PredisConnection;
 use Bernard\Serializer\SymfonySerializer;
 use Bernard\Symfony\EnvelopeNormalizer;
-use Bernard\QueueFactory\PersistentFactory;
+use Bernard\Broker\PersistentBroker;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
@@ -18,4 +18,4 @@ $serializer = new SymfonySerializer(new Serializer(array(new EnvelopeNormalizer)
 $connection = new PredisConnection(new Client(null, array(
     'prefix' => 'bernard:',
 )));
-$queues = new PersistentFactory($connection, $serializer);
+$broker = new PersistentBroker($connection, $serializer);

@@ -8,7 +8,7 @@ namespace Bernard;
  *
  * @package Bernard
  */
-interface QueueFactory extends \Countable
+interface Broker extends \Countable
 {
     /**
      * @param  string              $queueName

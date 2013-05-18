@@ -8,12 +8,12 @@ use Bernard\Consumer;
 use Bernard\Message\DefaultMessage;
 use Bernard\Producer;
 use Bernard\ServiceResolver\ObjectResolver;
-use Bernard\QueueFactory\InMemoryFactory;
+use Bernard\Broker\InMemoryBroker;
 
 require __DIR__ . '/../vendor/autoload.php';
 require 'EchoTimeService.php';
 
-$queues = new InMemoryFactory;
+$queues = new InMemoryBroker;
 $producer = new Producer($queues);
 
 for ($i = 0; $i < 20;$i++) {

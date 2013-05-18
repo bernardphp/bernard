@@ -2,23 +2,23 @@
 
 namespace Bernard;
 
+use Bernard\Broker;
 use Bernard\Message;
 use Bernard\Message\Envelope;
-use Bernard\QueueFactory;
 
 /**
  * @package Bernard
  */
 class Producer
 {
-    protected $factory;
+    protected $broker;
 
     /**
-     * @param QueueFactory $factory
+     * @param Broker $broker
      */
-    public function __construct(QueueFactory $factory)
+    public function __construct(Broker $broker)
     {
-        $this->factory = $factory;
+        $this->broker = $broker;
     }
 
     /**
@@ -26,7 +26,7 @@ class Producer
      */
     public function produce(Message $message)
     {
-        $queue = $this->factory->create($message->getQueue());
+        $queue = $this->broker->create($message->getQueue());
         $queue->enqueue(new Envelope($message));
     }
 }
