@@ -22,7 +22,7 @@ If your projects do not already use this, it is highly recommended to start.
 $ composer require henrikbjorn/bernard:dev-master
 ```
 
-Then look at what kind of connections and serializers there is available and install their dependencies
+Then look at what kind of drivers and serializers there is available and install their dependencies
 before use.
 
 ### Examples
@@ -34,14 +34,14 @@ theese and print the timestamp.
 `in_memory.php` will produce 20 `EchoTime` messages and consume them right they
 have been sent. It uses `SplQueue` and does not need a redis backend.
 
-### Configuring a Connection
+### Configuring a Driver
 
-Several different types of connections are supported. Currently theese are available:
+Several different types of drivers are supported. Currently theese are available:
 
-* `PhpRedisConnection` for the [redis](http://pecl.php.net/package/redis) extension.
-* `PredisConnection` for the [Predis](http://github.com/nrk/predis) library.
+* `PhpRedisDriver` for the [redis](http://pecl.php.net/package/redis) extension.
+* `PredisDriver` for the [Predis](http://github.com/nrk/predis) library.
 
-#### PhpRedisConnection
+#### PhpRedisDriver
 
 Requires the installation of the pecl extension. You can add the following to your `composer.json` file
 to make sure it is installed:
@@ -54,21 +54,21 @@ to make sure it is installed:
 }
 ```
 
-And then instanciate the correct connection object.
+And then instanciate the correct driver object.
 
 ``` php
 <?php
 
-use Bernard\Connection\PhpRedisConnection;
+use Bernard\Driver\PhpRedisDriver;
 
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
 $redis->setOption(Redis::OPT_PREFIX, 'bernard:');
 
-$connection = new PhpRedisConnection($redis);
+$driver = new PhpRedisDriver($redis);
 ```
 
-#### PredisConnection
+#### PredisDriver
 
 Requires the installation of predis. Add the following to your composer.json file for this:
 
@@ -80,19 +80,19 @@ Requires the installation of predis. Add the following to your composer.json fil
 }
 ```
 
-And then instanciate the correct connection object.
+And then instanciate the correct driver object.
 
 ``` php
 <?php
 
-use Bernard\Connection\PredisConnection;
+use Bernard\Driver\PredisDriver;
 use Predis\Client;
 
 $predis = new Client('tcp://localhost', array(
     'prefix' => 'bernard:',
 ));
 
-$connection = new PredisConnection($predis);
+$driver = new PredisDriver($predis);
 ```
 
 ### Producing Messages
@@ -130,8 +130,8 @@ use Bernard\Serializer\JMSSerializer;
 // is registered as a metadata dir with "Bernard" as prefix.
 $serializer = new JMSSerializer($jmsSerializer);
 
-// .. create connection
-$factory = new PersistentFactory($connection, $serializer);
+// .. create driver
+$factory = new PersistentFactory($driver, $serializer);
 $producer = new Producer($factory);
 
 $message = new DefaultMessage("SendNewsletter", array(
@@ -167,7 +167,7 @@ object should handle which messages, your are required to register them first.
 use Bernard\ServiceResolver\ObjectResolver;
 use Bernard\Consumer;
 
-// .. create connection and a queuefactory
+// .. create driver and a queuefactory
 // NewsletterMessageHandler is a pseudo service object that responds to
 // onSendNewsletter.
 

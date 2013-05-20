@@ -1,13 +1,13 @@
 <?php
 
-namespace Bernard\Connection;
+namespace Bernard\Driver;
 
 /**
- * Implements a Connection for use with https://github.com/nicolasff/phpredis
+ * Implements a Driver for use with https://github.com/nicolasff/phpredis
  *
  * @package Bernard
  */
-class PhpRedisConnection implements \Bernard\Connection
+class PhpRedisDriver implements \Bernard\Driver
 {
     protected $redis;
 

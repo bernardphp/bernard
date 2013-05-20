@@ -1,10 +1,10 @@
 <?php
 
-namespace Bernard\Tests\Connection;
+namespace Bernard\Tests\Driver;
 
-use Bernard\Connection\PredisConnection;
+use Bernard\Driver\PredisDriver;
 
-class PredisConnectionTest extends PhpRedisConnectionTest
+class PredisDriverTest extends PhpRedisDriverTest
 {
     public function setUp()
     {
@@ -23,7 +23,7 @@ class PredisConnectionTest extends PhpRedisConnectionTest
             'sRem',
         ));
 
-        $this->connection = new PredisConnection($this->redis);
+        $this->connection = new PredisDriver($this->redis);
     }
 
     public function testItPopMessages()

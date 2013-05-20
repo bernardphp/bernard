@@ -1,10 +1,10 @@
 <?php
 
-namespace Bernard\Tests\Connection;
+namespace Bernard\Tests\Driver;
 
-use Bernard\Connection\PhpRedisConnection;
+use Bernard\Driver\PhpRedisDriver;
 
-class PhpRedisConnectionTest extends \PHPUnit_Framework_TestCase
+class PhpRedisDriverTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -21,12 +21,12 @@ class PhpRedisConnectionTest extends \PHPUnit_Framework_TestCase
             'sRem',
         ));
 
-        $this->connection = new PhpRedisConnection($this->redis);
+        $this->connection = new PhpRedisDriver($this->redis);
     }
 
-    public function testItImplementsConnectionInterface()
+    public function testItImplementsDriverInterface()
     {
-        $this->assertInstanceOf('Bernard\Connection', $this->connection);
+        $this->assertInstanceOf('Bernard\Driver', $this->connection);
     }
 
     public function testItCountsNumberOfMessagesInQueue()
