@@ -17,11 +17,11 @@ to serialize and deserialize messages.
 
     .. code-block:: json
 
-    {
-        "require" : {
-            "symfony/serializer" : "~2.2"
+        {
+            "require" : {
+                "symfony/serializer" : "~2.2"
+            }
         }
-    }
 
     .. code-block:: php
 
@@ -44,11 +44,11 @@ Using JMS Serializer is only possible when the subscribing handler have been add
 
     .. code-block:: json
 
-    {
-        "require" : {
-            "jms/serializer" : "0.13.0@dev"
+        {
+            "require" : {
+                "jms/serializer" : "0.13.0@dev"
+            }
         }
-    }
 
     .. code-block:: php
 
