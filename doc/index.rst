@@ -270,7 +270,9 @@ Integration with Frameworks
 To make it easier to get started and have it "just work" with sending messages,
 a number of integrations have been created.
 
-* __Silex__: `BernardServiceProvider <https://github.com/henrikbjorn/BernardServiceProvider>`_
++-------+-----------------------------------------------------------------------------------+
+| Silex | `BernardServiceProvider <https://github.com/henrikbjorn/BernardServiceProvider>`_ |
++-------+-----------------------------------------------------------------------------------+
 
 Monitoring
 ----------
