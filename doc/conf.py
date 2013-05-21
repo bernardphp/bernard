@@ -21,7 +21,7 @@ def get_version():
     if version:
         return version
     else:
-        return 'master'
+        return 'latest'
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
