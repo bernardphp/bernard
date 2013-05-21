@@ -11,7 +11,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os, Popen, PIPE
+import sys, os
+from subprocess import Popen, PIPE
 
 def get_version():
     """ Returns project version as string from 'git describe' command. """
