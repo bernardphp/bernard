@@ -13,7 +13,7 @@ If your projects do not already use this, it is highly recommended to start.
 
 .. code-block:: bash
 
-    $ composer require henrikbjorn/bernard:dev-master
+    $ composer require henrikbjorn/bernard:0.4.0@dev
 
 Then look at what kind of drivers and serializers there is available and install their dependencies
 before use.
@@ -270,9 +270,11 @@ Integration with Frameworks
 To make it easier to get started and have it "just work" with sending messages,
 a number of integrations have been created.
 
-+-------+-----------------------------------------------------------------------------------+
-| Silex | `BernardServiceProvider <https://github.com/henrikbjorn/BernardServiceProvider>`_ |
-+-------+-----------------------------------------------------------------------------------+
++----------+-----------------------------------------------------------------------------------+
+| Framwork | Location                                                                          |
++==========+===================================================================================+
+| Silex    | `BernardServiceProvider <https://github.com/henrikbjorn/BernardServiceProvider>`_ |
++----------+-----------------------------------------------------------------------------------+
 
 Monitoring
 ----------
