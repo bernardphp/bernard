@@ -13,36 +13,56 @@ Symfony Serializer Component
 It is important that the serializer uses ``Bernard\Symfony\EnvelopeNormalizer`` and the ``JsonEncoder`` to being able
 to serialize and deserialize messages.
 
-.. code-block:: php
+.. configuration-block::
 
-    <?php
+    .. code-block:: json
 
-    use Bernard\Serializer\SymfonySerializer;
-    use Bernard\Symfony\EnvelopeNormalizer;
-    use Symfony\Component\Serializer\Encoder\JsonEncoder;
-    use Symfony\Component\Serializer\Serializer;
+    {
+        "require" : {
+            "symfony/serializer" : "~2.2"
+        }
+    }
 
-    $symfonySerializer = new Serializer(array(new EnvelopeNormalizer), array(new JsonEncoder);
-    $serializer = new SymfonySerializer($symfonySerializer);
+    .. code-block:: php
+
+        <?php
+
+        use Bernard\Serializer\SymfonySerializer;
+        use Bernard\Symfony\EnvelopeNormalizer;
+        use Symfony\Component\Serializer\Encoder\JsonEncoder;
+        use Symfony\Component\Serializer\Serializer;
+
+        $symfonySerializer = new Serializer(array(new EnvelopeNormalizer), array(new JsonEncoder);
+        $serializer = new SymfonySerializer($symfonySerializer);
 
 JMS Serializer
 --------------
 
 Using JMS Serializer is only possible when the subscribing handler have been added.
 
-.. code-block:: php
+.. configuration-block::
 
-    <?php
+    .. code-block:: json
 
-    use Bernard\Serializer\JMSSerializer;
-    use Bernard\JMSSerializer\EnvelopeHandler;
-    use JMS\Serializer\SerializerBuilder;
+    {
+        "require" : {
+            "jms/serializer" : "0.13.0@dev"
+        }
+    }
 
-    $jmsSerializer = SerializerBuilder::create()
-        ->configureHandlers(function ($registry) {
-            $registry->registerSubscribingHandler(new EnvelopeHandler);
-        })
-        ->build()
-    ;
+    .. code-block:: php
 
-    $serializer = new JMSSerializer($jmsSerializer);
+        <?php
+
+        use Bernard\Serializer\JMSSerializer;
+        use Bernard\JMSSerializer\EnvelopeHandler;
+        use JMS\Serializer\SerializerBuilder;
+
+        $jmsSerializer = SerializerBuilder::create()
+            ->configureHandlers(function ($registry) {
+                $registry->registerSubscribingHandler(new EnvelopeHandler);
+            })
+            ->build()
+        ;
+
+        $serializer = new JMSSerializer($jmsSerializer);
