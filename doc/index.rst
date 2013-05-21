@@ -11,5 +11,6 @@ solution to have any object method being called at a later time (as resque).
     getting-started
     drivers
     serializers
+    consuming
     frameworks
     monitoring
