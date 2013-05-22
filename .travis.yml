@@ -10,7 +10,6 @@ matrix:
         - php: 5.5
 
 before_script:
-    - "pyrus install pecl/redis"
-    - "mkdir ~/.composer"
-    - "echo '{\"config\":{\"github-oauth\": {\"github.com\":\"fa354b2f030836334eac842f8fd69a03e353d247\"}}}' > ~/.composer/config.json"
+    - "pecl install redis"
+    - "mkdir ~/.composer && echo '{\"config\":{\"github-oauth\": {\"github.com\":\"fa354b2f030836334eac842f8fd69a03e353d247\"}}}' > ~/.composer/config.json"
     - "composer install --dev --no-progress"
