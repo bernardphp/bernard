@@ -13,6 +13,12 @@ Symfony Serializer Component
 It is important that the serializer uses ``Bernard\Symfony\EnvelopeNormalizer`` and the ``JsonEncoder`` to being able
 to serialize and deserialize messages.
 
+.. warning::
+
+    If you are using ``Bernard\Message\DefaultMessage`` you MUST also register ``Bernard\Symfony\DefaultMessageNormalizer``
+    for proper serialization / deserialization of message. This is strongly encouraged as it is the fallback when message
+    classed cannot be found.
+
 .. configuration-block::
 
     .. code-block:: json

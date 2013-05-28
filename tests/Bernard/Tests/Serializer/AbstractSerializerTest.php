@@ -5,6 +5,8 @@ namespace Bernard\Tests\Serializer;
 use Bernard\Message\Envelope;
 use Bernard\Message\DefaultMessage;
 
+require __DIR__ . '/../Fixtures/SendNewsletterMessage.php';
+
 abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
 {
     abstract public function createSerializer();
@@ -35,28 +37,29 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
 
     public function testItSerializesACustomImplementedMessage()
     {
-        $json = '{"args":{},"class":"SymfonySerializerApplication:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serialize(new Envelope(new \SymfonySerializerApplication\SendNewsletterMessage())));
+        $json = '{"args":{"newsletterId":10},"class":"SerializerApplication:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
+        $this->assertEquals($json, $this->serializer->serialize(new Envelope(new \SerializerApplication\SendNewsletterMessage())));
     }
 
     public function testItDeserializesACustomImplementedMessage()
     {
-        $json = '{"args":{},"class":"SymfonySerializerApplication:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"args":{"newsletterId":10},"class":"SerializerApplication:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
         $envelope = $this->serializer->deserialize($json);
 
-        $this->assertInstanceOf('SymfonySerializerApplication\SendNewsletterMessage', $envelope->getMessage());
+        $this->assertInstanceOf('SerializerApplication\SendNewsletterMessage', $envelope->getMessage());
     }
 
     public function testItDeserializesAnUnknownClass()
     {
         $time = time();
 
-        $json = '{"args":{},"class":"UnknownNamespace:UnknownMessage","timestamp":' . $time . ',"retries":0}';
+        $json = '{"args":{"meaningOfLife":42},"class":"UnknownNamespace:UnknownMessage","timestamp":' . $time . ',"retries":0}';
         $envelope = $this->serializer->deserialize($json);
 
         $this->assertInstanceOf('Bernard\Message\DefaultMessage', $envelope->getMessage());
         $this->assertEquals('UnknownNamespace\\UnknownMessage', $envelope->getClass());
         $this->assertEquals('UnknownMessage', $envelope->getMessage()->getName());
+        $this->assertEquals(42, $envelope->getMessage()->meaningOfLife);
     }
 
     public function testItDeserializesDefaultMessage()
@@ -72,6 +75,3 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
         return new Envelope(new DefaultMessage($name, $properties));
     }
 }
-
-namespace SymfonySerializerApplication;
-class SendNewsletterMessage extends \Bernard\Message\AbstractMessage {}
