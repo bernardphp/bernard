@@ -110,11 +110,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
      */
     public function serializeDefaultMessage(AbstractVisitor $visitor, DefaultMessage $message, $type, Context $context)
     {
-        $data = array(
-            'name' => $message->getName(),
-        );
-
-        return array_merge($data, get_object_vars($message));
+        return array('name' => $message->getName()) + get_object_vars($message);
     }
 
     /**
