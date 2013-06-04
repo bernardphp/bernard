@@ -47,7 +47,7 @@ class Invocator
     /**
      * Makes it possible to have this being a callable.
      *
-     * @see Job::invoke()
+     * @see Invocator::invoke()
      */
     public function __invoke()
     {
