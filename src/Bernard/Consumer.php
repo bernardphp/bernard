@@ -2,12 +2,17 @@
 
 namespace Bernard;
 
+use Bernard\EventDispatcher\MessageEvent;
+use Bernard\EventDispatcher\ExceptionEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 /**
  * @package Consumer
  */
 class Consumer
 {
     protected $services;
+    protected $dispatcher;
     protected $shutdown = false;
     protected $defaults = array(
         'max-retries' => 5,
@@ -20,6 +25,16 @@ class Consumer
     public function __construct(ServiceResolver $services)
     {
         $this->services = $services;
+    }
+
+    /**
+     * Set the event dispatcher to dispatch PRODUCE and EXCEPTION events.
+     *
+     * @param  EventDispatcherInterface $dispatcher
+     */
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -45,7 +60,15 @@ class Consumer
 
                 $invocator = $this->services->resolve($message);
                 $invocator->invoke();
-            } catch (\Exception $e) {
+
+                if (null !== $this->dispatcher) {
+                    $this->dispatcher->dispatch(BernardEvents::CONSUME, new MessageEvent($message));
+                }
+            } catch (\Exception $exception) {
+                if (null !== $this->dispatcher) {
+                    $this->dispatcher->dispatch(BernardEvents::EXCEPTION, new ExceptionEvent($message, $exception));
+                }
+
                 if ($envelope->getRetries() < $options['max-retries']) {
                     $envelope->incrementRetries();
                     $queue->enqueue($envelope);
