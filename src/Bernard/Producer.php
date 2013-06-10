@@ -26,7 +26,8 @@ class Producer
      */
     public function produce(Message $message)
     {
-        $queue = $this->factory->create($message->getQueue());
-        $queue->enqueue(new Envelope($message));
+        $envelope = new Envelope($message);
+
+        $this->factory->create($message->getQueue())->enqueue($envelope);
     }
 }
