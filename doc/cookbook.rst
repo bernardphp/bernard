@@ -38,3 +38,19 @@ It works by decorating the normal service resolver.
 
     Because the forked process cannot throw an exception to its parent all exceptions that happens while invoking
     the service object will be wrapped with a ``Bernard\Spork\Exception\ProcessException``.
+
+.. warning::
+
+    When PHP fork's out a process and if you have a PDO connection it will have to be reconnected. This is also applicaple
+    with Doctrine DBAL and can be done like:
+
+    .. code-block:: php
+
+        <?php
+
+        // Doctrine DBAL Connection will automatically recreate a PDO instance which is the same as a reconnect.
+        $connection->close();
+
+    This must be done when inside the Fork.
+
+
