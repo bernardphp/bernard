@@ -1,10 +1,11 @@
 <?php
 
-namespace Bernard\ServiceResolver;
+namespace Bernard\Spork;
 
-use Bernard\Exception\ForkingLogicException;
-use Spork\ProcessManager;
+use Bernard\ServiceResolver\Invocator;
+use Bernard\Spork\Exception\ProcessException;
 use Spork\Fork;
+use Spork\ProcessManager;
 
 /**
  * Wraps a Invocator object and forks out when executing the service. This
@@ -13,7 +14,7 @@ use Spork\Fork;
  *
  * @package Bernard
  */
-class ForkingInvocator extends Invocator
+class ProcessInvocator extends \Bernard\ServiceResolver\Invocator
 {
     protected $invocator;
     protected $spork;
@@ -49,6 +50,6 @@ class ForkingInvocator extends Invocator
     {
         list($class, $message, $file, $line, $code) = $fork->getError();
 
-        throw new ForkingLogicException($class, $message, $file, $line, $code);
+        throw new ProcessException($class, $message, $file, $line, $code);
     }
 }

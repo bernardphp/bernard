@@ -23,7 +23,7 @@ It works by decorating the normal service resolver.
     <?php
 
     use Bernard\ServiceResolver\ObjectResolver;
-    use Bernard\ServiceResolver\ForkingResolver;
+    use Bernard\Spork\ProcessDecoratingResolver;
     use Spork\ProcessManager;
 
     // create a normal resolver and register some services.
@@ -32,9 +32,9 @@ It works by decorating the normal service resolver.
     // create a process manager
     $spork = new ProcessManager;
 
-    $serviceResolver = new ForkingResolver($spork, $serviceResolver);
+    $serviceResolver = new ProcessDecoratingResolver($spork, $serviceResolver);
 
 .. warning::
 
     Because the forked process cannot throw an exception to its parent all exceptions that happens while invoking
-    the service object will be wrapped with a ``Bernard\Exception\ForkingLogicException``.
+    the service object will be wrapped with a ``Bernard\Spork\Exception\ProcessException``.

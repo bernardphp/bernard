@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\ServiceResolver;
+namespace Bernard\Spork;
 
 use Bernard\Message;
 use Bernard\ServiceResolver;
@@ -13,7 +13,7 @@ use Spork\ProcessManager;
  * @see ForkingInvocator
  * @package Bernard
  */
-class ForkingResolver implements ServiceResolver
+class ProcessDecoratingResolver implements ServiceResolver
 {
     protected $spork;
     protected $resolver;
@@ -41,6 +41,6 @@ class ForkingResolver implements ServiceResolver
      */
     public function resolve(Message $message)
     {
-        return new ForkingInvocator($this->spork, $this->resolver->resolve($message));
+        return new ProcessInvocator($this->spork, $this->resolver->resolve($message));
     }
 }

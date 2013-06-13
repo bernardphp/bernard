@@ -1,19 +1,19 @@
 <?php
 
-namespace Bernard\Tests\Exception;
+namespace Bernard\Tests\Spork\Exception;
 
-use Bernard\Exception\ForkingLogicException;
+use Bernard\Spork\Exception\ProcessException;
 
-class ForkingLogicExceptionTest extends \PHPUnit_Framework_TestCase
+class ProcessExceptionTest extends \PHPUnit_Framework_TestCase
 {
     public function testItsALogicException()
     {
-        $this->assertInstanceOf('LogicException', new ForkingLogicException('class'));
+        $this->assertInstanceOf('LogicException', new ProcessException('class'));
     }
 
     public function testItContainsInformationAboutException()
     {
-        $exception = new ForkingLogicException('class', 'message', 'file', 52, 400);
+        $exception = new ProcessException('class', 'message', 'file', 52, 400);
 
         $this->assertEquals('class', $exception->getClass());
         $this->assertEquals('message', $exception->getMessage());

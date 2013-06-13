@@ -2,10 +2,10 @@
 
 namespace Bernard\Tests\ServiceResolver;
 
-use Bernard\ServiceResolver\ForkingResolver;
-use Bernard\ServiceResolver\ForkingInvocator;
+use Bernard\Spork\ProcessDecoratingResolver;
+use Bernard\Spork\ProcessInvocator;
 
-class ForkingResolverTest extends \PHPUnit_Framework_TestCase
+class ProcessDecoratingResolverTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -16,18 +16,18 @@ class ForkingResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testItIsAServiceResolver()
     {
-        $this->assertInstanceOf('Bernard\ServiceResolver', new ForkingResolver($this->spork, $this->resolver));
+        $this->assertInstanceOf('Bernard\ServiceResolver', new ProcessDecoratingResolver($this->spork, $this->resolver));
     }
 
     public function testItProxiesRegister()
     {
         $this->resolver->expects($this->once())->method('register')->with($this->equalTo('name'), $this->equalTo('service'));
 
-        $resolver = new ForkingResolver($this->spork, $this->resolver);
+        $resolver = new ProcessDecoratingResolver($this->spork, $this->resolver);
         $resolver->register('name', 'service');
     }
 
-    public function testItWrapsInvocatorWithForkingInvocator()
+    public function testItWrapsInvocatorWithProcessDecoratingInvocator()
     {
         $invocator = $this->getMockBuilder('Bernard\ServiceResolver\Invocator')->disableOriginalConstructor()
             ->getMock();
@@ -37,8 +37,8 @@ class ForkingResolverTest extends \PHPUnit_Framework_TestCase
         $this->resolver->expects($this->once())->method('resolve')->with($this->equalTo($message))
             ->will($this->returnValue($invocator));
 
-        $resolver = new ForkingResolver($this->spork, $this->resolver);
+        $resolver = new ProcessDecoratingResolver($this->spork, $this->resolver);
 
-        $this->assertEquals(new ForkingInvocator($this->spork, $invocator), $resolver->resolve($message));
+        $this->assertEquals(new ProcessInvocator($this->spork, $invocator), $resolver->resolve($message));
     }
 }

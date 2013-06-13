@@ -1,12 +1,12 @@
 <?php
 
-namespace Bernard\Tests\ServiceResolver;
+namespace Bernard\Tests\Spork;
 
 use Bernard\ServiceResolver\Invocator;
-use Bernard\ServiceResolver\ForkingInvocator;
+use Bernard\Spork\ProcessInvocator;
 use Spork\ProcessManager;
 
-class ForkingInvocatorTest extends \PHPUnit_Framework_TestCase
+class ProcessInvocatorTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -17,12 +17,12 @@ class ForkingInvocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testItsAnInvocator()
     {
-        $this->assertInstanceOf('Bernard\ServiceResolver\Invocator', new ForkingInvocator($this->spork, $this->invocator));
+        $this->assertInstanceOf('Bernard\ServiceResolver\Invocator', new ProcessInvocator($this->spork, $this->invocator));
     }
 
     public function testItForksWhenInvoked()
     {
-        $invocator = new ForkingInvocator($this->spork, $this->invocator);
+        $invocator = new ProcessInvocator($this->spork, $this->invocator);
 
         $fork = $this->getMockBuilder('Spork\Fork')->disableOriginalConstructor()->getMock();
         $fork->expects($this->once())->method('wait');
@@ -34,20 +34,20 @@ class ForkingInvocatorTest extends \PHPUnit_Framework_TestCase
         $invocator->invoke();
     }
 
-    public function testExceptionsAreConvertedToForkingLogicException()
+    public function testExceptionsAreConvertedToProcessLogicException()
     {
         if (!function_exists('pcntl_fork')) {
             $this->markTestSkipped('The extension "PCNTL" is required for forking to work.');
         }
 
-        $this->setExpectedException('Bernard\Exception\ForkingLogicException');
+        $this->setExpectedException('Bernard\Spork\Exception\ProcessException');
 
         $message = $this->getMock('Bernard\Message');
         $message->expects($this->any())->method('getName')->will($this->returnValue('ImportUsers'));
 
         $invocator = new Invocator(new FailingService(), $message);
 
-        $forking = new ForkingInvocator(new ProcessManager(), $invocator);
+        $forking = new ProcessInvocator(new ProcessManager(), $invocator);
         $forking->invoke();
     }
 }
