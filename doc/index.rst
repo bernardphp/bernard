@@ -25,4 +25,5 @@ Documentation
     serializers
     consuming
     frameworks
+    cookbook
     monitoring
