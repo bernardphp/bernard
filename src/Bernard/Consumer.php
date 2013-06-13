@@ -3,7 +3,7 @@
 namespace Bernard;
 
 /**
- * @package Consumer
+ * @package Bernard
  */
 class Consumer
 {
@@ -19,6 +19,14 @@ class Consumer
      */
     public function __construct(ServiceResolver $services)
     {
+        if (!extension_loaded('pcntl')) {
+            throw new \RuntimeException('The pcntl extension is missing.');
+        }
+
+        if (!extension_loaded('posix')) {
+            throw new \RuntimeException('The posix extension is missing.');
+        }
+
         $this->services = $services;
     }
 
@@ -27,7 +35,7 @@ class Consumer
      */
     public function consume(Queue $queue, Queue $failed = null, array $options = array())
     {
-        declare(ticks=1);
+        declare(ticks = 1);
 
         $options = array_merge($this->defaults, array_filter($options));
         $runtime = microtime(true) + $options['max-runtime'];
@@ -41,10 +49,28 @@ class Consumer
             }
 
             try {
-                $message = $envelope->getMessage();
+                if (0 === $forked = $this->fork()) {
+                    $message = $envelope->getMessage();
+                    $invocator = $this->services->resolve($message);
+                    $invocator->invoke();
+                    exit(0);
+                }
 
-                $invocator = $this->services->resolve($message);
-                $invocator->invoke();
+                if (0 < $forked) {
+                    $forkedPid = pcntl_wait($status);
+
+                    if (!pcntl_wifexited($status)) {
+                        throw new \RuntimeException(sprintf(
+                            'Forked pid %s did not teminiate normally.', $forkedPid
+                        ));
+                    }
+
+                    if (0 !== $exitCode = pcntl_wexitstatus($status)) {
+                        throw new \RuntimeException(sprintf(
+                            'Forked pid %s exited with exit code %s.', $forkedPid, $exitCode
+                        ));
+                    }
+                }
             } catch (\Exception $e) {
                 if ($envelope->getRetries() < $options['max-retries']) {
                     $envelope->incrementRetries();
@@ -62,11 +88,26 @@ class Consumer
 
     /**
      * Mark consumer as terminating
-     *
-     * @param integer $signal
      */
-    public function trap($signal)
+    public function trap()
     {
         $this->shutdown = true;
+    }
+
+
+    /**
+     * Fork the currently running consumer
+     *
+     * @throws \RuntimeException
+     */
+    protected function fork()
+    {
+        $pid = pcntl_fork();
+
+        if (-1 === $pid) {
+            throw new \RuntimeException(sprintf('Cannot fork %s.', posix_getpid()));
+        }
+
+        return $pid;
     }
 }
