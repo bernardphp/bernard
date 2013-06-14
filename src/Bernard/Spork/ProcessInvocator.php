@@ -14,7 +14,7 @@ use Spork\ProcessManager;
  *
  * @package Bernard
  */
-class ProcessInvocator extends \Bernard\ServiceResolver\Invocator
+class ProcessInvocator extends Invocator
 {
     protected $invocator;
     protected $spork;
