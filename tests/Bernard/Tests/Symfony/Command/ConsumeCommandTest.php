@@ -10,13 +10,8 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->queues = $this->getMock('Bernard\QueueFactory');
-        $this->services = $this->getMock('Bernard\ServiceResolver');
-    }
-
-    public function testItCanCreateAConsumer()
-    {
-        $command = new ConsumeCommand($this->services, $this->queues);
-        $this->assertInstanceOf('Bernard\Consumer', $command->getConsumer());
+        $this->consumer = $this->getMockBuilder('Bernard\Consumer')
+            ->disableOriginalConstructor()->getMock();
     }
 
     public function testItConsumes()
@@ -30,17 +25,12 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
         $this->queues->expects($this->at(1))->method('create')->with($this->equalTo('failed'))
             ->will($this->returnValue($failed));
 
-        $consumer = $this->getMockBuilder('Bernard\Consumer')->disableOriginalConstructor()->getMock();
-        $consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo($failed), $this->equalTo(array(
+        $this->consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo($failed), $this->equalTo(array(
             'max-retries' => 5,
             'max-runtime' => 100,
         )));
 
-        $command = $this->getMockBuilder('Bernard\Symfony\Command\ConsumeCommand')
-            ->setMethods(array('getConsumer'))
-            ->setConstructorArgs(array($this->services, $this->queues))->getMock();
-
-        $command->expects($this->once())->method('getConsumer')->will($this->returnValue($consumer));
+        $command = new ConsumeCommand($this->consumer, $this->queues);
 
         $tester = new CommandTester($command);
         $tester->execute(array(

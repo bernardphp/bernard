@@ -4,7 +4,6 @@ namespace Bernard\Symfony\Command;
 
 use Bernard\Consumer;
 use Bernard\QueueFactory;
-use Bernard\ServiceResolver;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,16 +14,16 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ConsumeCommand extends \Symfony\Component\Console\Command\Command
 {
-    protected $services;
+    protected $consumer;
     protected $queues;
 
     /**
-     * @param ServiceResolver       $services
-     * @param QueueFactoryInterface $queues
+     * @param Consumer     $consumer
+     * @param QueueFactory $queues
      */
-    public function __construct(ServiceResolver $services, QueueFactory $queues)
+    public function __construct(Consumer $consumer, QueueFactory $queues)
     {
-        $this->services = $services;
+        $this->consumer = $consumer;
         $this->queues = $queues;
 
         parent::__construct();
@@ -50,14 +49,6 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     {
         $queue = $this->queues->create($input->getArgument('queue'));
 
-        $this->getConsumer()->consume($queue, $this->queues->create('failed'), $input->getOptions());
-    }
-
-    /**
-     * @return Consumer
-     */
-    public function getConsumer()
-    {
-        return new Consumer($this->services);
+        $this->consumer->consume($queue, $this->queues->create('failed'), $input->getOptions());
     }
 }

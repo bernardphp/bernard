@@ -57,7 +57,7 @@ component.
     use Bernard\Symfony\Command\ConsumeCommand;
 
     // create $console application
-    $console->add(new ConsumeCommand($services, $queueManager));
+    $console->add(new ConsumeCommand($consumer, $queueFactory));
 
 It can then be used as any other console command. The argument given should be
 the queue that your messages are on. If we use the earlier example with sending
