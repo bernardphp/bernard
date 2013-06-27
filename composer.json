@@ -8,7 +8,8 @@
     },
 
     "require" : {
-        "php" : ">=5.3.3"
+        "php"     : ">=5.3.3",
+        "psr/log" : "~1.0"
     },
 
     "require-dev" : {

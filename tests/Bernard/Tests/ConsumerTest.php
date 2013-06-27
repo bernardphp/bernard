@@ -6,10 +6,10 @@ use Bernard\Consumer;
 
 class ConsumerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testTrapMarksShutdown()
+    public function testShutdown()
     {
         $consumer = new Consumer($this->getMock('Bernard\ServiceResolver'));
-        $consumer->trap(1);
+        $consumer->shutdown();
 
         $r = new \ReflectionProperty($consumer, 'shutdown');
         $r->setAccessible(true);
