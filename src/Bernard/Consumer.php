@@ -53,7 +53,7 @@ class Consumer
     /**
      * @param Envelope $envelope
      */
-    protected function invoke(Envelope $envelope, Queue $queue, Failed $failed = null)
+    protected function invoke(Envelope $envelope, Queue $queue, Queue $failed = null)
     {
         try {
             $invocator = $this->services->resolve($envelope->getMessage());
