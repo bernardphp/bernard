@@ -86,7 +86,7 @@ class Consumer
      */
     protected function configure(array $options)
     {
-        $this->options = $this->options + array_filter($options);
+        $this->options = array_filter($options) + $this->options;
         $this->options['max-runtime'] = microtime(true) + $this->options['max-runtime'];
     }
 
