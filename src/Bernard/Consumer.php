@@ -2,6 +2,11 @@
 
 namespace Bernard;
 
+use Bernard\Message\Envelope;
+use Exception;
+
+declare(ticks=1);
+
 /**
  * @package Consumer
  */
@@ -9,7 +14,7 @@ class Consumer
 {
     protected $services;
     protected $shutdown = false;
-    protected $defaults = array(
+    protected $options = array(
         'max-retries' => 5,
         'max-runtime' => PHP_INT_MAX,
     );
@@ -27,46 +32,71 @@ class Consumer
      */
     public function consume(Queue $queue, Queue $failed = null, array $options = array())
     {
-        declare(ticks=1);
+        $this->bind();
+        $this->configure($options);
 
-        $options = array_merge($this->defaults, array_filter($options));
-        $runtime = microtime(true) + $options['max-runtime'];
-
-        pcntl_signal(SIGTERM, array($this, 'trap'), true);
-        pcntl_signal(SIGINT, array($this, 'trap'), true);
-
-        while (microtime(true) < $runtime && !$this->shutdown) {
-            if (!$envelope = $queue->dequeue()) {
-                continue;
-            }
-
-            try {
-                $message = $envelope->getMessage();
-
-                $invocator = $this->services->resolve($message);
-                $invocator->invoke();
-            } catch (\Exception $e) {
-                if ($envelope->getRetries() < $options['max-retries']) {
-                    $envelope->incrementRetries();
-                    $queue->enqueue($envelope);
-
-                    continue;
-                }
-
-                if ($failed) {
-                    $failed->enqueue($envelope);
-                }
+        while (microtime(true) < $this->options['max-runtime'] && !$this->shutdown) {
+            if ($envelope = $queue->dequeue()) {
+                $this->invoke($envelope, $queue, $failed);
             }
         }
     }
 
     /**
-     * Mark consumer as terminating
-     *
-     * @param integer $signal
+     * Mark Consumer as shutdown
      */
-    public function trap($signal)
+    public function shutdown()
     {
         $this->shutdown = true;
+    }
+
+    /**
+     * @param Envelope $envelope
+     */
+    protected function invoke(Envelope $envelope, Queue $queue, Failed $failed = null)
+    {
+        try {
+            $invocator = $this->services->resolve($envelope->getMessage());
+            $invocator->invoke();
+        } catch (Exception $e) {
+            $this->fail($envelope, $e, $queue, $failed);
+        }
+    }
+
+    /**
+     * @param Envelope $envelope
+     * @param Exception $exception
+     * @param Queue|null $failed
+     */
+    protected function fail(Envelope $envelope, Exception $exception, Queue $queue, Queue $failed = null)
+    {
+        if ($envelope->getRetries() < $this->options['max-retries']) {
+            $envelope->incrementRetries();
+
+           return $queue->enqueue($envelope);
+        }
+
+        if ($failed) {
+            $failed->enqueue($envelope);
+        }
+    }
+
+    /**
+     * @param array $options
+     */
+    protected function configure(array $options)
+    {
+        $this->options = $this->options + array_filter($options);
+        $this->options['max-runtime'] = microtime(true) + $this->options['max-runtime'];
+    }
+
+    /**
+     * Setup signal handlers for unix signals.
+     */
+    protected function bind()
+    {
+        pcntl_signal(SIGTERM, array($this, 'shutdown'));
+        pcntl_signal(SIGQUIT, array($this, 'shutdown'));
+        pcntl_signal(SIGINT,  array($this, 'shutdown'));
     }
 }
