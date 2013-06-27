@@ -8,6 +8,10 @@ allows for easy creation of workers and creating distributed systems.
 
 You can read more about it, in [its documentation](http://bernard.rtfd.org).
 
+Used by these lovely companies
+------------------------------
+
+[![Peytz & Co](doc/_static/peytzco.jpg)](http://peytz.dk)
 
 Special Thanks
 --------------
