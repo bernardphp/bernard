@@ -27,12 +27,8 @@ class Consumer
      */
     public function __construct(ServiceResolver $services, LoggerInterface $logger = null)
     {
-        if (!$logger) {
-            $logger = new NullLogger;
-        }
-
         $this->services = $services;
-        $this->logger = $logger;
+        $this->logger = $logger ?: new NullLogger;
     }
 
     /**
@@ -44,11 +40,9 @@ class Consumer
         $this->configure($options);
 
         while (microtime(true) < $this->options['max-runtime'] && !$this->shutdown) {
-            if (!$envelope = $this->queue->dequeue($queue)) {
-                continue;
+            if ($envelope = $queue->dequeue()) {
+                $this->invoke($envelope, $queue, $failed);
             }
-
-            $this->invoke($envelope);
         }
     }
 
@@ -65,13 +59,13 @@ class Consumer
     /**
      * @param Envelope $envelope
      */
-    protected function invoke(Envelope $envelope)
+    protected function invoke(Envelope $envelope, Queue $queue, Failed $failed = null)
     {
         try {
             $invocator = $this->services->resolve($envelope->getMessage());
             $invocator->invoke();
         } catch (Exception $e) {
-            $this->fail($envelope, $e);
+            $this->fail($envelope, $e, $queue, $failed);
         }
     }
 
@@ -80,7 +74,7 @@ class Consumer
      * @param Exception $exception
      * @param Queue|null $failed
      */
-    protected function fail(Envelope $envelope, Exception $exception, Queue $failed = null)
+    protected function fail(Envelope $envelope, Exception $exception, Queue $queue, Queue $failed = null)
     {
         $this->logger->warning('[Bernard] Exception occured while processing "{message}".', array(
             'exception' => $exception,
