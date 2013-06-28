@@ -26,7 +26,9 @@
         "ext-redis"          : "Native redis extension for php if you want to use PhpRedisConnection",
         "predis/predis"      : "PHP implementation for redis support if you want to use PredisConnection",
         "jms/serializer"     : "Powerful serialization library. If you already use this or have advanced needs",
-        "symfony/serializer" : "Simple serialization if you dont have advanced needs. Easy to get started"
+        "symfony/serializer" : "Simple serialization if you dont have advanced needs. Easy to get started",
+        "iron-io/iron_mq"    : "Iron MQ API client",
+        "aws/aws-sdk-php"    : "Amazon PHP SDK, including SQS API client"
     },
 
     "extra" : {
