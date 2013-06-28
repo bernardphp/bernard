@@ -16,13 +16,37 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testItConsumes()
     {
-        $queue = $this->getMockBuilder('Bernard\Queue')->disableOriginalConstructor()->getMock();
-        $failed = $this->getMockBuilder('Bernard\Queue')->disableOriginalConstructor()->getMock();
+        $command = new ConsumeCommand($this->consumer, $this->queues);
+        $tester = new CommandTester($command);
+        $queue = $this->getMockBuilder('Bernard\Queue')->getMock();
 
         $this->queues->expects($this->at(0))->method('create')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue($queue));
 
-        $this->queues->expects($this->at(1))->method('create')->with($this->equalTo('failed'))
+        $this->consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), null, $this->equalTo(array(
+            'max-retries' => 5,
+            'max-runtime' => 100,
+        )));
+
+        $tester->execute(array(
+            '--max-retries' => 5,
+            '--max-runtime' => 100,
+            'queue' => 'send-newsletter',
+        ));
+    }
+
+    public function testItConsumesWithFailed()
+    {
+        $command = new ConsumeCommand($this->consumer, $this->queues);
+        $tester = new CommandTester($command);
+
+        $queue = $this->getMockBuilder('Bernard\Queue')->getMock();
+        $failed = $this->getMockBuilder('Bernard\Queue')->getMock();
+
+        $this->queues->expects($this->at(0))->method('create')->with($this->equalTo('send-newsletter'))
+            ->will($this->returnValue($queue));
+
+        $this->queues->expects($this->at(1))->method('create')->with($this->equalTo('failed-send-newsletter'))
             ->will($this->returnValue($failed));
 
         $this->consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo($failed), $this->equalTo(array(
@@ -30,12 +54,10 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
             'max-runtime' => 100,
         )));
 
-        $command = new ConsumeCommand($this->consumer, $this->queues);
-
-        $tester = new CommandTester($command);
         $tester->execute(array(
             '--max-retries' => 5,
             '--max-runtime' => 100,
+            '--failed' => 'failed-send-newsletter',
             'queue' => 'send-newsletter',
         ));
     }
