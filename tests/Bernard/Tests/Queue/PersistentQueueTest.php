@@ -18,12 +18,12 @@ class PersistentQueueTest extends AbstractQueueTest
         $messageWrapper = new Envelope($this->getMock('Bernard\Message'));
 
         $this->connection->expects($this->at(1))->method('popMessage')->with($this->equalTo('send-newsletter'))
-            ->will($this->returnValue('deserialized'));
+            ->will($this->returnValue(array('serialized', null)));
 
         $this->connection->expects($this->at(2))->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue(null));
 
-        $this->serializer->expects($this->once())->method('deserialize')->with($this->equalTo('deserialized'))
+        $this->serializer->expects($this->once())->method('deserialize')->with($this->equalTo('serialized'))
             ->will($this->returnValue($messageWrapper));
 
         $queue = $this->createQueue('send-newsletter');
