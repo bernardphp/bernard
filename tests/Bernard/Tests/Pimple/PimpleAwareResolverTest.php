@@ -1,8 +1,9 @@
 <?php
 
-namespace Bernard\Tests\ServiceResolver;
+namespace Bernard\Tests\Pimple;
 
 use Bernard\ServiceResolver\Invocator;
+use Bernard\Message\Envelope;
 use Bernard\Message\DefaultMessage;
 use Bernard\Pimple\PimpleAwareResolver;
 use Pimple;
@@ -19,13 +20,13 @@ class PimpleAwareResolverTest extends \PHPUnit_Framework_TestCase
     public function testExceptionWhenMessageCannotBeResolved()
     {
         $this->setExpectedException('InvalidArgumentException',
-            'No service registered for message "SendNewsletter".'); 
+            'No service registered for envelope "SendNewsletter".'); 
 
         $resolver = $this->createResolver();
 
         $this->assertEquals(array(), $this->container->keys());
 
-        $resolver->resolve(new DefaultMessage('SendNewsletter'));
+        $resolver->resolve($this->createEnvelope());
     }
 
     public function testResolveToServiceFromContainer()
@@ -36,7 +37,7 @@ class PimpleAwareResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolver->register('SendNewsletter', 'my.service.id');
 
-        $this->assertEquals(new Invocator($service, new DefaultMessage('SendNewsletter')), $resolver->resolve(new DefaultMessage('SendNewsletter')));
+        $this->assertEquals(new Invocator($service, $this->createEnvelope()), $resolver->resolve($this->createEnvelope()));
     }
 
     public function testExceptionWhenServiceDosentExistOnContainer()
@@ -46,7 +47,12 @@ class PimpleAwareResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolver = $this->createResolver();
         $resolver->register('SendNewsletter', 'non_existant_service_id');
-        $resolver->resolve(new DefaultMessage('SendNewsletter'));
+        $resolver->resolve($this->createEnvelope());
+    }
+
+    protected function createEnvelope()
+    {
+        return new Envelope(new DefaultMessage('SendNewsletter'));
     }
 
 }

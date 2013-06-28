@@ -10,7 +10,7 @@ use Bernard\Message;
  *
  * @package Bernard
  */
-final class Envelope
+class Envelope
 {
     protected $message;
     protected $class;

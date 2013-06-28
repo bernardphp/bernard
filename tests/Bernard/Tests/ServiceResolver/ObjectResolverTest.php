@@ -2,6 +2,7 @@
 
 namespace Bernard\Tests\ServiceResolver;
 
+use Bernard\Message\Envelope;
 use Bernard\ServiceResolver\ObjectResolver;
 use Bernard\ServiceResolver\Invocator;
 
@@ -24,26 +25,22 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testItResolvesBasedOnMessageName()
     {
-        $message = $this->getMock('Bernard\Message');
-        $message->expects($this->any())->method('getName')->will($this->returnValue('SendNewsletter'));
-
         $service = new \stdClass;
 
         $resolver = new ObjectResolver;
         $resolver->register('SendNewsletter', $service);
 
-        $this->assertEquals(new Invocator($service, $message), $resolver->resolve($message));
+        $envelope = $this->createEnvelope();
+
+        $this->assertEquals(new Invocator($service, $envelope), $resolver->resolve($envelope));
     }
 
     public function testItThrowsExceptionIfServiceCannotBeFound()
     {
         $this->setExpectedException('InvalidArgumentException');
 
-        $message = $this->getMock('Bernard\Message');
-        $message->expects($this->any())->method('getName')->will($this->returnValue('SendNewsletter'));
-
         $resolver = new ObjectResolver;
-        $resolver->resolve($message);
+        $resolver->resolve($this->createEnvelope());
     }
 
     public function dataProviderNotObjects()
@@ -55,5 +52,13 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
             array('SendNewsletter', 1.02),
             array('SendNewsletter', 12),
         );
+    }
+
+    protected function createEnvelope()
+    {
+        $message = $this->getMock('Bernard\Message');
+        $message->expects($this->any())->method('getName')->will($this->returnValue('SendNewsletter'));
+
+        return new Envelope($message);
     }
 }
