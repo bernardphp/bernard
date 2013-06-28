@@ -13,6 +13,7 @@ class PersistentQueue extends AbstractQueue
 {
     protected $connection;
     protected $serializer;
+    protected $receipts = array();
 
     /**
      * @param string     $name
@@ -69,11 +70,23 @@ class PersistentQueue extends AbstractQueue
     /**
      * {@inheritDoc}
      */
+    public function acknowledge(Envelope $envelope)
+    {
+        $receipt = $this->receipts[spl_object_hash($envelope->getMessage())];
+
+        $this->connection->acknowledgeMessage($this->name, $receipt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function dequeue()
     {
         $this->errorIfClosed();
 
-        $message = $this->connection->popMessage($this->name);
+        list($message, $receipt) = $this->connection->popMessage($this->name);
+
+        $this->receipts[spl_object_hash($message)] = $receipt;
 
         return $message ? $this->serializer->deserialize($message) : null;
     }

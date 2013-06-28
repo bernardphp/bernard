@@ -58,6 +58,8 @@ class Consumer
         try {
             $invocator = $this->services->resolve($envelope->getMessage());
             $invocator->invoke();
+
+            $queue->acknowledge($envelope);
         } catch (Exception $e) {
             $this->fail($envelope, $e, $queue, $failed);
         }
