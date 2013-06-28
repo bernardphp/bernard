@@ -72,6 +72,8 @@ class PersistentQueue extends AbstractQueue
      */
     public function acknowledge(Envelope $envelope)
     {
+        $this->errorIfClosed();
+
         $receipt = $this->receipts[spl_object_hash($envelope->getMessage())];
 
         $this->connection->acknowledgeMessage($this->name, $receipt);
@@ -86,9 +88,11 @@ class PersistentQueue extends AbstractQueue
 
         list($message, $receipt) = $this->connection->popMessage($this->name);
 
-        $this->receipts[spl_object_hash($message)] = $receipt;
+        if ($message) {
+            $this->receipts[spl_object_hash($message)] = $receipt;
 
-        return $message ? $this->serializer->deserialize($message) : null;
+            return $this->serializer->deserialize($message);
+        }
     }
 
     /**
