@@ -3,7 +3,7 @@
 namespace Bernard\Pimple;
 
 use Pimple;
-use Bernard\Message;
+use Bernard\Message\Envelope;
 use Bernard\ServiceResolver\Invocator;
 
 /**
@@ -33,12 +33,12 @@ class PimpleAwareResolver implements \Bernard\ServiceResolver
     /**
      * {@inheritDoc}
      */
-    public function resolve(Message $message)
+    public function resolve(Envelope $envelope)
     {
-        if (!isset($this->services[$message->getName()])) {
-            throw new \InvalidArgumentException('No service registered for message "' . $message->getName() . '".');
+        if (!isset($this->services[$envelope->getName()])) {
+            throw new \InvalidArgumentException('No service registered for envelope "' . $envelope->getName() . '".');
         }
 
-        return new Invocator($this->container[$this->services[$message->getName()]], $message);
+        return new Invocator($this->container[$this->services[$envelope->getName()]], $envelope);
     }
 }

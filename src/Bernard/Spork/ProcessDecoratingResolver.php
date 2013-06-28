@@ -2,7 +2,7 @@
 
 namespace Bernard\Spork;
 
-use Bernard\Message;
+use Bernard\Message\Envelope;
 use Bernard\ServiceResolver;
 use Spork\ProcessManager;
 
@@ -39,8 +39,8 @@ class ProcessDecoratingResolver implements ServiceResolver
     /**
      * {@inheritDoc}
      */
-    public function resolve(Message $message)
+    public function resolve(Envelope $envelope)
     {
-        return new ProcessInvocator($this->spork, $this->resolver->resolve($message));
+        return new ProcessInvocator($this->spork, $this->resolver->resolve($envelope));
     }
 }

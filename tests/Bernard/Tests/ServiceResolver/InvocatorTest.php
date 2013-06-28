@@ -9,14 +9,15 @@ class InvocatorTest extends \PHPUnit_Framework_TestCase
 {
     public function testItInvokesServiceObject()
     {
-        $message = new DefaultMessage('SendNewsletter');
+        $envelope = $this->getMockBuilder('Bernard\Message\Envelope')
+            ->disableOriginalConstructor()->getMock();
+        $envelope->expects($this->once())->method('getName')->will($this->returnValue('SendNewsletter'));
+        $envelope->expects($this->once())->method('getMessage')->will($this->returnValue('message'));
 
         $service = $this->getMock('stdClass', array('onSendNewsletter'));
-        $service->expects($this->exactly(2))->method('onSendNewsletter')->with($this->equalTo($message));
+        $service->expects($this->once())->method('onSendNewsletter')->with($this->equalTo('message'));
 
-        $invocator = new Invocator($service, $message);
+        $invocator = new Invocator($service, $envelope);
         $invocator->invoke();
-
-        $invocator();
     }
 }
