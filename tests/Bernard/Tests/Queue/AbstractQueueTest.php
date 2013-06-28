@@ -28,6 +28,9 @@ abstract class AbstractQueueTest  extends \PHPUnit_Framework_TestCase
             array('enqueue', array(
                 new Envelope($this->getMock('Bernard\Message'))
             )),
+            array('acknowledge', array(
+                new Envelope($this->getMock('Bernard\Message'))
+            )),
         );
     }
 

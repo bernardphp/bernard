@@ -13,6 +13,48 @@ class PersistentQueueTest extends AbstractQueueTest
         $this->serializer = $this->getMock('Bernard\Serializer');
     }
 
+    public function testEnqueue()
+    {
+        $envelope = new Envelope($this->getMock('Bernard\Message'));
+
+        $this->serializer->expects($this->once())->method('serialize')->with($this->equalTo($envelope))
+            ->will($this->returnValue('serialized message'));
+        $this->connection->expects($this->once())->method('pushMessage')
+            ->with($this->equalTo('send-newsletter'), $this->equalTo('serialized message'));
+
+        $queue = $this->createQueue('send-newsletter');
+        $queue->enqueue($envelope);
+    }
+
+    public function testAcknowledge()
+    {
+        $envelope = new Envelope($this->getMock('Bernard\Message'));
+
+        // When envelope have first been fetched.
+        $this->connection->expects($this->once())->method('acknowledgeMessage')
+            ->with($this->equalTo('send-newsletter'), $this->equalTo('receipt'));
+
+        $this->connection->expects($this->once())->method('popMessage')->with($this->equalTo('send-newsletter'))
+            ->will($this->returnValue(array('message', 'receipt')));
+
+        $this->serializer->expects($this->once())->method('deserialize')
+            ->will($this->returnValue($envelope));
+
+        $queue = $this->createQueue('send-newsletter');
+        $envelope = $queue->dequeue();
+        $queue->acknowledge($envelope);
+    }
+
+    public function testCount()
+    {
+        $this->connection->expects($this->once())->method('countMessages')->with($this->equalTo('send-newsletter'))
+            ->will($this->returnValue(10));
+
+        $queue = $this->createQueue('send-newsletter');
+
+        $this->assertEquals(10, $queue->count());
+    }
+
     public function testDequeue()
     {
         $messageWrapper = new Envelope($this->getMock('Bernard\Message'));

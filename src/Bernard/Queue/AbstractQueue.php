@@ -36,6 +36,7 @@ abstract class AbstractQueue implements \Bernard\Queue
      */
     public function acknowledge(Envelope $envelope)
     {
+        $this->errorIfClosed();
     }
 
     /**
