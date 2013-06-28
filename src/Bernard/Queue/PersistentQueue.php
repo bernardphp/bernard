@@ -2,6 +2,7 @@
 
 namespace Bernard\Queue;
 
+use ArrayObject;
 use Bernard\Driver;
 use Bernard\Message\Envelope;
 use Bernard\Serializer;
@@ -13,7 +14,7 @@ class PersistentQueue extends AbstractQueue
 {
     protected $connection;
     protected $serializer;
-    protected $receipts = array();
+    protected $receipts;
 
     /**
      * @param string     $name
@@ -26,6 +27,7 @@ class PersistentQueue extends AbstractQueue
 
         $this->connection = $connection;
         $this->serializer = $serializer;
+        $this->receipts   = array();
 
         $this->register();
     }
@@ -74,7 +76,8 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        $receipt = $this->receipts[spl_object_hash($envelope)];
+        $hash    = spl_object_hash($envelope);
+        $receipt = isset($this->receipts[$hash]) ? $this->receipts[$hash] : null;
 
         $this->connection->acknowledgeMessage($this->name, $receipt);
     }
