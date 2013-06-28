@@ -75,7 +75,7 @@ class PhpRedisDriver implements \Bernard\Driver
         // see https://github.com/nicolasff/phpredis/issues/158
         list(, $message) = $this->redis->blpop(array($this->resolveKey($queueName)), $interval) ?: null;
 
-        return $message;
+        return array($message, null);
     }
 
     /**
@@ -86,6 +86,13 @@ class PhpRedisDriver implements \Bernard\Driver
         $limit += $index - 1;
 
         return $this->redis->lRange($this->resolveKey($queueName), $index, $limit);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function acknowledgeMessage($queueName, $receipt)
+    {
     }
 
     /**

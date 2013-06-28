@@ -42,8 +42,18 @@ interface Driver
      *
      * @param string  $queueName
      * @param integer $interval
+     * @return array An array like array($message, $receipt);
      */
     public function popMessage($queueName, $interval = 5);
+
+    /**
+     * If the driver supports it, this will be called when a message
+     * have been consumed.
+     *
+     * @param string $queuename
+     * @param mixed $receipt
+     */
+    public function acknowledgeMessage($queueName, $receipt);
 
     /**
      * Returns a $limit numbers of messages without removing them
