@@ -76,10 +76,11 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        $hash    = spl_object_hash($envelope);
-        $receipt = isset($this->receipts[$hash]) ? $this->receipts[$hash] : null;
+        $hash = spl_object_hash($envelope);
 
-        $this->connection->acknowledgeMessage($this->name, $receipt);
+        if (isset($this->receipts[$hash])) {
+            $this->connection->acknowledgeMessage($this->name, $this->receipts[$hash]);
+        }
     }
 
     /**
