@@ -90,7 +90,7 @@ class PhpRedisDriverTest extends \PHPUnit_Framework_TestCase
         $this->redis->expects($this->at(1))->method('blPop')->with($this->equalTo(array('queue:ask-forgiveness')), $this->equalTo(30))
             ->will($this->returnValue(array('my-queue2', 'message2')));
 
-        $this->assertEquals('message1', $this->connection->popMessage('send-newsletter'));
-        $this->assertEquals('message2', $this->connection->popMessage('ask-forgiveness', 30));
+        $this->assertEquals(array('message1', null), $this->connection->popMessage('send-newsletter'));
+        $this->assertEquals(array('message2', null), $this->connection->popMessage('ask-forgiveness', 30));
     }
 }
