@@ -30,7 +30,6 @@ class PersistentQueueTest extends AbstractQueueTest
     {
         $envelope = new Envelope($this->getMock('Bernard\Message'));
 
-        // When envelope have first been fetched.
         $this->connection->expects($this->once())->method('acknowledgeMessage')
             ->with($this->equalTo('send-newsletter'), $this->equalTo('receipt'));
 
@@ -42,6 +41,16 @@ class PersistentQueueTest extends AbstractQueueTest
 
         $queue = $this->createQueue('send-newsletter');
         $envelope = $queue->dequeue();
+        $queue->acknowledge($envelope);
+    }
+
+    public function testAcknowledgeOnlyIfReceipt()
+    {
+        $envelope = new Envelope($this->getMock('Bernard\Message'));
+
+        $this->connection->expects($this->never())->method('acknowledgeMessage');
+
+        $queue = $this->createQueue('send-newsletter');
         $queue->acknowledge($envelope);
     }
 
