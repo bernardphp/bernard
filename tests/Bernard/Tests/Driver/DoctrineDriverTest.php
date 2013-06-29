@@ -38,6 +38,14 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('null', $this->driver->popMessage('import-users'));
     }
 
+    public function testListQueues()
+    {
+        $this->driver->pushMessage('import', 'message1');
+        $this->driver->pushMessage('send-newsletter', 'message2');
+
+        $this->assertEquals(array('import', 'send-newsletter'), $this->driver->listQueues());
+    }
+
     public function testRemoveQueue()
     {
         $this->driver->pushMessage('import', 'message1');

@@ -26,7 +26,10 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function listQueues()
     {
-        return $this->connection->fetchColumn('SELECT queue FROM messages GROUP BY queue');
+        $statement = $this->connection->prepare('SELECT queue FROM messages GROUP BY queue');
+        $statement->execute();
+
+        return $statement->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     /**
@@ -42,9 +45,7 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        $sql = 'SELECT COUNT(id) FROM messages WHERE queue = :queue';
-
-        return $this->connection->fetchColumn($sql, array(
+        return $this->connection->fetchColumn('SELECT COUNT(id) FROM messages WHERE queue = :queue', array(
             'queue' => $queueName,
         ));
     }
@@ -56,10 +57,7 @@ class DoctrineDriver implements \Bernard\Driver
     {
         $queue = $queueName;
 
-        $this->connection->insert('messages', compact('queue', 'message'), array(
-            'string',
-            'string',
-        ));
+        $this->connection->insert('messages', compact('queue', 'message'), array('string', 'string'));
     }
 
     /**
