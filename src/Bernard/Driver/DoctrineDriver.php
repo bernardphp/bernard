@@ -42,7 +42,11 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        return $this->connection->fetchColumn('SELECT COUNT(id) FROM messages');
+        $sql = 'SELECT COUNT(id) FROM messages WHERE queue = :queue';
+
+        return $this->connection->fetchColumn($sql, array(
+            'queue' => $queueName,
+        ));
     }
 
     /**
@@ -70,9 +74,9 @@ class DoctrineDriver implements \Bernard\Driver
                 ':queue' => $queueName,
             ));
 
-            $this->connection->delete('messages', $id);
+            $this->connection->delete('messages', compact('id'));
 
-            $this->commit();
+            $this->connection->commit();
         } catch (\Exception $e) {
             $this->connection->rollback();
 
@@ -98,7 +102,7 @@ class DoctrineDriver implements \Bernard\Driver
             ':limit' => $index + $limit,
         ));
 
-        return $statement->fetchAll(PDO::FETCH_COLUMN);
+        return $statement->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     /**
@@ -116,10 +120,8 @@ class DoctrineDriver implements \Bernard\Driver
     {
         $params = $this->connection->getParams();
 
-        return array(
-            'host'     => $params['host'],
-            'port'     => $params['port'],
-            'database' => $params['dbname'],
-        );
+        unset($params['user'], $params['password']);
+
+        return $params;
     }
 }
