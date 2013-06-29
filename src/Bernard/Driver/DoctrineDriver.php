@@ -66,27 +66,24 @@ class DoctrineDriver implements \Bernard\Driver
     public function popMessage($queueName, $interval = 5)
     {
         $this->connection->beginTransaction();
+        $sql = 'SELECT id, message FROM bernard_messages WHERE queue = :queue LOCK IN SHARE MODE';
 
         try {
-            list($id, $message) = $this->connection->fetchArray('SELECT id, message FROM bernard_messages WHERE queue = :queue', array(
-                ':queue' => $queueName,
-            ));
+            list($id, $message) = $this->connection->fetchArray($sql, array('queue' => $queueName));
 
             $this->connection->delete('bernard_messages', compact('id'));
 
             $this->connection->commit();
         } catch (\Exception $e) {
             $this->connection->rollback();
-
-            throw $e;
         }
 
         if (isset($message)) {
             return $message;
         }
 
-        // Sleep 100 ms between each select.
-        usleep(100);
+        // Sleep 10 ms between each select.
+        usleep(10);
     }
 
     /**
