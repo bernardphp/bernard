@@ -64,8 +64,8 @@ class Consumer
     }
 
     /**
-     * @param Envelope $envelope
-     * @param Exception $exception
+     * @param Envelope   $envelope
+     * @param Exception  $exception
      * @param Queue|null $failed
      */
     protected function fail(Envelope $envelope, Exception $exception, Queue $queue, Queue $failed = null)

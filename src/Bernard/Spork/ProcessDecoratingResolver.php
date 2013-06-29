@@ -20,7 +20,7 @@ class ProcessDecoratingResolver implements ServiceResolver
 
     /**
      * @param ProcessManager $manager
-     * @param Invocator $invocator
+     * @param Invocator      $invocator
      */
     public function __construct(ProcessManager $manager, ServiceResolver $resolver)
     {

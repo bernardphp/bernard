@@ -68,7 +68,7 @@ class EnvelopeNormalizer extends SerializerAwareNormalizer implements Normalizer
     }
 
     /**
-     * @param string|object $class
+     * @param  string|object $class
      * @return boolean
      */
     protected function supports($class)

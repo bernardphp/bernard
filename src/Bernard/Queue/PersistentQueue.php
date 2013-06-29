@@ -16,7 +16,7 @@ class PersistentQueue extends AbstractQueue
 
     /**
      * @param string     $name
-     * @param Driver $connection
+     * @param Driver     $connection
      * @param Serializer $serializer
      */
     public function __construct($name, Driver $connection, Serializer $serializer)
