@@ -18,7 +18,7 @@ class SqsDriver implements \Bernard\Driver
     protected $sqs;
     protected $queueUrls;
     protected $queueAttributes;
-    protected $messages;
+    protected $caches = array();
 
     /**
      * @param SqsClient $client
@@ -30,7 +30,6 @@ class SqsDriver implements \Bernard\Driver
         $this->sqs             = $sqs;
         $this->queueAttributes = array('Attributes' => $queueAttributes);
         $this->queueUrls       = $queueUrl;
-        $this->messages        = new SplQueue;
     }
 
     /**
@@ -114,10 +113,15 @@ class SqsDriver implements \Bernard\Driver
      */
     public function popMessage($queueName, $interval = 5)
     {
-        $queueUrl = $this->resolveUrl($queueName);
+        if (!isset($this->caches[$queueName])) {
+            $this->caches[$queueName] = new SplQueue;
+        }
 
-        if ($this->messages->count()) {
-            return $this->messages->dequeue();
+        $queueUrl = $this->resolveUrl($queueName);
+        $cache = $this->caches[$queueName];
+
+        if ($cache->count()) {
+            return $cache->dequeue();
         }
 
         $result = $this->sqs->receiveMessage(array(
@@ -131,10 +135,10 @@ class SqsDriver implements \Bernard\Driver
         }
 
         foreach ($messages as $message) {
-            $this->messages->enqueue(array($message['Body'], $message['ReceiptHandle']));
+            $cache->enqueue(array($message['Body'], $message['ReceiptHandle']));
         }
 
-        return $this->messages->dequeue();
+        return $cache->dequeue();
     }
 
     /**
