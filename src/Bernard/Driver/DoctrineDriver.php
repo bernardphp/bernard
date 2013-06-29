@@ -65,28 +65,31 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function popMessage($queueName, $interval = 5)
     {
-        $this->connection->beginTransaction();
+        $runtime = microtime(true) + $interval;
+        $query = 'SELECT id, message FROM bernard_messages WHERE queue = :queue';
 
-        try {
-            list($id, $message) = $this->connection->fetchArray('SELECT id, message FROM bernard_messages WHERE queue = :queue', array(
-                ':queue' => $queueName,
-            ));
-
-            $this->connection->delete('bernard_messages', compact('id'));
-
-            $this->connection->commit();
-        } catch (\Exception $e) {
-            $this->connection->rollback();
-
-            throw $e;
+        if ($this->isLockSupported()) {
+            $query .= ' LOCK IN SHARE MODE';
         }
 
-        if (isset($message)) {
-            return $message;
-        }
+        while (microtime(true) < $runtime) {
+            $this->connection->beginTransaction();
 
-        // Sleep 100 ms between each select.
-        usleep(100);
+            try {
+                list($id, $message) = $this->connection->fetchArray($query, array('queue' => $queueName));
+
+                $this->connection->delete('bernard_messages', compact('id'));
+                $this->connection->commit();
+            } catch (\Exception $e) {
+                $this->connection->rollback();
+            }
+
+            if (isset($message) && $message) {
+                return $message;
+            }
+
+            usleep(10);
+        }
     }
 
     /**
@@ -129,5 +132,15 @@ class DoctrineDriver implements \Bernard\Driver
         unset($params['user'], $params['password']);
 
         return $params;
+    }
+
+    /**
+     * @return boolean
+     */
+    protected function isLockSupported()
+    {
+        $unsupported = array('pdo_sqlite');
+
+        return !in_array($this->connection->getDriver()->getName(), $unsupported);
     }
 }
