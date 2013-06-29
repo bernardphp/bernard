@@ -60,3 +60,57 @@ Requires the installation of predis. Add the following to your ``composer.json``
         ));
 
         $driver = new PredisDriver($predis);
+
+Doctrine DBAL
+-------------
+
+For small usecases or testing there is a Doctrine DBAL driver which supports all of the major
+database platforms.
+
+The driver uses transactions to make sure that a single consumer always get the message popped from the queue.
+
+.. important::
+
+    To use Doctrine DBAL remember to setup the correct schema.
+
+The schema for the messages is as follows:
+
+.. code-block:: sql
+
+    CREATE TABLE `messages` (
+        `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+        `queue` varchar(255) DEFAULT NULL,
+        `message` longtext,
+        PRIMARY KEY (`id`),
+        KEY `queue_idx` (`queue`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+
+.. configuration-block::
+
+    .. code-block:: json
+
+        {
+            "require" : {
+                "doctrine/dbal" : "~2.3"
+            }
+        }
+
+    And then instanciate the correct driver object.
+
+    .. code-block:: php
+
+        <?php
+
+        use Bernard\Driver\DoctrineDriver;
+        use Doctrine\DBAL\DriverManager;
+
+        $connection = DriverManager::getConnection(array(
+            'dbname' => 'bernard',
+            'user' => 'root',
+            'password' => null,
+            'driver' => 'pdo_mysql',
+        ));
+
+
+        $driver = new DoctrineDriver($connection);
