@@ -32,8 +32,9 @@ class ConfigurationBlock(Directive):
     final_argument_whitespace = True
     option_spec = {}
     formats = {
-        'json':            'Composer',
-        'php':             'Usage',
+        'json': 'Composer',
+        'php':  'Usage',
+        'sql':  'SQL',
     }
 
     def run(self):

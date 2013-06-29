@@ -44,7 +44,7 @@ class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInter
     }
 
     /**
-     * @param string|object $class
+     * @param  string|object $class
      * @return boolean
      */
     protected function supports($class)

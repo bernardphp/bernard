@@ -17,7 +17,7 @@ interface ServiceResolver
     public function register($name, $service);
 
     /**
-     * @param  Envelope   $envelope
+     * @param  Envelope  $envelope
      * @return Invocator
      */
     public function resolve(Envelope $envelope);

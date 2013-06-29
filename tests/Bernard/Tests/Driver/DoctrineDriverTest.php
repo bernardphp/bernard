@@ -2,11 +2,9 @@
 
 namespace Bernard\Tests\Driver;
 
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Types\Type;
+use Bernard\Doctrine\MessagesSchema;
 use Bernard\Driver\DoctrineDriver;
+use Doctrine\DBAL\DriverManager;
 
 class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
 {
@@ -71,24 +69,15 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
 
     protected function setUpDatabase()
     {
-        $table = new Table('messages', array(
-            new Column('id', Type::getType('integer'), array(
-                'notnull'       => true,
-                'autoincrement' => true,
-                'unsigned'      => true,
-            )),
-            new Column('queue', Type::getType('string')),
-            new Column('message', Type::getType('text')),
-        ));
-        $table->setPrimaryKey(array('id'), 'id_x');
-
         $connection = DriverManager::getConnection(array(
             'memory' => true,
             'driver' => 'pdo_sqlite',
             'user' => 'henrik',
             'password' => 'notused',
         ));
-        $connection->getSchemaManager()->createTable($table);
+
+        $messagesSchema = new MessagesSchema;
+        $connection->getSchemaManager()->createTable($messagesSchema->createTable());
 
         return $connection;
     }

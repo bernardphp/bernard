@@ -13,9 +13,9 @@ class ProcessException extends \LogicException
     protected $class;
 
     /**
-     * @param string $class
-     * @param string $message
-     * @param string $file
+     * @param string  $class
+     * @param string  $message
+     * @param string  $file
      * @param integer $line
      * @param integer $code
      */

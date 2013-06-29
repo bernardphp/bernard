@@ -26,7 +26,7 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function listQueues()
     {
-        $statement = $this->connection->prepare('SELECT queue FROM messages GROUP BY queue');
+        $statement = $this->connection->prepare('SELECT queue FROM bernard_messages GROUP BY queue');
         $statement->execute();
 
         return $statement->fetchAll(\PDO::FETCH_COLUMN);
@@ -45,7 +45,7 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        return $this->connection->fetchColumn('SELECT COUNT(id) FROM messages WHERE queue = :queue', array(
+        return $this->connection->fetchColumn('SELECT COUNT(id) FROM bernard_messages WHERE queue = :queue', array(
             'queue' => $queueName,
         ));
     }
@@ -57,7 +57,7 @@ class DoctrineDriver implements \Bernard\Driver
     {
         $queue = $queueName;
 
-        $this->connection->insert('messages', compact('queue', 'message'), array('string', 'string'));
+        $this->connection->insert('bernard_messages', compact('queue', 'message'), array('string', 'string'));
     }
 
     /**
@@ -68,11 +68,11 @@ class DoctrineDriver implements \Bernard\Driver
         $this->connection->beginTransaction();
 
         try {
-            list($id, $message) = $this->connection->fetchArray('SELECT id, message FROM messages WHERE queue = :queue', array(
+            list($id, $message) = $this->connection->fetchArray('SELECT id, message FROM bernard_messages WHERE queue = :queue', array(
                 ':queue' => $queueName,
             ));
 
-            $this->connection->delete('messages', compact('id'));
+            $this->connection->delete('bernard_messages', compact('id'));
 
             $this->connection->commit();
         } catch (\Exception $e) {
@@ -102,7 +102,7 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        $statement = $this->connection->prepare('SELECT message FROM messages LIMIT :index, :limit');
+        $statement = $this->connection->prepare('SELECT message FROM bernard_messages LIMIT :index, :limit');
         $statement->execute(array(
             ':index' => $index,
             ':limit' => $index + $limit,
@@ -116,7 +116,7 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function removeQueue($queueName)
     {
-        $this->connection->delete('messages', array('queue' => $queueName));
+        $this->connection->delete('bernard_messages', array('queue' => $queueName));
     }
 
     /**
