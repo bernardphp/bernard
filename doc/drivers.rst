@@ -46,8 +46,6 @@ Requires the installation of predis. Add the following to your ``composer.json``
             }
         }
 
-    And then instanciate the correct driver object.
-
     .. code-block:: php
 
         <?php
@@ -73,17 +71,28 @@ The driver uses transactions to make sure that a single consumer always get the 
 
     To use Doctrine DBAL remember to setup the correct schema.
 
-The schema for the messages is as follows:
+Use one of the following methods for creating your table.
 
-.. code-block:: sql
+.. configuration-block::
 
-    CREATE TABLE `messages` (
-        `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-        `queue` varchar(255) DEFAULT NULL,
-        `message` longtext,
-        PRIMARY KEY (`id`),
-        KEY `queue_idx` (`queue`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+    .. code-block:: php
+
+        <?php
+
+        use Bernard\Doctrine\MessagesSchema;
+
+        $schema = new MessagesSchema;
+        $connection->getSchemaManager()->createTable($schema->createTable());
+
+    .. code-block:: sql
+
+        CREATE TABLE `bernard_messages` (
+            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+            `queue` varchar(255) DEFAULT NULL,
+            `message` longtext,
+            PRIMARY KEY (`id`),
+            KEY `queue_idx` (`queue`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 
 .. configuration-block::
@@ -95,8 +104,6 @@ The schema for the messages is as follows:
                 "doctrine/dbal" : "~2.3"
             }
         }
-
-    And then instanciate the correct driver object.
 
     .. code-block:: php
 
