@@ -17,19 +17,20 @@ class SqsDriver implements \Bernard\Driver
 {
     protected $sqs;
     protected $queueUrls;
-    protected $queueCreateAttribs;
+    protected $queueAttributes;
     protected $messages;
 
     /**
-     * @param Aws\Sqs\SqsClient $client
-     * @param array             $queueCreateAttribs
+     * @param SqsClient $client
+     * @param array     $queueAttributes
+     * @param array     $queueUrls
      */
-    public function __construct(SqsClient $sqs, $queueCreateAttribs = array())
+    public function __construct(SqsClient $sqs, $queueAttributes = array(), array $queueUrls = array())
     {
-        $this->sqs                = $sqs;
-        $this->queueCreateAttribs = $queueCreateAttribs;
-        $this->queueUrls          = array();
-        $this->messages           = new SplQueue;
+        $this->sqs             = $sqs;
+        $this->queueAttributes = array('Attributes' => $queueAttributes);
+        $this->queueUrls       = $queueUrl;
+        $this->messages        = new SplQueue;
     }
 
     /**
@@ -37,13 +38,14 @@ class SqsDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        if ($queueUrl = $this->resolveKey($queueName)) {
-            $result = $this->sqs->getQueueAttributes(array(
-                'QueueUrl'       => $queueUrl,
-                'AttributeNames' => array(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES)
-            ));
-            return $result->get(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES) ?: 0;
-        }
+        $queueUrl = $this->resolveUrl($queueName);
+
+        $result = $this->sqs->getQueueAttributes(array(
+            'QueueUrl'       => $queueUrl,
+            'AttributeNames' => array(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES)
+        ));
+
+        return $result->get(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES) ?: 0;
     }
 
     /**
@@ -51,10 +53,8 @@ class SqsDriver implements \Bernard\Driver
      */
     public function createQueue($queueName)
     {
-        $attribs = $this->queueCreateAttribs
-            ? array('Attributes' => $this->queueCreateAttribs)
-            : array();
-        $result = $this->sqs->createQueue(array_merge($attribs, array('QueueName' => $queueName)));
+        $result = $this->sqs->createQueue($this->queueAttributes, array('QueueName' => $queueName));
+
         $this->queueUrls[$queueName] = $result->get('QueueUrl');
     }
 
@@ -63,10 +63,11 @@ class SqsDriver implements \Bernard\Driver
      */
     public function removeQueue($queueName)
     {
-        if ($queueUrl = $this->resolveKey($queueName)) {
-            unset($this->queueUrls[$queueName]);
-            $this->sqs->deleteQueue(array('QueueUrl' => $queueUrl));
-        }
+        $queueUrl = $this->resolveUrl($queueName);
+
+        unset($this->queueUrls[$queueName]);
+
+        $this->sqs->deleteQueue(array('QueueUrl' => $queueUrl));
     }
 
     /**
@@ -75,12 +76,21 @@ class SqsDriver implements \Bernard\Driver
     public function listQueues()
     {
         $result = $this->sqs->listQueues();
-        if ($queueUrls = $result->get('QueueUrls')) {
-            return array_map(function ($url) {
-                return preg_replace('~^.+/~', '', $url);
-            }, $queueUrls);
+
+        if (!$queueUrls = $result->get('QueueUrls')) {
+            return array();
         }
-        return array();
+
+        foreach ($queueUrls as $queueUrl) {
+            if (false !== array_search($queueUrl, $this->queueUrls)) {
+                continue;
+            }
+
+            $queueName = current(array_reverse(explode('/', $queueUrl)));
+            $this->queueUrls[$queueName] = $queueUrl;
+        }
+
+        return $this->queueUrls;
     }
 
     /**
@@ -88,12 +98,12 @@ class SqsDriver implements \Bernard\Driver
      */
     public function pushMessage($queueName, $message)
     {
-        if ($queueUrl = $this->resolveKey($queueName)) {
-            $this->sqs->sendMessage(array(
-                'QueueUrl'    => $queueUrl,
-                'MessageBody' => $message
-            ));
-        }
+        $queueUrl = $this->resolveUrl($queueName);
+
+        $this->sqs->sendMessage(array(
+            'QueueUrl'    => $queueUrl,
+            'MessageBody' => $message
+        ));
     }
 
     /**
@@ -104,9 +114,7 @@ class SqsDriver implements \Bernard\Driver
      */
     public function popMessage($queueName, $interval = 5)
     {
-        if (!$queueUrl = $this->resolveKey($queueName)) {
-            return array(null, null);
-        }
+        $queueUrl = $this->resolveUrl($queueName);
 
         if ($this->messages->count()) {
             return $this->messages->dequeue();
@@ -134,12 +142,12 @@ class SqsDriver implements \Bernard\Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
-        if ($queueUrl = $this->resolveKey($queueName)) {
-            $this->sqs->deleteMessage(array(
-                'QueueUrl'      => $queueUrl,
-                'ReceiptHandle' => $receipt
-            ));
-        }
+        $queueUrl = $this->resolveUrl($queueName);
+
+        $this->sqs->deleteMessage(array(
+            'QueueUrl'      => $queueUrl,
+            'ReceiptHandle' => $receipt,
+        ));
     }
 
     /**
@@ -165,16 +173,21 @@ class SqsDriver implements \Bernard\Driver
      * @param  string $queueName
      * @return mixed
      */
-    protected function resolveKey($queueName)
+    protected function resolveUrl($queueName)
     {
         if (isset($this->queueUrls[$queueName])) {
             return $this->queueUrls[$queueName];
         }
-        $result = $this->sqs->getQueueUrl(array('QueueName' => $queueName));
+
+        $result = $this->sqs->getQueueUrl(array(
+            'QueueName' => $queueName,
+        ));
+
         if ($queueUrl = $result->get('QueueUrl')) {
-            $this->queueUrls[$queueName] = $queueUrl;
+            return $this->queueUrls[$queueName] = $queueUrl;
         }
-        return isset($this->queueUrls[$queueName]) ? $this->queueUrls[$queueName] : null;
+
+        throw new \InvalidArgumentException('Queue "' . $queueName .'" cannot be resolved to an url.');
     }
 
 }
