@@ -35,11 +35,50 @@ class Consumer
         $this->bind();
         $this->configure($options);
 
-        while (microtime(true) < $this->options['max-runtime'] && !$this->shutdown) {
-            if ($envelope = $queue->dequeue()) {
-                $this->invoke($envelope, $queue, $failed);
-            }
+        while ($this->tick($queue, $failed)) {
+            // NO op
         }
+    }
+
+    /**
+     * Returns true do indicate it should be run again or false to indicate 
+     * it should not be run again.
+     *
+     * @param Queue $queue
+     * @param Queue|null $failed
+     * @return boolean
+     */
+    public function tick(Queue $queue, Queue $failed = null)
+    {
+        if ($this->shutdown) {
+            return false;
+        }
+
+        if (microtime(true) > $this->options['max-runtime']) {
+            return false;
+        }
+
+        if (!$envelope = $queue->dequeue()) {
+            return true;
+        }
+
+        try {
+            $invocator = $this->services->resolve($envelope);
+            $invocator->invoke();
+        } catch (Exception $e) {
+            $this->fail($envelope, $e, $queue, $failed);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $options
+     */
+    public function configure(array $options)
+    {
+        $this->options = array_filter($options) + $this->options;
+        $this->options['max-runtime'] += microtime(true);
     }
 
     /**
@@ -48,19 +87,6 @@ class Consumer
     public function shutdown()
     {
         $this->shutdown = true;
-    }
-
-    /**
-     * @param Envelope $envelope
-     */
-    protected function invoke(Envelope $envelope, Queue $queue, Queue $failed = null)
-    {
-        try {
-            $invocator = $this->services->resolve($envelope->getMessage());
-            $invocator->invoke();
-        } catch (Exception $e) {
-            $this->fail($envelope, $e, $queue, $failed);
-        }
     }
 
     /**
@@ -79,15 +105,6 @@ class Consumer
         if ($failed) {
             $failed->enqueue($envelope);
         }
-    }
-
-    /**
-     * @param array $options
-     */
-    protected function configure(array $options)
-    {
-        $this->options = array_filter($options) + $this->options;
-        $this->options['max-runtime'] = microtime(true) + $this->options['max-runtime'];
     }
 
     /**
