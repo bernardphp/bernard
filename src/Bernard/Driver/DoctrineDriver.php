@@ -92,6 +92,14 @@ class DoctrineDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
+    public function acknowledgeMessage($queueName, $receipt)
+    {
+        // noop
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
         $statement = $this->connection->prepare('SELECT message FROM messages LIMIT :index, :limit');
