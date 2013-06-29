@@ -14,6 +14,15 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->driver = new DoctrineDriver($this->connection);
     }
 
+    public function testPopMessageWithInterval()
+    {
+        $microtime = microtime(true);
+
+        $this->driver->popMessage('non-existent-queue', 0.001);
+
+        $this->assertTrue((microtime(true) - $microtime) >= 0.001);
+    }
+
     public function testItIsAQueue()
     {
         $this->driver->pushMessage('send-newsletter', 'my-message-1');
@@ -28,12 +37,14 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('my-message-2'), $this->driver->peekQueue('send-newsletter', 1));
         $this->assertEquals(array('my-message-1'), $this->driver->peekQueue('send-newsletter', 0, 1));
 
+        //var_dump($this->connection->fetchAll('select * from bernard_messages'));die;
+
         // popping messages
         $this->assertEquals('my-message-1', $this->driver->popMessage('send-newsletter'));
         $this->assertEquals('my-message-2', $this->driver->popMessage('send-newsletter'));
 
         // No messages in queue is null
-        $this->assertInternalType('null', $this->driver->popMessage('import-users'));
+        $this->assertInternalType('null', $this->driver->popMessage('import-users', 0.0001));
     }
 
     public function testListQueues()

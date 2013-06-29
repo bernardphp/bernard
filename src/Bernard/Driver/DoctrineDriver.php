@@ -66,7 +66,11 @@ class DoctrineDriver implements \Bernard\Driver
     public function popMessage($queueName, $interval = 5)
     {
         $runtime = microtime(true) + $interval;
-        $query = 'SELECT id, message FROM bernard_messages WHERE queue = :queue LOCK IN SHARE MODE';
+        $query = 'SELECT id, message FROM bernard_messages WHERE queue = :queue';
+
+        if ($this->isLockSupported()) {
+            $query .= ' LOCK IN SHARE MODE';
+        }
 
         while (microtime(true) < $runtime) {
             $this->connection->beginTransaction();
@@ -75,13 +79,12 @@ class DoctrineDriver implements \Bernard\Driver
                 list($id, $message) = $this->connection->fetchArray($query, array('queue' => $queueName));
 
                 $this->connection->delete('bernard_messages', compact('id'));
-
                 $this->connection->commit();
             } catch (\Exception $e) {
                 $this->connection->rollback();
             }
 
-            if (isset($message)) {
+            if (isset($message) && $message) {
                 return $message;
             }
 
@@ -121,5 +124,15 @@ class DoctrineDriver implements \Bernard\Driver
         unset($params['user'], $params['password']);
 
         return $params;
+    }
+
+    /**
+     * @return boolean
+     */
+    protected function isLockSupported()
+    {
+        $unsupported = array('pdo_sqlite');
+
+        return !in_array($this->connection->getDriver()->getName(), $unsupported);
     }
 }
