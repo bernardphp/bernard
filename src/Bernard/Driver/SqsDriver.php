@@ -5,9 +5,11 @@ namespace Bernard\Driver;
 use Aws\Sqs\SqsClient;
 use Aws\Sqs\Enum\QueueAttribute;
 use Bernard\Message\Envelope;
+use SplQueue;
 
 /**
- * Implements a Driver for use with AWS SQS client API: http://docs.aws.amazon.com/aws-sdk-php-2/latest/class-Aws.Sqs.SqsClient.html
+ * Implements a Driver for use with AWS SQS client API:
+ * http://docs.aws.amazon.com/aws-sdk-php-2/latest/class-Aws.Sqs.SqsClient.html
  *
  * @package Bernard
  */
@@ -16,6 +18,7 @@ class SqsDriver implements \Bernard\Driver
     protected $sqs;
     protected $queueUrls;
     protected $queueCreateAttribs;
+    protected $messages;
 
     /**
      * @param Aws\Sqs\SqsClient $client
@@ -26,7 +29,7 @@ class SqsDriver implements \Bernard\Driver
         $this->sqs                = $sqs;
         $this->queueCreateAttribs = $queueCreateAttribs;
         $this->queueUrls          = array();
-        $this->openReceiptHandles = array();
+        $this->messages           = new SplQueue;
     }
 
     /**
@@ -34,7 +37,7 @@ class SqsDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        if ($queueUrl = $this->queueNameToUrl($queueName)) {
+        if ($queueUrl = $this->resolveKey($queueName)) {
             $result = $this->sqs->getQueueAttributes(array(
                 'QueueUrl'       => $queueUrl,
                 'AttributeNames' => array(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES)
@@ -60,7 +63,7 @@ class SqsDriver implements \Bernard\Driver
      */
     public function removeQueue($queueName)
     {
-        if ($queueUrl = $this->queueNameToUrl($queueName)) {
+        if ($queueUrl = $this->resolveKey($queueName)) {
             unset($this->queueUrls[$queueName]);
             $this->sqs->deleteQueue(array('QueueUrl' => $queueUrl));
         }
@@ -85,7 +88,7 @@ class SqsDriver implements \Bernard\Driver
      */
     public function pushMessage($queueName, $message)
     {
-        if ($queueUrl = $this->queueNameToUrl($queueName)) {
+        if ($queueUrl = $this->resolveKey($queueName)) {
             $this->sqs->sendMessage(array(
                 'QueueUrl'    => $queueUrl,
                 'MessageBody' => $message
@@ -94,23 +97,36 @@ class SqsDriver implements \Bernard\Driver
     }
 
     /**
+     * As it is costly to make a request for messages from SQS we get a couple instead of a single
+     * theese are cached and returned before making a new call.
+     *
      * {@inheritDoc}
      */
     public function popMessage($queueName, $interval = 5)
     {
-        if ($queueUrl = $this->queueNameToUrl($queueName)) {
-            $result = $this->sqs->receiveMessage(array(
-                'QueueUrl'            => $queueUrl,
-                'MaxNumberOfMessages' => 1,
-                'WaitTimeSeconds'     => $interval
-            ));
-            if ($messages = $result->get('Messages')) {
-                foreach ($messages as $message) {
-                    return array($message['Body'], $message['ReceiptHandle']);
-                }
-            }
+        if (!$queueUrl = $this->resolveKey($queueName)) {
+            return array(null, null);
         }
-        return null;
+
+        if ($this->messages->count()) {
+            return $this->messages->dequeue();
+        }
+
+        $result = $this->sqs->receiveMessage(array(
+            'QueueUrl'            => $queueUrl,
+            'MaxNumberOfMessages' => 4,
+            'WaitTimeSeconds'     => $interval
+        ));
+
+        if (!$messages = $result->get('Messages')) {
+            return array(null, null);
+        }
+
+        foreach ($messages as $message) {
+            $this->messages->enqueue(array($message['Body'], $message['ReceiptHandle']));
+        }
+
+        return $this->messages->dequeue();
     }
 
     /**
@@ -118,7 +134,7 @@ class SqsDriver implements \Bernard\Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
-        if ($queueUrl = $this->queueNameToUrl($queueName)) {
+        if ($queueUrl = $this->resolveKey($queueName)) {
             $this->sqs->deleteMessage(array(
                 'QueueUrl'      => $queueUrl,
                 'ReceiptHandle' => $receipt
@@ -149,7 +165,7 @@ class SqsDriver implements \Bernard\Driver
      * @param  string $queueName
      * @return mixed
      */
-    protected function queueNameToUrl($queueName)
+    protected function resolveKey($queueName)
     {
         if (isset($this->queueUrls[$queueName])) {
             return $this->queueUrls[$queueName];
