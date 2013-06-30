@@ -13,7 +13,7 @@ use Spork\ProcessManager;
  * @see ForkingInvocator
  * @package Bernard
  */
-class ProcessDecoratingResolver implements ServiceResolver
+class ProcessDecoratingResolver implements \Bernard\ServiceResolver
 {
     protected $spork;
     protected $resolver;

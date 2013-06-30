@@ -4,22 +4,21 @@ namespace Bernard\Pimple;
 
 use Pimple;
 use Bernard\Message\Envelope;
-use Bernard\ServiceResolver\Invocator;
 
 /**
  * @package Bernard
  */
-class PimpleAwareResolver implements \Bernard\ServiceResolver
+class PimpleAwareResolver extends \Bernard\ServiceResolver\AbstractResolver
 {
     protected $services = array();
-    protected $container;
+    protected $pimple;
 
     /**
-     * @param Pimple $container
+     * @param Pimple $pimple
      */
-    public function __construct(Pimple $container)
+    public function __construct(Pimple $pimple)
     {
-        $this->container = $container;
+        $this->pimple = $pimple;
     }
 
     /**
@@ -33,12 +32,10 @@ class PimpleAwareResolver implements \Bernard\ServiceResolver
     /**
      * {@inheritDoc}
      */
-    public function resolve(Envelope $envelope)
+    protected function getService(Envelope $envelope)
     {
-        if (!isset($this->services[$envelope->getName()])) {
-            throw new \InvalidArgumentException('No service registered for envelope "' . $envelope->getName() . '".');
-        }
+        $name = $envelope->getName();
 
-        return new Invocator($this->container[$this->services[$envelope->getName()]], $envelope);
+        return isset($this->services[$name]) ? $this->pimple[$this->services[$name]] : null;
     }
 }

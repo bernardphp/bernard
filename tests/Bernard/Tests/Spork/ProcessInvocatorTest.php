@@ -30,7 +30,7 @@ class ProcessInvocatorTest extends \PHPUnit_Framework_TestCase
         $fork->expects($this->once())->method('fail')->with($this->equalTo(array($invocator, 'fail')));
 
         $this->spork->expects($this->once())->method('fork')
-            ->with($this->equalTo($this->invocator))->will($this->returnValue($fork));
+            ->with($this->equalTo(array($this->invocator, 'invoke')))->will($this->returnValue($fork));
 
         $invocator->invoke();
     }

@@ -43,14 +43,4 @@ class Invocator
         $method = new \ReflectionMethod($this->object, $this->getMethodName());
         $method->invoke($this->object, $this->envelope->getMessage());
     }
-
-    /**
-     * Makes it possible to have this being a callable.
-     *
-     * @see Invocator::invoke()
-     */
-    public function __invoke()
-    {
-        $this->invoke();
-    }
 }

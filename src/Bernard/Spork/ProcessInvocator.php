@@ -34,7 +34,7 @@ class ProcessInvocator extends Invocator
      */
     public function invoke()
     {
-        $fork = $this->spork->fork($this->invocator);
+        $fork = $this->spork->fork(array($this->invocator, 'invoke'));
         $fork->fail(array($this, 'fail'));
         $fork->wait();
     }
