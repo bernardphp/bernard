@@ -85,7 +85,7 @@ class DoctrineDriver implements \Bernard\Driver
             }
 
             if (isset($message) && $message) {
-                return $message;
+                return array($message, null);
             }
 
             usleep(10);
