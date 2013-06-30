@@ -40,8 +40,8 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         //var_dump($this->connection->fetchAll('select * from bernard_messages'));die;
 
         // popping messages
-        $this->assertEquals('my-message-1', $this->driver->popMessage('send-newsletter'));
-        $this->assertEquals('my-message-2', $this->driver->popMessage('send-newsletter'));
+        $this->assertEquals(array('my-message-1', null), $this->driver->popMessage('send-newsletter'));
+        $this->assertEquals(array('my-message-2', null), $this->driver->popMessage('send-newsletter'));
 
         // No messages in queue is null
         $this->assertInternalType('null', $this->driver->popMessage('import-users', 0.0001));
