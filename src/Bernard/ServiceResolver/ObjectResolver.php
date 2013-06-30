@@ -7,7 +7,7 @@ use Bernard\Message\Envelope;
 /**
  * @package Bernard
  */
-class ObjectResolver implements \Bernard\ServiceResolver
+class ObjectResolver extends AbstractResolver
 {
     protected $services = array();
 
@@ -26,14 +26,10 @@ class ObjectResolver implements \Bernard\ServiceResolver
     /**
      * {@inheritDoc}
      */
-    public function resolve(Envelope $envelope)
+    protected function getService(Envelope $envelope)
     {
         $name = $envelope->getName();
 
-        if (isset($this->services[$name])) {
-            return new Invocator($this->services[$name], $envelope);
-        }
-
-        throw new \InvalidArgumentException('No service registered for message "' . $name . '".');
+        return isset($this->services[$name]) ? $this->services[$name] : null;
     }
 }

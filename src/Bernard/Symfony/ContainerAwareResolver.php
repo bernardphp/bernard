@@ -3,13 +3,12 @@
 namespace Bernard\Symfony;
 
 use Bernard\Message\Envelope;
-use Bernard\ServiceResolver\Invocator;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
  * @package Bernard
  */
-class ContainerAwareResolver implements \Bernard\ServiceResolver
+class ContainerAwareResolver extends \Bernard\ServiceResolver\AbstractResolver
 {
     protected $services = array();
     protected $container;
@@ -33,12 +32,14 @@ class ContainerAwareResolver implements \Bernard\ServiceResolver
     /**
      * {@inheritDoc}
      */
-    public function resolve(Envelope $envelope)
+    protected function getService(Envelope $envelope)
     {
-        if (!isset($this->services[$envelope->getName()])) {
-            throw new \InvalidArgumentException('No service registered for envelope "' . $envelope->getName() . '".');
+        $name = $envelope->getName();
+
+        if (!isset($this->services[$name])) {
+            return;
         }
 
-        return new Invocator($this->container->get($this->services[$envelope->getName()]), $envelope);
+        return $this->container->get($this->services[$name]);
     }
 }
