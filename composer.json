@@ -20,7 +20,9 @@
         "symfony/dependency-injection" : "~2.0",
         "symfony/serializer"           : "~2.2",
         "kriswallsmith/spork"          : "dev-master",
-        "doctrine/dbal"                : "~2.3"
+        "doctrine/dbal"                : "~2.3",
+        "iron-io/iron_mq"              : "~1.4",
+        "aws/aws-sdk-php"              : "~2.4"
     },
 
     "suggest" : {

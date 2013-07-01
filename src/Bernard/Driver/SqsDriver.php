@@ -58,7 +58,7 @@ class SqsDriver implements \Bernard\Driver
      */
     public function createQueue($queueName)
     {
-        $result = $this->sqs->createQueue($this->queueAttributes, array('QueueName' => $queueName));
+        $result = $this->sqs->createQueue(array_merge($this->queueAttributes, array('QueueName' => $queueName)));
 
         $this->queueUrls[$queueName] = $result->get('QueueUrl');
     }
