@@ -100,9 +100,7 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
-        $this->connection->transactional(function ($connection) use ($queueName, $receipt) {
-            $connection->delete('bernard_messages', array('id' => $receipt, 'queue' => $queueName));
-        });
+        $this->connection->delete('bernard_messages', array('id' => $receipt, 'queue' => $queueName));
     }
 
     /**

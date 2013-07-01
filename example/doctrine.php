@@ -6,6 +6,7 @@ use Bernard\Driver\DoctrineDriver;
 use Bernard\Message\DefaultMessage;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
+use Bernard\Doctrine\MessagesSchema;
 use Doctrine\DBAL\DriverManager;
 
 $argv = $_SERVER['argv'];
