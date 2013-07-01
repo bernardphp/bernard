@@ -15,21 +15,26 @@ use SplQueue;
  */
 class SqsDriver implements \Bernard\Driver
 {
+    const DEFAULT_PREFETCH_SIZE = 4;
+    const DEFAULT_WAIT_TIMEOUT  = 5;
+
     protected $sqs;
     protected $queueUrls;
     protected $queueAttributes;
     protected $caches = array();
+    protected $prefetchSize;
 
     /**
      * @param SqsClient $client
      * @param array     $queueAttributes
      * @param array     $queueUrls
      */
-    public function __construct(SqsClient $sqs, array $queueAttributes = array(), array $queueUrls = array())
+    public function __construct(SqsClient $sqs, $prefetchSize = self::DEFAULT_PREFETCH_SIZE, array $queueAttributes = array(), array $queueUrls = array())
     {
         $this->sqs             = $sqs;
         $this->queueAttributes = array('Attributes' => $queueAttributes);
         $this->queueUrls       = $queueUrls;
+        $this->prefetchSize    = $prefetchSize;
     }
 
     /**
@@ -48,6 +53,7 @@ class SqsDriver implements \Bernard\Driver
     }
 
     /**
+     * TO BE REMOVED?
      * {@inheritDoc}
      */
     public function createQueue($queueName)
@@ -58,6 +64,7 @@ class SqsDriver implements \Bernard\Driver
     }
 
     /**
+     * TO BE REMOVED?
      * {@inheritDoc}
      */
     public function removeQueue($queueName)
@@ -89,7 +96,7 @@ class SqsDriver implements \Bernard\Driver
             $this->queueUrls[$queueName] = $queueUrl;
         }
 
-        return $this->queueUrls;
+        return array_keys($this->queueUrls);
     }
 
     /**
@@ -111,7 +118,7 @@ class SqsDriver implements \Bernard\Driver
      *
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = 5)
+    public function popMessage($queueName, $interval = self::DEFAULT_WAIT_TIMEOUT)
     {
         if (!isset($this->caches[$queueName])) {
             $this->caches[$queueName] = new SplQueue;
@@ -126,7 +133,7 @@ class SqsDriver implements \Bernard\Driver
 
         $result = $this->sqs->receiveMessage(array(
             'QueueUrl'            => $queueUrl,
-            'MaxNumberOfMessages' => 4,
+            'MaxNumberOfMessages' => $this->prefetchSize,
             'WaitTimeSeconds'     => $interval
         ));
 
