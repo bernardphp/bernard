@@ -26,11 +26,13 @@ $connection = new PredisDriver(new Client(null, array(
 )));
 
 // with IronMq
-/*$ironmq = new IronMQ(array(
+$ironmq = new IronMQ(array(
     'token'      => getenv('IRONMQ_TOKEN'),
     'project_id' => getenv('IRONMQ_PROJECT_ID'),
 ));
-$connection = new Bernard\Driver\IronMqDriver($ironmq);*/
+$connection = new Bernard\Driver\IronMqDriver($ironmq);
+
+print_r($ironmq->getQueue('echo-time'));
 
 // with Sqs
 /*$sqs = Aws\Sqs\SqsClient::factory(array(
