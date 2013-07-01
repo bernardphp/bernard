@@ -3,6 +3,9 @@
 namespace Bernard\Tests;
 
 use Bernard\Consumer;
+use Bernard\Queue\InMemoryQueue;
+use Bernard\Message\Envelope;
+use Bernard\Message\DefaultMessage;
 
 class ConsumerTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,7 +17,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
 
     public function testShutdown()
     {
-        $queue = $this->getMock('Bernard\Queue');
+        $queue = new InMemoryQueue('queue');
 
         $this->consumer->shutdown();
 
@@ -23,7 +26,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
 
     public function testMaxRuntime()
     {
-        $queue = $this->getMock('Bernard\Queue');
+        $queue = new InMemoryQueue('queue');
 
         // Make sure max runtime is a looongtime in the past
         $this->consumer->configure(array(
@@ -37,30 +40,26 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
     {
         $this->resolver->expects($this->never())->method('resolve');
 
-        $queue = $this->getMock('Bernard\Queue');
-        $queue->expects($this->once())->method('dequeue')->will($this->returnValue(null));
+        $queue = new InMemoryQueue('queue');
 
         $this->assertTrue($this->consumer->tick($queue));
     }
 
     public function testEnvelopeWillBeInvoked()
     {
-        $envelope = $this->getMockBuilder('Bernard\Message\Envelope')->disableOriginalConstructor()
-            ->getMock();
-        $envelope->expects($this->never())->method('incrementRetries');
+        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
 
-        $invocator = $this->getMockBuilder('Bernard\ServiceResolver\Invocator')->disableOriginalConstructor()
-            ->getMock();
-
+        $invocator = $this->getMockBuilder('Bernard\ServiceResolver\Invocator')
+            ->disableOriginalConstructor()->getMock();
         $invocator->expects($this->once())->method('invoke');
 
         $this->resolver->expects($this->once())->method('resolve')
             ->with($this->equalTo($envelope))->will($this->returnValue($invocator));
 
-        $queue = $this->getMock('Bernard\Queue');
-        $queue->expects($this->once())->method('dequeue')->will($this->returnValue($envelope));
-        $queue->expects($this->never())->method('enqueue');
+        $queue = new InMemoryQueue('queue');
+        $queue->enqueue($envelope);
 
         $this->assertTrue($this->consumer->tick($queue));
+        $this->assertEquals(0, $envelope->getRetries());
     }
 }
