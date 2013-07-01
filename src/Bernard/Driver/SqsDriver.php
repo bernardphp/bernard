@@ -13,28 +13,22 @@ use SplQueue;
  *
  * @package Bernard
  */
-class SqsDriver implements \Bernard\Driver
+class SqsDriver extends AbstractPrefetchDriver
 {
-    const DEFAULT_PREFETCH_SIZE = 4;
-    const DEFAULT_WAIT_TIMEOUT  = 5;
-
     protected $sqs;
     protected $queueUrls;
-    protected $queueAttributes;
-    protected $caches = array();
-    protected $prefetchSize;
 
     /**
      * @param SqsClient $client
-     * @param array     $queueAttributes
      * @param array     $queueUrls
+     * @param integer|null $prefetch
      */
-    public function __construct(SqsClient $sqs, $prefetchSize = self::DEFAULT_PREFETCH_SIZE, array $queueAttributes = array(), array $queueUrls = array())
+    public function __construct(SqsClient $sqs, array $queueUrls = array(), $prefetch = null)
     {
-        $this->sqs             = $sqs;
-        $this->queueAttributes = array('Attributes' => $queueAttributes);
-        $this->queueUrls       = $queueUrls;
-        $this->prefetchSize    = $prefetchSize;
+        parent::__construct($prefetch);
+
+        $this->sqs       = $sqs;
+        $this->queueUrls = $queueUrls;
     }
 
     /**
@@ -53,27 +47,17 @@ class SqsDriver implements \Bernard\Driver
     }
 
     /**
-     * TO BE REMOVED?
      * {@inheritDoc}
      */
     public function createQueue($queueName)
     {
-        $result = $this->sqs->createQueue(array_merge($this->queueAttributes, array('QueueName' => $queueName)));
-
-        $this->queueUrls[$queueName] = $result->get('QueueUrl');
     }
 
     /**
-     * TO BE REMOVED?
      * {@inheritDoc}
      */
     public function removeQueue($queueName)
     {
-        $queueUrl = $this->resolveUrl($queueName);
-
-        unset($this->queueUrls[$queueName]);
-
-        $this->sqs->deleteQueue(array('QueueUrl' => $queueUrl));
     }
 
     /**
@@ -84,7 +68,7 @@ class SqsDriver implements \Bernard\Driver
         $result = $this->sqs->listQueues();
 
         if (!$queueUrls = $result->get('QueueUrls')) {
-            return array();
+            return array_keys($this->queueUrls);
         }
 
         foreach ($queueUrls as $queueUrl) {
@@ -118,34 +102,29 @@ class SqsDriver implements \Bernard\Driver
      *
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = self::DEFAULT_WAIT_TIMEOUT)
+    public function popMessage($queueName, $interval = 5)
     {
-        if (!isset($this->caches[$queueName])) {
-            $this->caches[$queueName] = new SplQueue;
+        if ($message = $this->cached($queueName)) {
+            return $message;
         }
 
         $queueUrl = $this->resolveUrl($queueName);
-        $cache = $this->caches[$queueName];
-
-        if ($cache->count()) {
-            return $cache->dequeue();
-        }
 
         $result = $this->sqs->receiveMessage(array(
             'QueueUrl'            => $queueUrl,
-            'MaxNumberOfMessages' => $this->prefetchSize,
+            'MaxNumberOfMessages' => $this->prefetch,
             'WaitTimeSeconds'     => $interval
         ));
 
-        if (!$messages = $result->get('Messages')) {
+        if (!$result || !$messages = $result->get('Messages')) {
             return array(null, null);
         }
 
         foreach ($messages as $message) {
-            $cache->enqueue(array($message['Body'], $message['ReceiptHandle']));
+            $this->cache($queueName, array($message['Body'], $message['ReceiptHandle']));
         }
 
-        return $cache->dequeue();
+        return $this->cached($queueName);
     }
 
     /**
@@ -194,7 +173,7 @@ class SqsDriver implements \Bernard\Driver
             'QueueName' => $queueName,
         ));
 
-        if ($queueUrl = $result->get('QueueUrl')) {
+        if ($result && $queueUrl = $result->get('QueueUrl')) {
             return $this->queueUrls[$queueName] = $queueUrl;
         }
 

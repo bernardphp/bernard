@@ -136,14 +136,4 @@ class DoctrineDriver implements \Bernard\Driver
 
         return $params;
     }
-
-    /**
-     * @return boolean
-     */
-    protected function isLockSupported()
-    {
-        $unsupported = array('pdo_sqlite');
-
-        return !in_array($this->connection->getDriver()->getName(), $unsupported);
-    }
 }

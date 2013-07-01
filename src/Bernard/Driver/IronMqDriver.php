@@ -5,21 +5,23 @@ namespace Bernard\Driver;
 use IronMQ;
 
 /**
- * Implements a Driver for use with AWS SQS client API: http://docs.aws.amazon.com/aws-sdk-php-2/latest/class-Aws.Sqs.SqsClient.html
+ * Implements a Driver for use with Iron MQ:
+ * http://dev.iron.io/mq/reference/api/
  *
  * @package Bernard
  */
-class IronMqDriver implements \Bernard\Driver
+class IronMqDriver extends AbstractPrefetchDriver
 {
-    const QUEUE_LIST_MAX_PER_PAGE = 100;
-
     protected $ironmq;
 
     /**
      * @param IronMQ $ironmq
+     * @param integer|null $prefetch
      */
-    public function __construct(IronMQ $ironmq)
+    public function __construct(IronMQ $ironmq, $prefetch = null)
     {
+        parent::__construct($prefetch);
+
         $this->ironmq = $ironmq;
     }
 
@@ -28,11 +30,9 @@ class IronMqDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        $info = $this->ironmq->getQueue($queueName);
-        if ($info) {
+        if ($info = $this->ironmq->getQueue($queueName)) {
             return $info->size;
         }
-        return 0;
     }
 
     /**
@@ -56,15 +56,17 @@ class IronMqDriver implements \Bernard\Driver
      */
     public function listQueues()
     {
-        $allQueues = $queues = $this->ironmq->getQueues($page = 0, self::QUEUE_LIST_MAX_PER_PAGE);
-        while (count($queues) === self::QUEUE_LIST_MAX_PER_PAGE) {
-            $queues = $this->ironmq->getQueues(++$page, self::QUEUE_LIST_MAX_PER_PAGE);
-            $allQueues = array_merge($allQueues, $queues);
-        }
         $queueNames = array();
-        foreach ($allQueues as $queue) {
-            $queueNames[] = $queue->name;
+
+        while ($queues = $this->ironmq->getQueues($page = 0, 100)) {
+            $queueNames += $this->pluck($queues, 'name');
+
+            // If we get 100 results the probability of another page is high.
+            if (count($queues) < 100) {
+                break;
+            }
         }
+
         return $queueNames;
     }
 
@@ -81,11 +83,21 @@ class IronMqDriver implements \Bernard\Driver
      */
     public function popMessage($queueName, $interval = 5)
     {
-        $message = $this->ironmq->getMessage($queueName, $interval);
-        if ($message) {
-            return array($message->body, $message->id);
+        if ($message = $this->cached($queueName)) {
+            return $message;
         }
-        return null;
+
+        $messages = $this->ironmq->getMessages($queueName, $this->prefetch, $interval);
+
+        if (!$messages) {
+            return array(null, null);
+        }
+
+        foreach ($messages as $message) {
+            $this->cache($queueName, array($message->body, $message->id));
+        }
+
+        return $this->cached($queueName);
     }
 
     /**
@@ -97,20 +109,17 @@ class IronMqDriver implements \Bernard\Driver
     }
 
     /**
+     * IronMQ does not support an offset when peeking messages.
+     *
      * {@inheritDoc}
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        // not supporting index->limit, just 0->limit
-        $messages = $this->ironmq->peekMessages($queueName, $limit);
-        if ($messages) {
-            $peekMessages = array();
-            foreach ($messages as $message) {
-                $peekMessages[] = $message->body;
-            }
-            return $peekMessages;
+        if ($messages = $this->ironmq->peekMessages($queueName, $limit)) {
+            return $this->pluck($messages, 'body');
         }
-        return null;
+
+        return array();
     }
 
     /**
@@ -118,8 +127,23 @@ class IronMqDriver implements \Bernard\Driver
      */
     public function info()
     {
-        // info per queue would be possible.. return info about all queues here?
-        return null;
+        return array();
+    }
+
+    /**
+     * The missing array_pluck but for objects array
+     *
+     * @param array $objects
+     * @param string $property
+     * @retrun array
+     */
+    protected function pluck(array $objects, $property)
+    {
+        $function = function ($object) use ($property) {
+            return $object->$property;
+        };
+
+        return array_map($function, $objects);
     }
 
 }
