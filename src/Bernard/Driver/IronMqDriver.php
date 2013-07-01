@@ -11,6 +11,8 @@ use IronMQ;
  */
 class IronMqDriver implements \Bernard\Driver
 {
+    const QUEUE_LIST_MAX_PER_PAGE = 100;
+
     protected $ironmq;
 
     /**
@@ -54,13 +56,16 @@ class IronMqDriver implements \Bernard\Driver
      */
     public function listQueues()
     {
-        $queues = $this->ironmq->getQueues(0, 100);
-        if ($queues) {
-            return array_map(function ($queue) {
-                return $queue->name;
-            }, $queues);
+        $allQueues = $queues = $this->ironmq->getQueues($page = 0, self::QUEUE_LIST_MAX_PER_PAGE);
+        while (count($queues) === self::QUEUE_LIST_MAX_PER_PAGE) {
+            $queues = $this->ironmq->getQueues(++$page, self::QUEUE_LIST_MAX_PER_PAGE);
+            $allQueues = array_merge($allQueues, $queues);
         }
-        return array();
+        $queueNames = array();
+        foreach ($allQueues as $queue) {
+            $queueNames[] = $queue->name;
+        }
+        return $queueNames;
     }
 
     /**
@@ -99,9 +104,11 @@ class IronMqDriver implements \Bernard\Driver
         // not supporting index->limit, just 0->limit
         $messages = $this->ironmq->peekMessages($queueName, $limit);
         if ($messages) {
-            return array_map(function ($message) {
-                return $message->body;
-            }, $messages);
+            $peekMessages = array();
+            foreach ($messages as $message) {
+                $peekMessages[] = $message->body;
+            }
+            return $peekMessages;
         }
         return null;
     }
