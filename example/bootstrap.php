@@ -1,7 +1,6 @@
 <?php
 
 use Predis\Client;
-use Bernard\Driver\IronMqDriver;
 use Bernard\Driver\PredisDriver;
 use Bernard\Serializer\SymfonySerializer;
 use Bernard\Symfony\EnvelopeNormalizer;
@@ -20,9 +19,7 @@ $serializer = new SymfonySerializer(
     new Serializer($normalizers, array(new JsonEncoder))
 );
 
-// with Redis
 $connection = new PredisDriver(new Client(null, array(
     'prefix' => 'bernard:',
 )));
-
 $queues = new PersistentFactory($connection, $serializer);
