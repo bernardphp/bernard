@@ -26,8 +26,11 @@ class MessagesSchema
 
         $table->addColumn('queue', 'string');
         $table->addColumn('message', 'text');
+        $table->addColumn('visible', 'boolean', array('default' => true));
+        $table->addColumn('sentAt', 'datetime');
         $table->setPrimaryKey(array('id'));
         $table->addIndex(array('queue'));
+        $table->addIndex(array('queue', 'sentAt', 'visible'));
 
         return $table;
     }

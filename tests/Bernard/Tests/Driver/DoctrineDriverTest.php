@@ -28,23 +28,33 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->driver->pushMessage('send-newsletter', 'my-message-1');
         $this->driver->pushMessage('send-newsletter', 'my-message-2');
 
-        // counting
-        $this->assertEquals(0, $this->driver->countMessages('import-users'));
-        $this->assertEquals(2, $this->driver->countMessages('send-newsletter'));
-
         // peeking
         $this->assertEquals(array('my-message-1', 'my-message-2'), $this->driver->peekQueue('send-newsletter'));
         $this->assertEquals(array('my-message-2'), $this->driver->peekQueue('send-newsletter', 1));
         $this->assertEquals(array('my-message-1'), $this->driver->peekQueue('send-newsletter', 0, 1));
 
-        //var_dump($this->connection->fetchAll('select * from bernard_messages'));die;
-
         // popping messages
-        $this->assertEquals(array('my-message-1', null), $this->driver->popMessage('send-newsletter'));
-        $this->assertEquals(array('my-message-2', null), $this->driver->popMessage('send-newsletter'));
+        $this->assertEquals(array('my-message-1', 1), $this->driver->popMessage('send-newsletter'));
+        $this->assertEquals(array('my-message-2', 2), $this->driver->popMessage('send-newsletter'));
 
-        // No messages in queue is null
+        // No messages when all are invisible
         $this->assertInternalType('null', $this->driver->popMessage('import-users', 0.0001));
+    }
+
+    public function testCountMessages()
+    {
+        $this->assertEquals(0, $this->driver->countMessages('import-users'));
+
+        $this->driver->pushMessage('send-newsletter', 'my-message-1');
+        $this->driver->pushMessage('send-newsletter', 'my-message-2');
+        $this->assertEquals(2, $this->driver->countMessages('send-newsletter'));
+
+        // popping does not affect counting until it is acknowledged
+        list($message, $id) = $this->driver->popMessage('send-newsletter');
+        $this->assertEquals(2, $this->driver->countMessages('send-newsletter'));
+
+        $this->driver->acknowledgeMessage('send-newsletter', $id);
+        $this->assertEquals(1, $this->driver->countMessages('send-newsletter'));
     }
 
     public function testListQueues()
