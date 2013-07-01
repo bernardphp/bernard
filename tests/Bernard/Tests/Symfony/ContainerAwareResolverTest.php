@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\ServiceResolver;
 
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\Envelope;
 use Bernard\Symfony\ContainerAwareResolver;
 use Bernard\ServiceResolver\Invocator;
 use Symfony\Component\DependencyInjection\Container;
@@ -18,25 +18,26 @@ class ContainerAwareResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionWhenMessageCannotBeResolved()
     {
-        $this->setExpectedException('InvalidArgumentException',
-            'No service registered for message "SendNewsletter".'); 
+        $this->setExpectedException('InvalidArgumentException', 'No service registered for envelope "SendNewsletter".'); 
 
         $resolver = $this->createResolver();
+        $envelope = $this->createEnvelope();
 
         $this->assertEquals(array('service_container'), $this->container->getServiceIds());
 
-        $resolver->resolve(new DefaultMessage('SendNewsletter'));
+        $resolver->resolve($envelope);
     }
 
     public function testResolveToServiceFromContainer()
     {
         $resolver = $this->createResolver();
+        $envelope = $this->createEnvelope();
 
         $this->container->set('my.service.id', $service = new \stdClass);
 
         $resolver->register('SendNewsletter', 'my.service.id');
 
-        $this->assertEquals(new Invocator($service, new DefaultMessage('SendNewsletter')), $resolver->resolve(new DefaultMessage('SendNewsletter')));
+        $this->assertEquals(new Invocator($service, $envelope), $resolver->resolve($envelope));
     }
 
     public function testExceptionWhenServiceDosentExistOnContainer()
@@ -45,7 +46,15 @@ class ContainerAwareResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolver = $this->createResolver();
         $resolver->register('SendNewsletter', 'non_existant_service_id');
-        $resolver->resolve(new DefaultMessage('SendNewsletter'));
+        $resolver->resolve($this->createEnvelope());
     }
 
+
+    protected function createEnvelope()
+    {
+        $message = $this->getMock('Bernard\Message');
+        $message->expects($this->any())->method('getName')->will($this->returnValue('SendNewsletter'));
+
+        return new Envelope($message);
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace Bernard\ServiceResolver;
 
-use Bernard\Message;
+use Bernard\Message\Envelope;
 
 /**
  * @package Bernard
@@ -10,15 +10,15 @@ use Bernard\Message;
 class Invocator
 {
     protected $object;
-    protected $message;
+    protected $envelope;
 
     /**
      * @param object $object
      */
-    public function __construct($object, Message $message)
+    public function __construct($object, Envelope $envelope)
     {
         $this->object  = $object;
-        $this->message = $message;
+        $this->envelope = $envelope;
     }
 
     /**
@@ -26,7 +26,7 @@ class Invocator
      */
     public function getMethodName()
     {
-        return 'on' . ucfirst($this->message->getName());
+        return 'on' . ucfirst($this->envelope->getName());
     }
 
     /**
@@ -41,16 +41,6 @@ class Invocator
     public function invoke()
     {
         $method = new \ReflectionMethod($this->object, $this->getMethodName());
-        $method->invoke($this->object, $this->message);
-    }
-
-    /**
-     * Makes it possible to have this being a callable.
-     *
-     * @see Invocator::invoke()
-     */
-    public function __invoke()
-    {
-        $this->invoke();
+        $method->invoke($this->object, $this->envelope->getMessage());
     }
 }

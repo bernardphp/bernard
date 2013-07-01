@@ -2,12 +2,12 @@
 
 namespace Bernard\ServiceResolver;
 
-use Bernard\Message;
+use Bernard\Message\Envelope;
 
 /**
  * @package Bernard
  */
-class ObjectResolver implements \Bernard\ServiceResolver
+class ObjectResolver extends AbstractResolver
 {
     protected $services = array();
 
@@ -26,12 +26,10 @@ class ObjectResolver implements \Bernard\ServiceResolver
     /**
      * {@inheritDoc}
      */
-    public function resolve(Message $message)
+    protected function getService(Envelope $envelope)
     {
-        if (isset($this->services[$message->getName()])) {
-            return new Invocator($this->services[$message->getName()], $message);
-        }
+        $name = $envelope->getName();
 
-        throw new \InvalidArgumentException('No service registered for message "' . $message->getName() . '".');
+        return isset($this->services[$name]) ? $this->services[$name] : null;
     }
 }

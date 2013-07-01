@@ -21,7 +21,7 @@ class ProcessInvocator extends Invocator
 
     /**
      * @param ProcessManager $manager
-     * @param Invocator $invocator
+     * @param Invocator      $invocator
      */
     public function __construct(ProcessManager $manager, Invocator $invocator)
     {
@@ -34,7 +34,7 @@ class ProcessInvocator extends Invocator
      */
     public function invoke()
     {
-        $fork = $this->spork->fork($this->invocator);
+        $fork = $this->spork->fork(array($this->invocator, 'invoke'));
         $fork->fail(array($this, 'fail'));
         $fork->wait();
     }
@@ -43,7 +43,7 @@ class ProcessInvocator extends Invocator
      * Throws an Exception based on the $error array given by Spork\ProcessManager.
      * It hides some information but the trade of are still in the positive.
      *
-     * @param Fork $fork
+     * @param  Fork                  $fork
      * @throws ForkingLogicException
      */
     public function fail(Fork $fork)

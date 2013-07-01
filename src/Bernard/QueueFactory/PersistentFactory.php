@@ -19,7 +19,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     protected $serializer;
 
     /**
-     * @param Driver          $connection
+     * @param Driver              $connection
      * @param SerializerInterface $serializer
      */
     public function __construct(

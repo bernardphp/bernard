@@ -19,7 +19,8 @@
         "symfony/console"              : "~2.0",
         "symfony/dependency-injection" : "~2.0",
         "symfony/serializer"           : "~2.2",
-        "kriswallsmith/spork"          : "dev-master"
+        "kriswallsmith/spork"          : "dev-master",
+        "doctrine/dbal"                : "~2.3"
     },
 
     "suggest" : {

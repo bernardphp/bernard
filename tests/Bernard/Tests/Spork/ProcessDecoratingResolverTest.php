@@ -29,16 +29,17 @@ class ProcessDecoratingResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testItWrapsInvocatorWithProcessDecoratingInvocator()
     {
-        $invocator = $this->getMockBuilder('Bernard\ServiceResolver\Invocator')->disableOriginalConstructor()
-            ->getMock();
+        $invocator = $this->getMockBuilder('Bernard\ServiceResolver\Invocator')
+            ->disableOriginalConstructor()->getMock();
 
-        $message = $this->getMock('Bernard\Message');
+        $envelope = $this->getMockBuilder('Bernard\Message\Envelope')
+            ->disableOriginalConstructor()->getMock();
 
-        $this->resolver->expects($this->once())->method('resolve')->with($this->equalTo($message))
+        $this->resolver->expects($this->once())->method('resolve')->with($this->equalTo($envelope))
             ->will($this->returnValue($invocator));
 
         $resolver = new ProcessDecoratingResolver($this->spork, $this->resolver);
+        $this->assertInstanceOf('Bernard\Spork\ProcessInvocator', $resolver->resolve($envelope));
 
-        $this->assertEquals(new ProcessInvocator($this->spork, $invocator), $resolver->resolve($message));
     }
 }

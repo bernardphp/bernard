@@ -38,6 +38,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
             ->setName('bernard:consume')
             ->addOption('max-retries', null, InputOption::VALUE_OPTIONAL, 'Number of times a message will be requeued before marked as failed.', null)
             ->addOption('max-runtime', null, InputOption::VALUE_OPTIONAL, 'Maximum time in seconds the consumer will run.', null)
+            ->addOption('failed', null, InputOption::VALUE_OPTIONAL, 'Messages failed more than {max-retries} will be queued here.', null)
             ->addArgument('queue', InputArgument::REQUIRED, 'Name of queue that will be consumed.')
         ;
     }
@@ -47,8 +48,12 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $options = $input->getOptions();
         $queue = $this->queues->create($input->getArgument('queue'));
+        $failed = isset($options['failed']) ? $this->queues->create($options['failed']) : null;
 
-        $this->consumer->consume($queue, $this->queues->create('failed'), $input->getOptions());
+        unset($options['failed']);
+
+        $this->consumer->consume($queue, $failed, $options);
     }
 }

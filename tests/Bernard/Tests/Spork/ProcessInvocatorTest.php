@@ -2,6 +2,7 @@
 
 namespace Bernard\Tests\Spork;
 
+use Bernard\Message\Envelope;
 use Bernard\ServiceResolver\Invocator;
 use Bernard\Spork\ProcessInvocator;
 use Spork\ProcessManager;
@@ -29,7 +30,7 @@ class ProcessInvocatorTest extends \PHPUnit_Framework_TestCase
         $fork->expects($this->once())->method('fail')->with($this->equalTo(array($invocator, 'fail')));
 
         $this->spork->expects($this->once())->method('fork')
-            ->with($this->equalTo($this->invocator))->will($this->returnValue($fork));
+            ->with($this->equalTo(array($this->invocator, 'invoke')))->will($this->returnValue($fork));
 
         $invocator->invoke();
     }
@@ -42,13 +43,18 @@ class ProcessInvocatorTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('Bernard\Spork\Exception\ProcessException');
 
-        $message = $this->getMock('Bernard\Message');
-        $message->expects($this->any())->method('getName')->will($this->returnValue('ImportUsers'));
-
-        $invocator = new Invocator(new FailingService(), $message);
+        $invocator = new Invocator(new FailingService(), $this->createEnvelope());
 
         $forking = new ProcessInvocator(new ProcessManager(), $invocator);
         $forking->invoke();
+    }
+
+    protected function createEnvelope()
+    {
+        $message = $this->getMock('Bernard\Message');
+        $message->expects($this->any())->method('getName')->will($this->returnValue('ImportUsers'));
+
+        return new Envelope($message);
     }
 }
 
