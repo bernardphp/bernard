@@ -3,7 +3,6 @@
 namespace Bernard\Driver;
 
 use Aws\Sqs\SqsClient;
-use Aws\Sqs\Enum\QueueAttribute;
 use Bernard\Message\Envelope;
 use SplQueue;
 
@@ -40,10 +39,14 @@ class SqsDriver extends AbstractPrefetchDriver
 
         $result = $this->sqs->getQueueAttributes(array(
             'QueueUrl'       => $queueUrl,
-            'AttributeNames' => array(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES)
+            'AttributeNames' => array('ApproximateNumberOfMessages'),
         ));
 
-        return $result->get(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES) ?: 0;
+        if (isset($result['Attributes']['ApproximateNumberOfMessages'])) {
+            return $result['Attributes']['ApproximateNumberOfMessages'];
+        }
+
+        return 0;
     }
 
     /**

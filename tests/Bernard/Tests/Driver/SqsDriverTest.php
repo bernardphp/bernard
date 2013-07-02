@@ -43,9 +43,13 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
             ->method('getQueueAttributes')
             ->with($this->equalTo(array(
                 'QueueUrl'       => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME,
-                'AttributeNames' => array(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES)
+                'AttributeNames' => array('ApproximateNumberOfMessages'),
             )))
-            ->will($this->returnValue(new Model(array(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES => 4))));
+            ->will($this->returnValue(
+                new Model(array(
+                    'Attributes' => array('ApproximateNumberOfMessages' => 4),
+                ))
+            ));
 
         $this->assertEquals(4, $this->connection->countMessages(self::DUMMY_QUEUE_NAME));
     }
