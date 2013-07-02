@@ -121,3 +121,73 @@ Use one of the following methods for creating your table.
 
 
         $driver = new DoctrineDriver($connection);
+
+IronMQ
+------
+
+IronMQ from Iron.io is a "message queue in the cloud".
+
+.. important::
+
+    You need to create an account with iron.io to get a ``project-id`` and ``token``.
+
+.. configuration-block::
+
+    .. code-block:: json
+
+        {
+            "require" : {
+                "iron-io/iron_mq" : "~1.4"
+            }
+        }
+
+    .. code-block:: php
+
+        <?php
+
+        use Bernard\Driver\IronMqDriver;
+
+        $connection = new IronMQ(array(
+            'token'      => 'your-ironmq-token',
+            'project_id' => 'your-ironmq-project-id',
+        ));
+
+
+        $driver = new IronMqDriver($connection);
+
+Amazon SQS
+----------
+
+SQS (Simple Queuing System) part of Amazons Web Services (AWS).
+
+.. important::
+
+    You need to create an account with AWS to get SQS access credentials, consisting of an API key
+    and an API secret. In addition, each SQS queue is setup in a specific region, eg ``eu-west-1``
+    or ``us-east-1``.
+
+.. configuration-block::
+
+    .. code-block:: json
+
+        {
+            "require" : {
+                "aws/aws-sdk-php" : "~2.4"
+            }
+        }
+
+    .. code-block:: php
+
+        <?php
+
+        use Aws\Sqs\SqsClient;
+        use Bernard\Driver\SqsDriver;
+
+        $connection = SqsClient::factory(array(
+            'key'    => 'your-aws-access-key',
+            'secret' => 'your-aws-secret-key',
+            'region' => 'the-aws-region-you-choose'
+        ));
+
+
+        $driver = new SqsDriver($connection);
