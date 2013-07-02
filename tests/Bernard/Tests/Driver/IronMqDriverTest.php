@@ -117,25 +117,25 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
         $this->ironmq
             ->expects($this->at(0))
             ->method('getMessages')
-            ->with($this->equalTo('my-queue1'), $this->equalTo(2), $this->equalTo(5))
+            ->with($this->equalTo('my-queue1'), $this->equalTo(2), $this->equalTo(60))
             ->will($this->returnValue(array(
                 (object) array('body' => 'message1', 'id' => 1),
             )));
         $this->ironmq
             ->expects($this->at(1))
             ->method('getMessages')
-            ->with($this->equalTo('my-queue2'), $this->equalTo(2), $this->equalTo(30))
+            ->with($this->equalTo('my-queue2'), $this->equalTo(2), $this->equalTo(60))
             ->will($this->returnValue(array(
                 (object) array('body' => 'message2', 'id' => 2),
             )));
         $this->ironmq
             ->expects($this->at(1))
             ->method('getMessages')
-            ->with($this->equalTo('my-queue2'), $this->equalTo(2), $this->equalTo(30))
+            ->with($this->equalTo('my-queue2'), $this->equalTo(2), $this->equalTo(60))
             ->will($this->returnValue(null));
 
         $this->assertEquals(array('message1', 1), $this->connection->popMessage('my-queue1'));
-        $this->assertEquals(array('message2', 2), $this->connection->popMessage('my-queue2', 30));
+        $this->assertEquals(array('message2', 2), $this->connection->popMessage('my-queue2'));
         $this->assertEquals(array(null, null), $this->connection->popMessage('my-queue2'));
     }
 }
