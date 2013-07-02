@@ -101,8 +101,8 @@ class SqsDriver extends AbstractPrefetchDriver
      */
     public function popMessage($queueName, $interval = 5)
     {
-        if ($this->cache->contains($queueName)) {
-            return $this->cache->pop($queueName);
+        if ($message = $this->cache->pop($queueName)) {
+            return $message;
         }
 
         $queueUrl = $this->resolveUrl($queueName);

@@ -32,20 +32,9 @@ class PrefetchMessageCache
     {
         $cache = $this->get($queueName);
 
-        if ($this->contains($queueName)) {
+        if (!$cache->isEmpty()) {
             return $cache->dequeue();
         }
-    }
-
-    /**
-     * Does the cache for a specific queue contain any more caches.
-     *
-     * @param string $queueName
-     * @return boolean
-     */
-    public function contains($queueName)
-    {
-        return !$this->get($queueName)->isEmpty();
     }
 
     /**
