@@ -97,15 +97,12 @@ class SqsDriver extends AbstractPrefetchDriver
     }
 
     /**
-     * As it is costly to make a request for messages from SQS we get a couple instead of a single
-     * theese are cached and returned before making a new call.
-     *
      * {@inheritDoc}
      */
     public function popMessage($queueName, $interval = 5)
     {
-        if ($message = $this->cached($queueName)) {
-            return $message;
+        if ($this->cache->contains($queueName)) {
+            return $this->cache->pop($queueName);
         }
 
         $queueUrl = $this->resolveUrl($queueName);
@@ -121,10 +118,10 @@ class SqsDriver extends AbstractPrefetchDriver
         }
 
         foreach ($messages as $message) {
-            $this->cache($queueName, array($message['Body'], $message['ReceiptHandle']));
+            $this->cache->push($queueName, array($message['Body'], $message['ReceiptHandle']));
         }
 
-        return $this->cached($queueName);
+        return $this->cache->pop($queueName);
     }
 
     /**

@@ -136,6 +136,6 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array('message1', 1), $this->connection->popMessage('my-queue1'));
         $this->assertEquals(array('message2', 2), $this->connection->popMessage('my-queue2'));
-        $this->assertEquals(array(null, null), $this->connection->popMessage('my-queue2'));
+        $this->assertEquals(array(null, null), $this->connection->popMessage('my-queue2', 0.01));
     }
 }

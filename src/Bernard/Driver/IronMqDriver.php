@@ -83,8 +83,8 @@ class IronMqDriver extends AbstractPrefetchDriver
      */
     public function popMessage($queueName, $interval = 5)
     {
-        if ($message = $this->cached($queueName)) {
-            return $message;
+        if ($this->cache->contains($queueName)) {
+            return $this->cache->pop($queueName);
         }
 
         $runtime = microtime(true) + $interval;
@@ -98,11 +98,13 @@ class IronMqDriver extends AbstractPrefetchDriver
             }
 
             foreach ($messages as $message) {
-                $this->cache($queueName, array($message->body, $message->id));
+                $this->cache->push($queueName, array($message->body, $message->id));
             }
 
-            return $this->cached($queueName);
+            return $this->cache->pop($queueName);
         }
+
+        return array(null, null);
     }
 
     /**
