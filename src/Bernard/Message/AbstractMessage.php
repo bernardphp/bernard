@@ -18,10 +18,6 @@ abstract class AbstractMessage implements \Bernard\Message
             $class = substr($class, 0, -7);
         }
 
-        if (!strpos($class, '\\')) {
-            return $class;
-        }
-
         return current(array_reverse(explode('\\', $class)));
     }
 

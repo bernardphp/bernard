@@ -3,8 +3,10 @@
 namespace Bernard\Tests\Spork;
 
 use Bernard\Message\Envelope;
+use Bernard\Message\DefaultMessage;
 use Bernard\ServiceResolver\Invocator;
 use Bernard\Spork\ProcessInvocator;
+use Bernard\Tests\Fixtures;
 use Spork\ProcessManager;
 
 class ProcessInvocatorTest extends \PHPUnit_Framework_TestCase
@@ -43,25 +45,12 @@ class ProcessInvocatorTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException('Bernard\Spork\Exception\ProcessException');
 
-        $invocator = new Invocator(new FailingService(), $this->createEnvelope());
+        $service = new Fixtures\Service;
+        $envelope = new Envelope(new DefaultMessage('FailSendMessage'));
+
+        $invocator = new Invocator($service, $envelope);
 
         $forking = new ProcessInvocator(new ProcessManager(), $invocator);
         $forking->invoke();
-    }
-
-    protected function createEnvelope()
-    {
-        $message = $this->getMock('Bernard\Message');
-        $message->expects($this->any())->method('getName')->will($this->returnValue('ImportUsers'));
-
-        return new Envelope($message);
-    }
-}
-
-class FailingService
-{
-    public function onImportUsers()
-    {
-        throw new \Exception('Something bad happended.');
     }
 }
