@@ -2,6 +2,7 @@
 
 namespace Bernard\Queue;
 
+use Bernard\Message\Envelope;
 use Bernard\Exception\InvalidOperationException;
 
 /**
@@ -26,6 +27,16 @@ abstract class AbstractQueue implements \Bernard\Queue
     public function close()
     {
         $this->closed = true;
+    }
+
+    /**
+     * By Default this is not implemented. For Memory queues it does not make sense.
+     *
+     * {@inheritDoc}
+     */
+    public function acknowledge(Envelope $envelope)
+    {
+        $this->errorIfClosed();
     }
 
     /**

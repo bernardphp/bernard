@@ -2,6 +2,7 @@
 
 namespace Bernard\Queue;
 
+use SplObjectStorage;
 use Bernard\Driver;
 use Bernard\Message\Envelope;
 use Bernard\Serializer;
@@ -13,6 +14,7 @@ class PersistentQueue extends AbstractQueue
 {
     protected $connection;
     protected $serializer;
+    protected $receipts;
 
     /**
      * @param string     $name
@@ -25,6 +27,7 @@ class PersistentQueue extends AbstractQueue
 
         $this->connection = $connection;
         $this->serializer = $serializer;
+        $this->receipts   = new SplObjectStorage;
 
         $this->register();
     }
@@ -69,13 +72,31 @@ class PersistentQueue extends AbstractQueue
     /**
      * {@inheritDoc}
      */
+    public function acknowledge(Envelope $envelope)
+    {
+        $this->errorIfClosed();
+
+        if (isset($this->receipts[$envelope])) {
+            $this->connection->acknowledgeMessage($this->name, $this->receipts[$envelope]);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function dequeue()
     {
         $this->errorIfClosed();
 
-        $message = $this->connection->popMessage($this->name);
+        list($serialized, $receipt) = $this->connection->popMessage($this->name);
 
-        return $message ? $this->serializer->deserialize($message) : null;
+        if ($serialized) {
+            $envelope = $this->serializer->deserialize($serialized);
+
+            $this->receipts->attach($envelope, $receipt);
+
+            return $envelope;
+        }
     }
 
     /**

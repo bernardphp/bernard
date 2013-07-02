@@ -55,9 +55,14 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function pushMessage($queueName, $message)
     {
-        $queue = $queueName;
+        $types = array('string', 'string', 'datetime');
+        $data = array(
+            'queue'   => $queueName,
+            'message' => $message,
+            'sentAt'  => new \DateTime(),
+        );
 
-        $this->connection->insert('bernard_messages', compact('queue', 'message'), array('string', 'string'));
+        $this->connection->insert('bernard_messages', $data, $types);
     }
 
     /**
@@ -66,30 +71,36 @@ class DoctrineDriver implements \Bernard\Driver
     public function popMessage($queueName, $interval = 5)
     {
         $runtime = microtime(true) + $interval;
-        $query = 'SELECT id, message FROM bernard_messages WHERE queue = :queue';
-
-        if ($this->isLockSupported()) {
-            $query .= ' LOCK IN SHARE MODE';
-        }
+        $query = 'SELECT id, message FROM bernard_messages
+                  WHERE queue = :queue AND visible = :visible
+                  ORDER BY sentAt, id ' . $this->connection->getDatabasePlatform()->getForUpdateSql();
 
         while (microtime(true) < $runtime) {
             $this->connection->beginTransaction();
 
             try {
-                list($id, $message) = $this->connection->fetchArray($query, array('queue' => $queueName));
+                list($id, $message) = $this->connection->fetchArray($query, array('queue' => $queueName, 'visible' => true));
 
-                $this->connection->delete('bernard_messages', compact('id'));
+                $this->connection->update('bernard_messages', array('visible' => false), compact('id'));
                 $this->connection->commit();
             } catch (\Exception $e) {
                 $this->connection->rollback();
             }
 
             if (isset($message) && $message) {
-                return $message;
+                return array($message, $id);
             }
 
             usleep(10);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function acknowledgeMessage($queueName, $receipt)
+    {
+        $this->connection->delete('bernard_messages', array('id' => $receipt, 'queue' => $queueName));
     }
 
     /**
@@ -124,15 +135,5 @@ class DoctrineDriver implements \Bernard\Driver
         unset($params['user'], $params['password']);
 
         return $params;
-    }
-
-    /**
-     * @return boolean
-     */
-    protected function isLockSupported()
-    {
-        $unsupported = array('pdo_sqlite');
-
-        return !in_array($this->connection->getDriver()->getName(), $unsupported);
     }
 }

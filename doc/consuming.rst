@@ -67,3 +67,11 @@ a newsletter, it would look like this.
 
     $ /path/to/console bernard:consume 'send-newsletter'
 
+
+Internals
+---------
+
+When a message is dequeued it is also marked as invisible (if the driver supports this) and when the message have
+been consumed it will be acknowledged. Some drivers have a timeout on the invisible state and will automatically
+requeue a message after that time. Therefor it is important to have a timeout creater than it takes for you
+to consume a single message.

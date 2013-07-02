@@ -65,6 +65,8 @@ class Consumer
         try {
             $invocator = $this->services->resolve($envelope);
             $invocator->invoke();
+
+            $queue->acknowledge($envelope);
         } catch (Exception $e) {
             $this->fail($envelope, $e, $queue, $failed);
         }
@@ -99,10 +101,13 @@ class Consumer
         if ($envelope->getRetries() < $this->options['max-retries']) {
             $envelope->incrementRetries();
 
-           return $queue->enqueue($envelope);
+            $failed = $queue;
         }
 
         if ($failed) {
+            // As we are manually requeuing the envelope we must acknowledge it
+            // or it will be duplicated.
+            $queue->acknowledge($envelope);
             $failed->enqueue($envelope);
         }
     }
