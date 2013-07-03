@@ -4,8 +4,7 @@ namespace Bernard\Tests\Serializer;
 
 use Bernard\Message\Envelope;
 use Bernard\Message\DefaultMessage;
-
-require __DIR__ . '/../Fixtures/SendNewsletterMessage.php';
+use Bernard\Tests\Fixtures;
 
 abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,16 +36,16 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
 
     public function testItSerializesACustomImplementedMessage()
     {
-        $json = '{"args":{"newsletterId":10},"class":"SerializerApplication:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
-        $this->assertEquals($json, $this->serializer->serialize(new Envelope(new \SerializerApplication\SendNewsletterMessage())));
+        $json = '{"args":{"newsletterId":10},"class":"Bernard:Tests:Fixtures:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
+        $this->assertEquals($json, $this->serializer->serialize(new Envelope(new Fixtures\SendNewsletterMessage())));
     }
 
     public function testItDeserializesACustomImplementedMessage()
     {
-        $json = '{"args":{"newsletterId":10},"class":"SerializerApplication:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"args":{"newsletterId":10},"class":"Bernard:Tests:Fixtures:SendNewsletterMessage","timestamp":' . time() . ',"retries":0}';
         $envelope = $this->serializer->deserialize($json);
 
-        $this->assertInstanceOf('SerializerApplication\SendNewsletterMessage', $envelope->getMessage());
+        $this->assertInstanceOf('Bernard\Tests\Fixtures\SendNewsletterMessage', $envelope->getMessage());
     }
 
     public function testItDeserializesAnUnknownClass()

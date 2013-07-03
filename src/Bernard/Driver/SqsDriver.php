@@ -3,7 +3,6 @@
 namespace Bernard\Driver;
 
 use Aws\Sqs\SqsClient;
-use Aws\Sqs\Enum\QueueAttribute;
 use Bernard\Message\Envelope;
 use SplQueue;
 
@@ -40,10 +39,14 @@ class SqsDriver extends AbstractPrefetchDriver
 
         $result = $this->sqs->getQueueAttributes(array(
             'QueueUrl'       => $queueUrl,
-            'AttributeNames' => array(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES)
+            'AttributeNames' => array('ApproximateNumberOfMessages'),
         ));
 
-        return $result->get(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES) ?: 0;
+        if (isset($result['Attributes']['ApproximateNumberOfMessages'])) {
+            return $result['Attributes']['ApproximateNumberOfMessages'];
+        }
+
+        return 0;
     }
 
     /**
@@ -72,7 +75,7 @@ class SqsDriver extends AbstractPrefetchDriver
         }
 
         foreach ($queueUrls as $queueUrl) {
-            if (false !== array_search($queueUrl, $this->queueUrls)) {
+            if (in_array($queueUrl, $this->queueUrls)) {
                 continue;
             }
 
@@ -97,14 +100,11 @@ class SqsDriver extends AbstractPrefetchDriver
     }
 
     /**
-     * As it is costly to make a request for messages from SQS we get a couple instead of a single
-     * theese are cached and returned before making a new call.
-     *
      * {@inheritDoc}
      */
     public function popMessage($queueName, $interval = 5)
     {
-        if ($message = $this->cached($queueName)) {
+        if ($message = $this->cache->pop($queueName)) {
             return $message;
         }
 
@@ -121,10 +121,10 @@ class SqsDriver extends AbstractPrefetchDriver
         }
 
         foreach ($messages as $message) {
-            $this->cache($queueName, array($message['Body'], $message['ReceiptHandle']));
+            $this->cache->push($queueName, array($message['Body'], $message['ReceiptHandle']));
         }
 
-        return $this->cached($queueName);
+        return $this->cache->pop($queueName);
     }
 
     /**

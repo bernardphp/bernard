@@ -83,21 +83,28 @@ class IronMqDriver extends AbstractPrefetchDriver
      */
     public function popMessage($queueName, $interval = 5)
     {
-        if ($message = $this->cached($queueName)) {
+        if ($message = $this->cache->pop($queueName)) {
             return $message;
         }
 
-        $messages = $this->ironmq->getMessages($queueName, $this->prefetch, $interval);
+        $runtime = microtime(true) + $interval;
 
-        if (!$messages) {
-            return array(null, null);
+        while ($runtime > microtime(true)) {
+            $messages = $this->ironmq->getMessages($queueName, $this->prefetch);
+
+            if (!$messages) {
+                usleep(10000);
+                continue;
+            }
+
+            foreach ($messages as $message) {
+                $this->cache->push($queueName, array($message->body, $message->id));
+            }
+
+            return $this->cache->pop($queueName);
         }
 
-        foreach ($messages as $message) {
-            $this->cache($queueName, array($message->body, $message->id));
-        }
-
-        return $this->cached($queueName);
+        return array(null, null);
     }
 
     /**

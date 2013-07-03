@@ -25,9 +25,8 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
                 'deleteMessage',
             ))
             ->getMock();
-        $this->connection = new SqsDriver($this->sqs, array(
-            'send-newsletter' => 'url',
-        ));
+
+        $this->connection = new SqsDriver($this->sqs, array('send-newsletter' => 'url'));
     }
 
     public function testItImplementsDriverInterface()
@@ -43,9 +42,13 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
             ->method('getQueueAttributes')
             ->with($this->equalTo(array(
                 'QueueUrl'       => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME,
-                'AttributeNames' => array(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES)
+                'AttributeNames' => array('ApproximateNumberOfMessages'),
             )))
-            ->will($this->returnValue(new Model(array(QueueAttribute::APPROXIMATE_NUMBER_OF_MESSAGES => 4))));
+            ->will($this->returnValue(
+                new Model(array(
+                    'Attributes' => array('ApproximateNumberOfMessages' => 4),
+                ))
+            ));
 
         $this->assertEquals(4, $this->connection->countMessages(self::DUMMY_QUEUE_NAME));
     }
@@ -59,19 +62,24 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testItGetsAllQueues()
     {
+        $connection = new SqsDriver($this->sqs, array(
+            'import-users' => 'alreadyknowurl/import_users_prod'
+        ));
+
         $this->sqs
             ->expects($this->once())
             ->method('listQueues')
             ->will($this->returnValue(new Model(array(
                 'QueueUrls' => array(
                     'https://sqs.eu-west-1.amazonaws.com/123123/failed',
-                    'https://sqs.eu-west-1.amazonaws.com/123123/queue1'
+                    'https://sqs.eu-west-1.amazonaws.com/123123/queue1',
+                    'alreadyknowurl/import_users_prod',
                 )
             ))));
 
-        $queues = array('send-newsletter', 'failed', 'queue1');
+        $queues = array('import-users', 'failed', 'queue1');
 
-        $this->assertEquals($queues, $this->connection->listQueues());
+        $this->assertEquals($queues, $connection->listQueues());
     }
 
     public function testItPrefetchesMessages()

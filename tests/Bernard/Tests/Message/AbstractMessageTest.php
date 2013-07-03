@@ -2,24 +2,20 @@
 
 namespace Bernard\Tests\Message;
 
+use Bernard\Tests\Fixtures;
+
 class AbstractMessageTest extends \PHPUnit_Framework_TestCase
 {
     public function testImplementsMessage()
     {
-        $this->assertInstanceOf('Bernard\Message', $this->getMockForAbstractClass('Bernard\Message\AbstractMessage'));
+        $this->assertInstanceOf('Bernard\Message', new Fixtures\SendNewsletterMessage);
+        $this->assertInstanceOf('Bernard\Message\AbstractMessage', new Fixtures\SendNewsletterMessage);
     }
 
     public function testItUsesClassNameAsNameAndQueueNameNormalized()
     {
-        $message = $this->getMockForAbstractClass('Bernard\Message\AbstractMessage', array(), 'MyCustomMessage');
-        $this->assertEquals('MyCustom', $message->getName());
-        $this->assertEquals('my-custom', $message->getQueue());
-
-        $message =  new \CustomVendor\SendNewsletterMessage();
+        $message =  new Fixtures\SendNewsletterMessage();
         $this->assertEquals('SendNewsletter', $message->getName());
         $this->assertEquals('send-newsletter', $message->getQueue());
     }
 }
-
-namespace CustomVendor;
-class SendNewsletterMessage extends \Bernard\Message\AbstractMessage {}

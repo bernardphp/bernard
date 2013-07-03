@@ -1,7 +1,13 @@
 Changelog
 =========
 
-1.6.x / yyyy-mm-dd
+0.6.1 / yyyy-mm-dd
+------------------
+
+ * Increment sleep in drivers that does not natively support internal to minimize CPU usage.
+ * Fix error in `$queueUrls` for SQS Driver where aliased queue urls would show up.
+
+0.6.0 / 2013-07-03
 ------------------
 
  * Add driver for Amazon SQS @ukautz

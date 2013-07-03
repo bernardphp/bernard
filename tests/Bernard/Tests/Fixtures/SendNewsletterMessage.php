@@ -1,6 +1,6 @@
 <?php
 
-namespace SerializerApplication;
+namespace Bernard\Tests\Fixtures;
 
 use Bernard\Message\AbstractMessage;
 use JMS\Serializer\Annotation as JMSSerializer;
