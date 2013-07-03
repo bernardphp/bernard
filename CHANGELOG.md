@@ -1,11 +1,12 @@
 Changelog
 =========
 
-0.6.1 / yyyy-mm-dd
+0.6.1 / 2013-07-03
 ------------------
 
  * Increment sleep in drivers that does not natively support internal to minimize CPU usage.
  * Fix error in `$queueUrls` for SQS Driver where aliased queue urls would show up.
+ * Include documentation for the new drivers and options. @ukautz
 
 0.6.0 / 2013-07-03
 ------------------
