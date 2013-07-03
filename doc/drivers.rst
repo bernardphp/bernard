@@ -125,11 +125,19 @@ Use one of the following methods for creating your table.
 IronMQ
 ------
 
-IronMQ from Iron.io is a "message queue in the cloud".
+IronMQ from Iron.io is a "message queue in the cloud". The IronMQ driver supports prefetching
+messages, which reduces the number of http request. This is configured as the second parameter
+in the drivers constructor.
 
 .. important::
 
     You need to create an account with iron.io to get a ``project-id`` and ``token``.
+
+.. important::
+
+    When using prefetching the timeout value for each message much be greater than the time it takes to
+    consume all of the fetched message. If one message takes 10 seconds to consume and the driver is prefetching
+    5 message the timeout value must be greater than 10 seconds.
 
 .. configuration-block::
 
@@ -155,16 +163,27 @@ IronMQ from Iron.io is a "message queue in the cloud".
 
         $driver = new IronMqDriver($connection);
 
+        // or with a prefetching number
+        $driver = new IronMqDriver($connection, 5);
+
 Amazon SQS
 ----------
 
-SQS (Simple Queuing System) part of Amazons Web Services (AWS).
+SQS (Simple Queuing System) part of Amazons Web Services (AWS). The SQS driver supports prefetching messages
+which reduces the number of http request. It also supports aliasing specific queue urls to a queue name. If queue
+aliasing is used the queue names provided will not require a HTTP request to amazon to be resolved.
 
 .. important::
 
     You need to create an account with AWS to get SQS access credentials, consisting of an API key
     and an API secret. In addition, each SQS queue is setup in a specific region, eg ``eu-west-1``
     or ``us-east-1``.
+
+.. important::
+
+    When using prefetching the timeout value for each message much be greater than the time it takes to
+    consume all of the fetched message. If one message takes 10 seconds to consume and the driver is prefetching
+    5 message the timeout value must be greater than 10 seconds.
 
 .. configuration-block::
 
@@ -189,5 +208,12 @@ SQS (Simple Queuing System) part of Amazons Web Services (AWS).
             'region' => 'the-aws-region-you-choose'
         ));
 
-
         $driver = new SqsDriver($connection);
+
+        // or with prefetching
+        $driver = new SqsDriver($connection, array(), 5);
+
+        // or with aliased queue urls
+        $driver = new SqsDriver($connection, array(
+            'queue-name' => 'queue-url',
+        ));
