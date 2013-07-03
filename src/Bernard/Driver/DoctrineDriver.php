@@ -91,7 +91,8 @@ class DoctrineDriver implements \Bernard\Driver
                 return array($message, $id);
             }
 
-            usleep(10);
+            //sleep for 10 ms
+            usleep(10000);
         }
     }
 

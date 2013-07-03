@@ -93,7 +93,7 @@ class IronMqDriver extends AbstractPrefetchDriver
             $messages = $this->ironmq->getMessages($queueName, $this->prefetch);
 
             if (!$messages) {
-                usleep(10);
+                usleep(10000);
                 continue;
             }
 
