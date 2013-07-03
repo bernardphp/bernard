@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.0 / 2013-07-03
+0.6.0 / 2013-07-03
 ------------------
 
  * Add driver for Amazon SQS @ukautz
