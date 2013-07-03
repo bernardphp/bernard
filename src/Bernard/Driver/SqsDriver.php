@@ -75,7 +75,7 @@ class SqsDriver extends AbstractPrefetchDriver
         }
 
         foreach ($queueUrls as $queueUrl) {
-            if (false !== array_search($queueUrl, $this->queueUrls)) {
+            if (in_array($queueUrl, $this->queueUrls)) {
                 continue;
             }
 
