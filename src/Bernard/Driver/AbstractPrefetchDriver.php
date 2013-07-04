@@ -2,8 +2,6 @@
 
 namespace Bernard\Driver;
 
-use SplQueue;
-
 /**
  * For some drivers it gives a performance boost not to query the backend
  * all the time. This is mostly for SQS and IronMQ.
@@ -12,7 +10,7 @@ use SplQueue;
  */
 abstract class AbstractPrefetchDriver implements \Bernard\Driver
 {
-    protected $perfetch;
+    protected $prefetch;
     protected $cache;
 
     /**
