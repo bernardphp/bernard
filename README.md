@@ -11,10 +11,7 @@ different backends such as:
 * Iron MQ
 * Doctrine DBAL
 
-Documentation
--------------
-
-There is plenty more to discover in the [documentation located right here.][documentation].
+There is plenty more to discover in the [documentation located right here][documentation].
 
 Special Thanks
 --------------
