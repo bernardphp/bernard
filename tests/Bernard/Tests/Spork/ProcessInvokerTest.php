@@ -4,28 +4,28 @@ namespace Bernard\Tests\Spork;
 
 use Bernard\Message\Envelope;
 use Bernard\Message\DefaultMessage;
-use Bernard\ServiceResolver\Invocator;
-use Bernard\Spork\ProcessInvocator;
+use Bernard\ServiceResolver\Invoker;
+use Bernard\Spork\ProcessInvoker;
 use Bernard\Tests\Fixtures;
 use Spork\ProcessManager;
 
-class ProcessInvocatorTest extends \PHPUnit_Framework_TestCase
+class ProcessInvokerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->invocator = $this->getMockBuilder('Bernard\ServiceResolver\Invocator')
+        $this->invocator = $this->getMockBuilder('Bernard\ServiceResolver\Invoker')
             ->disableOriginalConstructor()->getMock();
         $this->spork = $this->getMock('Spork\ProcessManager');
     }
 
-    public function testItsAnInvocator()
+    public function testItsAnInvoker()
     {
-        $this->assertInstanceOf('Bernard\ServiceResolver\Invocator', new ProcessInvocator($this->spork, $this->invocator));
+        $this->assertInstanceOf('Bernard\ServiceResolver\Invoker', new ProcessInvoker($this->spork, $this->invocator));
     }
 
     public function testItForksWhenInvoked()
     {
-        $invocator = new ProcessInvocator($this->spork, $this->invocator);
+        $invocator = new ProcessInvoker($this->spork, $this->invocator);
 
         $fork = $this->getMockBuilder('Spork\Fork')->disableOriginalConstructor()->getMock();
         $fork->expects($this->once())->method('wait');
@@ -48,9 +48,9 @@ class ProcessInvocatorTest extends \PHPUnit_Framework_TestCase
         $service = new Fixtures\Service;
         $envelope = new Envelope(new DefaultMessage('FailSendMessage'));
 
-        $invocator = new Invocator($service, $envelope);
+        $invocator = new Invoker($service, $envelope);
 
-        $forking = new ProcessInvocator(new ProcessManager(), $invocator);
+        $forking = new ProcessInvoker(new ProcessManager(), $invocator);
         $forking->invoke();
     }
 }

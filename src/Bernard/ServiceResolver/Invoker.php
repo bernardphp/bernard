@@ -7,7 +7,7 @@ use Bernard\Message\Envelope;
 /**
  * @package Bernard
  */
-class Invocator
+class Invoker
 {
     protected $object;
     protected $envelope;

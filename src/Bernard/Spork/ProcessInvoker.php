@@ -2,28 +2,28 @@
 
 namespace Bernard\Spork;
 
-use Bernard\ServiceResolver\Invocator;
+use Bernard\ServiceResolver\Invoker;
 use Bernard\Spork\Exception\ProcessException;
 use Spork\Fork;
 use Spork\ProcessManager;
 
 /**
- * Wraps a Invocator object and forks out when executing the service. This
+ * Wraps a Invoker object and forks out when executing the service. This
  * will help on memory. If memory is exceeded it will kill the fork and not
  * the master process.
  *
  * @package Bernard
  */
-class ProcessInvocator extends Invocator
+class ProcessInvoker extends Invoker
 {
     protected $invocator;
     protected $spork;
 
     /**
      * @param ProcessManager $manager
-     * @param Invocator      $invocator
+     * @param Invoker      $invocator
      */
-    public function __construct(ProcessManager $manager, Invocator $invocator)
+    public function __construct(ProcessManager $manager, Invoker $invocator)
     {
         $this->invocator = $invocator;
         $this->spork = $manager;

@@ -3,7 +3,7 @@
 namespace Bernard;
 
 use Bernard\Message\Envelope;
-use Bernard\ServiceResolver\Invocator;
+use Bernard\ServiceResolver\Invoker;
 
 /**
  * @package Bernard
@@ -18,7 +18,7 @@ interface ServiceResolver
 
     /**
      * @param  Envelope  $envelope
-     * @return Invocator
+     * @return Invoker
      */
     public function resolve(Envelope $envelope);
 }

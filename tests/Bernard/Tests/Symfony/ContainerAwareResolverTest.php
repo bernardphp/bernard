@@ -4,7 +4,7 @@ namespace Bernard\Tests\ServiceResolver;
 
 use Bernard\Message\Envelope;
 use Bernard\Symfony\ContainerAwareResolver;
-use Bernard\ServiceResolver\Invocator;
+use Bernard\ServiceResolver\Invoker;
 use Symfony\Component\DependencyInjection\Container;
 
 class ContainerAwareResolverTest extends \PHPUnit_Framework_TestCase
@@ -37,7 +37,7 @@ class ContainerAwareResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolver->register('SendNewsletter', 'my.service.id');
 
-        $this->assertEquals(new Invocator($service, $envelope), $resolver->resolve($envelope));
+        $this->assertEquals(new Invoker($service, $envelope), $resolver->resolve($envelope));
     }
 
     public function testExceptionWhenServiceDosentExistOnContainer()

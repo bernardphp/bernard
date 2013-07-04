@@ -4,7 +4,7 @@ namespace Bernard\Tests\ServiceResolver;
 
 use Bernard\Message\Envelope;
 use Bernard\ServiceResolver\ObjectResolver;
-use Bernard\ServiceResolver\Invocator;
+use Bernard\ServiceResolver\Invoker;
 
 class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,7 +32,7 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 
         $envelope = $this->createEnvelope();
 
-        $this->assertEquals(new Invocator($service, $envelope), $resolver->resolve($envelope));
+        $this->assertEquals(new Invoker($service, $envelope), $resolver->resolve($envelope));
     }
 
     public function testItThrowsExceptionIfServiceCannotBeFound()

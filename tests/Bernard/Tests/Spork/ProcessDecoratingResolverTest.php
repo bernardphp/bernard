@@ -3,7 +3,7 @@
 namespace Bernard\Tests\ServiceResolver;
 
 use Bernard\Spork\ProcessDecoratingResolver;
-use Bernard\Spork\ProcessInvocator;
+use Bernard\Spork\ProcessInvoker;
 
 class ProcessDecoratingResolverTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,9 +27,9 @@ class ProcessDecoratingResolverTest extends \PHPUnit_Framework_TestCase
         $resolver->register('name', 'service');
     }
 
-    public function testItWrapsInvocatorWithProcessDecoratingInvocator()
+    public function testItWrapsInvokerWithProcessDecoratingInvoker()
     {
-        $invocator = $this->getMockBuilder('Bernard\ServiceResolver\Invocator')
+        $invocator = $this->getMockBuilder('Bernard\ServiceResolver\Invoker')
             ->disableOriginalConstructor()->getMock();
 
         $envelope = $this->getMockBuilder('Bernard\Message\Envelope')
@@ -39,7 +39,7 @@ class ProcessDecoratingResolverTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($invocator));
 
         $resolver = new ProcessDecoratingResolver($this->spork, $this->resolver);
-        $this->assertInstanceOf('Bernard\Spork\ProcessInvocator', $resolver->resolve($envelope));
+        $this->assertInstanceOf('Bernard\Spork\ProcessInvoker', $resolver->resolve($envelope));
 
     }
 }

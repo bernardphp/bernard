@@ -7,10 +7,10 @@ use Bernard\ServiceResolver;
 use Spork\ProcessManager;
 
 /**
- * Decorates an ordinary ServiceResolver and will return ForkingInvocator
+ * Decorates an ordinary ServiceResolver and will return ForkingInvoker
  * for the resolve method.
  *
- * @see ForkingInvocator
+ * @see ForkingInvoker
  * @package Bernard
  */
 class ProcessDecoratingResolver implements \Bernard\ServiceResolver
@@ -20,7 +20,7 @@ class ProcessDecoratingResolver implements \Bernard\ServiceResolver
 
     /**
      * @param ProcessManager $manager
-     * @param Invocator      $invocator
+     * @param Invoker      $invocator
      */
     public function __construct(ProcessManager $manager, ServiceResolver $resolver)
     {
@@ -41,6 +41,6 @@ class ProcessDecoratingResolver implements \Bernard\ServiceResolver
      */
     public function resolve(Envelope $envelope)
     {
-        return new ProcessInvocator($this->spork, $this->resolver->resolve($envelope));
+        return new ProcessInvoker($this->spork, $this->resolver->resolve($envelope));
     }
 }

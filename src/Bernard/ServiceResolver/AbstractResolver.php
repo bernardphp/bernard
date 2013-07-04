@@ -18,16 +18,16 @@ abstract class AbstractResolver implements \Bernard\ServiceResolver
             throw new \InvalidArgumentException('No service registered for envelope "' . $envelope->getName() . '".');
         }
 
-        return $this->getInvocator($object, $envelope);
+        return $this->getInvoker($object, $envelope);
     }
 
     abstract protected function getService(Envelope $envelope);
 
     /**
-     * @return Invocator
+     * @return Invoker
      */
-    protected function getInvocator($object, Envelope $envelope)
+    protected function getInvoker($object, Envelope $envelope)
     {
-        return new Invocator($object, $envelope);
+        return new Invoker($object, $envelope);
     }
 }
