@@ -1,5 +1,5 @@
 {
-    "name"        : "henrikbjorn/bernard",
+    "name"        : "bernard/bernard",
     "description" : "Message queue implemented in PHP with Redis as a backend.",
     "license"     : "MIT",
 
@@ -10,6 +10,10 @@
     "require" : {
         "php" : ">=5.3.3"
     },
+
+    "replace" : {
+        "henrikbjorn/bernard" : "self.version"
+    }
 
     "require-dev" : {
         "ext-redis"                    : "~2.2",

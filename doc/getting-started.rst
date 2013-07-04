@@ -9,7 +9,7 @@ If your projects do not already use this, it is highly recommended to start.
 
 .. code-block:: bash
 
-    $ composer require henrikbjorn/bernard:0.4.0@dev
+    $ composer require bernard/bernard:0.6.0
 
 Then look at what kind of drivers and serializers there is available and install their dependencies
 before use.
