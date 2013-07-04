@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.7.0 / yyyy-mm-dd
+------------------
+
+ * BC Break. Rename `Invocator` to `Invoker` as the former is not a word.
+
 0.6.1 / 2013-07-03
 ------------------
 
