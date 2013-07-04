@@ -13,7 +13,7 @@
 
     "replace" : {
         "henrikbjorn/bernard" : "self.version"
-    }
+    },
 
     "require-dev" : {
         "ext-redis"                    : "~2.2",
