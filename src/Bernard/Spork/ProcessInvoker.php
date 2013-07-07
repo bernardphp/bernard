@@ -16,16 +16,16 @@ use Spork\ProcessManager;
  */
 class ProcessInvoker extends Invoker
 {
-    protected $invocator;
+    protected $invoker;
     protected $spork;
 
     /**
      * @param ProcessManager $manager
-     * @param Invoker      $invocator
+     * @param Invoker        $invoker
      */
-    public function __construct(ProcessManager $manager, Invoker $invocator)
+    public function __construct(ProcessManager $manager, Invoker $invoker)
     {
-        $this->invocator = $invocator;
+        $this->invoker = $invoker;
         $this->spork = $manager;
     }
 
@@ -34,7 +34,7 @@ class ProcessInvoker extends Invoker
      */
     public function invoke()
     {
-        $fork = $this->spork->fork(array($this->invocator, 'invoke'));
+        $fork = $this->spork->fork(array($this->invoker, 'invoke'));
         $fork->fail(array($this, 'fail'));
         $fork->wait();
     }

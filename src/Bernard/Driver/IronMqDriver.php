@@ -15,7 +15,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     protected $ironmq;
 
     /**
-     * @param IronMQ $ironmq
+     * @param IronMQ       $ironmq
      * @param integer|null $prefetch
      */
     public function __construct(IronMQ $ironmq, $prefetch = null)
@@ -140,7 +140,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * The missing array_pluck but for objects array
      *
-     * @param array $objects
+     * @param array  $objects
      * @param string $property
      * @retrun array
      */

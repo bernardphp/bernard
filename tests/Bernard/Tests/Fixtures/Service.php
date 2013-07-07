@@ -4,7 +4,7 @@ namespace Bernard\Tests\Fixtures;
 
 class Service
 {
-    static $onImportUsers = false;
+    public static $onImportUsers = false;
 
     public function onFailSendNewsletter()
     {

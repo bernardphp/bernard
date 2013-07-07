@@ -5,7 +5,6 @@ namespace Bernard\Tests\Driver;
 use Aws\Sqs\SqsClient;
 use Bernard\Driver\SqsDriver;
 use Guzzle\Service\Resource\Model;
-use Aws\Sqs\Enum\QueueAttribute;
 
 class SqsDriverTest extends \PHPUnit_Framework_TestCase
 {

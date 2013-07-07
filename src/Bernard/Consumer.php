@@ -41,11 +41,11 @@ class Consumer
     }
 
     /**
-     * Returns true do indicate it should be run again or false to indicate 
+     * Returns true do indicate it should be run again or false to indicate
      * it should not be run again.
      *
-     * @param Queue $queue
-     * @param Queue|null $failed
+     * @param  Queue      $queue
+     * @param  Queue|null $failed
      * @return boolean
      */
     public function tick(Queue $queue, Queue $failed = null)
@@ -63,8 +63,8 @@ class Consumer
         }
 
         try {
-            $invocator = $this->services->resolve($envelope);
-            $invocator->invoke();
+            $invoker = $this->services->resolve($envelope);
+            $invoker->invoke();
 
             $queue->acknowledge($envelope);
         } catch (Exception $e) {

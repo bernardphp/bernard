@@ -13,28 +13,28 @@ class ProcessInvokerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->invocator = $this->getMockBuilder('Bernard\ServiceResolver\Invoker')
+        $this->invoker = $this->getMockBuilder('Bernard\ServiceResolver\Invoker')
             ->disableOriginalConstructor()->getMock();
         $this->spork = $this->getMock('Spork\ProcessManager');
     }
 
     public function testItsAnInvoker()
     {
-        $this->assertInstanceOf('Bernard\ServiceResolver\Invoker', new ProcessInvoker($this->spork, $this->invocator));
+        $this->assertInstanceOf('Bernard\ServiceResolver\Invoker', new ProcessInvoker($this->spork, $this->invoker));
     }
 
     public function testItForksWhenInvoked()
     {
-        $invocator = new ProcessInvoker($this->spork, $this->invocator);
+        $invoker = new ProcessInvoker($this->spork, $this->invoker);
 
         $fork = $this->getMockBuilder('Spork\Fork')->disableOriginalConstructor()->getMock();
         $fork->expects($this->once())->method('wait');
-        $fork->expects($this->once())->method('fail')->with($this->equalTo(array($invocator, 'fail')));
+        $fork->expects($this->once())->method('fail')->with($this->equalTo(array($invoker, 'fail')));
 
         $this->spork->expects($this->once())->method('fork')
-            ->with($this->equalTo(array($this->invocator, 'invoke')))->will($this->returnValue($fork));
+            ->with($this->equalTo(array($this->invoker, 'invoke')))->will($this->returnValue($fork));
 
-        $invocator->invoke();
+        $invoker->invoke();
     }
 
     public function testExceptionsAreConvertedToProcessLogicException()
@@ -48,9 +48,9 @@ class ProcessInvokerTest extends \PHPUnit_Framework_TestCase
         $service = new Fixtures\Service;
         $envelope = new Envelope(new DefaultMessage('FailSendMessage'));
 
-        $invocator = new Invoker($service, $envelope);
+        $invoker = new Invoker($service, $envelope);
 
-        $forking = new ProcessInvoker(new ProcessManager(), $invocator);
+        $forking = new ProcessInvoker(new ProcessManager(), $invoker);
         $forking->invoke();
     }
 }

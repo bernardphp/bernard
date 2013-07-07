@@ -40,9 +40,9 @@ interface Driver
      * Remove the next message in line. And if no message is available
      * wait $interval seconds.
      *
-     * @param string  $queueName
-     * @param integer $interval
-     * @return array An array like array($message, $receipt);
+     * @param  string  $queueName
+     * @param  integer $interval
+     * @return array   An array like array($message, $receipt);
      */
     public function popMessage($queueName, $interval = 5);
 
@@ -51,7 +51,7 @@ interface Driver
      * have been consumed.
      *
      * @param string $queuename
-     * @param mixed $receipt
+     * @param mixed  $receipt
      */
     public function acknowledgeMessage($queueName, $receipt);
 

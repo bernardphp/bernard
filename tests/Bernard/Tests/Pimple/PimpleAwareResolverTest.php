@@ -20,7 +20,7 @@ class PimpleAwareResolverTest extends \PHPUnit_Framework_TestCase
     public function testExceptionWhenMessageCannotBeResolved()
     {
         $this->setExpectedException('InvalidArgumentException',
-            'No service registered for envelope "SendNewsletter".'); 
+            'No service registered for envelope "SendNewsletter".');
 
         $resolver = $this->createResolver();
 
@@ -43,7 +43,7 @@ class PimpleAwareResolverTest extends \PHPUnit_Framework_TestCase
     public function testExceptionWhenServiceDosentExistOnContainer()
     {
         $this->setExpectedException('InvalidArgumentException',
-            'Identifier "non_existant_service_id" is not defined.'); 
+            'Identifier "non_existant_service_id" is not defined.');
 
         $resolver = $this->createResolver();
         $resolver->register('SendNewsletter', 'non_existant_service_id');

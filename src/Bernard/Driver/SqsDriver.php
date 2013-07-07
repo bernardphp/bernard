@@ -3,8 +3,6 @@
 namespace Bernard\Driver;
 
 use Aws\Sqs\SqsClient;
-use Bernard\Message\Envelope;
-use SplQueue;
 
 /**
  * Implements a Driver for use with AWS SQS client API:
@@ -18,8 +16,8 @@ class SqsDriver extends AbstractPrefetchDriver
     protected $queueUrls;
 
     /**
-     * @param SqsClient $client
-     * @param array     $queueUrls
+     * @param SqsClient    $client
+     * @param array        $queueUrls
      * @param integer|null $prefetch
      */
     public function __construct(SqsClient $sqs, array $queueUrls = array(), $prefetch = null)

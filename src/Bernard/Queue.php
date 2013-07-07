@@ -32,10 +32,9 @@ interface Queue extends \Countable
      */
     public function peek($index = 1, $limit = 20);
 
-
     /**
      * SQS requires that a message will be acknowledged or it will be moved back
-     * into the queue. 
+     * into the queue.
      *
      * @param Envelope $envelope
      */

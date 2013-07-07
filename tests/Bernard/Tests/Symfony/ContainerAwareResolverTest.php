@@ -18,7 +18,7 @@ class ContainerAwareResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionWhenMessageCannotBeResolved()
     {
-        $this->setExpectedException('InvalidArgumentException', 'No service registered for envelope "SendNewsletter".'); 
+        $this->setExpectedException('InvalidArgumentException', 'No service registered for envelope "SendNewsletter".');
 
         $resolver = $this->createResolver();
         $envelope = $this->createEnvelope();
@@ -48,7 +48,6 @@ class ContainerAwareResolverTest extends \PHPUnit_Framework_TestCase
         $resolver->register('SendNewsletter', 'non_existant_service_id');
         $resolver->resolve($this->createEnvelope());
     }
-
 
     protected function createEnvelope()
     {
