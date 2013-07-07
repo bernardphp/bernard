@@ -14,6 +14,8 @@ class Consumer
 {
     protected $services;
     protected $shutdown = false;
+    protected $configured = false;
+    protected $bound = false;
     protected $options = array(
         'max-retries' => 5,
         'max-runtime' => PHP_INT_MAX,
@@ -32,10 +34,7 @@ class Consumer
      */
     public function consume(Queue $queue, Queue $failed = null, array $options = array())
     {
-        $this->bind();
-        $this->configure($options);
-
-        while ($this->tick($queue, $failed)) {
+        while ($this->tick($queue, $failed, $options)) {
             // NO op
         }
     }
@@ -48,8 +47,11 @@ class Consumer
      * @param  Queue|null $failed
      * @return boolean
      */
-    public function tick(Queue $queue, Queue $failed = null)
+    public function tick(Queue $queue, Queue $failed = null, array $options = array())
     {
+        $this->bind();
+        $this->configure($options);
+
         if ($this->shutdown) {
             return false;
         }
@@ -72,15 +74,6 @@ class Consumer
         }
 
         return true;
-    }
-
-    /**
-     * @param array $options
-     */
-    public function configure(array $options)
-    {
-        $this->options = array_filter($options) + $this->options;
-        $this->options['max-runtime'] += microtime(true);
     }
 
     /**
@@ -113,12 +106,33 @@ class Consumer
     }
 
     /**
+     * @param array $options
+     */
+    protected function configure(array $options)
+    {
+        if ($this->configured) {
+            return $this->options;
+        }
+
+        $this->options = array_filter($options) + $this->options;
+        $this->options['max-runtime'] += microtime(true);
+        $this->configured = true;
+    }
+
+
+    /**
      * Setup signal handlers for unix signals.
      */
     protected function bind()
     {
+        if ($this->bound) {
+            return;
+        }
+
         pcntl_signal(SIGTERM, array($this, 'shutdown'));
         pcntl_signal(SIGQUIT, array($this, 'shutdown'));
         pcntl_signal(SIGINT,  array($this, 'shutdown'));
+
+        $this->bound = true;
     }
 }

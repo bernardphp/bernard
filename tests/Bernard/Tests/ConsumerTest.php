@@ -29,12 +29,9 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
     {
         $queue = new InMemoryQueue('queue');
 
-        // Make sure max runtime is a looongtime in the past
-        $this->consumer->configure(array(
+        $this->assertFalse($this->consumer->tick($queue, null, array(
             'max-runtime' => -1 * PHP_INT_MAX,
-        ));
-
-        $this->assertFalse($this->consumer->tick($queue));
+        )));
     }
 
     public function testNoEnvelopeInQueue()
@@ -57,8 +54,17 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($service::$onImportUsers);
     }
 
-    public function testFailedMessagesIsRequeuedAndMovedToFailed()
+    /**
+     * @dataProvider failMaxRetriesProvider
+     */
+    public function testFailedMessagesIsRequeuedAndMovedToFailed($maxRetries = null)
     {
+        $options = array_filter(array(
+            'max-retries' => $maxRetries,
+        ));
+
+        $maxRetries = $maxRetries ?: 5;
+
         $service = new Fixtures\Service;
         $envelope = new Envelope(new DefaultMessage('SendNewsleter'));
 
@@ -70,20 +76,27 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(0, $envelope->getRetries());
 
-        $this->consumer->tick($queue, $failed);
-        $this->consumer->tick($queue, $failed);
-        $this->consumer->tick($queue, $failed);
-        $this->consumer->tick($queue, $failed);
-        $this->consumer->tick($queue, $failed);
+        for ($i = 0;$i < $maxRetries;$i++) {
+            $this->consumer->tick($queue, $failed, $options);
+        }
 
-        $this->assertEquals(5, $envelope->getRetries());
+        $this->assertEquals($maxRetries, $envelope->getRetries());
         $this->assertEquals(1, $queue->count());
         $this->assertEquals(0, $failed->count());
 
-        $this->consumer->tick($queue, $failed);
+        $this->consumer->tick($queue, $failed, $options);
 
         $this->assertEquals(0, $queue->count());
         $this->assertEquals(1, $failed->count());
         $this->assertSame($envelope, $failed->dequeue());
+    }
+
+    public function failMaxRetriesProvider()
+    {
+        return array(
+            array(null),
+            array(3),
+            array(5),
+        );
     }
 }
