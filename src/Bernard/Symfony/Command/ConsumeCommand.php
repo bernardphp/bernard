@@ -26,7 +26,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
         $this->consumer = $consumer;
         $this->queues = $queues;
 
-        parent::__construct();
+        parent::__construct('bernard:consume');
     }
 
     /**
@@ -35,7 +35,6 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     public function configure()
     {
         $this
-            ->setName('bernard:consume')
             ->addOption('max-retries', null, InputOption::VALUE_OPTIONAL, 'Number of times a message will be requeued before marked as failed.', null)
             ->addOption('max-runtime', null, InputOption::VALUE_OPTIONAL, 'Maximum time in seconds the consumer will run.', null)
             ->addOption('failed', null, InputOption::VALUE_OPTIONAL, 'Messages failed more than {max-retries} will be queued here.', null)
