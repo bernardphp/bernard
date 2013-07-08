@@ -13,12 +13,12 @@ class ProcessInvokerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->spork = new ProcessManager();
-        $this->service = new Fixtures\Service;
-
         if (!function_exists('pcntl_fork')) {
             $this->markTestSkipped('The extension "PCNTL" is required for forking to work.');
         }
+
+        $this->spork = new ProcessManager();
+        $this->service = new Fixtures\Service;
     }
 
     public function tearDown()
