@@ -34,9 +34,14 @@ class ProcessInvoker extends Invoker
      */
     public function invoke()
     {
-        $fork = $this->spork->fork(array($this->invoker, 'invoke'));
-        $fork->fail(array($this, 'fail'));
+        $invoker = $this->invoker;
+
+        $fork = $this->spork->fork(function () use ($invoker) {
+            $invoker->invoke();
+        });
+
         $fork->wait();
+        $fork->fail(array($this, 'fail'));
     }
 
     /**

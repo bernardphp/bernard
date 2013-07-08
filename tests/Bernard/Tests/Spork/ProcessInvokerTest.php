@@ -13,44 +13,44 @@ class ProcessInvokerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->invoker = $this->getMockBuilder('Bernard\ServiceResolver\Invoker')
-            ->disableOriginalConstructor()->getMock();
-        $this->spork = $this->getMock('Spork\ProcessManager');
+        $this->spork = new ProcessManager();
+        $this->service = new Fixtures\Service;
+
+        if (!function_exists('pcntl_fork')) {
+            $this->markTestSkipped('The extension "PCNTL" is required for forking to work.');
+        }
+    }
+
+    public function tearDown()
+    {
+        @unlink(__DIR__ . '/../Fixtures/create_file.test');
     }
 
     public function testItsAnInvoker()
     {
-        $this->assertInstanceOf('Bernard\ServiceResolver\Invoker', new ProcessInvoker($this->spork, $this->invoker));
+        $this->assertInstanceOf('Bernard\ServiceResolver\Invoker', new ProcessInvoker($this->spork, $this->createInvoker('ImportUsers')));
     }
 
-    public function testItForksWhenInvoked()
+    public function testItInvokesDecoratedInvoker()
     {
-        $invoker = new ProcessInvoker($this->spork, $this->invoker);
-
-        $fork = $this->getMockBuilder('Spork\Fork')->disableOriginalConstructor()->getMock();
-        $fork->expects($this->once())->method('wait');
-        $fork->expects($this->once())->method('fail')->with($this->equalTo(array($invoker, 'fail')));
-
-        $this->spork->expects($this->once())->method('fork')
-            ->with($this->equalTo(array($this->invoker, 'invoke')))->will($this->returnValue($fork));
-
+        $invoker = new ProcessInvoker($this->spork, $this->createInvoker('CreateFile'));
         $invoker->invoke();
+
+        // This is a hack, since memory is isolated from parent and there is no direct link
+        // to the fork used.
+        $this->assertTrue(is_file(__DIR__ . '/../Fixtures/create_file.test'));
     }
 
     public function testExceptionsAreConvertedToProcessLogicException()
     {
-        if (!function_exists('pcntl_fork')) {
-            $this->markTestSkipped('The extension "PCNTL" is required for forking to work.');
-        }
-
         $this->setExpectedException('Bernard\Spork\Exception\ProcessException');
 
-        $service = new Fixtures\Service;
-        $envelope = new Envelope(new DefaultMessage('FailSendMessage'));
-
-        $invoker = new Invoker($service, $envelope);
-
-        $forking = new ProcessInvoker(new ProcessManager(), $invoker);
+        $forking = new ProcessInvoker($this->spork, $this->createInvoker('FailSendNewsletter'));
         $forking->invoke();
+    }
+
+    public function createInvoker($name)
+    {
+        return new Invoker($this->service, new Envelope(new DefaultMessage($name)));
     }
 }

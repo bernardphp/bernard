@@ -15,4 +15,9 @@ class Service
     {
         static::$onImportUsers = true;
     }
+
+    public function onCreateFile()
+    {
+        touch(__DIR__ . '/create_file.test');
+    }
 }
