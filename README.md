@@ -1,7 +1,7 @@
 Bernard
 =======
 
-[![Build Status](https://travis-ci.org/henrikbjorn/Bernard.png?branch=master)][travis]
+[![Build Status](https://travis-ci.org/bernardphp/bernard.png?branch=master)][travis]
 
 Bernard is a library that helps with writing distributed systems and offloading task to the background. It supports
 different backends such as:
