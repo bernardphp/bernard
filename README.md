@@ -25,4 +25,4 @@ Special Thanks
 
 [documentation]: http://bernard.rtfd.org
 [peytz]: http://peytz.dk
-[travis]: https://travis-ci.org/henrikbjorn/Bernard
+[travis]: https://travis-ci.org/bernardphp/bernard
