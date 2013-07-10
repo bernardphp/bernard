@@ -4,7 +4,6 @@ namespace Bernard\Symfony\Command;
 
 use Bernard\Producer;
 use Bernard\Message\DefaultMessage;
-use Bernard\QueueFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,8 +32,8 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
     public function configure()
     {
         $this
-            ->addArgument('service', InputArgument::REQUIRED, 'Name of the service (i.e. job), as registered in the bernard config.')
-            ->addArgument('data', InputArgument::OPTIONAL, 'JSON encoded data for the new job.')
+            ->addArgument('name', InputArgument::REQUIRED, 'Name for the message eg. "ImportUsers".')
+            ->addArgument('message', InputArgument::OPTIONAL, 'JSON encoded string that is used for message properties.')
         ;
     }
 
@@ -43,18 +42,13 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $service = $input->getArgument('service');
-        // todo: check whether service registered`
+        $name    = $input->getArgument('name');
+        $message = json_decode($input->getArgument('message'), true) ?: array();
 
-        $data = $input->getArgument('data') ?: array();
-        if ($data) {
-            try {
-                $data = json_decode($data, true);
-            } catch (\Exception $e) {
-                throw new \InvalidArgumentException("Failed to parse json data");
-            }
+        if (json_last_error()) {
+            throw new \RuntimeException('An error occured while decoding JSON data "' . json_last_error() . '".');
         }
 
-        $this->producer->produce(new DefaultMessage($service, $data));
+        $this->producer->produce(new DefaultMessage($name, $message));
     }
 }

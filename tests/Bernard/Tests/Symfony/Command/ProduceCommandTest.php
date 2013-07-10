@@ -16,19 +16,16 @@ class ProduceCommandTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
     }
 
-    public function testItProducesMessage()
+    public function testProduceMessageWithNoArguments()
     {
         $command = new ProduceCommand($this->producer);
         $message = new DefaultMessage('SendNewsletter');
 
-        $this->producer
-            ->expects($this->once())
-            ->method('produce')
-            ->with($this->equalTo($message));
+        $this->producer->expects($this->once())->method('produce')->with($this->equalTo($message));
 
         $tester = new CommandTester($command);
         $tester->execute(array(
-            'service' => 'SendNewsletter'
+            'name' => 'SendNewsletter'
         ));
     }
 
@@ -37,15 +34,12 @@ class ProduceCommandTest extends \PHPUnit_Framework_TestCase
         $command = new ProduceCommand($this->producer);
         $message = new DefaultMessage('SendNewsletter', array('foo' => 'bar'));
 
-        $this->producer
-            ->expects($this->once())
-            ->method('produce')
-            ->with($this->equalTo($message));
+        $this->producer->expects($this->once())->method('produce')->with($this->equalTo($message));
 
         $tester = new CommandTester($command);
         $tester->execute(array(
-            'service' => 'SendNewsletter',
-            'data'    => '{"foo":"bar"}'
+            'name'    => 'SendNewsletter',
+            'message' => '{"foo":"bar"}'
         ));
     }
 }
