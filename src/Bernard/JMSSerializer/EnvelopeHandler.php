@@ -94,9 +94,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
         $visitor->setNavigator($context->getNavigator());
 
         foreach (array('retries', 'timestamp', 'class') as $name) {
-            $property = new \ReflectionProperty($envelope, $name);
-            $property->setAccessible(true);
-            $property->setValue($envelope, $data[$name]);
+            Utils::forceObjectPropertyValue($envelope, $name, $data[$name]);
         }
 
         return $envelope;

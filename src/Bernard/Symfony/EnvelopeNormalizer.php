@@ -44,9 +44,7 @@ class EnvelopeNormalizer extends SerializerAwareNormalizer implements Normalizer
         $envelope = new Envelope($this->serializer->denormalize($data['args'], $class, $format, $context));
 
         foreach (array('timestamp', 'retries', 'class') as $name) {
-            $property = new \ReflectionProperty($envelope, $name);
-            $property->setAccessible(true);
-            $property->setValue($envelope, $data[$name]);
+            Utils::forceObjectPropertyValue($envelope, $name, $data[$name]);
         }
 
         return $envelope;
