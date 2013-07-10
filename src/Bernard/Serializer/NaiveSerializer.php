@@ -53,9 +53,7 @@ class NaiveSerializer implements \Bernard\Serializer
         $envelope = new Envelope(new DefaultMessage($data['args']['name'], $data['args']));
 
         foreach (array('timestamp', 'retries', 'class') as $name) {
-            $property = new \ReflectionProperty($envelope, $name);
-            $property->setAccessible(true);
-            $property->setValue($envelope, $data[$name]);
+            Utils::forceObjectPropertyValue($envelope, $name, $data[$name]);
         }
 
         return $envelope;
