@@ -32,6 +32,7 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('my-message-1', 'my-message-2'), $this->driver->peekQueue('send-newsletter'));
         $this->assertEquals(array('my-message-2'), $this->driver->peekQueue('send-newsletter', 1));
         $this->assertEquals(array('my-message-1'), $this->driver->peekQueue('send-newsletter', 0, 1));
+        $this->assertEquals(array(), $this->driver->peekQueue('import-users'));
 
         // popping messages
         $this->assertEquals(array('my-message-1', 1), $this->driver->popMessage('send-newsletter'));
