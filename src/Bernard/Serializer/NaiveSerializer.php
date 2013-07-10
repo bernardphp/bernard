@@ -29,12 +29,12 @@ class NaiveSerializer implements \Bernard\Serializer
             )));
         }
 
-        return array(
+        return json_encode(array(
             'args'      => array('name' => $message->getName()) + get_object_vars($message),
             'class'     => Utils::encodeClassName($envelope->getClass()),
             'timestamp' => $envelope->getTimestamp(),
             'retries'   => $envelope->getRetries(),
-        );
+        ));
     }
 
     /**
