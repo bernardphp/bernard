@@ -4,6 +4,7 @@ namespace Bernard\Serializer;
 
 use Bernard\Message\DefaultMessage;
 use Bernard\Message\Envelope;
+use Bernard\Utils;
 
 /**
  * Very simple Serializer that only supports DefaultMessage
@@ -12,20 +13,25 @@ use Bernard\Message\Envelope;
  *
  * @package Bernard
  */
-class NativeSerializer implements \Bernard\Serializer
+class NaiveSerializer implements \Bernard\Serializer
 {
     /**
      * {@inheritDoc}
      */
     public function serialize(Envelope $envelope)
     {
-        if (!$envelope->getMessage() instanceof DefaultMessage) {
-            die('only dfault message');
+        $message = $envelope->getMessage();
+
+        if ($envelope->getClass() != 'Bernard\Message\DefaultMessage') {
+            throw new \InvalidArgumentException(strtr('Expected instance of "%expected%" but got "%actual%".', array(
+                '%expected%' => 'Bernard\Message\DefaultMessage',
+                '%actual%'   => $envelope->getClass(),
+            )));
         }
 
         return array(
-            'args'      => array('name' => $envelope->getName()) + get_object_vars($envelope->getMessage()),
-            'class'     => str_replace('\\', ':', $envelope->getClass()),
+            'args'      => array('name' => $message->getName()) + get_object_vars($message),
+            'class'     => Utils::encodeClassName($envelope->getClass()),
             'timestamp' => $envelope->getTimestamp(),
             'retries'   => $envelope->getRetries(),
         );
@@ -38,7 +44,7 @@ class NativeSerializer implements \Bernard\Serializer
     {
         // everything is just deserialized into an DefaultMessage
         $data = json_decode($serialized, true);
-        $data['class'] = str_replace(':', '\\', $data['class']);
+        $data['class'] = Utils::decodeClassString($data['class']);
 
         if ($data['class'] !== 'Bernard\Message\DefaultMessage') {
             $data['args']['name'] = current(array_reverse(explode('\\', $data['class'])));
