@@ -43,26 +43,17 @@ any number of proberties and only needs a name for the message. The queue name
 is then generated from that. When generating the queue name it will insert a "_"
 before any uppercase letters and then lowercase everything.
 
-Messages are serialized to json using `JMS Serializer <http://jmsyst.com/libs/serializer>`_.
-Therefore an instance of that is required. Also if custom message classes are
-used it is needed to add metadata for being able to serialize and deserialize them.
-
 .. code-block:: php
 
     <?php
 
     use Bernard\Message\DefaultMessage;
-    use Bernard\Message\Envelope;
     use Bernard\Producer;
     use Bernard\QueueFactory\PersistentFactory;
-    use Bernard\Serializer\JMSSerializer;
+    use Bernard\Serializer\NaiveSerializer;
 
-    // .. create serializer instance where src/Bernard/Resources/serializer
-    // is registered as a metadata dir with "Bernard" as prefix.
-    $serializer = new JMSSerializer($jmsSerializer);
-
-    // .. create driver
-    $factory = new PersistentFactory($driver, $serializer);
+    // .. create $driver
+    $factory = new PersistentFactory($driver, new NaiveSerializer);
     $producer = new Producer($factory);
 
     $message = new DefaultMessage("SendNewsletter", array(
@@ -70,9 +61,6 @@ used it is needed to add metadata for being able to serialize and deserialize th
     ));
 
     $producer->produce($message);
-
-    // or give it to a queue directly. The queue will be created if it doesn't exist
-    $factory->create('my-queue')->enqueue(new Envelope($message));
 
 In Memory Queues
 ~~~~~~~~~~~~~~~~
