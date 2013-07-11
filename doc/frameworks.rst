@@ -8,8 +8,8 @@ a number of integrations have been created.
 Silex
 -----
 
-There is a `BernardServiceProvider <https://github.com/bernardphp/silex`_
-which enables usage of Bernard in your Silex applications.
+There is a `bernard/silex <https://github.com/bernardphp/silex>`_ package which enables usage
+of Bernard in your Silex applications.
 
 Laravel
 -------
