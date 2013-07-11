@@ -14,7 +14,7 @@ class Utils
     }
 
     /**
-     * @param string $className
+     * @param  string $className
      * @return string
      */
     public static function encodeClassName($className)
@@ -23,7 +23,7 @@ class Utils
     }
 
     /**
-     * @param string $encodedClassName
+     * @param  string $encodedClassName
      * @return string
      */
     public static function decodeClassString($classString)
@@ -36,7 +36,7 @@ class Utils
      *
      * @param object $object
      * @param string $property
-     * @param mixed $value
+     * @param mixed  $value
      */
     public static function forceObjectPropertyValue($object, $property, $value)
     {

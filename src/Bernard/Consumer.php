@@ -119,7 +119,6 @@ class Consumer
         $this->configured = true;
     }
 
-
     /**
      * Setup signal handlers for unix signals.
      */
