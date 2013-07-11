@@ -7,6 +7,21 @@ on. So far the examples have been using JMS as it was the first supported.
 JMS Serializer is only recommended if you already uses this serializer or have advanced serialization needs in
 your application.
 
+Naive
+-----
+
+Bernard ships with a Naive serializer, which only supports using `DefaultMessage` messages. And as such it
+should only be used when starting up or playing with Bernard.
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Serializer\NaiveSerializer;
+
+    $serializer = new NaiveSerializer();
+
+
 Symfony Serializer Component
 ----------------------------
 
