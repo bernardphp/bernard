@@ -1,25 +1,82 @@
 <?php
 
-use Predis\Client;
-use Bernard\Driver\PredisDriver;
-use Bernard\Serializer\SymfonySerializer;
-use Bernard\Symfony\EnvelopeNormalizer;
-use Bernard\Symfony\DefaultMessageNormalizer;
+use Bernard\Consumer;
+use Bernard\Message\DefaultMessage;
+use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Bernard\Serializer\NaiveSerializer;
+use Bernard\ServiceResolver\ObjectResolver;
+
+/**
+ * This file contains helper methods for the examples. See example/$driver.php
+ * for how to initiate the driver. Also the helper methods can be used as 
+ * guidance if you are using Bernard outside a framework or you are developing
+ * a plugin to a framework.
+ */
 
 require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/EchoTimeService.php';
 
 ini_set('display_erros', 1);
 error_reporting(E_ALL);
 
-$normalizers = array(new EnvelopeNormalizer, new DefaultMessageNormalizer);
-$serializer = new SymfonySerializer(
-    new Serializer($normalizers, array(new JsonEncoder))
-);
+function get_serializer() {
+    return new NaiveSerializer;
+}
 
-$connection = new PredisDriver(new Client(null, array(
-    'prefix' => 'bernard:',
-)));
-$queues = new PersistentFactory($connection, $serializer);
+function get_queue_factory() {
+    return new PersistentFactory(get_driver(), get_serializer());
+}
+
+function get_producer() {
+    return new Producer(get_queue_factory());
+}
+
+function get_services() {
+    $resolver = new ObjectResolver;
+    $resolver->register('EchoTime', new EchoTimeService);
+
+    return $resolver;
+}
+
+function get_consumer() {
+    return new Consumer(get_services());
+}
+
+function produce() {
+    $producer = get_producer();
+
+    while (true) {
+        $producer->produce(new DefaultMessage('EchoTime', array(
+            'time' => time(),
+        )));
+
+        usleep(rand(100, 1000));
+    }
+}
+
+function consume() {
+    $queues   = get_queue_factory();
+    $consumer = get_consumer();
+
+    $consumer->consume($queues->create('echo-time'), $queues->create('failed'), array(
+        'max_retries' => 5,
+    ));
+}
+
+function main() {
+    if (!isset($_SERVER['argv'][1])) {
+        die('You must provide an argument of either "consume" or "produce"');
+    }
+
+    if ($_SERVER['argv'][1] == 'produce') {
+        produce();
+    }
+
+    if ($_SERVER['argv'][1] == 'consume') {
+        consume();
+    }
+}
+
+// Run this diddy
+main();
