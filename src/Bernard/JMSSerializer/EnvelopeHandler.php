@@ -4,6 +4,7 @@ namespace Bernard\JMSSerializer;
 
 use Bernard\Message\DefaultMessage;
 use Bernard\Message\Envelope;
+use Bernard\Utils;
 use JMS\Serializer\AbstractVisitor;
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
@@ -57,7 +58,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
 
         $data = array(
             'args'      => $context->accept($envelope->getMessage(), $type),
-            'class'     => str_replace('\\', ':', $envelope->getClass()),
+            'class'     => Utils::encodeClassName($envelope->getClass()),
             'timestamp' => $envelope->getTimestamp(),
             'retries'   => $envelope->getRetries(),
         );
@@ -76,7 +77,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
      */
     public function deserializeEnvelope(AbstractVisitor $visitor, array $data, $type, Context $context)
     {
-        $data['class'] = str_replace(':', '\\', $data['class']);
+        $data['class'] = Utils::decodeClassString($data['class']);
 
         $type = array(
             'name' => $data['class'],
@@ -84,8 +85,8 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
         );
 
         if (!class_exists($data['class'])) {
-            $type['name'] = 'Bernard\Message\DefaultMessage';
             $data['args']['name'] = current(array_reverse(explode('\\', $data['class'])));
+            $type['name'] = 'Bernard\Message\DefaultMessage';
         }
 
         $envelope = new Envelope($context->accept($data['args'], $type));
@@ -93,9 +94,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
         $visitor->setNavigator($context->getNavigator());
 
         foreach (array('retries', 'timestamp', 'class') as $name) {
-            $property = new \ReflectionProperty($envelope, $name);
-            $property->setAccessible(true);
-            $property->setValue($envelope, $data[$name]);
+            Utils::forceObjectPropertyValue($envelope, $name, $data[$name]);
         }
 
         return $envelope;

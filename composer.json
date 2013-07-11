@@ -16,7 +16,6 @@
     },
 
     "require-dev" : {
-        "ext-redis"                    : "~2.2",
         "jms/serializer"               : "~0.12",
         "pimple/pimple"                : "~1.0",
         "predis/predis"                : "~0.8",
