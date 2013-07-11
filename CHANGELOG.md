@@ -5,6 +5,8 @@ Changelog
 ------------------
 
  * BC Break. Rename `Invocator` to `Invoker` as the former is not a word.
+ * New `NaiveSerializer` with no dependencies.
+ * Fixed error in `DoctrineDriver` wheen peeking.
 
 0.6.1 / 2013-07-03
 ------------------

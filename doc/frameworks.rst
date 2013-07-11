@@ -8,5 +8,10 @@ a number of integrations have been created.
 Silex
 -----
 
-There is a `BernardServiceProvider <https://github.com/henrikbjorn/BernardServiceProvider>`_
-which enables usage of Bernard in your silex applications.
+There is a `BernardServiceProvider <https://github.com/bernardphp/silex`_
+which enables usage of Bernard in your Silex applications.
+
+Laravel
+-------
+
+The officially supported Laravel package can be found at `bernard/laravel <https://github.com/bernardphp/laravel>`_.
