@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.7.1 / 2013-07-12
+------------------
+
+ * Fix bug in `DoctrineDriver` with prepared statements and limit placeholders.
+
 0.7.0 / 2013-07-12
 ------------------
 

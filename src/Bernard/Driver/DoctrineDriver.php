@@ -110,10 +110,14 @@ class DoctrineDriver implements \Bernard\Driver
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
         $query = 'SELECT message FROM bernard_messages WHERE queue = ? LIMIT ?, ?';
-        $statement = $this->connection->executeQuery($query, array(
+        $params = array(
             $queueName,
             $index,
             $index + $limit,
+        );
+
+        $statement = $this->connection->executeQuery($query, $params, array(
+            'string', 'integer', 'integer'
         ));
 
         return $statement->fetchAll(\PDO::FETCH_COLUMN);
