@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.8.0 / YYYY-MM-DD
+------------------
+
+ * New schema for `DoctrineDriver`. Queues are now kept in a seperate table.
+
 0.7.1 / 2013-07-12
 ------------------
 
