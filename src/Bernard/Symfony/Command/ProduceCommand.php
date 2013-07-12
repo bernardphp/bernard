@@ -44,10 +44,33 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
         $name    = $input->getArgument('name');
         $message = json_decode($input->getArgument('message'), true) ?: array();
 
-        if (json_last_error()) {
-            throw new \RuntimeException('An error occured while decoding JSON data "' . json_last_error() . '".');
+        if (!json_last_error()) {
+            $this->producer->produce(new DefaultMessage($name, $message));
+
+            return;
         }
 
-        $this->producer->produce(new DefaultMessage($name, $message));
+        switch (json_last_error()) {
+            case JSON_ERROR_DEPTH:
+                $error = 'Maximum stack depth exceeded';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $error = 'Underflow or the modes mismatch';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $error = 'Unexpected control character found';
+                break;
+            case JSON_ERROR_SYNTAX:
+                $error = 'Syntax error, malformed JSON';
+                break;
+            case JSON_ERROR_UTF8:
+                $error = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                $error = 'Unknown error';
+                break;
+        }
+
+        throw new \RuntimeException('"'. $error .'" occured when decoding JSON data.');
     }
 }
