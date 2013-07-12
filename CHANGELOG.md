@@ -4,6 +4,7 @@ Changelog
 0.7.0 / yyyy-mm-dd
 ------------------
 
+ * Add `ProduceCommand` by @ukautz.
  * Refactor examples in `example` directory to remove ugly code.
  * BC Break. Rename `Invocator` to `Invoker` as the former is not a word.
  * New `NaiveSerializer` with no dependencies.
