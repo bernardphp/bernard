@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.7.0 / yyyy-mm-dd
+0.7.0 / 2013-07-12
 ------------------
 
  * Add `ProduceCommand` by @ukautz.
