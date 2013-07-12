@@ -27,3 +27,7 @@ Documentation
     frameworks
     cookbook
     monitoring
+
+----
+
+.. image:: _static/peytzco.png
