@@ -45,9 +45,7 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
         $message = json_decode($input->getArgument('message'), true) ?: array();
 
         if (!json_last_error()) {
-            $this->producer->produce(new DefaultMessage($name, $message));
-
-            return;
+            return $this->producer->produce(new DefaultMessage($name, $message));
         }
 
         switch (json_last_error()) {
