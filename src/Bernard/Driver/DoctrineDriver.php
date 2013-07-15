@@ -113,7 +113,7 @@ class DoctrineDriver implements \Bernard\Driver
         $params = array(
             $queueName,
             $index,
-            $index + $limit,
+            $limit,
         );
 
         $statement = $this->connection->executeQuery($query, $params, array(
