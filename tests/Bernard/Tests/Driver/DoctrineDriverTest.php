@@ -4,7 +4,9 @@ namespace Bernard\Tests\Driver;
 
 use Bernard\Doctrine\MessagesSchema;
 use Bernard\Driver\DoctrineDriver;
+
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Schema\Schema;
 
 class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,6 +24,37 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue((microtime(true) - $microtime) >= 0.001);
     }
+
+    public function testCreateAndRemoveQueue()
+    {
+        // Duplicates are not taking into account.
+        $this->driver->createQueue('import-users');
+        $this->driver->createQueue('send-newsletter');
+        $this->driver->createQueue('import-users');
+
+        $this->assertEquals(array('import-users',  'send-newsletter'), $this->driver->listQueues());
+
+        $this->driver->removeQueue('import-users');
+
+        $this->assertEquals(array('send-newsletter'), $this->driver->listQueues());
+    }
+
+    public function testPushMessageLazilyCreatesQueue()
+    {
+        $this->driver->pushMessage('send-newsletter', 'something');
+        $this->assertEquals(array('send-newsletter'), $this->driver->listQueues());
+    }
+
+    public function testRemoveQueueRemovesMessages()
+    {
+        $this->driver->pushMessage('send-newsletter', 'something');
+        $this->assertEquals(1, $this->driver->countMessages('send-newsletter'));
+
+        $this->driver->removeQueue('send-newsletter');
+
+        $this->assertEquals(0, $this->driver->countMessages('send-newsletter'));
+    }
+
 
     public function testItIsAQueue()
     {
@@ -98,8 +131,11 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
             'password' => 'notused',
         ));
 
-        $messagesSchema = new MessagesSchema;
-        $connection->getSchemaManager()->createTable($messagesSchema->createTable());
+        $schema = new Schema;
+
+        MessagesSchema::create($schema);
+
+        array_map(array($connection, 'executeQuery'), $schema->toSql($connection->getDatabasePlatform()));
 
         return $connection;
     }
