@@ -2,14 +2,14 @@
 
 namespace Bernard\Tests\Spork;
 
-use Bernard\Message\Envelope;
 use Bernard\Message\DefaultMessage;
+use Bernard\Message\Envelope;
 use Bernard\ServiceResolver\Invoker;
-use Bernard\Spork\ProcessInvoker;
+use Bernard\Spork\ServiceProxy;
 use Bernard\Tests\Fixtures;
 use Spork\ProcessManager;
 
-class ProcessInvokerTest extends \PHPUnit_Framework_TestCase
+class ServiceProxyTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -26,15 +26,20 @@ class ProcessInvokerTest extends \PHPUnit_Framework_TestCase
         @unlink(__DIR__ . '/../Fixtures/create_file.test');
     }
 
-    public function testItsAnInvoker()
+    public function testIsInvokedThroughInvoker()
     {
-        $this->assertInstanceOf('Bernard\ServiceResolver\Invoker', new ProcessInvoker($this->spork, $this->createInvoker('ImportUsers')));
+        $invoker = new Invoker(new ServiceProxy($this->spork, $this->service));
+        $invoker->invoke(new Envelope(new DefaultMessage('CreateFile')));
+
+        // This is a hack, since memory is isolated from parent and there is no direct link
+        // to the fork used.
+        $this->assertTrue(is_file(__DIR__ . '/../Fixtures/create_file.test'));
     }
 
-    public function testItInvokesDecoratedInvoker()
+    public function testItProxiesMethod()
     {
-        $invoker = new ProcessInvoker($this->spork, $this->createInvoker('CreateFile'));
-        $invoker->invoke();
+        $proxy = new ServiceProxy($this->spork, $this->service);
+        $proxy->onCreateFile(new DefaultMessage('CreateFile'));
 
         // This is a hack, since memory is isolated from parent and there is no direct link
         // to the fork used.
@@ -45,12 +50,7 @@ class ProcessInvokerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Bernard\Spork\Exception\ProcessException');
 
-        $forking = new ProcessInvoker($this->spork, $this->createInvoker('FailSendNewsletter'));
-        $forking->invoke();
-    }
-
-    public function createInvoker($name)
-    {
-        return new Invoker($this->service, new Envelope(new DefaultMessage($name)));
+        $proxy = new ServiceProxy($this->spork, $this->service);
+        $proxy->onFailSendNewsletter(new DefaultMessage('FailSendNewsletter'));
     }
 }

@@ -40,6 +40,9 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->consumer->tick($queue));
     }
 
+    /**
+     * @group debug
+     */
     public function testEnvelopeWillBeInvoked()
     {
         $service = new Fixtures\Service();

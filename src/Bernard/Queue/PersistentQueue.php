@@ -12,20 +12,20 @@ use Bernard\Serializer;
  */
 class PersistentQueue extends AbstractQueue
 {
-    protected $connection;
+    protected $driver;
     protected $serializer;
     protected $receipts;
 
     /**
      * @param string     $name
-     * @param Driver     $connection
+     * @param Driver     $driver
      * @param Serializer $serializer
      */
-    public function __construct($name, Driver $connection, Serializer $serializer)
+    public function __construct($name, Driver $driver, Serializer $serializer)
     {
         parent::__construct($name);
 
-        $this->connection = $connection;
+        $this->driver     = $driver;
         $this->serializer = $serializer;
         $this->receipts   = new SplObjectStorage;
 
@@ -33,13 +33,13 @@ class PersistentQueue extends AbstractQueue
     }
 
     /**
-     * Register with the connection
+     * Register with the driver
      */
     public function register()
     {
         $this->errorIfClosed();
 
-        $this->connection->createQueue($this->name);
+        $this->driver->createQueue($this->name);
     }
 
     /**
@@ -49,14 +49,14 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        return $this->connection->countMessages($this->name);
+        return $this->driver->countMessages($this->name);
     }
 
     public function close()
     {
         parent::close();
 
-        $this->connection->removeQueue($this->name);
+        $this->driver->removeQueue($this->name);
     }
 
     /**
@@ -66,7 +66,7 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        $this->connection->pushMessage($this->name, $this->serializer->serialize($envelope));
+        $this->driver->pushMessage($this->name, $this->serializer->serialize($envelope));
     }
 
     /**
@@ -77,7 +77,7 @@ class PersistentQueue extends AbstractQueue
         $this->errorIfClosed();
 
         if (isset($this->receipts[$envelope])) {
-            $this->connection->acknowledgeMessage($this->name, $this->receipts[$envelope]);
+            $this->driver->acknowledgeMessage($this->name, $this->receipts[$envelope]);
         }
     }
 
@@ -88,7 +88,7 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        list($serialized, $receipt) = $this->connection->popMessage($this->name);
+        list($serialized, $receipt) = $this->driver->popMessage($this->name);
 
         if ($serialized) {
             $envelope = $this->serializer->deserialize($serialized);
@@ -106,7 +106,7 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        $messages = $this->connection->peekQueue($this->name, $index, $limit);
+        $messages = $this->driver->peekQueue($this->name, $index, $limit);
 
         return array_map(array($this->serializer, 'deserialize'), $messages);
     }
