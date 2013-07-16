@@ -39,7 +39,10 @@ class DoctrineDriver implements \Bernard\Driver
     {
         try {
             $this->connection->insert('bernard_queues', array('name' => $queueName));
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+            // Because SQL server does not support a portable INSERT ON IGNORE syntax
+            // this ignores error based on primary key.
+        }
     }
 
     /**
