@@ -19,7 +19,7 @@ interface ServiceResolver
      * Resolves an envelope to a callable.
      *
      * @param  Envelope $envelope
-     * @return array
+     * @return callable
      */
     public function resolve(Envelope $envelope);
 }
