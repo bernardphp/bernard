@@ -9,14 +9,18 @@ use Bernard\Message\Envelope;
  */
 class Invoker
 {
-    protected $object;
+    protected $callable;
 
     /**
-     * @param object $object
+     * @param callable $callable
      */
-    public function __construct($object)
+    public function __construct($callable)
     {
-        $this->object = $object;
+        if (!is_callable($callable)) {
+            throw new \InvalidArgumentException('Expected argument of type "callable" but got "' . gettype($callable) . '".');
+        }
+
+        $this->callable = $callable;
     }
 
     /**
@@ -30,17 +34,6 @@ class Invoker
      */
     public function invoke(Envelope $envelope)
     {
-        $method = $this->getMethodName($envelope);
-
-        $this->object->$method($envelope->getMessage());
-    }
-
-    /**
-     * @param Envelope $envelope
-     * @return string
-     */
-    protected function getMethodName(Envelope $envelope)
-    {
-        return 'on' . ucfirst($envelope->getName());
+        call_user_func($this->callable, $envelope->getMessage());
     }
 }
