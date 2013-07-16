@@ -4,8 +4,7 @@ Changelog
 0.8.0 / YYYY-MM-DD
 ------------------
 
- * Service resolvers now resolve to a service object. This way it only have one
- responsibility.
+ * Service resolvers now resolve to a callable. This allows for closures to do work.
  * Consumer is now responsible for creating Invoker object.
  * Spork return a Proxy object that allows calling the right method on service object.
  * New schema for `DoctrineDriver`. Queues are now kept in a seperate table.
