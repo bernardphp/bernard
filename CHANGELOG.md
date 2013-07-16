@@ -8,6 +8,8 @@ Changelog
  * Consumer is now responsible for creating Invoker object.
  * Spork return a Proxy object that allows calling the right method on service object.
  * New schema for `DoctrineDriver`. Queues are now kept in a seperate table.
+ * `ObjectResolver` now supports object instances and class names. Laravel can then register 
+ facades.
 
 0.7.1 / 2013-07-12
 ------------------
