@@ -166,6 +166,38 @@ in the drivers constructor.
         // or with a prefetching number
         $driver = new IronMqDriver($connection, 5);
 
+It is also possible to use push queues with some additional logic. Basically
+it is needed to deserialize the message in the request and route it to the
+correct service. An example of this:
+
+.. code-block:: php
+
+    <?php
+
+    namespace Acme\Controller;
+
+    use Bernard\Serializer;
+    use Bernard\ServiceResolver;
+    use Bernard\ServiceResolver\Invoker;
+    use Symfony\Component\HttpFoundation\Request;
+
+    class QueueController
+    {
+        public function __construct(ServiceResolver $resolver, Serializer $serializer)
+        {
+            $this->resolver = $resolver;
+            $this->serializer = $serializer;
+        }
+
+        public function queueAction(Request $request)
+        {
+            $envelope = $this->serializer->deserialize($request->getContent());
+
+            $invoker = new Invoker($this->resolver->resolve($envelope);
+            $invoker->invoke($envelope));
+        }
+    }
+
 Amazon SQS
 ----------
 
