@@ -16,10 +16,10 @@ interface ServiceResolver
     public function register($name, $service);
 
     /**
-     * Resolves an envelope to an instance of a service object.
+     * Resolves an envelope to a callable.
      *
      * @param  Envelope $envelope
-     * @return object
+     * @return array
      */
     public function resolve(Envelope $envelope);
 }

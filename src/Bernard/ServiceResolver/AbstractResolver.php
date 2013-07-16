@@ -15,7 +15,7 @@ abstract class AbstractResolver implements \Bernard\ServiceResolver
     public function resolve(Envelope $envelope)
     {
         if ($object = $this->getService($envelope)) {
-            return $object;
+            return array($object, 'on' . ucfirst($envelope->getName()));
         }
 
         throw new \InvalidArgumentException('No service registered for envelope "' . $envelope->getName() . '".');

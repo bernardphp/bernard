@@ -32,7 +32,7 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 
         $envelope = $this->createEnvelope();
 
-        $this->assertEquals($service, $resolver->resolve($envelope));
+        $this->assertEquals(array($service, 'onSendNewsletter'), $resolver->resolve($envelope));
     }
 
     public function testItThrowsExceptionIfServiceCannotBeFound()

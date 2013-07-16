@@ -28,7 +28,9 @@ class ServiceProxyTest extends \PHPUnit_Framework_TestCase
 
     public function testIsInvokedThroughInvoker()
     {
-        $invoker = new Invoker(new ServiceProxy($this->spork, $this->service));
+        $proxy = new ServiceProxy($this->spork, $this->service);
+
+        $invoker = new Invoker(array($proxy, 'onCreateFile'));
         $invoker->invoke(new Envelope(new DefaultMessage('CreateFile')));
 
         // This is a hack, since memory is isolated from parent and there is no direct link

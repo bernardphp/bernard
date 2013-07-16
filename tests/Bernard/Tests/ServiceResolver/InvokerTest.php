@@ -10,13 +10,12 @@ class InvokerTest extends \PHPUnit_Framework_TestCase
     {
         $envelope = $this->getMockBuilder('Bernard\Message\Envelope')
             ->disableOriginalConstructor()->getMock();
-        $envelope->expects($this->once())->method('getName')->will($this->returnValue('SendNewsletter'));
         $envelope->expects($this->once())->method('getMessage')->will($this->returnValue('message'));
 
         $service = $this->getMock('stdClass', array('onSendNewsletter'));
         $service->expects($this->once())->method('onSendNewsletter')->with($this->equalTo('message'));
 
-        $invoker = new Invoker($service);
+        $invoker = new Invoker(array($service, 'onSendNewsletter'));
         $invoker->invoke($envelope);
     }
 }
