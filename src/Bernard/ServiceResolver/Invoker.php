@@ -16,6 +16,10 @@ class Invoker
      */
     public function __construct($callable)
     {
+        if (!is_callable($callable)) {
+            throw new \InvalidArgumentException('Expected argument of type "callable" but got "' . gettype($callable) . '".');
+        }
+
         $this->callable = $callable;
     }
 

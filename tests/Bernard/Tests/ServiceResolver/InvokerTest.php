@@ -18,4 +18,11 @@ class InvokerTest extends \PHPUnit_Framework_TestCase
         $invoker = new Invoker(array($service, 'onSendNewsletter'));
         $invoker->invoke($envelope);
     }
+
+    public function testOnlyAllowCallbacks()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'Expected argument of type "callable" but got "string".');
+
+        new Invoker('something not callabkle');
+    }
 }
