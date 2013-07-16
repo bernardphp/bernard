@@ -16,8 +16,8 @@ class ObjectResolver extends AbstractResolver
      */
     public function register($name, $service)
     {
-        if (!is_object($service)) {
-            throw new \InvalidArgumentException('The given service is not an object.');
+        if (!is_object($service) && !class_exists($service)) {
+            throw new \InvalidArgumentException('Expected argument either be "class" or "object" got "' . gettype($service) . '".');
         }
 
         $this->services[$name] = $service;

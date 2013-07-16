@@ -23,6 +23,17 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
         $resolver->register($name, $type);
     }
 
+    public function testItAllowsClassNamesForStaticAccess()
+    {
+        $resolver = new ObjectResolver;
+        $resolver->register('SendNewsletter', 'Bernard\Tests\Fixtures\Service');
+
+        $envelope = $this->createEnvelope();
+        $callable = array('Bernard\Tests\Fixtures\Service', 'onSendNewsletter');
+
+        $this->assertEquals($callable, $resolver->resolve($envelope));
+    }
+
     public function testItResolvesBasedOnMessageName()
     {
         $service = new \stdClass;
