@@ -2,6 +2,7 @@
 
 namespace Bernard\Spork;
 
+use Bernard\Message;
 use Bernard\Spork\Exception\ProcessException;
 use Spork\Fork;
 use Spork\ProcessManager;
@@ -12,16 +13,16 @@ use Spork\ProcessManager;
 class ServiceProxy
 {
     protected $spork;
-    protected $object;
+    protected $callable;
 
     /**
      * @param ProcessManager $manager
      * @param object        $object
      */
-    public function __construct(ProcessManager $manager, $object)
+    public function __construct(ProcessManager $manager, $callable)
     {
         $this->spork = $manager;
-        $this->object = $object;
+        $this->callable = $callable;
     }
 
     /**
@@ -41,13 +42,12 @@ class ServiceProxy
     /**
      * {@inheritDoc}
      */
-    public function __call($method, array $arguments = array())
+    public function __invoke(Message $message)
     {
-        // The arguments will hold a single key 0 with an instance of Envelope
-        $callable = array($this->object, $method);
+        $callable = $this->callable;
 
-        $fork = $this->spork->fork(function () use ($callable, $arguments) {
-            call_user_func_array($callable, $arguments);
+        $fork = $this->spork->fork(function () use ($callable, $message) {
+            call_user_func($callable, $message);
         });
 
         // Wait for the fork, blocks the process.
