@@ -15,11 +15,20 @@ abstract class AbstractResolver implements \Bernard\ServiceResolver
     public function resolve(Envelope $envelope)
     {
         if ($object = $this->getService($envelope)) {
-            return array($object, 'on' . ucfirst($envelope->getName()));
+            return array($object, $this->getMethodName($envelope));
         }
 
         throw new \InvalidArgumentException('No service registered for envelope "' . $envelope->getName() . '".');
     }
 
     abstract protected function getService(Envelope $envelope);
+
+    /**
+     * @param Envelope $envelope
+     * @return string
+     */
+    protected function getMethodName(Envelope $envelope)
+    {
+        return 'on' . ucfirst($envelope->getName());
+    }
 }
