@@ -3,7 +3,6 @@
 namespace Bernard;
 
 use Bernard\Message\Envelope;
-use Bernard\ServiceResolver\Invoker;
 
 /**
  * @package Bernard

@@ -5,7 +5,6 @@ namespace Bernard\Spork;
 use Bernard\Spork\Exception\ProcessException;
 use Spork\Fork;
 use Spork\ProcessManager;
-use Bernard\Message\Envelope;
 
 /**
  * @package Bernard
