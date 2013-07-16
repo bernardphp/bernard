@@ -37,7 +37,7 @@ class PimpleAwareResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolver->register('SendNewsletter', 'my.service.id');
 
-        $this->assertEquals(new Invoker($service, $this->createEnvelope()), $resolver->resolve($this->createEnvelope()));
+        $this->assertEquals($service, $resolver->resolve($this->createEnvelope()));
     }
 
     public function testExceptionWhenServiceDosentExistOnContainer()

@@ -10,23 +10,13 @@ use Bernard\Message\Envelope;
 class Invoker
 {
     protected $object;
-    protected $envelope;
 
     /**
      * @param object $object
      */
-    public function __construct($object, Envelope $envelope)
+    public function __construct($object)
     {
-        $this->object  = $object;
-        $this->envelope = $envelope;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMethodName()
-    {
-        return 'on' . ucfirst($this->envelope->getName());
+        $this->object = $object;
     }
 
     /**
@@ -35,12 +25,22 @@ class Invoker
      * The exception should be catched and send back to the parent which can then
      * retry or mark the message as failed.
      *
+     * @param  Envelope $envelope
      * @throws Exception
-     * @throws ReflectionException
      */
-    public function invoke()
+    public function invoke(Envelope $envelope)
     {
-        $method = new \ReflectionMethod($this->object, $this->getMethodName());
-        $method->invoke($this->object, $this->envelope->getMessage());
+        $method = $this->getMethodName($envelope);
+
+        $this->object->$method($envelope->getMessage());
+    }
+
+    /**
+     * @param Envelope $envelope
+     * @return string
+     */
+    protected function getMethodName(Envelope $envelope)
+    {
+        return 'on' . ucfirst($envelope->getName());
     }
 }

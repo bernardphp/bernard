@@ -16,7 +16,7 @@ class InvokerTest extends \PHPUnit_Framework_TestCase
         $service = $this->getMock('stdClass', array('onSendNewsletter'));
         $service->expects($this->once())->method('onSendNewsletter')->with($this->equalTo('message'));
 
-        $invoker = new Invoker($service, $envelope);
-        $invoker->invoke();
+        $invoker = new Invoker($service);
+        $invoker->invoke($envelope);
     }
 }

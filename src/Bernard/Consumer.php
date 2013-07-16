@@ -3,6 +3,7 @@
 namespace Bernard;
 
 use Bernard\Message\Envelope;
+use Bernard\ServiceResolver\Invoker;
 use Exception;
 
 declare(ticks=1);
@@ -65,13 +66,13 @@ class Consumer
         }
 
         try {
-            $invoker = $this->services->resolve($envelope);
-            $invoker->invoke();
-
-            $queue->acknowledge($envelope);
+            $invoker = new Invoker($this->services->resolve($envelope));
+            $invoker->invoke($envelope);
         } catch (Exception $e) {
             $this->fail($envelope, $e, $queue, $failed);
         }
+
+        $queue->acknowledge($envelope);
 
         return true;
     }
