@@ -28,7 +28,9 @@ class ServiceProxyTest extends \PHPUnit_Framework_TestCase
 
     public function testIsInvokedThroughInvoker()
     {
-        $invoker = new Invoker(new ServiceProxy($this->spork, $this->service));
+        $proxy = new ServiceProxy($this->spork, array($this->service, 'onCreateFile'));
+
+        $invoker = new Invoker($proxy);
         $invoker->invoke(new Envelope(new DefaultMessage('CreateFile')));
 
         // This is a hack, since memory is isolated from parent and there is no direct link
@@ -38,8 +40,8 @@ class ServiceProxyTest extends \PHPUnit_Framework_TestCase
 
     public function testItProxiesMethod()
     {
-        $proxy = new ServiceProxy($this->spork, $this->service);
-        $proxy->onCreateFile(new DefaultMessage('CreateFile'));
+        $proxy = new ServiceProxy($this->spork, array($this->service, 'onCreateFile'));
+        $proxy(new DefaultMessage('CreateFile'));
 
         // This is a hack, since memory is isolated from parent and there is no direct link
         // to the fork used.
@@ -50,7 +52,7 @@ class ServiceProxyTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Bernard\Spork\Exception\ProcessException');
 
-        $proxy = new ServiceProxy($this->spork, $this->service);
-        $proxy->onFailSendNewsletter(new DefaultMessage('FailSendNewsletter'));
+        $proxy = new ServiceProxy($this->spork, array($this->service, 'onFailSendNewsletter'));
+        $proxy(new DefaultMessage('FailSendNewsletter'));
     }
 }

@@ -37,7 +37,7 @@ class ContainerAwareResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolver->register('SendNewsletter', 'my.service.id');
 
-        $this->assertEquals($service, $resolver->resolve($envelope));
+        $this->assertEquals(array($service, 'onSendNewsletter'), $resolver->resolve($envelope));
     }
 
     public function testExceptionWhenServiceDosentExistOnContainer()
