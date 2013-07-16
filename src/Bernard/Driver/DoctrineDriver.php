@@ -26,7 +26,7 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function listQueues()
     {
-        $statement = $this->connection->prepare('SELECT queue FROM bernard_messages GROUP BY queue');
+        $statement = $this->connection->prepare('SELECT name FROM bernard_queues');
         $statement->execute();
 
         return $statement->fetchAll(\PDO::FETCH_COLUMN);
@@ -37,7 +37,12 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function createQueue($queueName)
     {
-        // noop
+        try {
+            $this->connection->insert('bernard_queues', array('name' => $queueName));
+        } catch (\Exception $e) {
+            // Because SQL server does not support a portable INSERT ON IGNORE syntax
+            // this ignores error based on primary key.
+        }
     }
 
     /**
@@ -62,6 +67,7 @@ class DoctrineDriver implements \Bernard\Driver
             'sentAt'  => new \DateTime(),
         );
 
+        $this->createQueue($queueName);
         $this->connection->insert('bernard_messages', $data, $types);
     }
 
@@ -129,6 +135,7 @@ class DoctrineDriver implements \Bernard\Driver
     public function removeQueue($queueName)
     {
         $this->connection->delete('bernard_messages', array('queue' => $queueName));
+        $this->connection->delete('bernard_queues', array('name' => $queueName));
     }
 
     /**

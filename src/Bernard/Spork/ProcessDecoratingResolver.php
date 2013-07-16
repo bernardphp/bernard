@@ -41,6 +41,6 @@ class ProcessDecoratingResolver implements \Bernard\ServiceResolver
      */
     public function resolve(Envelope $envelope)
     {
-        return new ProcessInvoker($this->spork, $this->resolver->resolve($envelope));
+        return new ServiceProxy($this->spork, $this->resolver->resolve($envelope));
     }
 }

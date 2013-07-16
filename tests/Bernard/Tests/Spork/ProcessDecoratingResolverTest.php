@@ -39,7 +39,7 @@ class ProcessDecoratingResolverTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($invoker));
 
         $resolver = new ProcessDecoratingResolver($this->spork, $this->resolver);
-        $this->assertInstanceOf('Bernard\Spork\ProcessInvoker', $resolver->resolve($envelope));
+        $this->assertInstanceOf('Bernard\Spork\ServiceProxy', $resolver->resolve($envelope));
 
     }
 }

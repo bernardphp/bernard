@@ -14,20 +14,12 @@ abstract class AbstractResolver implements \Bernard\ServiceResolver
      */
     public function resolve(Envelope $envelope)
     {
-        if (!$object = $this->getService($envelope)) {
-            throw new \InvalidArgumentException('No service registered for envelope "' . $envelope->getName() . '".');
+        if ($object = $this->getService($envelope)) {
+            return $object;
         }
 
-        return $this->getInvoker($object, $envelope);
+        throw new \InvalidArgumentException('No service registered for envelope "' . $envelope->getName() . '".');
     }
 
     abstract protected function getService(Envelope $envelope);
-
-    /**
-     * @return Invoker
-     */
-    protected function getInvoker($object, Envelope $envelope)
-    {
-        return new Invoker($object, $envelope);
-    }
 }

@@ -2,7 +2,7 @@
 
 namespace Bernard\Doctrine;
 
-use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\Schema;
 
 /**
  * @package Bernard
@@ -10,14 +10,26 @@ use Doctrine\DBAL\Schema\Table;
 class MessagesSchema
 {
     /**
-     * Returns a Table instance setup to save messages for the queue in the
-     * database.
+     * Creates tables on the current schema given.
      *
-     * @return Table
+     * @param Schema $schema
      */
-    public function createTable()
+    public static function create(Schema $schema)
     {
-        $table = new Table('bernard_messages');
+        static::createQueueTable($schema);
+        static::createMessagesTable($schema);
+    }
+
+    protected static function createQueueTable(Schema $schema)
+    {
+        $table = $schema->createTable('bernard_queues');
+        $table->addColumn('name', 'string');
+        $table->setPrimaryKey(array('name'));
+    }
+
+    protected static function createMessagesTable(Schema $schema)
+    {
+        $table = $schema->createTable('bernard_messages');
         $table->addColumn('id', 'integer', array(
             'autoincrement' => true,
             'unsigned'      => true,
@@ -29,9 +41,6 @@ class MessagesSchema
         $table->addColumn('visible', 'boolean', array('default' => true));
         $table->addColumn('sentAt', 'datetime');
         $table->setPrimaryKey(array('id'));
-        $table->addIndex(array('queue'));
         $table->addIndex(array('queue', 'sentAt', 'visible'));
-
-        return $table;
     }
 }

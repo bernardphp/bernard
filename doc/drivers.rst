@@ -80,19 +80,12 @@ Use one of the following methods for creating your table.
         <?php
 
         use Bernard\Doctrine\MessagesSchema;
+        use Doctrine\DBAL\Schema\Schema;
 
-        $schema = new MessagesSchema;
-        $connection->getSchemaManager()->createTable($schema->createTable());
-
-    .. code-block:: sql
-
-        CREATE TABLE `bernard_messages` (
-            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `queue` varchar(255) DEFAULT NULL,
-            `message` longtext,
-            PRIMARY KEY (`id`),
-            KEY `queue_idx` (`queue`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+        MessagesSchema::create($schema = new Schema);
+        
+        // setup $connection with Doctrine DBAL
+        $sql = $schema->toSql($connection->getDatabasePlatform());
 
 
 .. configuration-block::
