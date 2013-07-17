@@ -17,7 +17,7 @@ class ServiceProxy
 
     /**
      * @param ProcessManager $manager
-     * @param object         $object
+     * @param callable       $callable
      */
     public function __construct(ProcessManager $manager, $callable)
     {
@@ -32,7 +32,7 @@ class ServiceProxy
      * @param  Fork                  $fork
      * @throws ForkingLogicException
      */
-    public function __fail__(Fork $fork)
+    public function fail(Fork $fork)
     {
         $error = $fork->getError();
 
@@ -50,10 +50,7 @@ class ServiceProxy
             $callable($message);
         });
 
-        // Wait for the fork, blocks the process.
-        // To avoid collisions with the object being proxied.
         $fork->wait();
-        $fork->fail(array($this, '__fail__'));
+        $fork->fail(array($this, 'fail'));
     }
-
 }
