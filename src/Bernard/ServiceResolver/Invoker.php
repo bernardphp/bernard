@@ -29,7 +29,7 @@ class Invoker
      * The exception should be catched and send back to the parent which can then
      * retry or mark the message as failed.
      *
-     * @param  Envelope $envelope
+     * @param  Envelope  $envelope
      * @throws Exception
      */
     public function invoke(Envelope $envelope)

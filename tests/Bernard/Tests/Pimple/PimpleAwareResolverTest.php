@@ -2,7 +2,6 @@
 
 namespace Bernard\Tests\Pimple;
 
-use Bernard\ServiceResolver\Invoker;
 use Bernard\Message\Envelope;
 use Bernard\Message\DefaultMessage;
 use Bernard\Pimple\PimpleAwareResolver;

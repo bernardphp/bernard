@@ -3,7 +3,6 @@
 namespace Bernard\Tests\ServiceResolver;
 
 use Bernard\Spork\ProcessDecoratingResolver;
-use Bernard\Spork\ProcessInvoker;
 
 class ProcessDecoratingResolverTest extends \PHPUnit_Framework_TestCase
 {

@@ -4,7 +4,6 @@ namespace Bernard\Tests\ServiceResolver;
 
 use Bernard\Message\Envelope;
 use Bernard\ServiceResolver\ObjectResolver;
-use Bernard\ServiceResolver\Invoker;
 
 class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 {

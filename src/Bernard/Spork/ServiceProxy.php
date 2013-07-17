@@ -17,7 +17,7 @@ class ServiceProxy
 
     /**
      * @param ProcessManager $manager
-     * @param object        $object
+     * @param object         $object
      */
     public function __construct(ProcessManager $manager, $callable)
     {

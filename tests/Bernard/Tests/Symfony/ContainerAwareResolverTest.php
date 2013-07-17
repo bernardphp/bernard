@@ -4,7 +4,6 @@ namespace Bernard\Tests\ServiceResolver;
 
 use Bernard\Message\Envelope;
 use Bernard\Symfony\ContainerAwareResolver;
-use Bernard\ServiceResolver\Invoker;
 use Symfony\Component\DependencyInjection\Container;
 
 class ContainerAwareResolverTest extends \PHPUnit_Framework_TestCase

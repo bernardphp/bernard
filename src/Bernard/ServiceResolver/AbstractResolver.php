@@ -24,7 +24,7 @@ abstract class AbstractResolver implements \Bernard\ServiceResolver
     abstract protected function getService(Envelope $envelope);
 
     /**
-     * @param Envelope $envelope
+     * @param  Envelope $envelope
      * @return string
      */
     protected function getMethodName(Envelope $envelope)

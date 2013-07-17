@@ -55,7 +55,6 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $this->driver->countMessages('send-newsletter'));
     }
 
-
     public function testItIsAQueue()
     {
         $this->driver->pushMessage('send-newsletter', 'my-message-1');
