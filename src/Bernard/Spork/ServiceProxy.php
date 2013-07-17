@@ -47,7 +47,7 @@ class ServiceProxy
         $callable = $this->callable;
 
         $fork = $this->spork->fork(function () use ($callable, $message) {
-            call_user_func($callable, $message);
+            $callable($message);
         });
 
         // Wait for the fork, blocks the process.
