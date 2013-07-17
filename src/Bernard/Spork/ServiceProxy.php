@@ -36,7 +36,24 @@ class ServiceProxy
     {
         $error = $fork->getError();
 
-        throw new ProcessException($error->getClass(), $error->getMessage(), $error->getFile(), $error->getLine(), $error->getCode());
+        // Spork changed between two versions.
+        if (is_array($error)) {
+            throw new ProcessException(
+                $error['class'],
+                $error['message'],
+                $error['file'],
+                $error['line'],
+                $error['code']
+            );
+        }
+
+        throw new ProcessException(
+            $error->getClass(),
+            $error->getMessage(),
+            $error->getFile(),
+            $error->getLine(),
+            $error->getCode()
+        );
     }
 
     /**
@@ -47,7 +64,7 @@ class ServiceProxy
         $callable = $this->callable;
 
         $fork = $this->spork->fork(function () use ($callable, $message) {
-            $callable($message);
+            call_user_func($callable, $message);
         });
 
         $fork->wait();
