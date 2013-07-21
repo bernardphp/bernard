@@ -57,14 +57,17 @@ class IronMqDriver extends AbstractPrefetchDriver
     public function listQueues()
     {
         $queueNames = array();
+        $page = 0;
 
-        while ($queues = $this->ironmq->getQueues($page = 0, 100)) {
+        while ($queues = $this->ironmq->getQueues($page, 100)) {
             $queueNames += $this->pluck($queues, 'name');
 
             // If we get 100 results the probability of another page is high.
             if (count($queues) < 100) {
                 break;
             }
+
+            $page++;
         }
 
         return $queueNames;
