@@ -242,3 +242,59 @@ aliasing is used the queue names provided will not require a HTTP request to ama
         $driver = new SqsDriver($connection, array(
             'queue-name' => 'queue-url',
         ));
+
+Google AppEngine
+----------------
+
+Google AppEngine have support for PHP and PushQueue just as IronMQ. The AppEngine driver for Bernard
+is a minimal driver that uses its TaskQueue to push messages. 
+There is a lot about how this works in `their documentation <https://developers.google.com/appengine/docs/php/taskqueue/overview-push>`_.
+
+.. important::
+
+    This driver only works on AppEngine or withs it development server as it needs access to its SDK. Also it must be
+    autoloadable. If it is in the include path you can use ``"config" : { "use-include-path" : true } }`` in composer.
+
+The driver takes a list of queue names and mappings to an endpoint. This is because queues are created at runtime and their endpoints
+are not preconfigured.
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\AppEngineDriver;
+
+    $driver = new AppEngineDriver(array(
+        'queue-name' => '/url_endpoint',
+    ));
+
+To consume messages you need to create a url endpoint matching the one given to the drivers constructor. For the
+actual dispatching of messages you can do something like this:
+
+.. code-block:: php
+
+    <?php
+
+    namespace Acme\Controller;
+
+    use Bernard\Serializer;
+    use Bernard\ServiceResolver;
+    use Bernard\ServiceResolver\Invoker;
+    use Symfony\Component\HttpFoundation\Request;
+
+    class QueueController
+    {
+        public function __construct(ServiceResolver $resolver, Serializer $serializer)
+        {
+            $this->resolver = $resolver;
+            $this->serializer = $serializer;
+        }
+
+        public function queueAction(Request $request)
+        {
+            $envelope = $this->serializer->deserialize($request->request->get('message'));
+
+            $invoker = new Invoker($this->resolver->resolve($envelope);
+            $invoker->invoke($envelope));
+        }
+    }
