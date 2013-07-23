@@ -25,7 +25,8 @@ class AppEngineDriverTest extends \PHPUnit_Framework_TestCase
     {
         $this->driver->pushMessage('send-newsletter', 'message');
 
-        $this->assertEquals(new PushTask('/url_endpoint', array('message' => 'message')), PushTask::$messages[0]);
+        $message = new PushTask('/url_endpoint', array('message' => 'message'));
+        $this->assertEquals($message, PushTask::$messages['send-newsletter'][0]);
     }
 
     public function testThrowsExceptionOnInvalidQueueMap()

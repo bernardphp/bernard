@@ -21,8 +21,8 @@ class PushTask
         $this->options = $options;
     }
 
-    public function add()
+    public function add($queueName = 'default')
     {
-        static::$messages[] = $this;
+        static::$messages[$queueName][] = $this;
     }
 }
