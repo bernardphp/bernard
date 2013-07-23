@@ -242,3 +242,28 @@ aliasing is used the queue names provided will not require a HTTP request to ama
         $driver = new SqsDriver($connection, array(
             'queue-name' => 'queue-url',
         ));
+
+Google AppEngine
+----------------
+
+Google AppEngine have support for PHP and PushQueue just as IronMQ. The AppEngine driver for Bernard
+is a minimal driver that uses its TaskQueue to push messages. 
+There is a lot about how this works in `their documentation <https://developers.google.com/appengine/docs/php/taskqueue/overview-push>`_.
+
+The driver takes a list of queue names and mappings to an endpoint. This is because queues are created at runtime and their endpoints
+are not preconfigured.
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\AppEngineDriver;
+
+    $driver = new AppEngineDriver(array(
+        'queue-name' => '/url_endpoint',
+    ));
+
+.. important::
+
+    This driver only works on AppEngine or withs it development server as it needs access to its SDK. Also it must be
+    autoloadable. If it is in the include path you can use ``"config" : { "use-include-path" : true } }`` in composer.
