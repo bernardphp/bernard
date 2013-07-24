@@ -21,7 +21,7 @@ Special Thanks
 
 ---
 
-[![Peytz & Co](doc/_static/peytzco.png)][peytz]
+[![Peytz & Co](http://bernard.readthedocs.org/en/latest/_images/peytzco.png)][peytz]
 
 [documentation]: http://bernard.rtfd.org
 [peytz]: http://peytz.dk
