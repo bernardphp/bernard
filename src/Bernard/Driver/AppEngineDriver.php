@@ -91,6 +91,6 @@ class AppEngineDriver implements \Bernard\Driver
             return $this->queueMap[$queueName];
         }
 
-        throw new \InvalidArgumentException('Queue "' . $queueName .'" cannot be resolved to an endpoint.');
+        return '/_ah/queue/' . $queueName;
     }
 }

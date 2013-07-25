@@ -21,6 +21,11 @@ class AppEngineDriverTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    public function tearDown()
+    {
+        PushTask::$messages = array();
+    }
+
     public function testItQueuesPushTask()
     {
         $this->driver->pushMessage('send-newsletter', 'message');
@@ -29,11 +34,18 @@ class AppEngineDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($message, PushTask::$messages['send-newsletter'][0]);
     }
 
-    public function testThrowsExceptionOnInvalidQueueMap()
+    public function testItUsesDefaultEndpointWhenAliasArentThere()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Queue "import-users" cannot be resolved to an endpoint.');
+        $this->driver->pushMessage('import-users', 'message');
+        $this->driver->pushMessage('calculate-reports', 'message');
 
-        $this->driver->pushMessage('import-users', '');
+        $messages = array(
+            new PushTask('/_ah/queue/import-users', array('message' => 'message')),
+            new PushTask('/_ah/queue/calculate-reports', array('message' => 'message')),
+        );
+
+        $this->assertEquals($messages[0], PushTask::$messages['import-users'][0]);
+        $this->assertEquals($messages[1], PushTask::$messages['calculate-reports'][0]);
     }
 
     public function testListQueues()
