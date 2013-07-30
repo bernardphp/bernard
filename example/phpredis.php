@@ -1,6 +1,5 @@
 <?php
 
-use Redis;
 use Bernard\Driver\PhpRedisDriver;
 
 /**
