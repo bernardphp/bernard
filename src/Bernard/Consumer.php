@@ -66,8 +66,7 @@ class Consumer
         }
 
         try {
-            $invoker = new Invoker($this->services->resolve($envelope));
-            $invoker->invoke($envelope);
+            $this->invoke($envelope, $queue);
         } catch (Exception $e) {
             $this->fail($envelope, $e, $queue, $failed);
         }
@@ -83,6 +82,19 @@ class Consumer
     public function shutdown()
     {
         $this->shutdown = true;
+    }
+
+    /**
+     * Until there is a real extension point to doing invoked stuff, this can be used
+     * by wrapping the invoke method.
+     *
+     * @param Envelope $envelope
+     * @param Queue $queue
+     */
+    protected function invoke(Envelope $envelope, Queue $queue)
+    {
+        $invoker = new Invoker($this->services->resolve($envelope));
+        $invoker->invoke($envelope);
     }
 
     /**
