@@ -24,10 +24,10 @@ class Producer
     /**
      * {@inheritDoc}
      */
-    public function produce(Message $message)
+    public function produce(Message $message, $queueName = null)
     {
         $envelope = new Envelope($message);
 
-        $this->factory->create($message->getQueue())->enqueue($envelope);
+        $this->factory->create($queueName ?: $message->getQueue())->enqueue($envelope);
     }
 }
