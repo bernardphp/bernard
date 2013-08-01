@@ -12,6 +12,16 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Bernard\ServiceResolver', new ObjectResolver);
     }
 
+    public function testArrayOfServicesInConstructor()
+    {
+        $resolver = new ObjectResolver(array(
+            'SendNewsletter' => 'Bernard\Tests\Fixtures\Service',
+        ));
+
+        $envelope = $this->createEnvelope();
+        $this->assertEquals(array('Bernard\Tests\Fixtures\Service', 'onSendNewsletter'), $resolver->resolve($envelope));
+    }
+
     /**
      * @dataProvider dataProviderNotObjects
      */
