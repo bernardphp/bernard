@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.8.0 / YYYY-MM-DD
+0.8.0 / 2013-08-01
 ------------------
 
  * Service resolvers now resolve to a callable. This allows for closures to do work.
@@ -10,6 +10,7 @@ Changelog
  * New schema for `DoctrineDriver`. Queues are now kept in a seperate table.
  * `ObjectResolver` now supports object instances and class names. Laravel can then register 
  facades.
+ * ServiceResolvers now takes an optional array of `array('MessageName' => $service)`.
 
 0.7.1 / 2013-07-12
 ------------------
