@@ -22,7 +22,9 @@ Special Thanks
 ---
 
 [![Peytz & Co](http://bernard.readthedocs.org/en/latest/_images/peytzco.png)][peytz]
+[![Fortrabbit](http://fortrabbit.com/media/fortrabbit-logo-250.png)][fortrabbit]
 
 [documentation]: http://bernard.rtfd.org
 [peytz]: http://peytz.dk
+[fortrabbit]: http://fortrabbit.com
 [travis]: https://travis-ci.org/bernardphp/bernard

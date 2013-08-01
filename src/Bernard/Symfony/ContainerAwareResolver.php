@@ -10,15 +10,16 @@ use Symfony\Component\DependencyInjection\Container;
  */
 class ContainerAwareResolver extends \Bernard\ServiceResolver\AbstractResolver
 {
-    protected $services = array();
     protected $container;
 
     /**
      * @param Container $container
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, array $services = array())
     {
         $this->container = $container;
+
+        parent::__construct($services);
     }
 
     /**

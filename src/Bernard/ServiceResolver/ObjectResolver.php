@@ -9,8 +9,6 @@ use Bernard\Message\Envelope;
  */
 class ObjectResolver extends AbstractResolver
 {
-    protected $services = array();
-
     /**
      * {@inheritDoc}
      */

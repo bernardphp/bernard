@@ -10,15 +10,17 @@ use Bernard\Message\Envelope;
  */
 class PimpleAwareResolver extends \Bernard\ServiceResolver\AbstractResolver
 {
-    protected $services = array();
     protected $pimple;
 
     /**
      * @param Pimple $pimple
+     * @param array $services
      */
-    public function __construct(Pimple $pimple)
+    public function __construct(Pimple $pimple, array $services = array())
     {
         $this->pimple = $pimple;
+
+        parent::__construct($services);
     }
 
     /**

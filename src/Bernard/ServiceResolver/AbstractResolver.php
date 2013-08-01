@@ -9,6 +9,18 @@ use Bernard\Message\Envelope;
  */
 abstract class AbstractResolver implements \Bernard\ServiceResolver
 {
+    protected $services;
+
+    /**
+     * @param array $services
+     */
+    public function __construct(array $services = array())
+    {
+        foreach ($services as $name => $service) {
+            $this->register($name, $service);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
