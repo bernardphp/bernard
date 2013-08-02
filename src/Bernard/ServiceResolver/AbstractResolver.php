@@ -26,11 +26,16 @@ abstract class AbstractResolver implements \Bernard\ServiceResolver
      */
     public function resolve(Envelope $envelope)
     {
-        if ($object = $this->getService($envelope)) {
-            return array($object, $this->getMethodName($envelope));
+        if (!$service = $this->getService($envelope)) {
+            throw new \InvalidArgumentException('No service registered for envelope "' . $envelope->getName() . '".');
         }
 
-        throw new \InvalidArgumentException('No service registered for envelope "' . $envelope->getName() . '".');
+        if (!is_callable($service)) {
+            $service = array($service, $this->getMethodName($envelope));
+        }
+
+        // Hook into middlewares here and wrap the callable
+        return $service;
     }
 
     abstract protected function getService(Envelope $envelope);

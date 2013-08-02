@@ -9,7 +9,7 @@ class PhpRedisDriverTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         if (!extension_loaded('redis')) {
-            $this->markTestAsSkipped('"redis" extension is not loaded.');
+            $this->markTestSkipped('"redis" extension is not loaded.');
         }
 
         $this->redis = $this->getMock('Redis', array(

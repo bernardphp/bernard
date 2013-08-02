@@ -23,6 +23,19 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider dataProviderCallables
+     */
+    public function testItSupportsCallables($callable)
+    {
+        $resolver = new ObjectResolver(array(
+            'SendNewsletter' => $callable,
+        ));
+
+        $envelope = $this->createEnvelope();
+        $this->assertSame($callable, $resolver->resolve($envelope));
+    }
+
+    /**
      * @dataProvider dataProviderNotObjects
      */
     public function testItThrowsExceptionWhenServiceIsNotAnObject($name, $type)
@@ -61,6 +74,14 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 
         $resolver = new ObjectResolver;
         $resolver->resolve($this->createEnvelope());
+    }
+
+    public function dataProviderCallables()
+    {
+        return array(
+            array(function ($envelope) { }),
+            array('var_dump'),
+        );
     }
 
     public function dataProviderNotObjects()

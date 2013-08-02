@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.9.0 / YYYY-MM-DD
+------------------
+
+ * Support any callable in ObjectResolver
+
 0.8.0 / 2013-08-01
 ------------------
 
