@@ -14,7 +14,9 @@ use Bernard\ServiceResolver\ObjectResolver;
  * a plugin to a framework.
  */
 
-require __DIR__ . '/../vendor/autoload.php';
+if (file_exists($autoloadFile = __DIR__ . '/../vendor/autoload.php') || file_exists($autoloadFile = __DIR__ . '/../../../autoload.php')) {
+    require $autoloadFile;
+}
 require __DIR__ . '/EchoTimeService.php';
 
 ini_set('display_erros', 1);
