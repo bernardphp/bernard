@@ -46,6 +46,6 @@ abstract class AbstractResolver implements \Bernard\ServiceResolver
      */
     protected function getMethodName(Envelope $envelope)
     {
-        return 'on' . ucfirst($envelope->getName());
+        return lcfirst($envelope->getName());
     }
 }
