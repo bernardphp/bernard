@@ -36,4 +36,12 @@ class Invoker
     {
         call_user_func($this->callable, $envelope->getMessage());
     }
+
+    /**
+     * @see Invoker::invoke()
+     */
+    public function __invoke(Envelope $envelope)
+    {
+        $this->invoke($envelope);
+    }
 }
