@@ -6,6 +6,7 @@ use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer\NaiveSerializer;
 use Bernard\ServiceResolver\ObjectResolver;
+use Bernard\Middleware;
 
 /**
  * This file contains helper methods for the examples. See example/$driver.php
@@ -24,6 +25,29 @@ function get_serializer() {
     return new NaiveSerializer;
 }
 
+function get_producer_middleware() {
+    return new Middleware();
+}
+
+function get_consumer_middleware() {
+    $middleware = new Middleware();
+    $middleware->add(function ($next) {
+        return function ($envelope) use ($next) {
+            print "Executing '" . $envelope->getName() . "'.\n";
+
+            try {
+                $next($envelope);
+            } catch (Exception $e) {
+                print "Got '" . (string) $e . "' while executing envelope.\n";
+
+                throw $e;
+            }
+        };
+    });
+
+    return $middleware;
+}
+
 function get_queue_factory() {
     return new PersistentFactory(get_driver(), get_serializer());
 }
@@ -33,14 +57,14 @@ function get_producer() {
 }
 
 function get_services() {
-    $resolver = new ObjectResolver;
+    $resolver = new ObjectResolver();
     $resolver->register('EchoTime', new EchoTimeService);
 
     return $resolver;
 }
 
 function get_consumer() {
-    return new Consumer(get_services());
+    return new Consumer(get_services(), get_consumer_middleware());
 }
 
 function produce() {
