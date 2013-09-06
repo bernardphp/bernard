@@ -22,7 +22,6 @@
         "symfony/console"              : "~2.0",
         "symfony/dependency-injection" : "~2.0",
         "symfony/serializer"           : "~2.2",
-        "kriswallsmith/spork"          : "dev-master",
         "doctrine/dbal"                : "~2.3",
         "iron-io/iron_mq"              : "~1.4",
         "aws/aws-sdk-php"              : "~2.4"
@@ -39,7 +38,7 @@
 
     "extra" : {
         "branch-alias" : {
-            "dev-master" : "0.8.x-dev"
+            "dev-master" : "0.9.x-dev"
         }
     }
 }

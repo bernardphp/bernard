@@ -2,6 +2,7 @@
 
 namespace Bernard;
 
+use Bernard\Middleware\MiddlewareChain;
 use Bernard\Message\Envelope;
 use Bernard\ServiceResolver\Invoker;
 use Exception;
@@ -14,6 +15,7 @@ declare(ticks=1);
 class Consumer
 {
     protected $services;
+    protected $middleware;
     protected $shutdown = false;
     protected $configured = false;
     protected $bound = false;
@@ -24,10 +26,12 @@ class Consumer
 
     /**
      * @param ServiceResolver $services
+     * @param MiddlewareChain $midddleware
      */
-    public function __construct(ServiceResolver $services)
+    public function __construct(ServiceResolver $services, MiddlewareChain $middleware)
     {
         $this->services = $services;
+        $this->middleware = $middleware;
     }
 
     /**
@@ -65,13 +69,7 @@ class Consumer
             return true;
         }
 
-        try {
-            $this->invoke($envelope, $queue);
-        } catch (Exception $e) {
-            $this->fail($envelope, $e, $queue, $failed);
-        }
-
-        $queue->acknowledge($envelope);
+        $this->invoke($envelope, $queue, $failed);
 
         return true;
     }
@@ -91,15 +89,24 @@ class Consumer
      * @param Envelope $envelope
      * @param Queue $queue
      */
-    protected function invoke(Envelope $envelope, Queue $queue)
+    public function invoke(Envelope $envelope, Queue $queue, Queue $failed = null)
     {
-        $invoker = new Invoker($this->services->resolve($envelope));
-        $invoker->invoke($envelope);
+        $callable = $this->services->resolve($envelope);
+        $invoker = $this->middleware->chain(new Invoker($callable));
+
+        try {
+            $invoker->call($envelope);
+        } catch (Exception $e) {
+            $this->fail($envelope, $e, $queue, $failed);
+        }
+
+        $queue->acknowledge($envelope);
     }
 
     /**
      * @param Envelope   $envelope
      * @param Exception  $exception
+     * @param Queue $queue
      * @param Queue|null $failed
      */
     protected function fail(Envelope $envelope, Exception $exception, Queue $queue, Queue $failed = null)

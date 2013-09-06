@@ -2,6 +2,7 @@
 
 namespace Bernard;
 
+use Bernard\Middleware\MiddlewareChain;
 use Bernard\Message;
 use Bernard\Message\Envelope;
 use Bernard\QueueFactory;
@@ -11,14 +12,16 @@ use Bernard\QueueFactory;
  */
 class Producer
 {
-    protected $factory;
+    protected $queues;
+    protected $middleware;
 
     /**
      * @param QueueFactory $factory
      */
-    public function __construct(QueueFactory $factory)
+    public function __construct(QueueFactory $queues, MiddlewareChain $middleware)
     {
-        $this->factory = $factory;
+        $this->queues = $queues;
+        $this->middleware = $middleware;
     }
 
     /**
@@ -26,8 +29,9 @@ class Producer
      */
     public function produce(Message $message)
     {
-        $envelope = new Envelope($message);
+        $queue = $this->queues->create($message->getQueue());
 
-        $this->factory->create($message->getQueue())->enqueue($envelope);
+        $this->middleware->chain($queue)
+            ->call(new Envelope($message));
     }
 }
