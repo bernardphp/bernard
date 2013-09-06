@@ -19,7 +19,7 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
         ));
 
         $envelope = $this->createEnvelope();
-        $this->assertEquals(array('Bernard\Tests\Fixtures\Service', 'onSendNewsletter'), $resolver->resolve($envelope));
+        $this->assertEquals(array('Bernard\Tests\Fixtures\Service', 'sendNewsletter'), $resolver->resolve($envelope));
     }
 
     /**
@@ -51,7 +51,7 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
         $resolver->register('SendNewsletter', 'Bernard\Tests\Fixtures\Service');
 
         $envelope = $this->createEnvelope();
-        $callable = array('Bernard\Tests\Fixtures\Service', 'onSendNewsletter');
+        $callable = array('Bernard\Tests\Fixtures\Service', 'sendNewsletter');
 
         $this->assertEquals($callable, $resolver->resolve($envelope));
     }
@@ -65,7 +65,7 @@ class ObjectResolverTest extends \PHPUnit_Framework_TestCase
 
         $envelope = $this->createEnvelope();
 
-        $this->assertEquals(array($service, 'onSendNewsletter'), $resolver->resolve($envelope));
+        $this->assertEquals(array($service, 'sendNewsletter'), $resolver->resolve($envelope));
     }
 
     public function testItThrowsExceptionIfServiceCannotBeFound()
