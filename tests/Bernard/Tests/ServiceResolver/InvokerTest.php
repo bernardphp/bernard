@@ -6,6 +6,23 @@ use Bernard\ServiceResolver\Invoker;
 
 class InvokerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testIsCallable()
+    {
+
+        $envelope = $this->getMockBuilder('Bernard\Message\Envelope')
+            ->disableOriginalConstructor()->getMock();
+
+        $called = false;
+        $function = function () use (&$called) {
+            $called = true;
+        };
+
+        $invoker = new Invoker($function);
+        $invoker($envelope);
+
+        $this->assertTrue($called);
+    }
+
     public function testItInvokesServiceObject()
     {
         $envelope = $this->getMockBuilder('Bernard\Message\Envelope')
