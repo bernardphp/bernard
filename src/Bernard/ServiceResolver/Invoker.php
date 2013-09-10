@@ -41,7 +41,9 @@ class Invoker implements \Bernard\Middleware
      */
     public function call(Envelope $envelope)
     {
-        $callable = $this->callable;
-        $callable($envelope->getMessage());
+
+        // This is a bit slow, but only way to support on 5.3 if callable is not
+        // a string.
+        call_user_func($this->callable, $envelope->getMessage());
     }
 }
