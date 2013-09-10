@@ -41,7 +41,7 @@ class LoggerMiddleware implements Middleware
             $context += compact('exception');
             $this->logger->error('[Bernard] Received exception while processing "{name}".', $context);
 
-            throw $e;
+            throw $exception;
         }
     }
 }
