@@ -33,6 +33,8 @@ class ObjectResolver extends AbstractResolver
     {
         $name = $envelope->getName();
 
-        return isset($this->services[$name]) ? $this->services[$name] : null;
+        if (isset($this->services[$name])) {
+            return $this->services[$name];
+        }
     }
 }

@@ -7,13 +7,15 @@ use Bernard\Queue\InMemoryQueue;
 use Bernard\Message\Envelope;
 use Bernard\Message\DefaultMessage;
 use Bernard\ServiceResolver\ObjectResolver;
+use Bernard\Middleware\MiddlewareBuilder;
 
 class ConsumerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->resolver = new ObjectResolver;
-        $this->consumer = new Consumer($this->resolver);
+        $this->middleware = new MiddlewareBuilder;
+        $this->consumer = new Consumer($this->resolver, $this->middleware);
     }
 
     public function testShutdown()
@@ -69,7 +71,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $maxRetries = $maxRetries ?: 5;
 
         $service = new Fixtures\Service;
-        $envelope = new Envelope(new DefaultMessage('SendNewsleter'));
+        $envelope = new Envelope(new DefaultMessage('FailSendNewsletter'));
 
         $this->resolver->register('FailSendNewsletter', $service);
 

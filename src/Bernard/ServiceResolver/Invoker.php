@@ -2,12 +2,13 @@
 
 namespace Bernard\ServiceResolver;
 
+use Bernard\Assert;
 use Bernard\Message\Envelope;
 
 /**
  * @package Bernard
  */
-class Invoker
+class Invoker implements \Bernard\Middleware
 {
     protected $callable;
 
@@ -16,11 +17,17 @@ class Invoker
      */
     public function __construct($callable)
     {
-        if (!is_callable($callable)) {
-            throw new \InvalidArgumentException('Expected argument of type "callable" but got "' . gettype($callable) . '".');
-        }
+        Assert::assertCallable($callable);
 
         $this->callable = $callable;
+    }
+
+    /**
+     * @see Invoker::call()
+     */
+    public function invoke(Envelope $envelope)
+    {
+        $this->call($envelope);
     }
 
     /**
@@ -32,16 +39,11 @@ class Invoker
      * @param  Envelope  $envelope
      * @throws Exception
      */
-    public function invoke(Envelope $envelope)
+    public function call(Envelope $envelope)
     {
-        call_user_func($this->callable, $envelope->getMessage());
-    }
 
-    /**
-     * @see Invoker::invoke()
-     */
-    public function __invoke(Envelope $envelope)
-    {
-        $this->invoke($envelope);
+        // This is a bit slow, but only way to support on 5.3 if callable is not
+        // a string.
+        call_user_func($this->callable, $envelope->getMessage());
     }
 }
