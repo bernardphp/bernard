@@ -28,12 +28,12 @@ function get_serializer() {
 }
 
 function get_producer_middleware() {
-    return new Middleware\MiddlewareChain();
+    return new Middleware\MiddlewareBuilder;
 }
 
 function get_consumer_middleware() {
-    $chain = new Middleware\MiddlewareChain();
-    $chain->add(function ($next) {
+    $chain = new Middleware\MiddlewareBuilder;
+    $chain->push(function ($next) {
         return new Middleware\ErrorLogMiddleware($next);
     });
 

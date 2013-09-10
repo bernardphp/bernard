@@ -7,14 +7,14 @@ use Bernard\Queue\InMemoryQueue;
 use Bernard\Message\Envelope;
 use Bernard\Message\DefaultMessage;
 use Bernard\ServiceResolver\ObjectResolver;
-use Bernard\Middleware\MiddlewareChain;
+use Bernard\Middleware\MiddlewareBuilder;
 
 class ConsumerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->resolver = new ObjectResolver;
-        $this->middleware = new MiddlewareChain;
+        $this->middleware = new MiddlewareBuilder;
         $this->consumer = new Consumer($this->resolver, $this->middleware);
     }
 

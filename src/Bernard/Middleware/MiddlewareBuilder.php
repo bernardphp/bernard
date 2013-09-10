@@ -11,7 +11,7 @@ use Bernard\Middleware;
  *
  * @package Raven
  */
-class MiddlewareChain
+class MiddlewareBuilder
 {
     protected $factories;
 
@@ -20,19 +20,29 @@ class MiddlewareChain
      */
     public function __construct(array $factories = array())
     {
-        $this->factories = array();
+        $this->factories = new \SplStack;
 
-        array_map(array($this, 'add'), $factories);
+        array_map(array($this, 'push'), $factories);
     }
 
     /**
      * @param callable $factory
      */
-    public function add($factory)
+    public function push($factory)
     {
         Assert::assertCallable($factory);
 
-        $this->factories[] = $factory;
+        $this->factories->push($factory);
+    }
+
+    /**
+     * @param callable $factory
+     */
+    public function unshift($factory)
+    {
+        Assert::assertCallable($factory);
+
+        $this->factories->unshift($factory);
     }
 
     /**
@@ -41,11 +51,11 @@ class MiddlewareChain
      * @param Middleware $middleware
      * @return Middleware
      */
-    public function chain(Middleware $middleware)
+    public function build(Middleware $middleware)
     {
-        reset($this->factories);
+        $this->factories->rewind();
 
-        $factories = array_reverse($this->factories);
+        $factories = iterator_to_array($this->factories);
 
         return array_reduce($factories, array($this, 'reduce'), $middleware);
     }

@@ -2,7 +2,7 @@
 
 namespace Bernard;
 
-use Bernard\Middleware\MiddlewareChain;
+use Bernard\Middleware\MiddlewareBuilder;
 use Bernard\Message\Envelope;
 use Bernard\ServiceResolver\Invoker;
 use Exception;
@@ -26,9 +26,9 @@ class Consumer
 
     /**
      * @param ServiceResolver $services
-     * @param MiddlewareChain $midddleware
+     * @param MiddlewareBuilder $midddleware
      */
-    public function __construct(ServiceResolver $services, MiddlewareChain $middleware)
+    public function __construct(ServiceResolver $services, MiddlewareBuilder $middleware)
     {
         $this->services = $services;
         $this->middleware = $middleware;
@@ -92,7 +92,7 @@ class Consumer
     public function invoke(Envelope $envelope, Queue $queue, Queue $failed = null)
     {
         $callable = $this->services->resolve($envelope);
-        $invoker = $this->middleware->chain(new Invoker($callable));
+        $invoker = $this->middleware->build(new Invoker($callable));
 
         try {
             $invoker->call($envelope);
