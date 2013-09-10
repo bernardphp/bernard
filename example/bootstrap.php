@@ -1,7 +1,7 @@
 <?php
 
 use Bernard\Consumer;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer\NaiveSerializer;
@@ -15,7 +15,9 @@ use Bernard\Middleware;
  * a plugin to a framework.
  */
 
-require __DIR__ . '/../vendor/autoload.php';
+if (file_exists($autoloadFile = __DIR__ . '/../vendor/autoload.php') || file_exists($autoloadFile = __DIR__ . '/../../../autoload.php')) {
+    require $autoloadFile;
+}
 require __DIR__ . '/EchoTimeService.php';
 
 ini_set('display_erros', 1);
@@ -26,26 +28,14 @@ function get_serializer() {
 }
 
 function get_producer_middleware() {
-    return new Middleware();
+    return new Middleware\MiddlewareBuilder;
 }
 
 function get_consumer_middleware() {
-    $middleware = new Middleware();
-    $middleware->add(function ($next) {
-        return function ($envelope) use ($next) {
-            print "Executing '" . $envelope->getName() . "'.\n";
+    $chain = new Middleware\MiddlewareBuilder;
+    $chain->push(array('Bernard\Middleware\ErrorLogMiddleware', 'create'));
 
-            try {
-                $next($envelope);
-            } catch (Exception $e) {
-                print "Got '" . (string) $e . "' while executing envelope.\n";
-
-                throw $e;
-            }
-        };
-    });
-
-    return $middleware;
+    return $chain;
 }
 
 function get_queue_factory() {
@@ -53,7 +43,7 @@ function get_queue_factory() {
 }
 
 function get_producer() {
-    return new Producer(get_queue_factory());
+    return new Producer(get_queue_factory(), get_producer_middleware());
 }
 
 function get_services() {
@@ -71,7 +61,7 @@ function produce() {
     $producer = get_producer();
 
     while (true) {
-        $producer->produce(new DefaultMessage('EchoTime', array(
+        $producer->produce(new Message\DefaultMessage('EchoTime', array(
             'time' => time(),
         )));
 

@@ -8,6 +8,7 @@ use Bernard\Driver\PhpRedisDriver;
  */
 function get_driver() {
     $redis = new Redis;
+    $redis->connect('localhost');
     $redis->setOption(Redis::OPT_PREFIX, 'bernard:');
 
     return new PhpRedisDriver($redis);

@@ -34,7 +34,6 @@ abstract class AbstractResolver implements \Bernard\ServiceResolver
             $service = array($service, $this->getMethodName($envelope));
         }
 
-        // Hook into middlewares here and wrap the callable
         return $service;
     }
 
