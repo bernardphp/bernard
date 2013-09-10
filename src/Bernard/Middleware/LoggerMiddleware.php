@@ -22,7 +22,7 @@ class LoggerMiddleware implements Middleware
     {
         $this->next = $next;
         $this->logger = $logger;
-        $this->usage = $consumer;
+        $this->usage = $usage;
     }
 
     /**
@@ -30,7 +30,7 @@ class LoggerMiddleware implements Middleware
      */
     public function call(Envelope $envelope)
     {
-        if ($usage == 'producer') {
+        if ($this->usage == 'producer') {
             $this->logger->info('[Bernard] Produced "{message}" for "{queue}".', array(
                 'name' => $envelope->getName(),
                 'queue' => $envelope->getMessage()->getQueue(),
