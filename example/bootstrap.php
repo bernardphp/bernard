@@ -1,11 +1,12 @@
 <?php
 
 use Bernard\Consumer;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer\NaiveSerializer;
 use Bernard\ServiceResolver\ObjectResolver;
+use Bernard\Middleware;
 
 /**
  * This file contains helper methods for the examples. See example/$driver.php
@@ -26,30 +27,41 @@ function get_serializer() {
     return new NaiveSerializer;
 }
 
+function get_producer_middleware() {
+    return new Middleware\MiddlewareBuilder;
+}
+
+function get_consumer_middleware() {
+    $chain = new Middleware\MiddlewareBuilder;
+    $chain->push(array('Bernard\Middleware\ErrorLogMiddleware', 'create'));
+
+    return $chain;
+}
+
 function get_queue_factory() {
     return new PersistentFactory(get_driver(), get_serializer());
 }
 
 function get_producer() {
-    return new Producer(get_queue_factory());
+    return new Producer(get_queue_factory(), get_producer_middleware());
 }
 
 function get_services() {
-    $resolver = new ObjectResolver;
+    $resolver = new ObjectResolver();
     $resolver->register('EchoTime', new EchoTimeService);
 
     return $resolver;
 }
 
 function get_consumer() {
-    return new Consumer(get_services());
+    return new Consumer(get_services(), get_consumer_middleware());
 }
 
 function produce() {
     $producer = get_producer();
 
     while (true) {
-        $producer->produce(new DefaultMessage('EchoTime', array(
+        $producer->produce(new Message\DefaultMessage('EchoTime', array(
             'time' => time(),
         )));
 

@@ -3,11 +3,12 @@
 namespace Bernard;
 
 use Bernard\Message\Envelope;
+use Countable;
 
 /**
  * @package Bernard
  */
-interface Queue extends \Countable
+interface Queue extends Middleware, Countable
 {
     /**
      * @param Envelope $envelope
