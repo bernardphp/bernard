@@ -1,13 +1,13 @@
 Changelog
 =========
 
-0.9.0 / YYYY-MM-DD
+0.9.0 / 2013-08-10
 ------------------
 
  * Support any callable in ObjectResolver
  * Implement Middleware. Middleware is used by the Consumer and Producer when a Message in queued or consumed.
  * Removed Spork support until it can be reimplemented as a Middleware.
- * Add `LoggerMiddleware` for basic logging when producing and consuming messages.
+ * Add `LoggerMiddleware` and `ErrorLogMiddleware` for basic logging when producing and consuming messages.
 
 0.8.0 / 2013-08-01
 ------------------
