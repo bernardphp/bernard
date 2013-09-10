@@ -7,7 +7,7 @@ use Bernard\Middleware;
 use Psr\Log\LoggerInterface;
 
 /**
- * Sends useful logging messages to $logger. 
+ * Sends useful logging messages to $logger.
  *
  * @package Raven
  */
