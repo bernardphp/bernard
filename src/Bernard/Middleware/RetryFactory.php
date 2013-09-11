@@ -11,13 +11,16 @@ use Bernard\QueueFactory;
 class RetryFactory
 {
     protected $queues;
+    protected $name;
 
     /**
      * @param QueueFactory $queues
+     * @param string       $name
      */
-    public function __construct(QueueFactory $queues)
+    public function __construct(QueueFactory $queues, $name = 'failed')
     {
         $this->queues = $queues;
+        $this->name = $name;
     }
 
     /**
@@ -26,6 +29,6 @@ class RetryFactory
      */
     public function __invoke(Middleware $next)
     {
-        return new RetryMiddleware($next, $this->queues);
+        return new RetryMiddleware($next, $this->queues, $this->name);
     }
 }

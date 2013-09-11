@@ -16,15 +16,18 @@ class RetryMiddleware
 
     protected $queues;
     protected $next;
+    protected $name;
 
     /**
      * @param Middleware   $next
      * @param QueueFactory $queues
+     * @param string       $name
      */
-    public function __construct(Middleware $next, QueueFactory $queues)
+    public function __construct(Middleware $next, QueueFactory $queues, $name = 'failed')
     {
         $this->next = $next;
         $this->queues = $queues;
+        $this->name = $name;
     }
 
     /**
@@ -58,6 +61,6 @@ class RetryMiddleware
 
         // The Message have been retried 5 times. Move it to the $failed queue.
         // the middleware chain is dropped.
-        return $this->queues->create('failed')->enqueue($envelope);
+        return $this->queues->create($this->name)->enqueue($envelope);
     }
 }
