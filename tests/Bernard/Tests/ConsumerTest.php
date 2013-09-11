@@ -56,6 +56,6 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
 
         $this->consumer->tick($queue);
 
-        $this->assertTrue($service::$onImportUsers);
+        $this->assertTrue($service::$importUsers);
     }
 }
