@@ -4,7 +4,8 @@
     "license"     : "MIT",
 
     "autoload" : {
-        "psr-0" : { "Bernard" : "src/" }
+        "psr-0" : { "Bernard" : "src/" },
+        "files" : ["src/Bernard/functions.php"]
     },
 
     "require" : {

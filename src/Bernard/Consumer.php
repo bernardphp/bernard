@@ -23,7 +23,7 @@ class Consumer
     );
 
     /**
-     * @param ServiceResolver $services
+     * @param ServiceResolver   $services
      * @param MiddlewareBuilder $midddleware
      */
     public function __construct(ServiceResolver $services, MiddlewareBuilder $middleware)
@@ -86,7 +86,7 @@ class Consumer
      * by wrapping the invoke method.
      *
      * @param Envelope $envelope
-     * @param Queue $queue
+     * @param Queue    $queue
      */
     public function invoke(Envelope $envelope, Queue $queue, Queue $failed = null)
     {

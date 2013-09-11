@@ -2,9 +2,9 @@
 
 namespace Bernard\JMSSerializer;
 
+use Bernard;
 use Bernard\Message\DefaultMessage;
 use Bernard\Message\Envelope;
-use Bernard\Utils;
 use JMS\Serializer\AbstractVisitor;
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
@@ -58,7 +58,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
 
         $data = array(
             'args'      => $context->accept($envelope->getMessage(), $type),
-            'class'     => Utils::encodeClassName($envelope->getClass()),
+            'class'     => bernard_encode_class_name($envelope->getClass()),
             'timestamp' => $envelope->getTimestamp(),
             'retries'   => $envelope->getRetries(),
         );
@@ -77,7 +77,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
      */
     public function deserializeEnvelope(AbstractVisitor $visitor, array $data, $type, Context $context)
     {
-        $data['class'] = Utils::decodeClassString($data['class']);
+        $data['class'] = bernard_decode_class_string($data['class']);
 
         $type = array(
             'name' => $data['class'],
@@ -94,7 +94,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
         $visitor->setNavigator($context->getNavigator());
 
         foreach (array('retries', 'timestamp', 'class') as $name) {
-            Utils::forceObjectPropertyValue($envelope, $name, $data[$name]);
+            bernard_force_property_value($envelope, $name, $data[$name]);
         }
 
         return $envelope;

@@ -21,7 +21,7 @@ class LoggerFactory
     }
 
     /**
-     * @param Middleware $next
+     * @param  Middleware       $next
      * @return LoggerMiddleware
      */
     public function __invoke(Middleware $next)

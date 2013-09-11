@@ -21,7 +21,7 @@ class RetryFactory
     }
 
     /**
-     * @param Middleware $next
+     * @param  Middleware      $next
      * @return RetryMiddleware
      */
     public function __invoke(Middleware $next)

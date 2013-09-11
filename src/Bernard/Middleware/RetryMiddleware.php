@@ -18,7 +18,7 @@ class RetryMiddleware
     protected $next;
 
     /**
-     * @param Middleware $next
+     * @param Middleware   $next
      * @param QueueFactory $queues
      */
     public function __construct(Middleware $next, QueueFactory $queues)
@@ -44,7 +44,7 @@ class RetryMiddleware
     /**
      * Moves the Envelope to failed queue if retries have been exhausted.
      *
-     * @param Envelope $envelope
+     * @param Envelope  $envelope
      * @param Exception $e
      */
     protected function fail(Envelope $envelope, Exception $e)

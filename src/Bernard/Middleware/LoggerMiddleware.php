@@ -14,7 +14,7 @@ use Psr\Log\LoggerInterface;
 class LoggerMiddleware implements Middleware
 {
     /**
-     * @param Middleware $next
+     * @param Middleware      $next
      * @param LoggerInterface $logger
      */
     public function __construct(Middleware $next, LoggerInterface $logger)

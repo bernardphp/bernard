@@ -3,7 +3,6 @@
 namespace Bernard\Symfony;
 
 use Bernard\Message\Envelope;
-use Bernard\Utils;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer;
@@ -23,7 +22,7 @@ class EnvelopeNormalizer extends SerializerAwareNormalizer implements Normalizer
     {
         return array(
             'args'      => $this->serializer->normalize($object->getMessage(), $format, $context),
-            'class'     => Utils::encodeClassName($object->getClass()),
+            'class'     => bernard_encode_class_name($object->getClass()),
             'timestamp' => $object->getTimestamp(),
             'retries'   => $object->getRetries(),
         );
@@ -34,7 +33,7 @@ class EnvelopeNormalizer extends SerializerAwareNormalizer implements Normalizer
      */
     public function denormalize($data, $class, $format = null, array $context = array())
     {
-        $data['class'] = $class = Utils::decodeClassString($data['class']);
+        $data['class'] = $class = bernard_decode_class_string($data['class']);
 
         if (!class_exists($class)) {
             $class = 'Bernard\\Message\\DefaultMessage';
@@ -44,7 +43,7 @@ class EnvelopeNormalizer extends SerializerAwareNormalizer implements Normalizer
         $envelope = new Envelope($this->serializer->denormalize($data['args'], $class, $format, $context));
 
         foreach (array('timestamp', 'retries', 'class') as $name) {
-            Utils::forceObjectPropertyValue($envelope, $name, $data[$name]);
+            bernard_force_property_value($envelope, $name, $data[$name]);
         }
 
         return $envelope;

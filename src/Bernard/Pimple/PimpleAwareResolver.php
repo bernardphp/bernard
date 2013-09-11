@@ -14,7 +14,7 @@ class PimpleAwareResolver extends \Bernard\ServiceResolver\AbstractResolver
 
     /**
      * @param Pimple $pimple
-     * @param array $services
+     * @param array  $services
      */
     public function __construct(Pimple $pimple, array $services = array())
     {

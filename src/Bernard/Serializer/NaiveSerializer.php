@@ -4,7 +4,6 @@ namespace Bernard\Serializer;
 
 use Bernard\Message\DefaultMessage;
 use Bernard\Message\Envelope;
-use Bernard\Utils;
 
 /**
  * Very simple Serializer that only supports DefaultMessage
@@ -31,7 +30,7 @@ class NaiveSerializer implements \Bernard\Serializer
 
         return json_encode(array(
             'args'      => array('name' => $message->getName()) + get_object_vars($message),
-            'class'     => Utils::encodeClassName($envelope->getClass()),
+            'class'     => bernard_encode_class_name($envelope->getClass()),
             'timestamp' => $envelope->getTimestamp(),
             'retries'   => $envelope->getRetries(),
         ));
@@ -44,7 +43,7 @@ class NaiveSerializer implements \Bernard\Serializer
     {
         // everything is just deserialized into an DefaultMessage
         $data = json_decode($serialized, true);
-        $data['class'] = Utils::decodeClassString($data['class']);
+        $data['class'] = bernard_decode_class_string($data['class']);
 
         if ($data['class'] !== 'Bernard\Message\DefaultMessage') {
             $data['args']['name'] = current(array_reverse(explode('\\', $data['class'])));
@@ -53,7 +52,7 @@ class NaiveSerializer implements \Bernard\Serializer
         $envelope = new Envelope(new DefaultMessage($data['args']['name'], $data['args']));
 
         foreach (array('timestamp', 'retries', 'class') as $name) {
-            Utils::forceObjectPropertyValue($envelope, $name, $data[$name]);
+            bernard_force_property_value($envelope, $name, $data[$name]);
         }
 
         return $envelope;

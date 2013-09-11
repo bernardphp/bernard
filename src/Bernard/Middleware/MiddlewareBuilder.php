@@ -48,7 +48,7 @@ class MiddlewareBuilder
     /**
      * Creates the chain a returns the wrapped callable.
      *
-     * @param Middleware $middleware
+     * @param  Middleware $middleware
      * @return Middleware
      */
     public function build(Middleware $middleware)
@@ -65,7 +65,7 @@ class MiddlewareBuilder
      * $callable and effectively creating a chain.
      *
      * @param Middleware $middleware
-     * @param callable $factory
+     * @param callable   $factory
      */
     public function reduce(Middleware $middleware, $factory)
     {

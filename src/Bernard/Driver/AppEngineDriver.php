@@ -82,7 +82,7 @@ class AppEngineDriver implements \Bernard\Driver
     public function removeQueue($queueName) { }
 
     /**
-     * @param string $queueName
+     * @param  string                   $queueName
      * @throws InvalidArgumentException
      */
     protected function resolveEndpoint($queueName)

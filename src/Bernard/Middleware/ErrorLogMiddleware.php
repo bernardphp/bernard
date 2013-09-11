@@ -39,7 +39,7 @@ class ErrorLogMiddleware implements Middleware
     /**
      * Static that can be used as the callable for the builder.
      *
-     * @param Middleware $next
+     * @param  Middleware $next
      * @return self
      */
     public static function create(Middleware $next)
