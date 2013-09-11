@@ -2,7 +2,7 @@
 
 namespace Bernard\Serializer;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Symfony\Component\Serializer\Serializer;
 
 /**
@@ -33,6 +33,6 @@ class SymfonySerializer implements \Bernard\Serializer
      */
     public function deserialize($serialized)
     {
-        return $this->serializer->deserialize($serialized, 'Bernard\Message\Envelope', 'json');
+        return $this->serializer->deserialize($serialized, 'Bernard\Envelope', 'json');
     }
 }

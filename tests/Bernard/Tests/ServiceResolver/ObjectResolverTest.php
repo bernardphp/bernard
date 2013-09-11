@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\ServiceResolver;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Bernard\ServiceResolver\ObjectResolver;
 
 class ObjectResolverTest extends \PHPUnit_Framework_TestCase

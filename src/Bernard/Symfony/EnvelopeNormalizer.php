@@ -2,7 +2,7 @@
 
 namespace Bernard\Symfony;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer;
@@ -75,6 +75,6 @@ class EnvelopeNormalizer extends SerializerAwareNormalizer implements Normalizer
             $class = get_class($class);
         }
 
-        return $class == 'Bernard\Message\Envelope';
+        return $class == 'Bernard\Envelope';
     }
 }

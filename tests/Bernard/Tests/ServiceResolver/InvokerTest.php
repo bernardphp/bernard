@@ -8,7 +8,7 @@ class InvokerTest extends \PHPUnit_Framework_TestCase
 {
     public function testIsCallable()
     {
-        $envelope = $this->getMockBuilder('Bernard\Message\Envelope')
+        $envelope = $this->getMockBuilder('Bernard\Envelope')
             ->disableOriginalConstructor()->getMock();
         $envelope->expects($this->once())->method('getMessage')->will($this->returnValue('message'));
 

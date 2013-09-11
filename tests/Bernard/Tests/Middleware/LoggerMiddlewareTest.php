@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\Middleware;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Bernard\Middleware\LoggerMiddleware;
 use Psr\Log\NullLogger;
 

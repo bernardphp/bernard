@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\Queue;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Bernard\Queue\InMemoryQueue;
 
 class InMemoryQueueTest extends AbstractQueueTest

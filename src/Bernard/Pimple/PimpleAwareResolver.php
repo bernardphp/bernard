@@ -3,7 +3,7 @@
 namespace Bernard\Pimple;
 
 use Pimple;
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 
 /**
  * @package Bernard

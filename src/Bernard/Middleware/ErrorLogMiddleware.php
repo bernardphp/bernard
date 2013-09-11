@@ -2,7 +2,7 @@
 
 namespace Bernard\Middleware;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Bernard\Middleware;
 
 /**

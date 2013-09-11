@@ -1,8 +1,6 @@
 <?php
 
-namespace Bernard\Message;
-
-use Bernard\Message;
+namespace Bernard;
 
 /**
  * Wraps a Message with metadata that can be used for automatic retry

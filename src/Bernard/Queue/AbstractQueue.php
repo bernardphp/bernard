@@ -2,7 +2,7 @@
 
 namespace Bernard\Queue;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Bernard\Exception\InvalidOperationException;
 
 /**
