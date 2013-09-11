@@ -73,9 +73,7 @@ function consume() {
     $queues   = get_queue_factory();
     $consumer = get_consumer();
 
-    $consumer->consume($queues->create('echo-time'), $queues->create('failed'), array(
-        'max_retries' => 5,
-    ));
+    $consumer->consume($queues->create('echo-time'));
 }
 
 function main() {
