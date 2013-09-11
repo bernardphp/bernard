@@ -20,7 +20,6 @@ class Consumer
     protected $configured = false;
     protected $bound = false;
     protected $options = array(
-        'max-retries' => 5,
         'max-runtime' => PHP_INT_MAX,
     );
 
@@ -39,6 +38,8 @@ class Consumer
      */
     public function consume(Queue $queue, Queue $failed = null, array $options = array())
     {
+        $this->bind();
+
         while ($this->tick($queue, $failed, $options)) {
             // NO op
         }
@@ -54,7 +55,6 @@ class Consumer
      */
     public function tick(Queue $queue, Queue $failed = null, array $options = array())
     {
-        $this->bind();
         $this->configure($options);
 
         if ($this->shutdown) {
@@ -97,32 +97,11 @@ class Consumer
         try {
             $invoker->call($envelope);
         } catch (Exception $e) {
-            $this->fail($envelope, $e, $queue, $failed);
+            // Make sure the exception is not interfering.
+            // Previously failing jobs handling have been moved to a middleware.
         }
 
         $queue->acknowledge($envelope);
-    }
-
-    /**
-     * @param Envelope   $envelope
-     * @param Exception  $exception
-     * @param Queue $queue
-     * @param Queue|null $failed
-     */
-    protected function fail(Envelope $envelope, Exception $exception, Queue $queue, Queue $failed = null)
-    {
-        if ($envelope->getRetries() < $this->options['max-retries']) {
-            $envelope->incrementRetries();
-
-            $failed = $queue;
-        }
-
-        if ($failed) {
-            // As we are manually requeuing the envelope we must acknowledge it
-            // or it will be duplicated.
-            $queue->acknowledge($envelope);
-            $failed->enqueue($envelope);
-        }
     }
 
     /**
@@ -144,14 +123,8 @@ class Consumer
      */
     protected function bind()
     {
-        if ($this->bound) {
-            return;
-        }
-
         pcntl_signal(SIGTERM, array($this, 'shutdown'));
         pcntl_signal(SIGQUIT, array($this, 'shutdown'));
         pcntl_signal(SIGINT,  array($this, 'shutdown'));
-
-        $this->bound = true;
     }
 }

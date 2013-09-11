@@ -9,7 +9,7 @@ use Bernard\Middleware;
  * Builder of middleware. Takes any number of Callables and handles
  * them as factories returning a new invokable.
  *
- * @package Raven
+ * @package Bernard
  */
 class MiddlewareBuilder
 {

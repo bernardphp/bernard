@@ -9,7 +9,7 @@ use Bernard\Middleware;
  * Uses `error_log` to stream error logs into the SAPI. This is
  * useful for examples.
  *
- * @package Raven
+ * @package Bernard
  */
 class ErrorLogMiddleware implements Middleware
 {
