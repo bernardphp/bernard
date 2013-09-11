@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\Serializer;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Bernard\Message\DefaultMessage;
 use Bernard\Serializer\NaiveSerializer;
 use Bernard\Tests\Fixtures;

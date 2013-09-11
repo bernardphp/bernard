@@ -2,7 +2,7 @@
 
 namespace Bernard\Serializer;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
 
@@ -37,6 +37,6 @@ class JMSSerializer implements \Bernard\Serializer
      */
     public function deserialize($deserialized)
     {
-        return $this->serializer->deserialize($deserialized, 'Bernard\Message\Envelope', 'json');
+        return $this->serializer->deserialize($deserialized, 'Bernard\Envelope', 'json');
     }
 }

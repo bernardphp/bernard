@@ -2,8 +2,6 @@
 
 namespace Bernard;
 
-use Bernard\Message\Envelope;
-
 /**
  * @package Bernard
  */

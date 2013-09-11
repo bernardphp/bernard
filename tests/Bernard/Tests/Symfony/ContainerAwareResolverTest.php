@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\ServiceResolver;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Bernard\Symfony\ContainerAwareResolver;
 use Symfony\Component\DependencyInjection\Container;
 

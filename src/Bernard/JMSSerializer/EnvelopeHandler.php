@@ -4,7 +4,7 @@ namespace Bernard\JMSSerializer;
 
 use Bernard;
 use Bernard\Message\DefaultMessage;
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use JMS\Serializer\AbstractVisitor;
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
@@ -22,12 +22,12 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
         return array(array(
             'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
             'format'    => 'json',
-            'type'      => 'Bernard\Message\Envelope',
+            'type'      => 'Bernard\Envelope',
             'method'    => 'serializeEnvelope',
         ), array(
             'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
             'format'    => 'json',
-            'type'      => 'Bernard\Message\Envelope',
+            'type'      => 'Bernard\Envelope',
             'method'    => 'deserializeEnvelope',
         ), array(
             'direction' => GraphNavigator::DIRECTION_SERIALIZATION,

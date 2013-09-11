@@ -6,6 +6,7 @@ Changelog
 
  * Move retry functionality from `Consumer` into a `RetryMiddleware`.
  * Add `LoggerFactory` for `LoggerMiddleware`.
+ * Rename internal `Bernard\Message\Envelope` to `Bernard\Envelope`.
 
 0.9.0 / 2013-08-10
 ------------------

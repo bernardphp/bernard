@@ -12,7 +12,7 @@ class RetryMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->next = $this->getMock('Bernard\Middleware');
         $this->queues = new InMemoryFactory;
 
-        $this->envelope = $this->getMockBuilder('Bernard\Message\Envelope')
+        $this->envelope = $this->getMockBuilder('Bernard\Envelope')
             ->disableOriginalConstructor()->getMock();
         $this->envelope->expects($this->any())->method('getName')->will($this->returnValue('SendNewsletter'));
 
