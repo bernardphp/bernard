@@ -18,7 +18,6 @@ class Consumer
     protected $middleware;
     protected $shutdown = false;
     protected $configured = false;
-    protected $bound = false;
     protected $options = array(
         'max-runtime' => PHP_INT_MAX,
     );
