@@ -32,13 +32,16 @@ class Consumer
     }
 
     /**
-     * {@inheritDoc}
+     * Starts an infinite loop calling Consumer::tick();
+     *
+     * @param Queue $queue
+     * @param array $options
      */
-    public function consume(Queue $queue, Queue $failed = null, array $options = array())
+    public function consume(Queue $queue, array $options = array())
     {
         $this->bind();
 
-        while ($this->tick($queue, $failed, $options)) {
+        while ($this->tick($queue, $options)) {
             // NO op
         }
     }
@@ -47,11 +50,11 @@ class Consumer
      * Returns true do indicate it should be run again or false to indicate
      * it should not be run again.
      *
-     * @param  Queue      $queue
-     * @param  Queue|null $failed
+     * @param  Queue   $queue
+     * @param  array   $options
      * @return boolean
      */
-    public function tick(Queue $queue, Queue $failed = null, array $options = array())
+    public function tick(Queue $queue, array $options = array())
     {
         $this->configure($options);
 
@@ -67,7 +70,7 @@ class Consumer
             return true;
         }
 
-        $this->invoke($envelope, $queue, $failed);
+        $this->invoke($envelope, $queue);
 
         return true;
     }
@@ -87,7 +90,7 @@ class Consumer
      * @param Envelope $envelope
      * @param Queue    $queue
      */
-    public function invoke(Envelope $envelope, Queue $queue, Queue $failed = null)
+    public function invoke(Envelope $envelope, Queue $queue)
     {
         $callable = $this->services->resolve($envelope);
         $invoker = $this->middleware->build(new Invoker($callable));

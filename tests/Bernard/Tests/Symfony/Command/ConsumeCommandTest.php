@@ -20,36 +20,13 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
         $command = new ConsumeCommand($this->consumer, $this->queues);
         $queue = $this->queues->create('send-newsletter');
 
-        $this->consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), null, $this->equalTo(array(
-            'max-retries' => 5,
+        $this->consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo(array(
             'max-runtime' => 100,
         )));
 
         $tester = new CommandTester($command);
         $tester->execute(array(
-            '--max-retries' => 5,
             '--max-runtime' => 100,
-            'queue' => 'send-newsletter',
-        ));
-    }
-
-    public function testItConsumesWithFailed()
-    {
-        $command = new ConsumeCommand($this->consumer, $this->queues);
-
-        $queue = $this->queues->create('send-newsletter');
-        $failed = $this->queues->create('failed-send-newsletter');
-
-        $this->consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo($failed), $this->equalTo(array(
-            'max-retries' => 5,
-            'max-runtime' => 100,
-        )));
-
-        $tester = new CommandTester($command);
-        $tester->execute(array(
-            '--max-retries' => 5,
-            '--max-runtime' => 100,
-            '--failed' => 'failed-send-newsletter',
             'queue' => 'send-newsletter',
         ));
     }

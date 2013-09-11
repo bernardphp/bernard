@@ -31,7 +31,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
     {
         $queue = new InMemoryQueue('queue');
 
-        $this->assertFalse($this->consumer->tick($queue, null, array(
+        $this->assertFalse($this->consumer->tick($queue, array(
             'max-runtime' => -1 * PHP_INT_MAX,
         )));
     }
