@@ -4,19 +4,19 @@ namespace Bernard\Tests\Fixtures;
 
 class Service
 {
-    public static $onImportUsers = false;
+    public static $importUsers = false;
 
-    public function onFailSendNewsletter()
+    public function failSendNewsletter()
     {
         throw new \Exception();
     }
 
-    public function onImportUsers()
+    public function importUsers()
     {
-        static::$onImportUsers = true;
+        static::$importUsers = true;
     }
 
-    public function onCreateFile()
+    public function createFile()
     {
         touch(__DIR__ . '/create_file.test');
     }
