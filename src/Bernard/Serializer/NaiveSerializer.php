@@ -3,7 +3,7 @@
 namespace Bernard\Serializer;
 
 use Bernard\Message\DefaultMessage;
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 
 /**
  * Very simple Serializer that only supports DefaultMessage

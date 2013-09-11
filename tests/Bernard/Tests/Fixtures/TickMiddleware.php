@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\Fixtures;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 
 class TickMiddleware implements \Bernard\Middleware
 {

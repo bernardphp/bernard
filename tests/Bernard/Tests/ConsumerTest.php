@@ -4,7 +4,7 @@ namespace Bernard\Tests;
 
 use Bernard\Consumer;
 use Bernard\Queue\InMemoryQueue;
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Bernard\Message\DefaultMessage;
 use Bernard\ServiceResolver\ObjectResolver;
 use Bernard\Middleware\MiddlewareBuilder;

@@ -10,7 +10,7 @@ class MiddlewareBuilderTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->builder = new MiddlewareBuilder;
-        $this->envelope = $this->getMockBuilder('Bernard\Message\Envelope')
+        $this->envelope = $this->getMockBuilder('Bernard\Envelope')
             ->disableOriginalConstructor()->getMock();
     }
 

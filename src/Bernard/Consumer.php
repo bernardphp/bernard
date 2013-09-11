@@ -3,7 +3,6 @@
 namespace Bernard;
 
 use Bernard\Middleware\MiddlewareBuilder;
-use Bernard\Message\Envelope;
 use Bernard\ServiceResolver\Invoker;
 use Exception;
 

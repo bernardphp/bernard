@@ -4,7 +4,7 @@ namespace Bernard\Middleware;
 
 use Bernard\Middleware;
 use Bernard\QueueFactory;
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Exception;
 
 /**

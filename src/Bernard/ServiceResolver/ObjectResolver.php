@@ -2,7 +2,7 @@
 
 namespace Bernard\ServiceResolver;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 
 /**
  * @package Bernard

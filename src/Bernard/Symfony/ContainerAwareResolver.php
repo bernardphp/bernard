@@ -2,7 +2,7 @@
 
 namespace Bernard\Symfony;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 use Symfony\Component\DependencyInjection\Container;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\Queue;
 
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 
 abstract class AbstractQueueTest  extends \PHPUnit_Framework_TestCase
 {

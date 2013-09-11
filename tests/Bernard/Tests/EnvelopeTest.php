@@ -1,9 +1,9 @@
 <?php
 
-namespace Bernard\Tests\Message;
+namespace Bernard\Tests;
 
 use Bernard\Message\DefaultMessage;
-use Bernard\Message\Envelope;
+use Bernard\Envelope;
 
 class EnvelopeTest extends \PHPUnit_Framework_TestCase
 {
