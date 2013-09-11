@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.10.0 / YYYY-MM-DD
+-------------------
+
+ * Move retry functionality from `Consumer` into a `RetryMiddleware`.
+
 0.9.0 / 2013-08-10
 ------------------
 

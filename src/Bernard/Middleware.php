@@ -8,7 +8,7 @@ use Bernard\Message\Envelope;
  * Builder of middleware. Takes any number of Callables and handles
  * them as factories returning a new invokable.
  *
- * @package Raven
+ * @package Bernard
  */
 interface Middleware
 {

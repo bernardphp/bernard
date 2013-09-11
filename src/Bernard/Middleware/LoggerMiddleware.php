@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Sends useful logging messages to $logger.
  *
- * @package Raven
+ * @package Bernard
  */
 class LoggerMiddleware implements Middleware
 {
@@ -41,7 +41,7 @@ class LoggerMiddleware implements Middleware
             $context += compact('exception');
             $this->logger->error('[Bernard] Received exception while processing "{name}".', $context);
 
-            throw $e;
+            throw $exception;
         }
     }
 }
