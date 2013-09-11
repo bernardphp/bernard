@@ -5,6 +5,7 @@ Changelog
 -------------------
 
  * Move retry functionality from `Consumer` into a `RetryMiddleware`.
+ * Add `LoggerFactory` for `LoggerMiddleware`.
 
 0.9.0 / 2013-08-10
 ------------------
