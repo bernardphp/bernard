@@ -2,7 +2,7 @@
 
 namespace Bernard\Middleware;
 
-use Bernard\Assert;
+use Bernard\Verify;
 use Bernard\Middleware;
 
 /**
@@ -30,7 +30,7 @@ class MiddlewareBuilder
      */
     public function push($factory)
     {
-        Assert::assertCallable($factory);
+        Verify::isCallable($factory);
 
         $this->factories->push($factory);
     }
@@ -40,7 +40,7 @@ class MiddlewareBuilder
      */
     public function unshift($factory)
     {
-        Assert::assertCallable($factory);
+        Verify::isCallable($factory);
 
         $this->factories->unshift($factory);
     }
@@ -69,7 +69,7 @@ class MiddlewareBuilder
      */
     public function reduce(Middleware $middleware, $factory)
     {
-        Assert::assertCallable($factory);
+        Verify::isCallable($factory);
 
         return $factory($middleware);
     }
