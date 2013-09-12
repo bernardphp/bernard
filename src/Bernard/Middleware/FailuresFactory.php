@@ -8,7 +8,7 @@ use Bernard\QueueFactory;
 /**
  * @package Bernard
  */
-class RetryFactory
+class FailuresFactory
 {
     protected $queues;
     protected $name;
@@ -25,10 +25,10 @@ class RetryFactory
 
     /**
      * @param  Middleware      $next
-     * @return RetryMiddleware
+     * @return FailuresMiddleware
      */
     public function __invoke(Middleware $next)
     {
-        return new RetryMiddleware($next, $this->queues, $this->name);
+        return new FailuresMiddleware($next, $this->queues, $this->name);
     }
 }
