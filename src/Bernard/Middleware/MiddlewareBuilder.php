@@ -22,7 +22,7 @@ class MiddlewareBuilder
     {
         $this->factories = new \SplStack;
 
-        array_map(array($this, 'push'), $factories);
+        array_walk($factories, array($this, 'push'));
     }
 
     /**
