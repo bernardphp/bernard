@@ -32,7 +32,6 @@ class NaiveSerializer implements \Bernard\Serializer
             'args'      => array('name' => $message->getName()) + get_object_vars($message),
             'class'     => bernard_encode_class_name($envelope->getClass()),
             'timestamp' => $envelope->getTimestamp(),
-            'retries'   => $envelope->getRetries(),
         ));
     }
 
@@ -51,7 +50,7 @@ class NaiveSerializer implements \Bernard\Serializer
 
         $envelope = new Envelope(new DefaultMessage($data['args']['name'], $data['args']));
 
-        foreach (array('timestamp', 'retries', 'class') as $name) {
+        foreach (array('timestamp', 'class') as $name) {
             bernard_force_property_value($envelope, $name, $data[$name]);
         }
 

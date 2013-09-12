@@ -28,10 +28,10 @@ class NaiveSerializerTest extends \PHPUnit_Framework_TestCase
 
     public function testItSerializesDefaultMessage()
     {
-        $json = '{"args":{"name":"SendNewsletter"},"class":"Bernard:Message:DefaultMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"args":{"name":"SendNewsletter"},"class":"Bernard:Message:DefaultMessage","timestamp":' . time() . '}';
         $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter')));
 
-        $json = '{"args":{"name":"SendNewsletter","newsletterId":1,"users":["henrikbjorn"]},"class":"Bernard:Message:DefaultMessage","timestamp":' . time() . ',"retries":0}';
+        $json = '{"args":{"name":"SendNewsletter","newsletterId":1,"users":["henrikbjorn"]},"class":"Bernard:Message:DefaultMessage","timestamp":' . time() . '}';
         $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter', array(
             'newsletterId' => 1,
             'users' => array(
@@ -44,7 +44,7 @@ class NaiveSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $time = time();
 
-        $json = '{"args":{"meaningOfLife":42},"class":"UnknownNamespace:UnknownMessage","timestamp":' . $time . ',"retries":0}';
+        $json = '{"args":{"meaningOfLife":42},"class":"UnknownNamespace:UnknownMessage","timestamp":' . $time . '}';
         $envelope = $this->serializer->deserialize($json);
 
         $this->assertInstanceOf('Bernard\Message\DefaultMessage', $envelope->getMessage());
