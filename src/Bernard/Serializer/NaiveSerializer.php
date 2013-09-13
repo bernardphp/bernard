@@ -46,9 +46,8 @@ class NaiveSerializer implements \Bernard\Serializer
 
         $envelope = new Envelope(new DefaultMessage($data['args']['name'], $data['args']));
 
-        foreach (array('timestamp', 'class') as $name) {
-            bernard_force_property_value($envelope, $name, $data[$name]);
-        }
+        bernard_force_property_value($envelope, 'class', $data['class']);
+        bernard_force_property_value($envelope, 'timestamp', $data['timestamp']);
 
         return $envelope;
     }
