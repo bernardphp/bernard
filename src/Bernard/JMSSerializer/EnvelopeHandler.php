@@ -60,7 +60,6 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
             'args'      => $context->accept($envelope->getMessage(), $type),
             'class'     => bernard_encode_class_name($envelope->getClass()),
             'timestamp' => $envelope->getTimestamp(),
-            'retries'   => $envelope->getRetries(),
         );
 
         $visitor->setRoot($data);
@@ -85,7 +84,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
         );
 
         if (!class_exists($data['class'])) {
-            $data['args']['name'] = current(array_reverse(explode('\\', $data['class'])));
+            $data['args']['name'] = substr(strrchr($data['class'], '\\'), 1);
             $type['name'] = 'Bernard\Message\DefaultMessage';
         }
 
@@ -93,7 +92,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
 
         $visitor->setNavigator($context->getNavigator());
 
-        foreach (array('retries', 'timestamp', 'class') as $name) {
+        foreach (array('timestamp', 'class') as $name) {
             bernard_force_property_value($envelope, $name, $data[$name]);
         }
 

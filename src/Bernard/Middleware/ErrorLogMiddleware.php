@@ -35,15 +35,4 @@ class ErrorLogMiddleware implements Middleware
             throw $e;
         }
     }
-
-    /**
-     * Static that can be used as the callable for the builder.
-     *
-     * @param  Middleware $next
-     * @return self
-     */
-    public static function create(Middleware $next)
-    {
-        return new self($next);
-    }
 }
