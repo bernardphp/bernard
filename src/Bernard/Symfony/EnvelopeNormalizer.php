@@ -36,7 +36,7 @@ class EnvelopeNormalizer extends SerializerAwareNormalizer implements Normalizer
 
         if (!class_exists($class)) {
             $class = 'Bernard\\Message\\DefaultMessage';
-            $data['args']['name'] = current(array_reverse(explode('\\', $data['class'])));
+            $data['args']['name'] = substr(strrchr($data['class'], '\\'), 1);
         }
 
         $envelope = new Envelope($this->serializer->denormalize($data['args'], $class, $format, $context));

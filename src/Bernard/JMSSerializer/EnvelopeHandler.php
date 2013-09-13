@@ -84,7 +84,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
         );
 
         if (!class_exists($data['class'])) {
-            $data['args']['name'] = current(array_reverse(explode('\\', $data['class'])));
+            $data['args']['name'] = substr(strrchr($data['class'], '\\'), 1);
             $type['name'] = 'Bernard\Message\DefaultMessage';
         }
 
