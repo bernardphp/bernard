@@ -33,7 +33,7 @@ function get_producer_middleware() {
 
 function get_consumer_middleware() {
     $chain = new Middleware\MiddlewareBuilder;
-    $chain->push(array('Bernard\Middleware\ErrorLogMiddleware', 'create'));
+    $chain->push(new Middleware\ErrorLogFactory);
     $chain->push(new Middleware\FailuresFactory(get_queue_factory()));
 
     return $chain;
