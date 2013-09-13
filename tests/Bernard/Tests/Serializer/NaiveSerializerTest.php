@@ -26,18 +26,27 @@ class NaiveSerializerTest extends \PHPUnit_Framework_TestCase
         $this->serializer->serialize(new Envelope(new Fixtures\SendNewsletterMessage()));
     }
 
-    public function testItSerializesDefaultMessage()
+    /**
+     * @dataProvider provideDefaultMessage
+     */
+    public function testItSerializesDefaultMessage($properties)
     {
-        $json = '{"args":{"name":"SendNewsletter"},"class":"Bernard:Message:DefaultMessage","timestamp":' . time() . '}';
-        $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter')));
+        $expected = array(
+            'args'      => array('name' => 'SendNewsletter') + $properties,
+            'class'     => 'Bernard:Message:DefaultMessage',
+            'timestamp' => time(),
+        );
 
-        $json = '{"args":{"name":"SendNewsletter","newsletterId":1,"users":["henrikbjorn"]},"class":"Bernard:Message:DefaultMessage","timestamp":' . time() . '}';
-        $this->assertEquals($json, $this->serializer->serialize($this->createWrappedDefaultMessage('SendNewsletter', array(
-            'newsletterId' => 1,
-            'users' => array(
-                'henrikbjorn'
-            ),
-        ))));
+        $envelope = new Envelope(new DefaultMessage('SendNewsletter', $properties));
+        $this->assertEquals(json_encode($expected), $this->serializer->serialize($envelope));
+    }
+
+    public function provideDefaultMessage()
+    {
+        return array(
+            array(array()),
+            array(array('newsletterId' => 1, 'users' => array('henrikbjorn'))),
+        );
     }
 
     public function testItDeserializesAnUnknownClass()
@@ -55,14 +64,9 @@ class NaiveSerializerTest extends \PHPUnit_Framework_TestCase
 
     public function testItDeserializesDefaultMessage()
     {
-        $message = $this->createWrappedDefaultMessage('SendNewsletter');
-        $json = $this->serializer->serialize($message);
+        $envelope = new Envelope(new DefaultMessage('SendNewsletter', array()));
+        $json = $this->serializer->serialize($envelope);
 
-        $this->assertEquals($message, $this->serializer->deserialize($json));
-    }
-
-    public function createWrappedDefaultMessage($name, array $properties = array())
-    {
-        return new Envelope(new DefaultMessage($name, $properties));
+        $this->assertEquals($envelope, $this->serializer->deserialize($json));
     }
 }
