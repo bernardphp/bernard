@@ -13,7 +13,6 @@ class Envelope
     protected $message;
     protected $class;
     protected $timestamp;
-    protected $retries = 0;
 
     /**
      * @param Message $message
@@ -55,21 +54,5 @@ class Envelope
     public function getTimestamp()
     {
         return $this->timestamp;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getRetries()
-    {
-        return $this->retries;
-    }
-
-    /**
-     * Increment number of retries
-     */
-    public function incrementRetries()
-    {
-        $this->retries += 1;
     }
 }

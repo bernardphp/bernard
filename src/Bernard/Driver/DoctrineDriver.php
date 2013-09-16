@@ -50,7 +50,7 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        return $this->connection->fetchColumn('SELECT COUNT(id) FROM bernard_messages WHERE queue = :queue', array(
+        return $this->connection->fetchColumn('SELECT COUNT(id) FROM bernard_messages WHERE queue = :queue AND visible = 1', array(
             'queue' => $queueName,
         ));
     }

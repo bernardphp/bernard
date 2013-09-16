@@ -82,11 +82,9 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->driver->pushMessage('send-newsletter', 'my-message-2');
         $this->assertEquals(2, $this->driver->countMessages('send-newsletter'));
 
-        // popping does not affect counting until it is acknowledged
         list($message, $id) = $this->driver->popMessage('send-newsletter');
-        $this->assertEquals(2, $this->driver->countMessages('send-newsletter'));
-
         $this->driver->acknowledgeMessage('send-newsletter', $id);
+
         $this->assertEquals(1, $this->driver->countMessages('send-newsletter'));
     }
 

@@ -2,7 +2,7 @@
 
 namespace Bernard\ServiceResolver;
 
-use Bernard\Assert;
+use Bernard\Verify;
 use Bernard\Envelope;
 
 /**
@@ -17,7 +17,7 @@ class Invoker implements \Bernard\Middleware
      */
     public function __construct($callable)
     {
-        Assert::assertCallable($callable);
+        Verify::isCallable($callable);
 
         $this->callable = $callable;
     }

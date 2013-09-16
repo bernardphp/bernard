@@ -4,10 +4,11 @@ namespace Bernard\Serializer;
 
 use Bernard\Message\DefaultMessage;
 use Bernard\Envelope;
+use Bernard\Verify;
 
 /**
- * Very simple Serializer that only supports DefaultMessage
- * message instances. For other Message instances and more
+ * Very simple Serializer that only supports the core message types
+ * DefaultMessage and FailedMessage. For other Message instances and more
  * advanced needs you should use Symfony or JMS Serializer components.
  *
  * @package Bernard
@@ -19,20 +20,14 @@ class NaiveSerializer implements \Bernard\Serializer
      */
     public function serialize(Envelope $envelope)
     {
-        $message = $envelope->getMessage();
+        Verify::any($envelope->getClass(), array('Bernard\Message\DefaultMessage', 'Bernard\Message\FailedMessage'));
 
-        if ($envelope->getClass() != 'Bernard\Message\DefaultMessage') {
-            throw new \InvalidArgumentException(strtr('Expected instance of "%expected%" but got "%actual%".', array(
-                '%expected%' => 'Bernard\Message\DefaultMessage',
-                '%actual%'   => $envelope->getClass(),
-            )));
-        }
+        $message = $envelope->getMessage();
 
         return json_encode(array(
             'args'      => array('name' => $message->getName()) + get_object_vars($message),
             'class'     => bernard_encode_class_name($envelope->getClass()),
             'timestamp' => $envelope->getTimestamp(),
-            'retries'   => $envelope->getRetries(),
         ));
     }
 
@@ -43,17 +38,16 @@ class NaiveSerializer implements \Bernard\Serializer
     {
         // everything is just deserialized into an DefaultMessage
         $data = json_decode($serialized, true);
-        $data['class'] = bernard_decode_class_string($data['class']);
+        $class = bernard_decode_class_string($data['class']);
 
-        if ($data['class'] !== 'Bernard\Message\DefaultMessage') {
-            $data['args']['name'] = current(array_reverse(explode('\\', $data['class'])));
+        if ($class !== 'Bernard\Message\DefaultMessage') {
+            $data['args']['name'] = substr(strrchr($class, '\\'), 1);
         }
 
         $envelope = new Envelope(new DefaultMessage($data['args']['name'], $data['args']));
 
-        foreach (array('timestamp', 'retries', 'class') as $name) {
-            bernard_force_property_value($envelope, $name, $data[$name]);
-        }
+        bernard_force_property_value($envelope, 'class', $class);
+        bernard_force_property_value($envelope, 'timestamp', $data['timestamp']);
 
         return $envelope;
     }
