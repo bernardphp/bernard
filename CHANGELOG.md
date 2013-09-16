@@ -8,6 +8,8 @@ Changelog
  * Add `LoggerFactory` for `LoggerMiddleware`.
  * Rename internal `Bernard\Message\Envelope` to `Bernard\Envelope`.
  * Service methods does not prepend `on` anymore. `onSendNewsletter` would be `sendNewsletter`.
+ * Remove `Invoker` Object. Instead this functionality have been moved into the Consumer which implements Middleware.
+ * Remove Middleware from Queue. Instead the Producer implements Middleware.
 
 0.9.0 / 2013-08-10
 ------------------

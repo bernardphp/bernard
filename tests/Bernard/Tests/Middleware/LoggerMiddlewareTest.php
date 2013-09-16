@@ -3,6 +3,7 @@
 namespace Bernard\Tests\Middleware;
 
 use Bernard\Envelope;
+use Bernard\Queue\InMemoryQueue;
 use Bernard\Middleware\LoggerMiddleware;
 use Psr\Log\NullLogger;
 
@@ -22,6 +23,6 @@ class LoggerMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->next->expects($this->once())->method('call')->with($envelope);
 
         $middleware = new LoggerMiddleware($this->next, $this->logger);
-        $middleware->call($envelope);
+        $middleware->call($envelope, new InMemoryQueue('queue'));
     }
 }

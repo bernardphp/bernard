@@ -3,6 +3,7 @@
 namespace Bernard\Tests\Fixtures;
 
 use Bernard\Envelope;
+use Bernard\Queue;
 
 class TickMiddleware implements \Bernard\Middleware
 {
@@ -13,7 +14,7 @@ class TickMiddleware implements \Bernard\Middleware
         $this->result = &$result;
     }
 
-    public function call(Envelope $envelope)
+    public function call(Envelope $envelope, Queue $queue)
     {
         $this->tick();
 
@@ -21,7 +22,7 @@ class TickMiddleware implements \Bernard\Middleware
             return;
         }
 
-        $this->next->call($envelope);
+        $this->next->call($envelope, $queue);
 
         $this->tick();
     }
