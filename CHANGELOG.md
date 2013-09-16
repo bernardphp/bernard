@@ -4,7 +4,7 @@ Changelog
 0.10.0 / YYYY-MM-DD
 -------------------
 
- * Move retry functionality from `Consumer` into a `RetryMiddleware`.
+ * Remove `RetryMiddleware` and add `FailuresMiddleware` that just sends failed messages to failed queue.
  * Add `LoggerFactory` for `LoggerMiddleware`.
  * Rename internal `Bernard\Message\Envelope` to `Bernard\Envelope`.
  * Service methods does not prepend `on` anymore. `onSendNewsletter` would be `sendNewsletter`.
