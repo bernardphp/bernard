@@ -4,6 +4,7 @@ namespace Bernard\Middleware;
 
 use Bernard\Middleware;
 use Bernard\QueueFactory;
+use Bernard\Queue;
 use Bernard\Envelope;
 use Exception;
 
@@ -31,11 +32,15 @@ class FailuresMiddleware implements Middleware
     /**
      * {@inheritDoc}
      */
-    public function call(Envelope $envelope)
+    public function call(Envelope $envelope, Queue $queue)
     {
         try {
-            $this->next->call($envelope);
+            $this->next->call($envelope, $queue);
         } catch (Exception $e) {
+            // Acknowledge are only done when a Envelope is processed with out interruption. but since
+            // it is getting requeued we dont want it retried.
+            $queue->acknowledge($envelope);
+
             $this->queues->create($this->name)->enqueue($envelope);
 
             throw $e;

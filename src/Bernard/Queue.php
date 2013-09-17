@@ -5,7 +5,7 @@ namespace Bernard;
 /**
  * @package Bernard
  */
-interface Queue extends Middleware, \Countable
+interface Queue extends \Countable
 {
     /**
      * @param Envelope $envelope

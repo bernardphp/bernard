@@ -3,14 +3,11 @@
 namespace Bernard;
 
 use Bernard\Middleware\MiddlewareBuilder;
-use Bernard\Message;
-use Bernard\Envelope;
-use Bernard\QueueFactory;
 
 /**
  * @package Bernard
  */
-class Producer
+class Producer implements Middleware
 {
     protected $queues;
     protected $middleware;
@@ -30,9 +27,17 @@ class Producer
      */
     public function produce(Message $message)
     {
-        $queue = $this->queues->create($message->getQueue());
+        $queue = $this->queues->create(bernard_guess_queue($message));
 
-        $this->middleware->build($queue)
-            ->call(new Envelope($message));
+        $middleware = $this->middleware->build($this);
+        $middleware->call(new Envelope($message), $queue);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function call(Envelope $envelope, Queue $queue)
+    {
+        $queue->enqueue($envelope);
     }
 }

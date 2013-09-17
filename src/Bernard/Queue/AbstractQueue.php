@@ -2,6 +2,7 @@
 
 namespace Bernard\Queue;
 
+use Bernard\Queue;
 use Bernard\Envelope;
 use Bernard\Exception\InvalidOperationException;
 
@@ -37,17 +38,6 @@ abstract class AbstractQueue implements \Bernard\Queue
     public function acknowledge(Envelope $envelope)
     {
         $this->errorIfClosed();
-    }
-
-    /**
-     * Enqueues the envelope on the queue. This is a shortcut for
-     * using it as a middleware.
-     *
-     * @param Envelope $envelope
-     */
-    public function call(Envelope $envelope)
-    {
-        $this->enqueue($envelope);
     }
 
     /**
