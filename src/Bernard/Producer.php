@@ -16,7 +16,8 @@ class Producer
     protected $middleware;
 
     /**
-     * @param QueueFactory $factory
+     * @param QueueFactory      $queues
+     * @param MiddlewareBuilder $middleware
      */
     public function __construct(QueueFactory $queues, MiddlewareBuilder $middleware)
     {

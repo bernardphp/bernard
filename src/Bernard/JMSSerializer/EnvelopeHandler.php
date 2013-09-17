@@ -101,7 +101,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
 
     /**
      * @param  AbstractVisitor $visitor
-     * @param  DefaultMessage  $envelope
+     * @param  DefaultMessage  $message
      * @param  string          $type
      * @param  Context         $context
      * @return array

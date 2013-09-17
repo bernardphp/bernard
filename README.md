@@ -20,7 +20,7 @@ Special Thanks
 --------------
 
 * [Igor Wiedler](http://igor.io) and [Dave Marshall](http://davedevelopment.co.uk) for helping me find a better name than Raekke.
-* [Benjamin Eberlei](http://whitewashing.de) for advice regarding architeture.
+* [Benjamin Eberlei](http://whitewashing.de) for advice regarding architecture.
 
 ---
 

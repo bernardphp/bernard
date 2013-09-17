@@ -16,7 +16,7 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
     protected $producer;
 
     /**
-     * @param Producer $consumer
+     * @param Producer $producer
      */
     public function __construct(Producer $producer)
     {
@@ -69,6 +69,6 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
                 break;
         }
 
-        throw new \RuntimeException('"'. $error .'" occured when decoding JSON data.');
+        throw new \RuntimeException('"'. $error .'" occurred when decoding JSON data.');
     }
 }

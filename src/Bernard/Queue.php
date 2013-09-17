@@ -25,7 +25,7 @@ interface Queue extends Middleware, \Countable
 
     /**
      * @param  integer $index
-     * @param  integer $length
+     * @param  integer $limit
      * @return array
      */
     public function peek($index = 1, $limit = 20);
