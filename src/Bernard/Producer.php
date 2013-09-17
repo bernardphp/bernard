@@ -23,11 +23,12 @@ class Producer implements Middleware
     }
 
     /**
-     * {@inheritDoc}
+     * @param Message     $message
+     * @param string|null $queueName
      */
-    public function produce(Message $message)
+    public function produce(Message $message, $queueName = null)
     {
-        $queue = $this->queues->create(bernard_guess_queue($message));
+        $queue = $this->queues->create($queueName ?: bernard_guess_queue($message));
 
         $middleware = $this->middleware->build($this);
         $middleware->call(new Envelope($message), $queue);

@@ -10,6 +10,7 @@ Changelog
  * Service methods does not prepend `on` anymore. `onSendNewsletter` would be `sendNewsletter`.
  * Remove `Invoker` Object. Instead this functionality have been moved into the Consumer which implements Middleware.
  * Remove Middleware from Queue. Instead the Producer implements Middleware.
+ * Producer takes a Queue name as the second parameter.
 
 0.9.0 / 2013-08-10
 ------------------

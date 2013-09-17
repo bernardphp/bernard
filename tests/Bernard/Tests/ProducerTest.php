@@ -9,15 +9,30 @@ use Bernard\QueueFactory\InMemoryFactory;
 
 class ProducerTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->queues = new InMemoryFactory;
+        $this->producer = new Producer($this->queues, new MiddlewareBuilder);
+    }
+
     public function testItDelegatesMessagesToQueue()
     {
-        $queues = new InMemoryFactory;
-        $message = new DefaultMessage('MyQueue');
+        $message = new DefaultMessage('SendNewsletter');
 
-        $producer = new Producer($queues, new MiddlewareBuilder);
-        $producer->produce($message);
+        $this->producer->produce($message);
 
-        $envelope = $queues->create('my-queue')->dequeue();
+        $envelope = $this->queues->create('send-newsletter')->dequeue();
+
+        $this->assertSame($message, $envelope->getMessage());
+    }
+
+    public function testItUsesGivenQueueName()
+    {
+        $message = new DefaultMessage('SendNewsletter');
+
+        $this->producer->produce($message, 'something-else');
+
+        $envelope = $this->queues->create('something-else')->dequeue();
 
         $this->assertSame($message, $envelope->getMessage());
     }
