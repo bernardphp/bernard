@@ -29,7 +29,7 @@ class ErrorLogMiddleware implements Middleware
         try {
             $this->next->call($envelope);
         } catch (\Exception $e) {
-            error_log(sprintf('[Bernard] Receieved exception "%s" with "%s" while processing "%s".',
+            error_log(sprintf('[Bernard] Received exception "%s" with "%s" while processing "%s".',
                 get_class($e), $e->getMessage(), $envelope->getName()));
 
             throw $e;

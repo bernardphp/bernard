@@ -23,7 +23,7 @@ class Consumer
 
     /**
      * @param ServiceResolver   $services
-     * @param MiddlewareBuilder $midddleware
+     * @param MiddlewareBuilder $middleware
      */
     public function __construct(ServiceResolver $services, MiddlewareBuilder $middleware)
     {

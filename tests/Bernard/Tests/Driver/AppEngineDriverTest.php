@@ -9,7 +9,7 @@ class AppEngineDriverTest extends \PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass()
     {
-        // Very ugly hack! But AppEngine SDK isnt available outside appengine
+        // Very ugly hack! But AppEngine SDK isn't available outside appengine
         // environment.
         class_alias('Bernard\Tests\Fixtures\PushTask', 'google\appengine\api\taskqueue\PushTask');
     }

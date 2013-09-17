@@ -145,7 +145,7 @@ class IronMqDriver extends AbstractPrefetchDriver
      *
      * @param array  $objects
      * @param string $property
-     * @retrun array
+     * @return array
      */
     protected function pluck(array $objects, $property)
     {
@@ -155,5 +155,4 @@ class IronMqDriver extends AbstractPrefetchDriver
 
         return array_map($function, $objects);
     }
-
 }

@@ -7,7 +7,7 @@ use Bernard\Envelope;
 
 class EnvelopeTest extends \PHPUnit_Framework_TestCase
 {
-    public function testItWrapsAMesageWithMetadata()
+    public function testItWrapsAMessageWithMetadata()
     {
         $envelope = new Envelope($message = new DefaultMessage('SendNewsletter'));
 

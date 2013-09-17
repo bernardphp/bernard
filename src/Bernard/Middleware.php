@@ -11,7 +11,7 @@ namespace Bernard;
 interface Middleware
 {
     /**
-     * Rememeber to call the next middleware.
+     * Remember to call the next middleware.
      *
      * @param Envelope $envelope
      */

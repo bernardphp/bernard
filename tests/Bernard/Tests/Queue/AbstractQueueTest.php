@@ -4,7 +4,7 @@ namespace Bernard\Tests\Queue;
 
 use Bernard\Envelope;
 
-abstract class AbstractQueueTest  extends \PHPUnit_Framework_TestCase
+abstract class AbstractQueueTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider dataClosedMethods

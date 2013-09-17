@@ -38,7 +38,7 @@ class PrefetchMessageCache
     }
 
     /**
-     * Create the queue cache internally if it doesnt yes exists.
+     * Create the queue cache internally if it doesn't yet exists.
      *
      * @param string $queueName
      */

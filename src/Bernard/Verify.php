@@ -3,7 +3,7 @@
 namespace Bernard;
 
 /**
- * Verify class that throws exception when assertion isnt fulfilled.
+ * Verify class that throws exception when assertion isn't fulfilled.
  *
  * @package Bernard
  */

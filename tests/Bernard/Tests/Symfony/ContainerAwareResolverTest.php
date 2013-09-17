@@ -39,7 +39,7 @@ class ContainerAwareResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array($service, 'sendNewsletter'), $resolver->resolve($envelope));
     }
 
-    public function testExceptionWhenServiceDosentExistOnContainer()
+    public function testExceptionWhenServiceDoesntExistOnContainer()
     {
         $this->setExpectedException('Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException');
 

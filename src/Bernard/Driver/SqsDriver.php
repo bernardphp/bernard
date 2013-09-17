@@ -16,7 +16,7 @@ class SqsDriver extends AbstractPrefetchDriver
     protected $queueUrls;
 
     /**
-     * @param SqsClient    $client
+     * @param SqsClient    $sqs
      * @param array        $queueUrls
      * @param integer|null $prefetch
      */
@@ -177,5 +177,4 @@ class SqsDriver extends AbstractPrefetchDriver
 
         throw new \InvalidArgumentException('Queue "' . $queueName .'" cannot be resolved to an url.');
     }
-
 }

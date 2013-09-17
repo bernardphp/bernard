@@ -20,7 +20,7 @@ if (file_exists($autoloadFile = __DIR__ . '/../vendor/autoload.php') || file_exi
 }
 require __DIR__ . '/EchoTimeService.php';
 
-ini_set('display_erros', 1);
+ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 function get_serializer() {
