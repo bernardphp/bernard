@@ -24,7 +24,7 @@ class FailuresFactory
     }
 
     /**
-     * @param  Middleware      $next
+     * @param  Middleware         $next
      * @return FailuresMiddleware
      */
     public function __invoke(Middleware $next)

@@ -24,7 +24,7 @@ class ErrorLogFactory
     }
 
     /**
-     * @param  Middleware      $next
+     * @param  Middleware         $next
      * @return ErrorLogMiddleware
      */
     public function __invoke(Middleware $next)
