@@ -10,7 +10,7 @@ function bernard_encode_class_name($className)
 }
 
 /**
- * @param  string $encodedClassName
+ * @param  string $classString
  * @return string
  */
 function bernard_decode_class_string($classString)

@@ -39,7 +39,7 @@ class PimpleAwareResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array($service, 'sendNewsletter'), $resolver->resolve($this->createEnvelope()));
     }
 
-    public function testExceptionWhenServiceDosentExistOnContainer()
+    public function testExceptionWhenServiceDoesntExistOnContainer()
     {
         $this->setExpectedException('InvalidArgumentException',
             'Identifier "non_existant_service_id" is not defined.');

@@ -12,7 +12,7 @@ class PhpRedisDriver implements \Bernard\Driver
     protected $redis;
 
     /**
-     * @param Redis $client
+     * @param Redis $redis
      */
     public function __construct(\Redis $redis)
     {

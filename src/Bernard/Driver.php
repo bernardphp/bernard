@@ -50,7 +50,7 @@ interface Driver
      * If the driver supports it, this will be called when a message
      * have been consumed.
      *
-     * @param string $queuename
+     * @param string $queueName
      * @param mixed  $receipt
      */
     public function acknowledgeMessage($queueName, $receipt);

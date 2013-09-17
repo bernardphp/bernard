@@ -10,8 +10,8 @@ class DefaultMessage extends AbstractMessage
     protected $name;
 
     /**
-     * @param string $string
-     * @param array
+     * @param string $name
+     * @param array $parameters
      */
     public function __construct($name, array $parameters = array())
     {

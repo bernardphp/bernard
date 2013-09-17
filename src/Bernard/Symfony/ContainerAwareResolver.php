@@ -14,6 +14,7 @@ class ContainerAwareResolver extends \Bernard\ServiceResolver\AbstractResolver
 
     /**
      * @param Container $container
+     * @param array     $services
      */
     public function __construct(Container $container, array $services = array())
     {

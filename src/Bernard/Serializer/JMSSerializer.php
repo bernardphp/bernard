@@ -14,7 +14,7 @@ class JMSSerializer implements \Bernard\Serializer
     protected $serializer;
 
     /**
-     * @param JMSSerializerInterface $serializer
+     * @param SerializerInterface $serializer
      */
     public function __construct(SerializerInterface $serializer)
     {
