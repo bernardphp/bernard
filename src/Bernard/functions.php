@@ -1,5 +1,7 @@
 <?php
 
+use Bernard\Message;
+
 /**
  * @param  string $className
  * @return string
@@ -23,4 +25,9 @@ function bernard_force_property_value($object, $property, $value)
     $property = new \ReflectionProperty($object, $property);
     $property->setAccessible(true);
     $property->setValue($object, $value);
+}
+
+function bernard_guess_queue(Message $message)
+{
+    return trim(strtolower(preg_replace('/[A-Z]/', '-\\0', $message->getName())), '-');
 }

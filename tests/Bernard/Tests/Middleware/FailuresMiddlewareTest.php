@@ -22,17 +22,20 @@ class FailuresMiddlewareTest extends \PHPUnit_Framework_TestCase
 
     public function testNextIsCalled()
     {
-        $this->next->expects($this->once())->method('call')->with($this->envelope);
+        $this->next->expects($this->once())->method('call')->with($this->envelope, $this->queues->create('queue'));
 
-        $this->middleware->call($this->envelope);
+        $this->middleware->call($this->envelope, $this->queues->create('queue'));
     }
 
     public function testFailedMessagesAreMovedToFailed()
     {
         $this->next->expects($this->once())->method('call')->will($this->throwException(new \Exception()));
 
+        $queue = $this->getMock('Bernard\Queue');
+        $queue->expects($this->once())->method('acknowledge')->with($this->envelope);
+
         try {
-            $this->middleware->call($this->envelope);
+            $this->middleware->call($this->envelope, $queue);
         } catch (\Exception $e) {
             // it bubbles the exceptions.
         }

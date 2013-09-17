@@ -4,6 +4,7 @@ namespace Bernard\Middleware;
 
 use Bernard\Envelope;
 use Bernard\Middleware;
+use Bernard\Queue;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -26,16 +27,15 @@ class LoggerMiddleware implements Middleware
     /**
      * {@inheritDoc}
      */
-    public function call(Envelope $envelope)
+    public function call(Envelope $envelope, Queue $queue)
     {
         $context = array(
-            'queue' => $envelope->getMessage()->getQueue(),
             'name' => $envelope->getName(),
         );
 
         try {
-            $this->logger->info('[Bernard] Processing message "{name}" from "{queue}".', $context);
-            $this->next->call($envelope);
+            $this->logger->info('[Bernard] Processing message "{name}".', $context);
+            $this->next->call($envelope, $queue);
 
         } catch (\Exception $exception) {
             $context += compact('exception');

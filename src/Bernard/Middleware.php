@@ -14,6 +14,7 @@ interface Middleware
      * Remember to call the next middleware.
      *
      * @param Envelope $envelope
+     * @param Queue $queue
      */
-    public function call(Envelope $envelope);
+    public function call(Envelope $envelope, Queue $queue);
 }

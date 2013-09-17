@@ -3,15 +3,13 @@
 namespace Bernard;
 
 use Bernard\Middleware\MiddlewareBuilder;
-use Bernard\ServiceResolver\Invoker;
-use Exception;
 
 declare(ticks=1);
 
 /**
  * @package Consumer
  */
-class Consumer
+class Consumer implements Middleware
 {
     protected $services;
     protected $middleware;
@@ -92,16 +90,24 @@ class Consumer
      */
     public function invoke(Envelope $envelope, Queue $queue)
     {
-        $callable = $this->services->resolve($envelope);
-        $invoker = $this->middleware->build(new Invoker($callable));
-
         try {
-            $invoker->call($envelope);
-        } catch (Exception $e) {
+            $middleware = $this->middleware->build($this);
+            $middleware->call($envelope, $queue);
+        } catch (\Exception $e) {
             // Make sure the exception is not interfering.
             // Previously failing jobs handling have been moved to a middleware.
         }
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function call(Envelope $envelope, Queue $queue)
+    {
+        // for 5.3 support where a function name is not a callable
+        call_user_func($this->services->resolve($envelope), $envelope->getMessage());
+
+        // We successfully processed the message.
         $queue->acknowledge($envelope);
     }
 
