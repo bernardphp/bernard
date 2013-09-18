@@ -9,7 +9,7 @@ class PersistentQueueTest extends AbstractQueueTest
 {
     public function setUp()
     {
-        $this->connection = $this->getMock('Bernard\Driver');
+        $this->driver = $this->getMock('Bernard\Driver');
         $this->serializer = $this->getMock('Bernard\Serializer');
     }
 
@@ -19,7 +19,7 @@ class PersistentQueueTest extends AbstractQueueTest
 
         $this->serializer->expects($this->once())->method('serialize')->with($this->equalTo($envelope))
             ->will($this->returnValue('serialized message'));
-        $this->connection->expects($this->once())->method('pushMessage')
+        $this->driver->expects($this->once())->method('pushMessage')
             ->with($this->equalTo('send-newsletter'), $this->equalTo('serialized message'));
 
         $queue = $this->createQueue('send-newsletter');
@@ -30,10 +30,10 @@ class PersistentQueueTest extends AbstractQueueTest
     {
         $envelope = new Envelope($this->getMock('Bernard\Message'));
 
-        $this->connection->expects($this->once())->method('acknowledgeMessage')
+        $this->driver->expects($this->once())->method('acknowledgeMessage')
             ->with($this->equalTo('send-newsletter'), $this->equalTo('receipt'));
 
-        $this->connection->expects($this->once())->method('popMessage')->with($this->equalTo('send-newsletter'))
+        $this->driver->expects($this->once())->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue(array('message', 'receipt')));
 
         $this->serializer->expects($this->once())->method('deserialize')
@@ -48,7 +48,7 @@ class PersistentQueueTest extends AbstractQueueTest
     {
         $envelope = new Envelope($this->getMock('Bernard\Message'));
 
-        $this->connection->expects($this->never())->method('acknowledgeMessage');
+        $this->driver->expects($this->never())->method('acknowledgeMessage');
 
         $queue = $this->createQueue('send-newsletter');
         $queue->acknowledge($envelope);
@@ -56,7 +56,7 @@ class PersistentQueueTest extends AbstractQueueTest
 
     public function testCount()
     {
-        $this->connection->expects($this->once())->method('countMessages')->with($this->equalTo('send-newsletter'))
+        $this->driver->expects($this->once())->method('countMessages')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue(10));
 
         $queue = $this->createQueue('send-newsletter');
@@ -68,10 +68,10 @@ class PersistentQueueTest extends AbstractQueueTest
     {
         $messageWrapper = new Envelope($this->getMock('Bernard\Message'));
 
-        $this->connection->expects($this->at(1))->method('popMessage')->with($this->equalTo('send-newsletter'))
+        $this->driver->expects($this->at(1))->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue(array('serialized', null)));
 
-        $this->connection->expects($this->at(2))->method('popMessage')->with($this->equalTo('send-newsletter'))
+        $this->driver->expects($this->at(2))->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue(null));
 
         $this->serializer->expects($this->once())->method('deserialize')->with($this->equalTo('serialized'))
@@ -92,7 +92,7 @@ class PersistentQueueTest extends AbstractQueueTest
         $this->serializer->expects($this->at(1))->method('deserialize')->with($this->equalTo('message2'));
         $this->serializer->expects($this->at(2))->method('deserialize')->with($this->equalTo('message3'));
 
-        $this->connection->expects($this->once())->method('peekQueue')->with($this->equalTo('send-newsletter'), $this->equalTo($index), $this->equalTo($limit))
+        $this->driver->expects($this->once())->method('peekQueue')->with($this->equalTo('send-newsletter'), $this->equalTo($index), $this->equalTo($limit))
             ->will($this->returnValue(array('message1', 'message2', 'message3')));
 
         $queue = $this->createQueue('send-newsletter');
@@ -118,6 +118,6 @@ class PersistentQueueTest extends AbstractQueueTest
 
     protected function createQueue($name)
     {
-        return new PersistentQueue($name, $this->connection, $this->serializer);
+        return new PersistentQueue($name, $this->driver, $this->serializer);
     }
 }
