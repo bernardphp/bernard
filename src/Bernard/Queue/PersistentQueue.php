@@ -27,7 +27,7 @@ class PersistentQueue extends AbstractQueue
 
         $this->driver     = $driver;
         $this->serializer = $serializer;
-        $this->receipts   = new SplObjectStorage;
+        $this->receipts   = array();
 
         $this->register();
     }
@@ -76,8 +76,10 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        if (isset($this->receipts[$envelope])) {
-            $this->driver->acknowledgeMessage($this->name, $this->receipts[$envelope]);
+        if ($receipt = array_search($envelope, $this->receipts, true)) {
+            $this->driver->acknowledgeMessage($this->name, $receipt);
+
+            unset($this->receipts[$receipt]);
         }
     }
 
@@ -90,12 +92,14 @@ class PersistentQueue extends AbstractQueue
 
         list($serialized, $receipt) = $this->driver->popMessage($this->name);
 
+        if (!$serialized) {
+            return;
+        }
+
         if ($serialized) {
             $envelope = $this->serializer->deserialize($serialized);
 
-            $this->receipts->attach($envelope, $receipt);
-
-            return $envelope;
+            return $this->receipts[$receipt] = $envelope;
         }
     }
 
