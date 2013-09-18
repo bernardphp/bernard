@@ -11,7 +11,11 @@ Changelog
  * Remove `Invoker` Object. Instead this functionality have been moved into the Consumer which implements Middleware.
  * Remove Middleware from Queue. Instead the Producer implements Middleware.
  * Producer takes a Queue name as the second parameter.
- * Fix memory leak in Queue where SplObjectStorage would not detach envelope objects.
+
+0.9.2 / 2013-09-18
+------------------
+
+ * Fix memory leak in Queue where SplObjectStorage would keep references to envelopes.
 
 0.9.0 / 2013-08-10
 ------------------
