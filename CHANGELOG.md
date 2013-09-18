@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.9.2 / 2013-09-18
+------------------
+
+* Fix memory leak in Queue where SplObjectStorage would keep references to envelopes.
+
 0.9.0 / 2013-08-10
 ------------------
 
