@@ -2,12 +2,11 @@
 
 namespace Bernard\Middleware;
 
-use Bernard\Message\FailedMessage;
+use Bernard\Message\FailureMessage;
 use Bernard\Middleware;
 use Bernard\QueueFactory;
 use Bernard\Queue;
 use Bernard\Envelope;
-use Bernard\RetryEnvelope;
 use Exception;
 
 /**
@@ -17,18 +16,15 @@ class RetryMiddleware implements Middleware
 {
     protected $queues;
     protected $next;
-    protected $name;
 
     /**
      * @param Middleware   $next
      * @param QueueFactory $queues
-     * @param string       $name
      */
-    public function __construct(Middleware $next, QueueFactory $queues, $name = 'failed')
+    public function __construct(Middleware $next, QueueFactory $queues)
     {
         $this->next = $next;
         $this->queues = $queues;
-        $this->name = $name;
     }
 
     /**
@@ -37,23 +33,30 @@ class RetryMiddleware implements Middleware
     public function call(Envelope $envelope, Queue $queue)
     {
         try {
-            $this->next->call($envelope, $queue);
+            if ($envelope->getMessage() instanceof FailureMessage) {
+                $this->next->call(new Envelope($envelope->getMessage()), $queue);
+            } else {
+                $this->next->call($envelope, $queue);
+            }
         } catch (Exception $e) {
             // Acknowledge are only done when a Envelope is processed with out interruption. but since
             // it is getting requeued we dont want it retried.
             $queue->acknowledge($envelope);
 
-            $failedMessage = new FailedMessage($envelope->getMessage());
+            $previous = $envelope->getMessage();
+
+            $retries = 0;
+            if ($previous instanceof FailureMessage) {
+                $retries = $previous->getRetries();
+            }
+
+            $failureMessage = new FailureMessage($previous, $retries + 1);
 
             /**
-             * @todo Do something with the $failedMessage->retryCount()
+             * @todo Calculate the exponential backoff time by using $failureMessage->getRetries()
              */
 
-            echo $failedMessage->getRetryCount() . PHP_EOL;
-
-            $envelope = new Envelope($failedMessage);
-
-            $this->queues->create($this->name)->enqueue($envelope);
+            $this->queues->create($failureMessage->getQueue())->enqueue(new Envelope($failureMessage));
 
             throw $e;
         }
