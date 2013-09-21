@@ -22,18 +22,15 @@ class PersistentFactory implements \Bernard\QueueFactory
      * @param Driver              $connection
      * @param SerializerInterface $serializer
      */
-    public function __construct(
-        Driver $connection,
-        Serializer $serializer
-    ) {
+    public function __construct(Driver $connection, Serializer $serializer)
+    {
         $this->queues     = array();
         $this->connection = $connection;
         $this->serializer = $serializer;
     }
 
     /**
-     * @param  string $queueName
-     * @return Queue
+     * {@inheritDoc}
      */
     public function create($queueName)
     {
@@ -47,7 +44,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @return Queue[]
+     * {@inheritDoc}
      */
     public function all()
     {
@@ -58,8 +55,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @param  string  $queueName
-     * @return boolean
+     * {@inheritDoc}
      */
     public function exists($queueName)
     {
@@ -75,7 +71,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @param string $queueName
+     * {@inheritDoc}
      */
     public function remove($queueName)
     {

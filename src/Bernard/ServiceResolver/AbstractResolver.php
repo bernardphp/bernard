@@ -37,6 +37,10 @@ abstract class AbstractResolver implements \Bernard\ServiceResolver
         return $service;
     }
 
+    /**
+     * @param  Envelope        $envelope
+     * @return object|callable
+     */
     abstract protected function getService(Envelope $envelope);
 
     /**
