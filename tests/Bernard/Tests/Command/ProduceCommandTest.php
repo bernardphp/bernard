@@ -1,9 +1,9 @@
 <?php
 
-namespace Bernard\Tests\Symfony\Command;
+namespace Bernard\Tests\Command;
 
 use Bernard\Message\DefaultMessage;
-use Bernard\Symfony\Command\ProduceCommand;
+use Bernard\Command\ProduceCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ProduceCommandTest extends \PHPUnit_Framework_TestCase
