@@ -1,8 +1,8 @@
 <?php
 
-namespace Bernard\Tests\Symfony\Command;
+namespace Bernard\Tests\Command;
 
-use Bernard\Symfony\Command\ConsumeCommand;
+use Bernard\Command\ConsumeCommand;
 use Bernard\QueueFactory\InMemoryFactory;
 use Symfony\Component\Console\Tester\CommandTester;
 
