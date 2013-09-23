@@ -28,6 +28,14 @@ class ContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
         $this->router->map($envelope);
     }
 
+    public function testAcceptsInConstructor()
+    {
+        $router = new ContainerAwareRouter($this->container, array('SendNewsletter' => 'my.service'));
+        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
+
+        $this->assertSame($this->container->get('my.service'), $router->map($envelope));
+    }
+
     public function testAcceptsContainerServiceAsReceiver()
     {
         $envelope = new Envelope(new DefaultMessage('SendNewsletter'));

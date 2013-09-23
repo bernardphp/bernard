@@ -28,11 +28,20 @@ class PimpleAwareRouterTest extends \PHPUnit_Framework_TestCase
         $this->router->map($envelope);
     }
 
+    public function testAcceptsInConstructor()
+    {
+        $router = new PimpleAwareRouter($this->pimple, array('SendNewsletter' => 'my.service'));
+        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
+
+        $this->assertSame($this->pimple['my.service'], $router->map($envelope));
+    }
+
     public function testAcceptsPimpleServiceAsReceiver()
     {
         $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
 
         $this->router->add('SendNewsletter', 'my.service');
+
         $this->assertSame($this->pimple['my.service'], $this->router->map($envelope));
     }
 }

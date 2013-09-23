@@ -17,9 +17,9 @@ class PimpleAwareRouter extends \Bernard\Router\SimpleRouter
      */
     public function __construct(Pimple $pimple, array $receivers = array())
     {
-        parent::__construct($receivers);
-
         $this->pimple = $pimple;
+
+        parent::__construct($receivers);
     }
 
     /**
