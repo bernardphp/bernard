@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.11.0 / YYYY-MM-DD
+-------------------
+
+* Rename `NaiveSerializer` to `SimpleSerializer`.
+
 0.10.0 / 2013-09-23
 -------------------
 
