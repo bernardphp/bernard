@@ -13,7 +13,7 @@ use Bernard\Verify;
  *
  * @package Bernard
  */
-class NaiveSerializer implements \Bernard\Serializer
+class SimpleSerializer implements \Bernard\Serializer
 {
     /**
      * {@inheritDoc}
