@@ -151,8 +151,9 @@ class SqsDriver extends AbstractPrefetchDriver
      */
     public function info()
     {
-        // info per queue would be possible.. return info about all queues here?
-        return null;
+        return array(
+            'prefetch' => $this->prefetch,
+        );
     }
 
     /**

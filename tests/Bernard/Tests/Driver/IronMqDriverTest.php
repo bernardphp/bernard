@@ -21,12 +21,20 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->connection = new IronMqDriver($this->ironmq);
+        $this->driver = new IronMqDriver($this->ironmq);
+    }
+
+    public function testItExposesInfo()
+    {
+        $driver = new IronMqDriver($this->ironmq, 10);
+
+        $this->assertEquals(array('prefetch' => 10), $driver->info());
+        $this->assertEquals(array('prefetch' => 2), $this->driver->info());
     }
 
     public function testItImplementsDriverInterface()
     {
-        $this->assertInstanceOf('Bernard\Driver\AbstractPrefetchDriver', $this->connection);
+        $this->assertInstanceOf('Bernard\Driver\AbstractPrefetchDriver', $this->driver);
     }
 
     public function testItCountsNumberOfMessagesInQueue()
@@ -37,8 +45,8 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
         $this->ironmq->expects($this->at(1))->method('getQueue')
             ->with($this->equalTo('non-existant'))->will($this->returnValue(null));
 
-        $this->assertEquals(4, $this->connection->countMessages('send-newsletter'));
-        $this->assertEquals(null, $this->connection->countMessages('non-existant'));
+        $this->assertEquals(4, $this->driver->countMessages('send-newsletter'));
+        $this->assertEquals(null, $this->driver->countMessages('non-existant'));
     }
 
     public function testItListQueues()
@@ -51,7 +59,7 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
         $this->ironmq->expects($this->once())->method('getQueues')
             ->will($this->returnValue($ironmqQueues));
 
-        $this->assertEquals(array('failed', 'queue1'), $this->connection->listQueues());
+        $this->assertEquals(array('failed', 'queue1'), $this->driver->listQueues());
     }
 
     public function testAcknowledgeMessage()
@@ -59,7 +67,7 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
         $this->ironmq->expects($this->once())->method('deleteMessage')
             ->with($this->equalTo('my-queue'), $this->equalTo('receipt1'));
 
-        $this->connection->acknowledgeMessage('my-queue', 'receipt1');
+        $this->driver->acknowledgeMessage('my-queue', 'receipt1');
     }
 
     public function testItPeeksInAQueue()
@@ -73,8 +81,8 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
         $this->ironmq->expects($this->at(1))->method('peekMessages')
             ->with($this->equalTo('my-queue2'), $this->equalTo(20))->will($this->returnValue(null));
 
-        $this->assertEquals(array('message1'), $this->connection->peekQueue('my-queue', 10, 10));
-        $this->assertEquals(array(), $this->connection->peekQueue('my-queue2'));
+        $this->assertEquals(array('message1'), $this->driver->peekQueue('my-queue', 10, 10));
+        $this->assertEquals(array(), $this->driver->peekQueue('my-queue2'));
     }
 
     public function testItRemovesAQueue()
@@ -84,7 +92,7 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
             ->method('deleteQueue')
             ->with($this->equalTo('my-queue'));
 
-        $this->connection->removeQueue('my-queue');
+        $this->driver->removeQueue('my-queue');
     }
 
     public function testItPushesMessages()
@@ -94,7 +102,7 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
             ->method('postMessage')
             ->with($this->equalTo('my-queue'), $this->equalTo('This is a message'));
 
-        $this->connection->pushMessage('my-queue', 'This is a message');
+        $this->driver->pushMessage('my-queue', 'This is a message');
     }
 
     public function testItPrefetchesMessages()
@@ -108,8 +116,8 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('send-newsletter'), $this->equalTo(2))
             ->will($this->returnValue($ironmqMessages));
 
-        $this->assertEquals(array('message1', 1), $this->connection->popMessage('send-newsletter'));
-        $this->assertEquals(array('message2', 2), $this->connection->popMessage('send-newsletter'));
+        $this->assertEquals(array('message1', 1), $this->driver->popMessage('send-newsletter'));
+        $this->assertEquals(array('message2', 2), $this->driver->popMessage('send-newsletter'));
     }
 
     public function testItPopMessages()
@@ -134,8 +142,8 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo('my-queue2'), $this->equalTo(2), $this->equalTo(60))
             ->will($this->returnValue(null));
 
-        $this->assertEquals(array('message1', 1), $this->connection->popMessage('my-queue1'));
-        $this->assertEquals(array('message2', 2), $this->connection->popMessage('my-queue2'));
-        $this->assertEquals(array(null, null), $this->connection->popMessage('my-queue2', 0.01));
+        $this->assertEquals(array('message1', 1), $this->driver->popMessage('my-queue1'));
+        $this->assertEquals(array('message2', 2), $this->driver->popMessage('my-queue2'));
+        $this->assertEquals(array(null, null), $this->driver->popMessage('my-queue2', 0.01));
     }
 }

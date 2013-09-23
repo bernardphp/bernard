@@ -137,7 +137,9 @@ class IronMqDriver extends AbstractPrefetchDriver
      */
     public function info()
     {
-        return array();
+        return array(
+            'prefetch' => $this->prefetch,
+        );
     }
 
     /**

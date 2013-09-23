@@ -25,12 +25,20 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
             ))
             ->getMock();
 
-        $this->connection = new SqsDriver($this->sqs, array('send-newsletter' => 'url'));
+        $this->driver = new SqsDriver($this->sqs, array('send-newsletter' => 'url'));
+    }
+
+    public function testItExposesInfo()
+    {
+        $driver = new SqsDriver($this->sqs, array(), 10);
+
+        $this->assertEquals(array('prefetch' => 10), $driver->info());
+        $this->assertEquals(array('prefetch' => 2), $this->driver->info());
     }
 
     public function testItImplementsDriverInterface()
     {
-        $this->assertInstanceOf('Bernard\Driver\AbstractPrefetchDriver', $this->connection);
+        $this->assertInstanceOf('Bernard\Driver\AbstractPrefetchDriver', $this->driver);
     }
 
     public function testItCountsNumberOfMessagesInQueue()
@@ -49,19 +57,19 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
                 ))
             ));
 
-        $this->assertEquals(4, $this->connection->countMessages(self::DUMMY_QUEUE_NAME));
+        $this->assertEquals(4, $this->driver->countMessages(self::DUMMY_QUEUE_NAME));
     }
 
     public function testUnresolveableQueueNameThrowsException()
     {
         $this->setExpectedException('InvalidArgumentException', 'Queue "unknown" cannot be resolved to an url.');
 
-        $this->connection->popMessage('unknown');
+        $this->driver->popMessage('unknown');
     }
 
     public function testItGetsAllQueues()
     {
-        $connection = new SqsDriver($this->sqs, array(
+        $driver = new SqsDriver($this->sqs, array(
             'import-users' => 'alreadyknowurl/import_users_prod'
         ));
 
@@ -78,7 +86,7 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
 
         $queues = array('import-users', 'failed', 'queue1');
 
-        $this->assertEquals($queues, $connection->listQueues());
+        $this->assertEquals($queues, $driver->listQueues());
     }
 
     public function testItPrefetchesMessages()
@@ -99,8 +107,8 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
         $this->sqs->expects($this->once())->method('receiveMessage')
             ->with($this->equalTo($query))->will($this->returnValue($sqsMessages));
 
-        $this->assertEquals(array('message0', 'r0'), $this->connection->popMessage('send-newsletter'));
-        $this->assertEquals(array('message1', 'r1'), $this->connection->popMessage('send-newsletter'));
+        $this->assertEquals(array('message0', 'r0'), $this->driver->popMessage('send-newsletter'));
+        $this->assertEquals(array('message1', 'r1'), $this->driver->popMessage('send-newsletter'));
     }
 
     public function testItPushesMessages()
@@ -113,7 +121,7 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
                 'QueueUrl'    => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME,
                 'MessageBody' => 'This is a message'
             )));
-        $this->connection->pushMessage('my-queue', 'This is a message');
+        $this->driver->pushMessage('my-queue', 'This is a message');
     }
 
     public function testItPopMessages()
@@ -162,9 +170,9 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
                 )
             ))));
 
-        $this->assertEquals(array('message0', 'r0'), $this->connection->popMessage('my-queue0'));
-        $this->assertEquals(array('message1', 'r1'), $this->connection->popMessage('my-queue1', 30));
-        $this->assertEquals(array(null, null), $this->connection->popMessage('send-newsletter'));
+        $this->assertEquals(array('message0', 'r0'), $this->driver->popMessage('my-queue0'));
+        $this->assertEquals(array('message1', 'r1'), $this->driver->popMessage('my-queue1', 30));
+        $this->assertEquals(array(null, null), $this->driver->popMessage('send-newsletter'));
     }
 
     public function testAcknowledgeMessage()
@@ -172,7 +180,7 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
         $this->sqs->expects($this->once())->method('deleteMessage')
             ->with($this->equalTo(array('QueueUrl' => 'url', 'ReceiptHandle' => 'r0')));
 
-        $this->connection->acknowledgeMessage('send-newsletter', 'r0');
+        $this->driver->acknowledgeMessage('send-newsletter', 'r0');
     }
 
     private function assertSqsQueueUrl()
