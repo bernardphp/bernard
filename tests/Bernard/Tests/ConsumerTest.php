@@ -42,6 +42,22 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->consumer->tick($queue));
     }
 
+    public function testEnvelopeIsAcknowledged()
+    {
+        $service = new Fixtures\Service();
+        $envelope = new Envelope(new DefaultMessage('ImportUsers'));
+
+        $this->router->add('ImportUsers', $service);
+
+        $queue = $this->getMock('Bernard\Queue');
+        $queue->expects($this->once())->method('dequeue')->will($this->returnValue($envelope));
+        $queue->expects($this->once())->method('acknowledge')->with($this->equalTo($envelope));
+
+        $this->consumer->tick($queue);
+
+        $this->assertTrue($service::$importUsers);
+    }
+
     /**
      * @group debug
      */
