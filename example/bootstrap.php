@@ -10,7 +10,7 @@ use Bernard\Serializer\SimpleSerializer;
 
 /**
  * This file contains helper methods for the examples. See example/$driver.php
- * for how to initiate the driver. Also the helper methods can be used as 
+ * for how to initiate the driver. Also the helper methods can be used as
  * guidance if you are using Bernard outside a framework or you are developing
  * a plugin to a framework.
  */
@@ -49,7 +49,7 @@ function get_producer() {
 
 function get_receivers() {
     return new SimpleRouter(array(
-        'EchoTime' => new EchoTimeService, 
+        'EchoTime' => new EchoTimeService,
     ));
 }
 

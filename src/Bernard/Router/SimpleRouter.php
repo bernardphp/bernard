@@ -58,8 +58,8 @@ class SimpleRouter implements \Bernard\Router
     }
 
     /**
-     * @param mixed $receiver
-     * @reuturn boolean
+     * @param  mixed   $receiver
+     * @return boolean
      */
     protected function accepts($receiver)
     {
