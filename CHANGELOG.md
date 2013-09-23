@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.10.0 / YYYY-MM-DD
+0.10.0 / 2013-09-23
 -------------------
 
  * Remove `RetryMiddleware` and add `FailuresMiddleware` that just sends failed messages to failed queue.
