@@ -29,6 +29,19 @@ class ProduceCommandTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    public function testInvalidJsonThrowsException()
+    {
+        $this->setExpectedException('RuntimeException');
+
+        $command = new ProduceCommand($this->producer);
+
+        $tester = new CommandTester($command);
+        $tester->execute(array(
+            'name'    => 'SendNewsletter',
+            'message' => '{@*^#"foo":"bar"}'
+        ));
+    }
+
     public function testItProducesMessageWithData()
     {
         $command = new ProduceCommand($this->producer);
