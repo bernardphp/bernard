@@ -2,11 +2,11 @@
 
 use Bernard\Consumer;
 use Bernard\Message;
+use Bernard\Middleware;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
+use Bernard\Router\SimpleRouter;
 use Bernard\Serializer\NaiveSerializer;
-use Bernard\ServiceResolver\ObjectResolver;
-use Bernard\Middleware;
 
 /**
  * This file contains helper methods for the examples. See example/$driver.php
@@ -47,15 +47,14 @@ function get_producer() {
     return new Producer(get_queue_factory(), get_producer_middleware());
 }
 
-function get_services() {
-    $resolver = new ObjectResolver();
-    $resolver->register('EchoTime', new EchoTimeService);
-
-    return $resolver;
+function get_receivers() {
+    return new SimpleRouter(array(
+        'EchoTime' => new EchoTimeService, 
+    ));
 }
 
 function get_consumer() {
-    return new Consumer(get_services(), get_consumer_middleware());
+    return new Consumer(get_receivers(), get_consumer_middleware());
 }
 
 function produce() {
