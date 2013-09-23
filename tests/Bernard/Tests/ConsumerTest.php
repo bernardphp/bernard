@@ -6,16 +6,16 @@ use Bernard\Consumer;
 use Bernard\Queue\InMemoryQueue;
 use Bernard\Envelope;
 use Bernard\Message\DefaultMessage;
-use Bernard\ServiceResolver\ObjectResolver;
+use Bernard\Router\SimpleRouter;
 use Bernard\Middleware\MiddlewareBuilder;
 
 class ConsumerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->resolver = new ObjectResolver;
+        $this->router = new SimpleRouter;
         $this->middleware = new MiddlewareBuilder;
-        $this->consumer = new Consumer($this->resolver, $this->middleware);
+        $this->consumer = new Consumer($this->router, $this->middleware);
     }
 
     public function testShutdown()
@@ -49,7 +49,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
     {
         $service = new Fixtures\Service();
 
-        $this->resolver->register('ImportUsers', $service);
+        $this->router->add('ImportUsers', $service);
 
         $queue = new InMemoryQueue('send-newsletter');
         $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));

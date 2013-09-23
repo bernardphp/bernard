@@ -11,6 +11,7 @@ Changelog
  * Remove `Invoker` Object. Instead this functionality have been moved into the Consumer which implements Middleware.
  * Remove Middleware from Queue. Instead the Producer implements Middleware.
  * Producer takes a Queue name as the second parameter.
+ * Replace `ServiceResolver` with `Router` and migrate the old Pimple and Container ServiceResolver's
 
 0.9.2 / 2013-09-18
 ------------------

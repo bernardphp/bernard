@@ -11,7 +11,7 @@ declare(ticks=1);
  */
 class Consumer implements Middleware
 {
-    protected $services;
+    protected $router;
     protected $middleware;
     protected $shutdown = false;
     protected $configured = false;
@@ -20,12 +20,12 @@ class Consumer implements Middleware
     );
 
     /**
-     * @param ServiceResolver   $services
+     * @param Router   $router
      * @param MiddlewareBuilder $middleware
      */
-    public function __construct(ServiceResolver $services, MiddlewareBuilder $middleware)
+    public function __construct(Router $router, MiddlewareBuilder $middleware)
     {
-        $this->services = $services;
+        $this->router = $router;
         $this->middleware = $middleware;
     }
 
@@ -105,7 +105,7 @@ class Consumer implements Middleware
     public function call(Envelope $envelope, Queue $queue)
     {
         // for 5.3 support where a function name is not a callable
-        call_user_func($this->services->resolve($envelope), $envelope->getMessage());
+        call_user_func($this->router->map($envelope), $envelope->getMessage());
 
         // We successfully processed the message.
         $queue->acknowledge($envelope);
