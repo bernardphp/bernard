@@ -4,14 +4,14 @@ namespace Bernard\Tests\Serializer;
 
 use Bernard\Envelope;
 use Bernard\Message\DefaultMessage;
-use Bernard\Serializer\NaiveSerializer;
+use Bernard\Serializer\SimpleSerializer;
 use Bernard\Tests\Fixtures;
 
-class NaiveSerializerTest extends \PHPUnit_Framework_TestCase
+class SimpleSerializerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->serializer = new NaiveSerializer();
+        $this->serializer = new SimpleSerializer();
     }
 
     public function testItIsASerializer()
