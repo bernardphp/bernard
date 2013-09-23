@@ -12,8 +12,16 @@ use Bernard\Driver;
  */
 class FlatFileDriver implements Driver
 {
+    /**
+     * @var string
+     */
     private $baseDirectory;
 
+    /**
+     * Constructor
+     *
+     * @param string $baseDirectory The base directory
+     */
     public function __construct($baseDirectory)
     {
         $this->baseDirectory = $baseDirectory;
@@ -26,8 +34,20 @@ class FlatFileDriver implements Driver
      */
     public function listQueues()
     {
-        $it = new \DirectoryIterator($this->baseDirectory);
+        $it = new \DirectoryIterator($this->baseDirectory, \FilesystemIterator::SKIP_DOTS);
 
+        $queues = array();
+
+        foreach ($it as $file) {
+            /** @var $file \SplFileInfo */
+            if (!$file->isDir()) {
+                continue;
+            }
+
+            array_push($queues, $file->getBasename());
+        }
+
+        return $queues;
     }
 
     /**
@@ -43,7 +63,7 @@ class FlatFileDriver implements Driver
             return;
         }
 
-        mkdir($queueName, 0664, true);
+        mkdir($queueDir, 0755, true);
     }
 
     /**
@@ -70,7 +90,7 @@ class FlatFileDriver implements Driver
     {
         $queueDir = $this->getQueueDirectory($queueName);
 
-        $filename = $this->getJobFilename();
+        $filename = $this->getJobFilename($queueName);
 
         file_put_contents($queueDir.DIRECTORY_SEPARATOR.$filename, $message);
     }
@@ -85,6 +105,27 @@ class FlatFileDriver implements Driver
      */
     public function popMessage($queueName, $interval = 5)
     {
+        $runtime = microtime(true) + $interval;
+        $queueDir = $this->getQueueDirectory($queueName);
+
+        $it = new \GlobIterator($queueDir.DIRECTORY_SEPARATOR.'*.job', \FilesystemIterator::KEY_AS_FILENAME);
+        $files = array_keys(iterator_to_array($it));
+
+        natsort($files);
+
+        while (microtime(true) < $runtime) {
+            if ($files) {
+                $id = array_pop($files);
+                $data = array(file_get_contents($queueDir.DIRECTORY_SEPARATOR.$id), $id);
+                rename($queueDir.DIRECTORY_SEPARATOR.$id, $queueDir.DIRECTORY_SEPARATOR.$id.'.proceed');
+
+                return $data;
+            }
+
+            usleep(1000);
+        }
+
+        return array(null, null);
     }
 
     /**
@@ -116,7 +157,23 @@ class FlatFileDriver implements Driver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
+        $queueDir = $this->getQueueDirectory($queueName);
 
+        $it = new \GlobIterator($queueDir.DIRECTORY_SEPARATOR.'*.job', \FilesystemIterator::KEY_AS_FILENAME);
+        $files = array_keys(iterator_to_array($it));
+
+        natsort($files);
+        $files = array_reverse($files);
+
+        $files = array_slice($files, $index, $limit);
+
+        $messages = array();
+
+        foreach ($files as $file) {
+            array_push($messages, file_get_contents($queueDir.DIRECTORY_SEPARATOR.$file));
+        }
+
+        return $messages;
     }
 
     /**
@@ -135,7 +192,7 @@ class FlatFileDriver implements Driver
             unlink($file->getRealPath());
         }
 
-        unlink($this->getQueueDirectory($queueName));
+        rmdir($this->getQueueDirectory($queueName));
     }
 
     /**
@@ -151,31 +208,27 @@ class FlatFileDriver implements Driver
     }
 
     /**
-     * Generates a v4 GUID.
-     *
-     * Copied from https://github.com/doctrine/oxm/blob/master/lib/Doctrine/OXM/Id/UuidGenerator.php
+     * Generates a uuid.
      *
      * @return string
      */
-    private function getJobFilename()
+    private function getJobFilename($queueName)
     {
-        return sprintf('%04x%04x%04x%04x%04x%04x%04x%04x',
-            // 32 bits for "time_low"
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+        $path = $this->baseDirectory.'/bernard.meta';
+        $meta = array();
 
-            // 16 bits for "time_mid"
-            mt_rand(0, 0xffff),
+        if (is_file($path)) {
+            $meta = unserialize(file_get_contents($path));
+        }
 
-            // 16 bits for "time_hi_and_version",
-            // four most significant bits holds version number 4
-            mt_rand(0, 0x0fff) | 0x4000,
+        $id = isset($meta[$queueName]) ? $meta[$queueName] : 0;
+        $id++;
 
-            // 16 bits, 8 bits for "clk_seq_hi_res",
-            // 8 bits for "clk_seq_low",
-            // two most significant bits holds zero and one for variant DCE1.1
-            mt_rand(0, 0x3fff) | 0x8000,
+        $filename = sprintf('%d.job', $id);
+        $meta[$queueName] = $id;
 
-            // 48 bits for "node"
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)).'.job';
+        file_put_contents($path, serialize($meta));
+
+        return $filename;
     }
 }
