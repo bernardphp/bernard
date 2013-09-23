@@ -6,7 +6,7 @@ use Bernard\Middleware;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\SimpleRouter;
-use Bernard\Serializer\NaiveSerializer;
+use Bernard\Serializer\SimpleSerializer;
 
 /**
  * This file contains helper methods for the examples. See example/$driver.php
@@ -24,7 +24,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 function get_serializer() {
-    return new NaiveSerializer;
+    return new SimpleSerializer;
 }
 
 function get_producer_middleware() {
