@@ -217,9 +217,14 @@ class FlatFileDriver implements Driver
         $path = $this->baseDirectory.'/bernard.meta';
         $meta = array();
 
-        if (is_file($path)) {
-            $meta = unserialize(file_get_contents($path));
+        if (!is_file($path)) {
+            touch($path);
         }
+
+        $file = new \SplFileObject($path, 'r+');
+        $file->flock(LOCK_EX);
+
+        $meta = unserialize($file->fgets());
 
         $id = isset($meta[$queueName]) ? $meta[$queueName] : 0;
         $id++;
@@ -227,7 +232,11 @@ class FlatFileDriver implements Driver
         $filename = sprintf('%d.job', $id);
         $meta[$queueName] = $id;
 
-        file_put_contents($path, serialize($meta));
+        $content = serialize($meta);
+
+        $file->fseek(0);
+        $file->fwrite($content, strlen($content));
+        $file->flock(LOCK_UN);
 
         return $filename;
     }
