@@ -49,4 +49,12 @@ abstract class AbstractQueue implements \Bernard\Queue
             throw new InvalidOperationException(sprintf('Queue "%s" is closed.', $this->name));
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __toString()
+    {
+        return (string) $this->name;
+    }
 }

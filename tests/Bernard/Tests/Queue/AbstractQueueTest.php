@@ -19,6 +19,14 @@ abstract class AbstractQueueTest extends \PHPUnit_Framework_TestCase
         call_user_func_array(array($queue, $method), $arguments);
     }
 
+    public function testNameAsToString()
+    {
+        $queue = $this->createQueue('long-name');
+
+        $this->assertEquals('long-name', (string) $queue);
+        $this->assertEquals('long-name', $queue);
+    }
+
     public function dataClosedMethods()
     {
         return array(
