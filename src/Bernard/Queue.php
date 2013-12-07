@@ -37,4 +37,11 @@ interface Queue extends \Countable
      * @param Envelope $envelope
      */
     public function acknowledge(Envelope $envelope);
+
+    /**
+     * Return the queue textual representation, normally this will be name (not the internal key)
+     *
+     * @return string
+     */
+    public function __toString();
 }
