@@ -19,6 +19,7 @@ class PersistentQueueSpec extends ObjectBehavior
     function it_implements_queue_interface()
     {
         $this->shouldHaveType('Bernard\Queue');
+        $this->shouldHaveType('Bernard\Queue\AbstractQueue');
     }
 
     function it_have_a_name()
