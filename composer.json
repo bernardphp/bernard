@@ -17,6 +17,7 @@
     },
 
     "require-dev" : {
+        "phpspec/phpspec" : "2.0.x-dev",
         "psr/log"                      : "~1.0",
         "jms/serializer"               : "~0.12",
         "pimple/pimple"                : "~1.0",
