@@ -63,7 +63,7 @@ class PersistentQueueSpec extends ObjectBehavior
     {
         $serializer->deserialize('message1')->willReturn($envelope);
 
-        $driver->createQueue('queue-name')->willReturn(null);
+        $driver->createQueue('queue-name')->willReturn();
         $driver->popMessage('queue-name')->willReturn(array('message1', 'receipt1'));
 
         $this->dequeue()->shouldReturn($envelope);
