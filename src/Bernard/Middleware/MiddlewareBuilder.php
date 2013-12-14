@@ -55,7 +55,7 @@ class MiddlewareBuilder
     {
         $this->factories->rewind();
 
-        $callback = function (Middleware $middleware, $factory) {
+        $callback = function ($middleware, $factory) {
             return $factory($middleware);
         };
 
