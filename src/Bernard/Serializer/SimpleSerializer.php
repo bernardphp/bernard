@@ -44,10 +44,8 @@ class SimpleSerializer implements \Bernard\Serializer
             $data['args']['name'] = substr(strrchr($class, '\\'), 1);
         }
 
-        $envelope = new Envelope(new DefaultMessage($data['args']['name'], $data['args']));
-
-        bernard_force_property_value($envelope, 'class', $class);
-        bernard_force_property_value($envelope, 'timestamp', $data['timestamp']);
+        $message = new DefaultMessage($data['args']['name'], $data['args']);
+        $envelope = new Envelope($message, $data['class'], $data['timestamp']);
 
         return $envelope;
     }

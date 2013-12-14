@@ -16,12 +16,14 @@ class Envelope
 
     /**
      * @param Message $message
+     * @param string $class
+     * @param integer $timestamp
      */
-    public function __construct(Message $message)
+    public function __construct(Message $message, $class, $timestamp)
     {
         $this->message   = $message;
-        $this->class     = get_class($message);
-        $this->timestamp = time();
+        $this->class     = $class;
+        $this->timestamp = $timestamp;
     }
 
     /**
