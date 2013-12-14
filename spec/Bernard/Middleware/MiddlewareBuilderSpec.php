@@ -25,8 +25,8 @@ class MiddlewareBuilderSpec extends ObjectBehavior
      */
     function it_is_able_to_unshift($middleware)
     {
-        $factory1 = function () { return '1'; };
-        $factory2 = function () { return '2'; };
+        $factory1 = function ($middleware) { return '1'; };
+        $factory2 = function ($middleware) { return '2'; };
 
         $this->push($factory2);
         $this->unshift($factory1);

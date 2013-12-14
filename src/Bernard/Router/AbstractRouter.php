@@ -67,5 +67,8 @@ abstract class AbstractRouter implements \Bernard\Router
      * @param  string $name
      * @return mixed
      */
-    abstract protected function get($name);
+    protected function get($name)
+    {
+        return $this->receivers[$name];
+    }
 }
