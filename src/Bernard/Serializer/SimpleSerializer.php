@@ -22,10 +22,8 @@ class SimpleSerializer implements \Bernard\Serializer
     {
         Verify::any($envelope->getClass(), array('Bernard\Message\DefaultMessage', 'Bernard\Message\FailedMessage'));
 
-        $message = $envelope->getMessage();
-
         return json_encode(array(
-            'args'      => array('name' => $message->getName()) + get_object_vars($message),
+            'args'      => array('name' => $envelope->getName()) + get_object_vars($envelope->getMessage()),
             'class'     => bernard_encode_class_name($envelope->getClass()),
             'timestamp' => $envelope->getTimestamp(),
         ));
