@@ -43,7 +43,7 @@ class SimpleSerializer implements \Bernard\Serializer
         }
 
         $message = new DefaultMessage($data['args']['name'], $data['args']);
-        $envelope = new Envelope($message, $data['class'], $data['timestamp']);
+        $envelope = new Envelope($message, $class, $data['timestamp']);
 
         return $envelope;
     }

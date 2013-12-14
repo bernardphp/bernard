@@ -41,4 +41,27 @@ class SimpleSerializerSpec extends ObjectBehavior
 
         $this->shouldNotThrow('InvalidArgumentException')->duringSerialize($envelope);
     }
+
+    function it_deserialize_into_default_message()
+    {
+        $envelope = $this->deserialize('{"args":{"name":"Import","newsletterId":10},"class":"Bernard:Message:DefaultMessage","timestamp":2013}');
+
+        $envelope->getClass()->shouldReturn('Bernard\Message\DefaultMessage');
+        $envelope->getTimestamp()->shouldReturn(2013);
+        $envelope->getName()->shouldReturn('Import');
+        $envelope->getMessage()->shouldReturnAnInstanceOf('Bernard\Message\DefaultMessage');
+
+        $message = $envelope->getMessage();
+        $message->shouldBeAnInstanceOf('Bernard\Message\DefaultMessage');
+        $message->shouldHavePropertyValue('newsletterId', 10);
+    }
+
+    public function getMatchers()
+    {
+        return array(
+            'havePropertyValue' => function ($subject, $key, $value) {
+                return property_exists($subject, $key) && $subject->$key == $value;
+            },
+        );
+    }
 }
