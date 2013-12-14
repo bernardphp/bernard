@@ -6,11 +6,17 @@ php:
     - 5.3
     - 5.4
     - 5.5
+    - hhvm
+
+matrix:
+    fast_finish: true
+    allow_failures:
+        - hhvm
 
 before_script:
     - "pyrus install pecl/redis && pyrus build pecl/redis"
     - "echo \"extension=redis.so\" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini"
     - "echo '{\"config\":{\"github-oauth\": {\"github.com\":\"fa354b2f030836334eac842f8fd69a03e353d247\"}}}' > ~/.composer/config.json"
-    - "composer install --dev --no-progress --no-custom-installers --no-scripts"
+    - "composer install --no-progress --no-custom-installers --no-scripts"
 
-script: phpunit
+script: ./vendor/bin/phpspec run -v
