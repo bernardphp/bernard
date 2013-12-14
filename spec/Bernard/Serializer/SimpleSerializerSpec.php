@@ -56,6 +56,14 @@ class SimpleSerializerSpec extends ObjectBehavior
         $message->shouldHavePropertyValue('newsletterId', 10);
     }
 
+    function it_uses_DefaultMessage_when_deserializing_non_DefaultMessage_clases()
+    {
+        $envelope = $this->deserialize('{"args":{"newsletterId":10},"class":"Acme:Message:Import","timestamp":2013}');
+
+        $envelope->getName()->shouldReturn('Import');
+        $envelope->getMessage()->shouldBeAnInstanceOf('Bernard\Message\DefaultMessage');
+    }
+
     public function getMatchers()
     {
         return array(

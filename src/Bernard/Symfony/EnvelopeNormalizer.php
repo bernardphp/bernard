@@ -39,11 +39,8 @@ class EnvelopeNormalizer extends SerializerAwareNormalizer implements Normalizer
             $data['args']['name'] = substr(strrchr($data['class'], '\\'), 1);
         }
 
-        $envelope = new Envelope($this->serializer->denormalize($data['args'], $class, $format, $context));
-
-        foreach (array('timestamp', 'class') as $name) {
-            bernard_force_property_value($envelope, $name, $data[$name]);
-        }
+        $message = $this->serializer->denormalize($data['args'], $class, $format, $context);
+        $envelope = new Envelope($message, $data['class'], $data['timestamp']);
 
         return $envelope;
     }

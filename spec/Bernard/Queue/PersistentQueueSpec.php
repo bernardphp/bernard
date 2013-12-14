@@ -30,6 +30,17 @@ class PersistentQueueSpec extends ObjectBehavior
     /**
      * @param Bernard\Envelope $envelope
      */
+    function it_only_acknowledge_when_envelope_receipt_is_found($envelope, $driver)
+    {
+        $driver->createQueue('queue-name')->shouldBeCalled();
+        $driver->acknowledgeMessage('queue-name', Argument::any())->shouldNotBeCalled();
+
+        $this->acknowledge($envelope);
+    }
+
+    /**
+     * @param Bernard\Envelope $envelope
+     */
     function it_is_closable($envelope, $driver)
     {
         $driver->createQueue('queue-name')->shouldBeCalled();

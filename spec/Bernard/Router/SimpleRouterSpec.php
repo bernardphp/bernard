@@ -41,6 +41,23 @@ class SimpleRouterSpec extends ObjectBehavior
     /**
      * @param Bernard\Envelope $envelope
      */
+    function it_takes_mapping_in_constructor($envelope)
+    {
+        $envelope->getName()->willReturn('Import');
+
+        $this->beConstructedWith(array('Import' => 'var_dump'));
+
+        $this->map($envelope)->shouldReturn('var_dump');
+    }
+
+    function it_throws_exception_when_it_dosent_accept_the_receiver()
+    {
+        $this->shouldThrow('InvalidArgumentException')->duringAdd('Import', 1337);
+    }
+
+    /**
+     * @param Bernard\Envelope $envelope
+     */
     function it_throws_exception_when_receiver_cannot_be_mapped($envelope)
     {
         $envelope->getName()->willReturn('Import');

@@ -25,7 +25,7 @@ class DefaultMessageSpec extends ObjectBehavior
         $this->shouldHavePropertyValue('members', array('Henrik', 'Antoine'));
     }
 
-    function it_have_a_name()
+    function it_has_a_name()
     {
         $this->beConstructedWith('Import');
 
