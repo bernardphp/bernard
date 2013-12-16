@@ -1,8 +1,0 @@
-{
-    "name" : "Import",
-    "class" : "Bernard:Message:DefaultMessage",
-    "args" : {
-        "name" : "Import"
-    },
-    "timestamp" : 590364000 
-}

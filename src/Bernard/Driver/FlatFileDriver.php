@@ -39,7 +39,6 @@ class FlatFileDriver implements Driver
         $queues = array();
 
         foreach ($it as $file) {
-            /** @var $file \SplFileInfo */
             if (!$file->isDir()) {
                 continue;
             }
@@ -188,7 +187,6 @@ class FlatFileDriver implements Driver
         $iterator = new \RegexIterator($iterator, '#\.job$#');
 
         foreach ($iterator as $file) {
-            /** @var $file \SplFileInfo */
             unlink($file->getRealPath());
         }
 
@@ -201,7 +199,7 @@ class FlatFileDriver implements Driver
     public function info()
     {
         return array(
-            'directory' => $tihs->baseDirectory,
+            'directory' => $this->baseDirectory,
         );
     }
 

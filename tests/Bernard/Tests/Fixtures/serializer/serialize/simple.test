@@ -1,0 +1,7 @@
+use Bernard\Envelope;
+use Bernard\Message\DefaultMessage;
+
+return new Envelope(new DefaultMessage("Import"), "Bernard\Message\DefaultMessage", 1);
+
+--EXPECTED--
+{"args":{"name":"Import"},"class":"Bernard:Message:DefaultMessage","timestamp":1}

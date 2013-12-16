@@ -1,3 +1,11 @@
+{
+    "class" : "Bernard:Message:DefaultMessage",
+    "timestamp" : 1,
+    "args": {
+        "name" : "Import"
+    }
+}
+--EXPECTED--
 Bernard\Envelope Object
 (
     [message:protected] => Bernard\Message\DefaultMessage Object
@@ -6,5 +14,5 @@ Bernard\Envelope Object
         )
 
     [class:protected] => Bernard\Message\DefaultMessage
-    [timestamp:protected] => 590364000
+    [timestamp:protected] => 1
 )
