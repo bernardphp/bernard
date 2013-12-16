@@ -8,6 +8,8 @@ use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\SimpleRouter;
 use Bernard\Serializer\SimpleSerializer;
 
+use Symfony\Component\Console;
+
 /**
  * This file contains helper methods for the examples. See example/$driver.php
  * for how to initiate the driver. Also the helper methods can be used as
@@ -57,37 +59,43 @@ function get_consumer() {
     return new Consumer(get_receivers(), get_consumer_middleware());
 }
 
-function produce() {
+function get_consume_command() {
+    $command = new Bernard\Command\ConsumeCommand(get_consumer(), get_queue_factory());
+    $command->setName('consume');
+    $command->setDescription('Consume from "echo-time" queue.');
+
+    // add default queue of "echo-time"
+    $command->getDefinition()->setArguments(array(
+        new Console\Input\InputArgument('queue', Console\Input\InputArgument::OPTIONAL, '', 'echo-time'),
+    ));
+
+    return $command;
+}
+
+function get_produce_command() {
     $producer = get_producer();
 
-    while (true) {
-        $producer->produce(new Message\DefaultMessage('EchoTime', array(
-            'time' => time(),
-        )));
+    $command = new Console\Command\Command('produce');
+    $command->setDescription('Insert millions and millions of EchoTime messages into the queue.');
+    $command->setCode(function ($input, $output) use ($producer) {
+        while (true) {
+            $producer->produce(new Message\DefaultMessage('EchoTime', array(
+                'time' => time(),
+            )));
 
-        usleep(rand(100, 1000));
-    }
+            usleep(rand(100, 1000));
+        }
+    });
+
+    return $command;
 }
 
-function consume() {
-    $queues   = get_queue_factory();
-    $consumer = get_consumer();
-
-    $consumer->consume($queues->create('echo-time'));
-}
 
 function main() {
-    if (!isset($_SERVER['argv'][1])) {
-        die('You must provide an argument of either "consume" or "produce"');
-    }
-
-    if ($_SERVER['argv'][1] == 'produce') {
-        produce();
-    }
-
-    if ($_SERVER['argv'][1] == 'consume') {
-        consume();
-    }
+    $cli = new Console\Application('Bernard');
+    $cli->add(get_consume_command());
+    $cli->add(get_produce_command());
+    $cli->run();
 }
 
 // Run this diddy

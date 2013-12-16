@@ -20,7 +20,7 @@ class SimpleSerializer implements \Bernard\Serializer
      */
     public function serialize(Envelope $envelope)
     {
-        Verify::any($envelope->getClass(), array('Bernard\Message\DefaultMessage', 'Bernard\Message\FailedMessage'));
+        Verify::any($envelope->getClass(), array('Bernard\Message\DefaultMessage'));
 
         return json_encode(array(
             'args'      => array('name' => $envelope->getName()) + get_object_vars($envelope->getMessage()),

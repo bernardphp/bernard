@@ -16,6 +16,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
 {
     protected $consumer;
     protected $queues;
+    protected $shutdown = false;
 
     /**
      * @param Consumer     $consumer
@@ -46,7 +47,41 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $queue = $this->queues->create($input->getArgument('queue'));
+        $options = $input->getOptions();
+        $options['max-runtime'] += time();
 
-        $this->consumer->consume($queue, $input->getOptions());
+        declare(ticks = 10) {
+            $this->bind($output);
+
+            while ($this->tick($queue, $input->getOptions())) {
+                // http://php.net/pcntl_signal_dispatch says that this MUST be called in each loop
+                // if using php to run long running Daemon scripts.
+                pcntl_signal_dispatch();
+            }
+        }
+    }
+
+    protected function tick($queue, $options)
+    {
+        if ($options['max-runtime'] >= time()) {
+            return false;
+        }
+
+        if ($this->shutdown) {
+            return false;
+        }
+
+        return $this->consumer->consume($queue, $options);
+    }
+
+    protected function bind(OutputInterface $output)
+    {
+        $callback = function ($signal) use ($output) {
+            $this->shutdown = true;
+
+            $output->writeln('Caught signal "' . $signal . '". Terminating...');
+        };
+
+        pcntl_signal(SIGINT, $callback);
     }
 }
