@@ -1,0 +1,10 @@
+Bernard\Envelope Object
+(
+    [message:protected] => Bernard\Message\DefaultMessage Object
+        (
+            [name:protected] => Import
+        )
+
+    [class:protected] => Bernard\Message\DefaultMessage
+    [timestamp:protected] => 590364000
+)

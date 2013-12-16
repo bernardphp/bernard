@@ -3,7 +3,7 @@
 namespace Bernard\Serializer;
 
 use Bernard\Envelope;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @package Bernard
@@ -13,9 +13,9 @@ class SymfonySerializer implements \Bernard\Serializer
     protected $serializer;
 
     /**
-     * @param Serializer $serializer
+     * @param SerializerInterface $serializer
      */
-    public function __construct(Serializer $serializer)
+    public function __construct(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
     }
