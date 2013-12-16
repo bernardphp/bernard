@@ -36,7 +36,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     public function configure()
     {
         $this
-            ->addOption('max-runtime', null, InputOption::VALUE_OPTIONAL, 'Maximum time in seconds the consumer will run.', null)
+            ->addOption('max-runtime', null, InputOption::VALUE_OPTIONAL, 'Maximum time in seconds the consumer will run.', 31556900)
             ->addArgument('queue', InputArgument::REQUIRED, 'Name of queue that will be consumed.')
         ;
     }
@@ -47,8 +47,11 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $queue = $this->queues->create($input->getArgument('queue'));
-        $options = $input->getOptions();
-        $options['max-runtime'] += time();
+
+        // This is 5.5+
+        if (function_exists('cli_set_process_title')) {
+            cli_set_process_title('bernard-' . (string) $queue);
+        }
 
         declare(ticks = 10) {
             $this->bind($output);
@@ -63,7 +66,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
 
     protected function tick($queue, $options)
     {
-        if ($options['max-runtime'] >= time()) {
+        if (time() > $_SERVER['REQUEST_TIME'] + $options['max-runtime']) {
             return false;
         }
 
