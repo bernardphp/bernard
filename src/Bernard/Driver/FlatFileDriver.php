@@ -200,6 +200,9 @@ class FlatFileDriver implements Driver
      */
     public function info()
     {
+        return array(
+            'directory' => $tihs->baseDirectory,
+        );
     }
 
     private function getQueueDirectory($queueName)
