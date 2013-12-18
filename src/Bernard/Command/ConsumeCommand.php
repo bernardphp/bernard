@@ -17,6 +17,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     protected $consumer;
     protected $queues;
     protected $shutdown = false;
+    protected $startTime;
 
     /**
      * @param Consumer     $consumer
@@ -46,6 +47,8 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->startTime = microtime(true);
+
         $queue = $this->queues->create($input->getArgument('queue'));
 
         // This is 5.5+
@@ -66,7 +69,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
 
     protected function tick($queue, $options)
     {
-        if (time() > $_SERVER['REQUEST_TIME'] + $options['max-runtime']) {
+        if (time() >= $this->startTime + $options['max-runtime']) {
             return false;
         }
 
