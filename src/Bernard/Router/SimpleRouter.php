@@ -2,9 +2,6 @@
 
 namespace Bernard\Router;
 
-use Bernard\Envelope;
-use Bernard\Exception\ReceiverNotFoundException;
-
 /**
  * Routes a Envelope to a Receiver by using the name of the Envelope.
  *

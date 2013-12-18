@@ -13,7 +13,7 @@ class PimpleAwareRouter extends \Bernard\Router\AbstractRouter
 
     /**
      * @param Pimple $pimple
-     * @param array $receivers
+     * @param array  $receivers
      */
     public function __construct(Pimple $pimple, array $receivers = array())
     {

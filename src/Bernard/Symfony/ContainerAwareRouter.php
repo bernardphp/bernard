@@ -2,7 +2,6 @@
 
 namespace Bernard\Symfony;
 
-use Bernard\Envelope;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

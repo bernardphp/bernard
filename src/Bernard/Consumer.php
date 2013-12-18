@@ -13,7 +13,7 @@ class Consumer implements Middleware
     protected $middleware;
 
     /**
-     * @param Router   $router
+     * @param Router            $router
      * @param MiddlewareBuilder $middleware
      */
     public function __construct(Router $router, MiddlewareBuilder $middleware)
