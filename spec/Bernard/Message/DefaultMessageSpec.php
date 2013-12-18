@@ -14,7 +14,7 @@ class DefaultMessageSpec extends ObjectBehavior
         $this->shouldHaveType('Bernard\Message');
     }
 
-    function it_have_arbitary_properties()
+    function it_has_arbitary_properties()
     {
         $this->beConstructedWith('Import', array(
             'newsletterId' => 10,

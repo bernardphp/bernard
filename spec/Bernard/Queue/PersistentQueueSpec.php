@@ -22,7 +22,7 @@ class PersistentQueueSpec extends ObjectBehavior
         $this->shouldHaveType('Bernard\Queue\AbstractQueue');
     }
 
-    function it_have_a_name()
+    function it_has_a_name()
     {
         $this->__toString()->shouldReturn('queue-name');
     }
@@ -30,7 +30,7 @@ class PersistentQueueSpec extends ObjectBehavior
     /**
      * @param Bernard\Envelope $envelope
      */
-    function it_only_acknowledge_when_envelope_receipt_is_found($envelope, $driver)
+    function it_only_acknowledges_when_envelope_receipt_is_found($envelope, $driver)
     {
         $driver->createQueue('queue-name')->shouldBeCalled();
         $driver->acknowledgeMessage('queue-name', Argument::any())->shouldNotBeCalled();

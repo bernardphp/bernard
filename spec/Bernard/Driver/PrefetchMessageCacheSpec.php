@@ -7,7 +7,7 @@ use Prophecy\Argument;
 
 class PrefetchMessageCacheSpec extends ObjectBehavior
 {
-    function it_have_internal_queue_for_cached_messages()
+    function it_has_internal_queue_for_cached_messages()
     {
         $this->pop('queue1')->shouldReturn(null);
 
