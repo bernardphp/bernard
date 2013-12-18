@@ -93,18 +93,11 @@ class IronMqDriver extends AbstractPrefetchDriver
         $runtime = microtime(true) + $interval;
 
         while ($runtime > microtime(true)) {
-            $messages = $this->ironmq->getMessages($queueName, $this->prefetch);
-
-            if (!$messages) {
-                usleep(10000);
-                continue;
+            if ($message = $this->doPopMessage($queueName)) {
+                return $message;
             }
 
-            foreach ($messages as $message) {
-                $this->cache->push($queueName, array($message->body, $message->id));
-            }
-
-            return $this->cache->pop($queueName);
+            usleep(10000);
         }
 
         return array(null, null);
@@ -141,6 +134,27 @@ class IronMqDriver extends AbstractPrefetchDriver
             'prefetch' => $this->prefetch,
         );
     }
+
+    /**
+     * Fetches message from a queue optionally saves them into the cache
+     *
+     * @param string $queueName
+     */
+    protected function doPopMessage($queueName)
+    {
+        $messages = $this->ironmq->getMessages($queueName, $this->prefetch);
+
+        if (!$messages) {
+            return;
+        }
+
+        foreach ($messages as $message) {
+            $this->cache->push($queueName, array($message->body, $message->id));
+        }
+
+        return $this->cache->pop($queueName);
+    }
+
 
     /**
      * The missing array_pluck but for objects array
