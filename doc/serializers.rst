@@ -28,7 +28,7 @@ Symfony Serializer Component
 ----------------------------
 
 You can also use Bernard with the
-the `Symfony Serializer Component <http://symfony.com/doc/current/components/serializer.html`_.
+the `Symfony Serializer Component <http://symfony.com/doc/current/components/serializer.html>`_.
 It is important that the serializer uses ``Bernard\Symfony\EnvelopeNormalizer``
 and the ``JsonEncoder`` to being able to serialize and deserialize messages.
 

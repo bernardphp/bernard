@@ -7,4 +7,3 @@
     consuming
     frameworks
     cookbook
-    monitoring

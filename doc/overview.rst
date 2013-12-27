@@ -17,4 +17,4 @@ or on twitter at `@henrikbjorn <http://twitter.com/henrikbjorn>`_.
 
 ----
 
-.. image:: /_static/peytzco.png
+.. image:: /doc/_static/peytzco.png
