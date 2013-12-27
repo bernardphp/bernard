@@ -1,0 +1,32 @@
+{%- set titlesuffix = "" -%}
+{%- if not embedded and docstitle -%}
+    {%- set titlesuffix = " &mdash; "|safe + docstitle|e -%}
+{%- endif -%}
+<!doctype html>
+<html>
+    <head>
+        <title>{{ shorttitle }}{{ titlesuffix }}</title>
+
+        <link rel="stylesheet" href="{{ pathto('_static/bernard.css', 1) }}" />
+        <link rel="shortcut icon" href="{{ pathto('_static/' + favicon, 1) }}"/>
+    </head>
+
+    <body id="frontpage">
+        <div class="container masthead">
+            <h1 class="logo">Bernard</h1>
+
+            <p class="lead">Helps <strong>you</strong> write distributed and service orientated
+            systems by offloading work to the background via message queues.</p>
+
+            <div>
+                <a class="btn" href="{{ pathto('getting-started') }}">Getting Started</a>
+                <a class="btn" href="{{ pathto('overview') }}">Documentation</a>
+                <a class="btn" href="http://github.com/bernardphp">GitHub</a>
+            </div>
+        </div>
+
+        <div id="forkongithub">
+            <a href="https://github.com/bernardphp/bernard">Fork me on GitHub</a>
+        </div>
+    </body>
+</html>
