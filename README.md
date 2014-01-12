@@ -11,6 +11,8 @@ different backends such as:
 * Amazon SQS
 * Iron MQ
 * Doctrine DBAL
+* Google AppEngine
+* Beanstalkd
 
 There is plenty more to discover in the [documentation located right here][documentation].
 

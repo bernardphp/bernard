@@ -26,7 +26,8 @@
         "symfony/serializer"           : "~2.2",
         "doctrine/dbal"                : "~2.3",
         "iron-io/iron_mq"              : "~1.4",
-        "aws/aws-sdk-php"              : "~2.4"
+        "aws/aws-sdk-php"              : "~2.4",
+        "pda/pheanstalk"               : "~2.1"
     },
 
     "extra" : {
