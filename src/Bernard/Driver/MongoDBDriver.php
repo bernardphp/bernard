@@ -105,12 +105,11 @@ class MongoDBDriver implements \Bernard\Driver
             '_id' => 0,
         );
 
-        $messages = array();
-        foreach ($this->collection->find($query, $fields)->limit($limit)->skip($index) as $result) {
-            $messages[] = $result['message'];
-        }
+        $cursor = $this->collection->find($query, $fields)
+            ->limit($limit)
+            ->skip($index);
 
-        return $messages;
+        return array_map(function ($item) { return $item['message']; }, iterator_to_array($cursor));
     }
 
     /**
