@@ -9,6 +9,7 @@ Several different types of drivers are supported. Currently these are available:
 * `IronMQ`_
 * `Amazon SQS`_
 * `Google AppEngine`_
+* `MongoDB`_
 
 Redis Extension
 ---------------
@@ -347,3 +348,49 @@ Requires the installation of pda/pheanstalk. Add the following to your
     $pheanstalk = new Pheanstalk('localhost');
 
     $driver = new PheanstalkDriver($pheanstalk);
+
+MongoDB
+-------
+
+Here is the setup of the driver for MongoDB, if you are using the native PHP classes.
+
+Make sure the php MongoDB extension is installed:
+
+.. code-block:: json
+
+    {
+        "require" : {
+              "ext-mongo": ">=1.2.12,<1.6-dev"
+        }
+    }
+
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\MongoDBDriver;
+
+    $client = new \MongoClient();
+    $driver = new MongoDBDriver($client->selectDB('myDatabaseName'));
+
+
+If you are using Doctrine MongoDB ODM, here is the setup:
+
+.. code-block:: json
+
+    {
+        "require" : {
+              "doctrine/mongodb-odm": "~1.0"
+        }
+    }
+
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\MongoDBDriver;
+
+    $db = $documentManager->getDocumentDatabase('myDatabaseName');
+    $driver = new MongoDBDriver($db->getMongoDB());
