@@ -356,7 +356,7 @@ If you are using Doctrine MongoDB ODM, here is the setup:
 
     {
         "require" : {
-              "doctrine/mongodb": "~1.0"
+              "doctrine/mongodb-odm": "~1.0"
         }
     }
 
@@ -367,8 +367,7 @@ If you are using Doctrine MongoDB ODM, here is the setup:
 
     use Bernard\Driver\MongoDBDriver;
 
-    /** @var \Doctrine\ODM\MongoDB\DocumentManager $dm */
-    $db = $dm->getDocumentDatabase('myDatabaseName');
+    $db = $documentManager->getDocumentDatabase('myDatabaseName');
     $driver = new MongoDBDriver($db->getMongoDB());
 
 
