@@ -56,7 +56,7 @@ class MongoDBDriver implements \Bernard\Driver
         $data = array(
             'queue'   => $queueName,
             'message' => $message,
-            'sentAt'  => new \DateTime(),
+            'sentAt'  => microtime(),
             'visible' => true,
         );
 
@@ -71,7 +71,7 @@ class MongoDBDriver implements \Bernard\Driver
         $runtime = microtime(true) + $interval;
         $query = array('queue' => $queueName, 'visible' => true);
         $update = array('$set' => array('visible' => false));
-        $options = array('sort' => array('sentAt' => -1), 'new' => true);
+        $options = array('sort' => array('sentAt' => 1), 'new' => true);
 
         while (microtime(true) < $runtime) {
             if ($result = $this->collection->findAndModify($query, $update, array(), $options)) {
@@ -97,7 +97,7 @@ class MongoDBDriver implements \Bernard\Driver
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
         $query = array(
-            '$orderby'  => array('setAt' => -1),
+            '$orderby'  => array('sentAt' => 1),
             '$query' => array('queue' => $queueName, 'visible' => true),
         );
         $fields = array(
