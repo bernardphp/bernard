@@ -37,7 +37,7 @@ class MongoDBDriver implements \Bernard\Driver
     public function createQueue($queueName)
     {
         $query = array('queue' => $queueName);
-        $this->queueCollection->findAndModify($query, $query, array(), array('upsert' => true));
+        $this->queueCollection->update($query, $query, array('upsert' => true));
     }
 
     /**
