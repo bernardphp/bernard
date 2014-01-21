@@ -26,7 +26,8 @@
         "symfony/serializer"           : "~2.2",
         "doctrine/dbal"                : "~2.3",
         "iron-io/iron_mq"              : "~1.4",
-        "aws/aws-sdk-php"              : "~2.4"
+        "aws/aws-sdk-php"              : "~2.4",
+        "ext-mongo"                    : ">=1.2.12,<1.6-dev"
     },
 
     "extra" : {
