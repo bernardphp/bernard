@@ -75,7 +75,7 @@ class MongoDBDriver implements \Bernard\Driver
 
         while (microtime(true) < $runtime) {
             if ($result = $this->collection->findAndModify($query, $update, array(), $options)) {
-                return array($result['message'], (string)$result['_id']);
+                return array($result['message'], (string) $result['_id']);
             }
 
             //sleep for 10 ms
@@ -127,7 +127,7 @@ class MongoDBDriver implements \Bernard\Driver
     public function info()
     {
         return array(
-            'db' => (string)$this->db,
+            'db' => (string) $this->db,
             'type' => 'MongoDB',
         );
     }
