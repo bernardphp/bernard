@@ -16,11 +16,11 @@ class MongoDBDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function __construct(\MongoDB $db, $messageCollectionName = 'bernardMessages', $queueCollectionName = 'bernardQueues')
+    public function __construct(\MongoDB $db)
     {
         $this->db = $db;
-        $this->collection = $db->selectCollection($messageCollectionName);
-        $this->queueCollection = $db->selectCollection($queueCollectionName);
+        $this->collection = $db->selectCollection('bernardMessages');
+        $this->queueCollection = $db->selectCollection('bernardQueues');
     }
 
     /**
