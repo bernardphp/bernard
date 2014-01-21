@@ -23,8 +23,8 @@ class MongoDBDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testListQueues()
     {
-        $this->driver->pushMessage('import', 'message1');
-        $this->driver->pushMessage('send-newsletter', 'message2');
+        $this->driver->createQueue('import');
+        $this->driver->createQueue('send-newsletter');
 
         $this->assertSimilarArrays(array('import', 'send-newsletter'), $this->driver->listQueues());
     }
@@ -81,12 +81,6 @@ class MongoDBDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->driver->removeQueue('import-users');
 
-        $this->assertEquals(array('send-newsletter'), $this->driver->listQueues());
-    }
-
-    public function testPushMessageLazilyCreatesQueue()
-    {
-        $this->driver->pushMessage('send-newsletter', 'something');
         $this->assertEquals(array('send-newsletter'), $this->driver->listQueues());
     }
 

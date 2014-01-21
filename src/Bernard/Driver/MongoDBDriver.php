@@ -53,7 +53,6 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function pushMessage($queueName, $message)
     {
-        $this->createQueue($queueName);
         $data = array(
             'queue'   => $queueName,
             'message' => $message,
