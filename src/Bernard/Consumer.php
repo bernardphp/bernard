@@ -72,11 +72,11 @@ class Consumer implements Middleware
 
         $this->invoke($envelope, $queue);
 
-        if (null != $this->options['max-messages']) {
-            $this->options['max-messages'] -= 1;
+        if (null === $this->options['max-messages']) {
+            return true;
         }
 
-        return (boolean) $this->options['max-messages']--;
+        return (boolean) --$this->options['max-messages'];
     }
 
     /**
