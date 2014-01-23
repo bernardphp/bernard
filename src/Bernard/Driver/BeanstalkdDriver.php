@@ -14,16 +14,16 @@ class BeanstalkdDriver implements \Bernard\Driver
     /**
      * @var \Pheanstalk_PheanstalkInterface
      */
-    protected $beanstalkd;
+    protected $pheanstalk;
 
     /**
      * Constructor.
      *
-     * @param Pheanstalk_PheanstalkInterface $beanstalkd
+     * @param Pheanstalk_PheanstalkInterface $pheanstalk
      */
-    public function __construct(\Pheanstalk_PheanstalkInterface $beanstalkd)
+    public function __construct(\Pheanstalk_PheanstalkInterface $pheanstalk)
     {
-        $this->beanstalkd = $beanstalkd;
+        $this->pheanstalk = $pheanstalk;
     }
 
     /**
@@ -31,7 +31,7 @@ class BeanstalkdDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        return (integer) $this->beanstalkd->statsTube($queueName)->total_jobs;
+        return (integer) $this->pheanstalk->statsTube($queueName)->total_jobs;
     }
 
     /**
@@ -39,7 +39,7 @@ class BeanstalkdDriver implements \Bernard\Driver
      */
     public function createQueue($queueName)
     {
-        $this->beanstalkd->useTube($queueName);
+        $this->pheanstalk->useTube($queueName);
     }
 
     /**
@@ -49,7 +49,7 @@ class BeanstalkdDriver implements \Bernard\Driver
     {
         do {
             try {
-                $this->beanstalkd->delete($this->beanstalkd->peekReady($queueName));
+                $this->pheanstalk->delete($this->pheanstalk->peekReady($queueName));
             } catch (\Pheanstalk_Exception_ServerException $e) {
                 // the queue is now empty and Beanstalkd will
                 // remove the queue automatically.
@@ -63,7 +63,7 @@ class BeanstalkdDriver implements \Bernard\Driver
      */
     public function listQueues()
     {
-        return $this->beanstalkd->listTubes();
+        return $this->pheanstalk->listTubes();
     }
 
     /**
@@ -71,7 +71,7 @@ class BeanstalkdDriver implements \Bernard\Driver
      */
     public function pushMessage($queueName, $message)
     {
-        $this->beanstalkd->putInTube($queueName, $message);
+        $this->pheanstalk->putInTube($queueName, $message);
     }
 
     /**
@@ -80,7 +80,7 @@ class BeanstalkdDriver implements \Bernard\Driver
     public function popMessage($queueName, $interval = 5)
     {
         try {
-            $job = $this->beanstalkd->peekReady($queueName);
+            $job = $this->pheanstalk->peekReady($queueName);
         } catch (\Exception $e) {
             return array(null, null);
         }
@@ -100,7 +100,7 @@ class BeanstalkdDriver implements \Bernard\Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
-        $this->beanstalkd->delete($this->beanstalkd->peek($receipt));
+        $this->pheanstalk->delete($this->pheanstalk->peek($receipt));
     }
 
     /**
