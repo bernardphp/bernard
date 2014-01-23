@@ -17,6 +17,7 @@ class Consumer implements Middleware
     protected $configured = false;
     protected $options = array(
         'max-runtime' => PHP_INT_MAX,
+        'max-messages' => null,
     );
 
     /**
@@ -68,9 +69,14 @@ class Consumer implements Middleware
             return true;
         }
 
+
         $this->invoke($envelope, $queue);
 
-        return true;
+        if (null != $this->options['max-messages']) {
+            $this->options['max-messages'] -= 1;
+        }
+
+        return (boolean) $this->options['max-messages']--;
     }
 
     /**
