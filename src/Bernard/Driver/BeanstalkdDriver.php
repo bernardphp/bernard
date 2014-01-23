@@ -79,13 +79,22 @@ class BeanstalkdDriver implements \Bernard\Driver
      */
     public function popMessage($queueName, $interval = 5)
     {
-        try {
-            $job = $this->pheanstalk->peekReady($queueName);
-        } catch (\Exception $e) {
-            return array(null, null);
+        $runtime = microtime(true) + $interval;
+
+        while (microtime(true) < $runtime) {
+            try {
+                if (!$job = $this->pheanstalk->peekReady($queueName)) {
+                    usleep(10000);
+                    continue;
+                }
+
+                return array($job->getData(), $job->getId());
+            } catch (\Exception $e) {
+                return array(null, null);
+            }
         }
 
-        return array($job->getData(), $job->getId());
+        return array(null, null);
     }
 
     /**

@@ -104,6 +104,12 @@ class BeanstalkdDriverTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(new \Pheanstalk_Job(2, 'job_2')));
 
         $this->beanstalkd
+            ->expects($this->at(1))
+            ->method('peekReady')
+            ->with($this->equalTo('my-queue-2'))
+            ->will($this->returnValue(null));
+
+        $this->beanstalkd
             ->expects($this->at(2))
             ->method('peekReady')
             ->with($this->equalTo('my-queue-2'))
@@ -111,6 +117,7 @@ class BeanstalkdDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array('job_1', 1), $this->driver->popMessage('my-queue'));
         $this->assertEquals(array('job_2', 2), $this->driver->popMessage('my-queue-2'));
+        $this->assertEquals(array(null, null), $this->driver->popMessage('my-queue-2', 0.01));
         $this->assertEquals(array(null, null), $this->driver->popMessage('my-queue-2'));
     }
 
