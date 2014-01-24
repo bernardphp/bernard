@@ -87,15 +87,16 @@ class DoctrineDriver implements \Bernard\Driver
             try {
                 list($id, $message) = $this->connection->fetchArray($query, array('queue' => $queueName, 'visible' => true));
 
-                $this->connection->update('bernard_messages', array('visible' => false), compact('id'));
-                $this->connection->commit();
+                if ($id) {
+                    $this->connection->update('bernard_messages', array('visible' => 0), compact('id'));
+                    $this->connection->commit();
+
+                    return array($message, $id);
+                }
             } catch (\Exception $e) {
                 $this->connection->rollback();
             }
 
-            if (isset($message) && $message) {
-                return array($message, $id);
-            }
 
             //sleep for 10 ms
             usleep(10000);
