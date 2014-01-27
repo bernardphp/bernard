@@ -77,29 +77,43 @@ class DoctrineDriver implements \Bernard\Driver
     public function popMessage($queueName, $interval = 5)
     {
         $runtime = microtime(true) + $interval;
-        $query = 'SELECT id, message FROM bernard_messages
-                  WHERE queue = :queue AND visible = :visible
-                  ORDER BY sentAt, id ' . $this->connection->getDatabasePlatform()->getForUpdateSql();
 
         while (microtime(true) < $runtime) {
             $this->connection->beginTransaction();
 
             try {
-                list($id, $message) = $this->connection->fetchArray($query, array('queue' => $queueName, 'visible' => true));
+                $message = $this->doPopMessage($queueName);
 
-                if ($id) {
-                    $this->connection->update('bernard_messages', array('visible' => 0), compact('id'));
-                    $this->connection->commit();
+                $this->connection->commit();
 
-                    return array($message, $id);
-                }
             } catch (\Exception $e) {
                 $this->connection->rollback();
             }
 
+            if (isset($message)) {
+                return $message;
+            }
 
             //sleep for 10 ms
             usleep(10000);
+        }
+    }
+
+    protected function doPopMessage($queueName)
+    {
+        $query = 'SELECT id, message FROM bernard_messages
+                  WHERE queue = :queue AND visible = :visible
+                  ORDER BY sentAt, id ' . $this->connection->getDatabasePlatform()->getForUpdateSql();
+
+        list($id, $message) = $this->connection->fetchArray($query, array(
+            'queue' => $queueName,
+            'visible' => true,
+        ));
+
+        if ($id) {
+            $this->connection->update('bernard_messages', array('visible' => 0), compact('id'));
+
+            return array($message, $id);
         }
     }
 
