@@ -14,6 +14,9 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Test that given a clean memcached the queue will be setup correctly
+     */
     public function testCreateEmptyQueueList()
     {
         $memcached = $this->getMock('Memcached', array('get', 'set', 'add'));
@@ -43,6 +46,9 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $driver->createQueue('send-newsletter');
     }
 
+    /** 
+     * Test that given a existing queue list, a new queue is created correctly
+     */
     public function testCreateNonEmptyQueueList()
     {
         $memcached = $this->getMock('Memcached', array('get', 'cas', 'add'));
@@ -73,6 +79,9 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $driver->createQueue('send-newsletter');
     }
 
+    /**
+     * Test that an existing queue will have a its head restored to 0 if lost
+     */
     public function testCreateExistingQueueMissingHead()
     {
         $memcached = $this->getMock('Memcached', array('get', 'add'));
@@ -96,6 +105,9 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $driver->createQueue('send-newsletter');
     }
 
+    /** 
+     * Test that an existing queue will have its tail restored to head if lost.
+     */
     public function testCreateExistingQueueMissingTail()
     {
         $memcached = $this->getMock('Memcached', array('get', 'add'));
@@ -119,6 +131,9 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $driver->createQueue('send-newsletter');
     }
 
+    /**
+     * Test count messages works for tail - head
+     */
     public function testCountMessages()
     {
         $memcached = $this->getMock('Memcached', array('get'));
@@ -136,6 +151,10 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($driver->countMessages('send-newsletter'), 123 - 99);
     }
 
+    /**
+     * Test that pushMessage correctly increments tail and pushes 
+     * the message.
+     */
     public function testPushMessageSuccess()
     {
         $memcached = $this->getMock('Memcached', array('increment', 'add'));
@@ -156,6 +175,10 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $driver->pushMessage('send-newsletter', 'TEST');
     }
 
+    /**
+     * Test that pushMessage correctly increments tail and when
+     * failing to add message, decrementes the tail again.
+     */
     public function testPushMessageFailAndDecrement()
     {
         $memcached = $this->getMock('Memcached', array('increment', 'add', 'decrement'));
@@ -190,6 +213,9 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($exception, 'Unable to queue item: "bernard_send-newsletter_item_5122"');
     }
 
+    /**
+     * Test that popMessage for equal head and tail returns nothing
+     */
     public function testPopMessageEmptyQueue()
     {
         $memcached = $this->getMock('Memcached', array('get', 'cas'));
@@ -209,6 +235,11 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($message, null);
     }
 
+    /**
+     * Test that popMessage on non empty queue will use cas 
+     * to update head after retreiving the message, and 
+     * subsequently delete the message.
+     */
     public function testPopMessageSuccess()
     {
         $memcached = $this->getMock('Memcached', array('get', 'cas', 'delete'));
@@ -253,6 +284,11 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($message, array('TEST', 'bernard_send-newsletter_item_55'));
     }
 
+    /**
+     * Test that popMessage will attempt to retreive a message
+     * from a non empty queue, but give up and skip the message
+     * after timeout.
+     */
     public function testPopMessageFailedPushAndTimeoutOnThreshold()
     {
         $memcached = $this->getMock('Memcached', array('get', 'cas', 'delete'));
@@ -284,6 +320,10 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($message, null);
     }
 
+    /** 
+     * Test that removeQueue will only delete keys relevant to the
+     * queue, and that the queue list is updated using cas.
+     */
     public function testRemoveQueue()
     {
         $memcached = $this->getMock('Memcached', array('getAllKeys', 'deleteMulti', 'get', 'cas'));

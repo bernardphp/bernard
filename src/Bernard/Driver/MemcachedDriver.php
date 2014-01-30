@@ -6,23 +6,37 @@ use Bernard\Driver;
 use Bernard\Exception\DriverException;
 
 /**
- * Flat file driver to provide a simple job queue without any
- * database.
+ * Memcached driver for bernard.
  *
- * @author Markus Bachmann <markus.bachmann@bachi.biz>
+ * @package Bernard
  */
 class MemcachedDriver implements Driver
-{
+{   
+    /**
+     * @var \Memcached $memcached Memcache server(s) connection 
+     */
     protected $memcached;
+
+    /** 
+     * @var integer $ttl Lifetime for items created by the driver
+     */
     protected $ttl = 0;
+
+    /** 
+     * @var string $namespace All keys created by the driver will have this prefix
+     */
     protected $namespace;
-    protected $popMessageThreshold;
 
     /**
      * Pop message threshold is the number of seconds to wait in popMessage 
      * before assuming that a pushMessage was terminated before adding the 
      * message, but after incremeting the tail. 
-     * 
+     *
+     * @var double $popMessageThreshold 
+     */ 
+    protected $popMessageThreshold;
+
+    /**
      * @param Memcached $memcached
      * @param string $namespace
      * @param double $popMessageThreshold  
