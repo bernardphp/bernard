@@ -111,7 +111,7 @@ class MemcachedDriver implements Driver
      * @param string $queueName
      * @return boolean
      */
-    protected function removeQueueNemeFromQueueList($queueName)
+    protected function removeQueueNameFromQueueList($queueName)
     {
         $casToken = 0.0;
 
@@ -139,11 +139,9 @@ class MemcachedDriver implements Driver
      */
     public function listQueues()
     {
-        if (($queueList = $this->memcached->get($this->getQueueListKey())) === false) {
-            return array();
-        }
-
-        return json_decode($queueList, true);
+        $queueList = $this->memcached->get($this->getQueueListKey());
+        
+        return json_decode($queueList ?: '[]', true);
     }
 
     /**
@@ -154,9 +152,7 @@ class MemcachedDriver implements Driver
     public function createQueue($queueName)
     {
         // Ensure that the queue is in the list
-        if (!$this->addQueueNameToQueueList($queueName)) {
-            // should anything special happen here?
-        }
+        $this->addQueueNameToQueueList($queueName);
 
         // Initialize the queue
         // Get the values for head and tail
@@ -168,6 +164,7 @@ class MemcachedDriver implements Driver
         if ($head === false && $tail === false) {
             $this->memcached->add($this->getQueueHeadKey($queueName), 0, $this->ttl);
             $this->memcached->add($this->getQueueTailKey($queueName), 0, $this->ttl);
+
             return;
         }
 
@@ -175,6 +172,7 @@ class MemcachedDriver implements Driver
         // Intialize the head to 0 (this assumes that tail will never be lower than 0)
         if ($head === false) {
             $this->memcached->add($this->getQueueHeadKey($queueName), 0, $this->ttl);
+
             return;
         }
 
@@ -182,6 +180,7 @@ class MemcachedDriver implements Driver
         // eg. the queue is empty
         if ($tail === false) {
             $this->memcached->add($this->getQueueTailKey($queueName), $head, $this->ttl);
+
             return;
         }
     }
@@ -196,11 +195,7 @@ class MemcachedDriver implements Driver
         $head = $this->memcached->get($this->getQueueHeadKey($queueName));
         $tail = $this->memcached->get($this->getQueueTailKey($queueName));
 
-        if ($head === false || $tail === false) {
-            return 0;
-        }
-
-        return $tail - $head;
+        return max(0, $tail - $head);
     }
 
     /**
@@ -256,7 +251,6 @@ class MemcachedDriver implements Driver
 
         // Head and tail and equal, this means the queue is empty
         if ($head >= $tail) {
-            // TODO: I assume that this would be the place to handle interval
             return null;
         }
 
@@ -364,7 +358,7 @@ class MemcachedDriver implements Driver
             return;
         }
 
-        $this->removeQueueNemeFromQueueList($queueName);
+        $this->removeQueueNameFromQueueList($queueName);
     }
 
     /**
