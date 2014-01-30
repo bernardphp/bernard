@@ -382,4 +382,36 @@ class MemcachedDriverTest extends \PHPUnit_Framework_TestCase
         $driver = new MemcachedDriver($memcached, 'bernard', 0.1);
         $driver->removeQueue('send-newsletter');
     }
+
+    /**
+     * Test that a non initialized queue list is treated as a empty array
+     */
+    public function testListQueuesEmpty()
+    {
+        $memcached = $this->getMock('Memcached', array('get'));
+        $memcached->expects($this->once())
+                  ->method('get')
+                  ->with('bernard_queuelist')
+                  ->will($this->returnValue(false))
+        ;
+
+        $driver = new MemcachedDriver($memcached, 'bernard');
+        $this->assertEquals($driver->listQueues(), array());
+    }
+
+    /**
+     * Test a initialized queue list
+     */
+    public function testListQueuesNotEmpty()
+    {
+        $memcached = $this->getMock('Memcached', array('get'));
+        $memcached->expects($this->once())
+                  ->method('get')
+                  ->with('bernard_queuelist')
+                  ->will($this->returnValue(json_encode(array('queue-1', 'queue-2'))))
+        ;
+
+        $driver = new MemcachedDriver($memcached, 'bernard');
+        $this->assertEquals($driver->listQueues(), array('queue-1', 'queue-2'));
+    }
 }
