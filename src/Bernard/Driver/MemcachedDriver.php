@@ -140,7 +140,7 @@ class MemcachedDriver implements Driver
     public function listQueues()
     {
         $queueList = $this->memcached->get($this->getQueueListKey());
-        
+
         return json_decode($queueList ?: '[]', true);
     }
 
@@ -276,6 +276,7 @@ class MemcachedDriver implements Driver
         // was added under $itemKey. We skip the message by moving head forward.
         if ($message === false) {
             $this->memcached->cas($headCasToken, $this->getQueueHeadKey($queueName), $head + 1, $this->ttl);
+            
             return null;
         }
 
