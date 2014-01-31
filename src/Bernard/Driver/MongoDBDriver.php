@@ -107,7 +107,8 @@ class MongoDBDriver implements \Bernard\Driver
 
         $cursor = $this->collection->find($query, $fields)
             ->limit($limit)
-            ->skip($index);
+            ->skip($index)
+        ;
 
         return array_map(function ($item) { return $item['message']; }, iterator_to_array($cursor));
     }
