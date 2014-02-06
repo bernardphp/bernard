@@ -22,7 +22,7 @@ Examples
 
 There are numerous examples of running Bernard in the ``example`` directory. The files are
 named after the driver they are using. Each file takes the argument ``consume`` or ``produce``.
-For instance, to use the ``Predis`` use:
+For instance, to use the ``Predis`` driver, use:
 
 .. code-block:: sh
 
