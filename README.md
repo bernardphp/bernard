@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://bernard.rtfd.org">
-    <img src="https://bernard.readthedocs.org/en/latest/_static/logo_small@2x.png" alt="Bernard" />
+    <img src="https://bernard.readthedocs.org/en/latest/_static/img/logo_small@2x.png" alt="Bernard" />
   </a>
 </p>
 
