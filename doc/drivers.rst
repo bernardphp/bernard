@@ -9,6 +9,7 @@ Several different types of drivers are supported. Currently these are available:
 * `IronMQ`_
 * `Amazon SQS`_
 * `Google AppEngine`_
+* `Beantalkd`_
 
 Redis Extension
 ---------------
@@ -86,7 +87,7 @@ Use the following method for creating the needed bernard tables.
     use Doctrine\DBAL\Schema\Schema;
 
     MessagesSchema::create($schema = new Schema);
-    
+
     // setup Doctrine DBAL
     $connection = ...;
 
@@ -323,3 +324,25 @@ something like this:
         }
     }
 
+Beanstalkd
+----------
+
+Requires the installation of pheanstalk. Add the following to your
+``composer.json`` file for this:
+
+.. code-block:: json
+
+    {
+        "require" : {
+            "pda/pheanstalk" : "~2.1"
+        }
+    }
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\BeanstalkdDriver;
+
+    $beanstalkd = new Pheanstalk_Pheanstalk('127.0.0.1');
+    $driver = new BeanstalkdDriver($predis);
