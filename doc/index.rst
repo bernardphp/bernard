@@ -49,8 +49,8 @@ The easiest way is to give it to the producer, as the queue name
 is taken from the message object.
 
 To make it easier to send messages and not require every type to be implemented
-in a seperate class, a ``Bernard\Message\DefaultMessage`` is provided. It can hold
-any number of proberties and only needs a name for the message. The queue name
+in a separate class, a ``Bernard\Message\DefaultMessage`` is provided. It can hold
+any number of properties and only needs a name for the message. The queue name
 is then generated from that. When generating the queue name it will insert a "_"
 before any uppercase letter and then lowercase the name.
 
@@ -76,7 +76,7 @@ before any uppercase letter and then lowercase the name.
 In Memory Queues
 ~~~~~~~~~~~~~~~~
 
-Bernard comes with an implemention for ``SplQueue`` which is completly in memory.
+Bernard comes with an implementation for ``SplQueue`` which is completly in memory.
 It is useful for development and/or testing, when you don't necessarily want actions to be
 performed.
 
