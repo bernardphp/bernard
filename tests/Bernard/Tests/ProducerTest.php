@@ -6,6 +6,7 @@ use Bernard\Producer;
 use Bernard\Message\DefaultMessage;
 use Bernard\QueueFactory\InMemoryFactory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Bernard\Batch;
 
 class ProducerTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,6 +42,36 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
         $envelope = $this->queues->create('send-newsletter')->dequeue();
 
         $this->assertSame($message, $envelope->getMessage());
+    }
+
+    public function testItSupportsBatches()
+    {
+        $message1 = new DefaultMessage('SendNewsletter');
+        $message2 = new DefaultMessage('SomeThingElse');
+
+        $batch = new Batch('my-id');
+        $batch->assign($message1);
+        $batch->assign($message2);
+
+        $this->producer->produce($batch);
+
+        $this->assertCount(1, $this->queues->create('send-newsletter'));
+        $this->assertCount(1, $this->queues->create('some-thing-else'));
+    }
+
+    public function testItBatchesToForcedQueue()
+    {
+        $message1 = new DefaultMessage('SendNewsletter');
+        $message2 = new DefaultMessage('SomeThingElse');
+
+        $batch = new Batch('my-id');
+        $batch->assign($message1);
+        $batch->assign($message2);
+
+        $this->producer->produce($batch, 'high');
+
+        $this->assertCount(2, $this->queues->create('high'));
+        $this->assertCount(0, $this->queues->create('send-newsletter'));
     }
 
     public function testItUsesGivenQueueName()

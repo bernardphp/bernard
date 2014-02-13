@@ -6,11 +6,16 @@ php:
     - 5.3
     - 5.4
     - 5.5
+    - 5.6
+    - hhvm
+
+matrix:
+    allow_failures:
+        - php: hhvm
 
 before_script:
-    - "pyrus install pecl/redis && pyrus build pecl/redis"
-    - "echo \"extension=redis.so\" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini"
-    - "echo '{\"config\":{\"github-oauth\": {\"github.com\":\"fa354b2f030836334eac842f8fd69a03e353d247\"}}}' > ~/.composer/config.json"
-    - "composer install --dev --no-progress --no-custom-installers --no-scripts"
+    - sh -c "if [ \"$TRAVIS_PHP_VERSION\" != \"hhvm\" ]; then pyrus install pecl/redis && pyrus build pecl/redis; fi"
+    - sh -c "if [ \"$TRAVIS_PHP_VERSION\" != \"hhvm\" ]; then echo \"extension=redis.so\" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi"
+    - "composer install --no-progress --no-plugins"
 
 script: phpunit
