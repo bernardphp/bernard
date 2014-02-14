@@ -24,11 +24,13 @@ class SimpleSerializer implements \Bernard\Serializer
 
         $message = $envelope->getMessage();
 
-        return json_encode(array(
+        $data = array(
             'args'      => array('name' => $message->getName()) + get_object_vars($message),
             'class'     => bernard_encode_class_name($envelope->getClass()),
             'timestamp' => $envelope->getTimestamp(),
-        ));
+        );
+
+        return json_encode($data + $envelope->getStamps());
     }
 
     /**
@@ -44,7 +46,8 @@ class SimpleSerializer implements \Bernard\Serializer
             $data['args']['name'] = substr(strrchr($class, '\\'), 1);
         }
 
-        $envelope = new Envelope(new DefaultMessage($data['args']['name'], $data['args']));
+        $stamps = array_diff_key($data, array_flip(array('timestamp', 'class', 'args')));
+        $envelope = new Envelope(new DefaultMessage($data['args']['name'], $data['args']), $stamps);
 
         bernard_force_property_value($envelope, 'class', $class);
         bernard_force_property_value($envelope, 'timestamp', $data['timestamp']);

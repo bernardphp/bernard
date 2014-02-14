@@ -20,11 +20,13 @@ class EnvelopeNormalizer extends SerializerAwareNormalizer implements Normalizer
      */
     public function normalize($object, $format = null, array $context = array())
     {
-        return array(
+        $data = array(
             'args'      => $this->serializer->normalize($object->getMessage(), $format, $context),
             'class'     => bernard_encode_class_name($object->getClass()),
             'timestamp' => $object->getTimestamp(),
         );
+
+        return $data + $object->getStamps();
     }
 
     /**
@@ -37,9 +39,10 @@ class EnvelopeNormalizer extends SerializerAwareNormalizer implements Normalizer
         if (!class_exists($class)) {
             $class = 'Bernard\\Message\\DefaultMessage';
             $data['args']['name'] = substr(strrchr($data['class'], '\\'), 1);
-        }
+        }   
 
-        $envelope = new Envelope($this->serializer->denormalize($data['args'], $class, $format, $context));
+        $stamps = array_diff_key($data, array_flip(array('timestamp', 'class', 'args')));
+        $envelope = new Envelope($this->serializer->denormalize($data['args'], $class, $format, $context), $stamps);
 
         foreach (array('timestamp', 'class') as $name) {
             bernard_force_property_value($envelope, $name, $data[$name]);

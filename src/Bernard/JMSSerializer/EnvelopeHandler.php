@@ -62,7 +62,7 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
             'timestamp' => $envelope->getTimestamp(),
         );
 
-        $visitor->setRoot($data);
+        $visitor->setRoot($data + $envelope->getStamps());
 
         return $data;
     }
@@ -88,7 +88,9 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
             $type['name'] = 'Bernard\Message\DefaultMessage';
         }
 
-        $envelope = new Envelope($context->accept($data['args'], $type));
+        $stamps = array_diff_key($data, array_flip(array('timestamp', 'class', 'args')));
+
+        $envelope = new Envelope($context->accept($data['args'], $type), $stamps);
 
         $visitor->setNavigator($context->getNavigator());
 
