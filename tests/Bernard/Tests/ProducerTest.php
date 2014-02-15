@@ -20,8 +20,8 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
     {
         $args = array();
 
-        $this->dispatcher->on('bernard.produce', function ($envelope, $queueName) use (&$args) {
-            $args = compact('envelope', 'queueName');
+        $this->dispatcher->on('bernard.produce', function ($envelope, $queue) use (&$args) {
+            $args = compact('envelope', 'queue');
         });
 
         $message = new DefaultMessage('Message');
@@ -29,7 +29,7 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
         $this->producer->produce($message, 'my-queue');
 
         $this->assertSame($message, $args['envelope']->getMessage());
-        $this->assertEquals('my-queue', $args['queueName']);
+        $this->assertSame($this->queues->create('my-queue'), $args['queue']);
     }
 
     public function testItDelegatesMessagesToQueue()

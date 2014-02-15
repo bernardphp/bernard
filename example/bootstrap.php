@@ -2,11 +2,11 @@
 
 use Bernard\Consumer;
 use Bernard\Message;
-use Bernard\Middleware;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\SimpleRouter;
 use Bernard\Serializer\SimpleSerializer;
+use Bernard\EventDispatcher;
 
 /**
  * This file contains helper methods for the examples. See example/$driver.php
@@ -27,16 +27,12 @@ function get_serializer() {
     return new SimpleSerializer;
 }
 
-function get_producer_middleware() {
-    return new Middleware\MiddlewareBuilder;
-}
+function get_event_dispatcher() {
+    $dispatcher = new EventDispatcher;
+    $dispatcher->subscribe(new EventDispatcher\ErrorLogSubscriber);
+    $dispatcher->subscribe(new EventDispatcher\FailureSubscriber(get_queue_factory()));
 
-function get_consumer_middleware() {
-    $chain = new Middleware\MiddlewareBuilder;
-    $chain->push(new Middleware\ErrorLogFactory);
-    $chain->push(new Middleware\FailuresFactory(get_queue_factory()));
-
-    return $chain;
+    return $dispatcher;
 }
 
 function get_queue_factory() {
@@ -44,7 +40,7 @@ function get_queue_factory() {
 }
 
 function get_producer() {
-    return new Producer(get_queue_factory(), get_producer_middleware());
+    return new Producer(get_queue_factory(), get_event_dispatcher());
 }
 
 function get_receivers() {
@@ -54,7 +50,7 @@ function get_receivers() {
 }
 
 function get_consumer() {
-    return new Consumer(get_receivers(), get_consumer_middleware());
+    return new Consumer(get_receivers(), get_event_dispatcher());
 }
 
 function produce() {

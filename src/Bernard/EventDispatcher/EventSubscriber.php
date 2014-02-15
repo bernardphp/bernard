@@ -1,6 +1,8 @@
 <?php
 
-namespace Bernard;
+namespace Bernard\EventDispatcher;
+
+use Bernard\EventDispatcher;
 
 interface EventSubscriber
 {

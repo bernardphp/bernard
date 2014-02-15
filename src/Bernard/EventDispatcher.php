@@ -2,6 +2,8 @@
 
 namespace Bernard;
 
+use Bernard\EventDispatcher\EventSubscriber;
+
 class EventDispatcher extends \Evenement\EventEmitter
 {
     /**

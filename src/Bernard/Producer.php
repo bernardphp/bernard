@@ -26,10 +26,11 @@ class Producer
      */
     public function produce(Message $message, $queueName = null)
     {
-        $queueName = $queueName ?: bernard_guess_queue($envelope->getMessage());
+        $queueName = $queueName ?: bernard_guess_queue($message);
 
-        $this->dispatcher->emit('bernard.produce', array($envelope, $queueName));
+        $queue = $this->queues->create($queueName);
+        $queue->enqueue($envelope = new Envelope($message));
 
-        $this->queues->create($queueName)->enqueue($envelope);
+        $this->dispatcher->emit('bernard.produce', array($envelope, $queue));
     }
 }

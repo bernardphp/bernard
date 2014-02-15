@@ -10,7 +10,7 @@ class EventDispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $dispatcher = new EventDispatcher;
 
-        $subscriber = $this->getMock('Bernard\EventSubscriber');
+        $subscriber = $this->getMock('Bernard\EventDispatcher\EventSubscriber');
         $subscriber->expects($this->once())->method('subscribe')->with($dispatcher);
 
 
