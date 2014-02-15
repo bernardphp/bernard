@@ -2,24 +2,22 @@
 
 namespace Bernard;
 
-use Bernard\Middleware\MiddlewareBuilder;
-
 /**
  * @package Bernard
  */
-class Producer implements Middleware
+class Producer
 {
     protected $queues;
-    protected $middleware;
+    protected $dispatcher;
 
     /**
-     * @param QueueFactory      $queues
-     * @param MiddlewareBuilder $middleware
+     * @param QueueFactory    $queues
+     * @param EventDispatcher $dispatcher
      */
-    public function __construct(QueueFactory $queues, MiddlewareBuilder $middleware)
+    public function __construct(QueueFactory $queues, EventDispatcher $dispatcher)
     {
         $this->queues = $queues;
-        $this->middleware = $middleware;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -28,17 +26,10 @@ class Producer implements Middleware
      */
     public function produce(Message $message, $queueName = null)
     {
-        $queue = $this->queues->create($queueName ?: bernard_guess_queue($message));
+        $queueName = $queueName ?: bernard_guess_queue($envelope->getMessage());
 
-        $middleware = $this->middleware->build($this);
-        $middleware->call(new Envelope($message), $queue);
-    }
+        $this->dispatcher->emit('bernard.produce', array($envelope, $queueName));
 
-    /**
-     * {@inheritDoc}
-     */
-    public function call(Envelope $envelope, Queue $queue)
-    {
-        $queue->enqueue($envelope);
+        $this->queues->create($queueName)->enqueue($envelope);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests;
 
-use Bernard\Middleware\MiddlewareBuilder;
+use Bernard\EventDispatcher;
 use Bernard\Producer;
 use Bernard\Message\DefaultMessage;
 use Bernard\QueueFactory\InMemoryFactory;
@@ -12,7 +12,24 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->queues = new InMemoryFactory;
-        $this->producer = new Producer($this->queues, new MiddlewareBuilder);
+        $this->dispatcher = new EventDispatcher;
+        $this->producer = new Producer($this->queues, $this->dispatcher);
+    }
+
+    public function testDispatchesEvent()
+    {
+        $args = array();
+
+        $this->dispatcher->on('bernard.produce', function ($envelope, $queueName) use (&$args) {
+            $args = compact('envelope', 'queueName');
+        });
+
+        $message = new DefaultMessage('Message');
+
+        $this->producer->produce($message, 'my-queue');
+
+        $this->assertSame($message, $args['envelope']->getMessage());
+        $this->assertEquals('my-queue', $args['queueName']);
     }
 
     public function testItDelegatesMessagesToQueue()

@@ -9,7 +9,8 @@
     },
 
     "require" : {
-        "php" : ">=5.3.3"
+        "php" : ">=5.3.3",
+        "evenement/evenement" : "~1.0"
     },
 
     "replace" : {
