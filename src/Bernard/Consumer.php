@@ -89,13 +89,13 @@ class Consumer
     public function invoke(Envelope $envelope, Queue $queue)
     {
         try {
-            $this->dispatcher->emit('bernard.consume', array($envelope, $queue));
-
             // for 5.3 support where a function name is not a callable
             call_user_func($this->router->map($envelope), $envelope->getMessage());
 
             // We successfully processed the message.
             $queue->acknowledge($envelope);
+
+            $this->dispatcher->emit('bernard.consume', array($envelope, $queue));
         } catch (\Exception $e) {
             // Make sure the exception is not interfering.
             // Previously failing jobs handling have been moved to a middleware.

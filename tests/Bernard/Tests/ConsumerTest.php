@@ -42,10 +42,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $envelope = new Envelope(new DefaultMessage('ImportUsers'));
         $queue = new InMemoryQueue('queue');
 
-        $this->dispatcher->expects($this->at(0))->method('emit')
-            ->with('bernard.consume', array($envelope, $queue));
-
-        $this->dispatcher->expects($this->at(1))->method('emit')
+        $this->dispatcher->expects($this->once())->method('emit')
             ->with('bernard.exception', array($envelope, $queue, $exception));
 
         $this->consumer->invoke($envelope, $queue);
