@@ -24,14 +24,14 @@ class LoggerSubscriber implements EventSubscriber
         ));
     }
 
-    public function onConsume(Envelope $envelope, Queue $queue)
+    public function onInvoke(Envelope $envelope, Queue $queue)
     {
-        $this->logger->info('[bernard] consuming {envelope}.', array(
+        $this->logger->info('[bernard] invoking receiver for {envelope}.', array(
             'envelope' => $envelope,
         ));
     }
 
-    public function onException(Envelope $envelope, Queue $queue, \Exception $e)
+    public function onReject(Envelope $envelope, Queue $queue, \Exception $e)
     {
         $this->logger->error('[bernard] caught exception {exception} while processing {envelope}.', array(
             'envelope' => $envelope,
@@ -42,7 +42,7 @@ class LoggerSubscriber implements EventSubscriber
     public function subscribe(EventDispatcher $dispatcher)
     {
         $dispatcher->on('bernard.produce', array($this, 'onProduce'));
-        $dispatcher->on('bernard.consume', array($this, 'onConsume'));
-        $dispatcher->on('bernard.exception', array($this, 'onException'));
+        $dispatcher->on('bernard.invoke', array($this, 'onInvoke'));
+        $dispatcher->on('bernard.reject', array($this, 'onReject'));
     }
 }

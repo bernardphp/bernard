@@ -18,7 +18,7 @@ class FailureSubscriber implements EventSubscriber
         $this->name = $name;
     }
 
-    public function onException(Envelope $envelope, Queue $queue, $exception)
+    public function onReject(Envelope $envelope, Queue $queue, $exception)
     {
         $queue->acknowledge($envelope);
 
@@ -27,6 +27,6 @@ class FailureSubscriber implements EventSubscriber
 
     public function subscribe(EventDispatcher $dispatcher)
     {
-        $dispatcher->on('bernard.exception', array($this, 'onException'));
+        $dispatcher->on('bernard.reject', array($this, 'onReject'));
     }
 }
