@@ -2,17 +2,15 @@
 
 namespace Bernard;
 
-use Bernard\Middleware\MiddlewareBuilder;
-
 declare(ticks=1);
 
 /**
  * @package Consumer
  */
-class Consumer implements Middleware
+class Consumer
 {
     protected $router;
-    protected $middleware;
+    protected $dispatcher;
     protected $shutdown = false;
     protected $configured = false;
     protected $options = array(
@@ -20,13 +18,13 @@ class Consumer implements Middleware
     );
 
     /**
-     * @param Router   $router
-     * @param MiddlewareBuilder $middleware
+     * @param Router          $router
+     * @param EventDispatcher $dispatcher
      */
-    public function __construct(Router $router, MiddlewareBuilder $middleware)
+    public function __construct(Router $router, EventDispatcher $dispatcher)
     {
         $this->router = $router;
-        $this->middleware = $middleware;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -91,24 +89,22 @@ class Consumer implements Middleware
     public function invoke(Envelope $envelope, Queue $queue)
     {
         try {
-            $middleware = $this->middleware->build($this);
-            $middleware->call($envelope, $queue);
+            $this->dispatcher->emit('bernard.invoke', array($envelope, $queue));
+
+            // for 5.3 support where a function name is not a callable
+            call_user_func($this->router->map($envelope), $envelope->getMessage());
+
+            // We successfully processed the message.
+            $queue->acknowledge($envelope);
+
+            $this->dispatcher->emit('bernard.acknowledge', array($envelope, $queue));
         } catch (\Exception $e) {
             // Make sure the exception is not interfering.
             // Previously failing jobs handling have been moved to a middleware.
+            //
+            // Emit an event to let others log that exception
+            $this->dispatcher->emit('bernard.reject', array($envelope, $queue, $e));
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function call(Envelope $envelope, Queue $queue)
-    {
-        // for 5.3 support where a function name is not a callable
-        call_user_func($this->router->map($envelope), $envelope->getMessage());
-
-        // We successfully processed the message.
-        $queue->acknowledge($envelope);
     }
 
     /**
