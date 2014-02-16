@@ -31,7 +31,7 @@ class Producer implements Middleware
         $queue = $this->queues->create($queueName ?: bernard_guess_queue($message));
 
         $middleware = $this->middleware->build($this);
-        $middleware->call(new Envelope($message), $queue);
+        $middleware->call(new Envelope($message, get_class($message), time()), $queue);
     }
 
     /**

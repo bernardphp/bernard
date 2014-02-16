@@ -4,8 +4,6 @@ namespace Bernard;
 
 use Bernard\Middleware\MiddlewareBuilder;
 
-declare(ticks=1);
-
 /**
  * @package Consumer
  */
@@ -13,14 +11,9 @@ class Consumer implements Middleware
 {
     protected $router;
     protected $middleware;
-    protected $shutdown = false;
-    protected $configured = false;
-    protected $options = array(
-        'max-runtime' => PHP_INT_MAX,
-    );
 
     /**
-     * @param Router   $router
+     * @param Router            $router
      * @param MiddlewareBuilder $middleware
      */
     public function __construct(Router $router, MiddlewareBuilder $middleware)
@@ -30,16 +23,14 @@ class Consumer implements Middleware
     }
 
     /**
-     * Starts an infinite loop calling Consumer::tick();
+     * Starts an infinite loop calling Consumer::consume();
+     * This should not be used unless in very extreme circumstances.
      *
      * @param Queue $queue
-     * @param array $options
      */
-    public function consume(Queue $queue, array $options = array())
+    public function run(Queue $queue)
     {
-        $this->bind();
-
-        while ($this->tick($queue, $options)) {
+        while ($this->consume($queue)) {
             // NO op
         }
     }
@@ -48,22 +39,13 @@ class Consumer implements Middleware
      * Returns true do indicate it should be run again or false to indicate
      * it should not be run again.
      *
+     * Handles the whole dispatching to receivers and so on.
+     *
      * @param  Queue   $queue
-     * @param  array   $options
      * @return boolean
      */
-    public function tick(Queue $queue, array $options = array())
+    public function consume(Queue $queue)
     {
-        $this->configure($options);
-
-        if ($this->shutdown) {
-            return false;
-        }
-
-        if (microtime(true) > $this->options['max-runtime']) {
-            return false;
-        }
-
         if (!$envelope = $queue->dequeue()) {
             return true;
         }
@@ -74,17 +56,6 @@ class Consumer implements Middleware
     }
 
     /**
-     * Mark Consumer as shutdown
-     */
-    public function shutdown()
-    {
-        $this->shutdown = true;
-    }
-
-    /**
-     * Until there is a real extension point to doing invoked stuff, this can be used
-     * by wrapping the invoke method.
-     *
      * @param Envelope $envelope
      * @param Queue    $queue
      */
@@ -109,29 +80,5 @@ class Consumer implements Middleware
 
         // We successfully processed the message.
         $queue->acknowledge($envelope);
-    }
-
-    /**
-     * @param array $options
-     */
-    protected function configure(array $options)
-    {
-        if ($this->configured) {
-            return $this->options;
-        }
-
-        $this->options = array_filter($options) + $this->options;
-        $this->options['max-runtime'] += microtime(true);
-        $this->configured = true;
-    }
-
-    /**
-     * Setup signal handlers for unix signals.
-     */
-    protected function bind()
-    {
-        pcntl_signal(SIGTERM, array($this, 'shutdown'));
-        pcntl_signal(SIGQUIT, array($this, 'shutdown'));
-        pcntl_signal(SIGINT,  array($this, 'shutdown'));
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Bernard\Queue;
 
-use SplObjectStorage;
 use Bernard\Driver;
 use Bernard\Envelope;
 use Bernard\Serializer;

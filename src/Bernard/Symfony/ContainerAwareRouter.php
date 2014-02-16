@@ -2,13 +2,12 @@
 
 namespace Bernard\Symfony;
 
-use Bernard\Envelope;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @package Bernard
  */
-class ContainerAwareRouter extends \Bernard\Router\SimpleRouter
+class ContainerAwareRouter extends \Bernard\Router\AbstractRouter
 {
     public function __construct(ContainerInterface $container, array $receivers = array())
     {

@@ -88,13 +88,9 @@ class EnvelopeHandler implements \JMS\Serializer\Handler\SubscribingHandlerInter
             $type['name'] = 'Bernard\Message\DefaultMessage';
         }
 
-        $envelope = new Envelope($context->accept($data['args'], $type));
+        $envelope = new Envelope($context->accept($data['args'], $type), $data['class'], $data['timestamp']);
 
         $visitor->setNavigator($context->getNavigator());
-
-        foreach (array('timestamp', 'class') as $name) {
-            bernard_force_property_value($envelope, $name, $data[$name]);
-        }
 
         return $envelope;
     }

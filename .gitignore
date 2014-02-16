@@ -1,5 +1,6 @@
 composer.lock
 vendor
 phpunit.xml
+phpspec.yml
 coverage
 _build

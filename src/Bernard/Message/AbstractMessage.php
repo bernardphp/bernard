@@ -20,12 +20,4 @@ abstract class AbstractMessage implements \Bernard\Message
 
         return current(array_reverse(explode('\\', $class)));
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getQueue()
-    {
-        return trim(strtolower(preg_replace('/[A-Z]/', '-\\0', $this->getName())), '-');
-    }
 }

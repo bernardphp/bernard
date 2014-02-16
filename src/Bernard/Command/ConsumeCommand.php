@@ -16,6 +16,8 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
 {
     protected $consumer;
     protected $queues;
+    protected $shutdown = false;
+    protected $startTime;
 
     /**
      * @param Consumer     $consumer
@@ -35,7 +37,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     public function configure()
     {
         $this
-            ->addOption('max-runtime', null, InputOption::VALUE_OPTIONAL, 'Maximum time in seconds the consumer will run.', null)
+            ->addOption('max-runtime', null, InputOption::VALUE_OPTIONAL, 'Maximum time in seconds the consumer will run.', 31556900)
             ->addArgument('queue', InputArgument::REQUIRED, 'Name of queue that will be consumed.')
         ;
     }
@@ -45,8 +47,47 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->startTime = microtime(true);
+
         $queue = $this->queues->create($input->getArgument('queue'));
 
-        $this->consumer->consume($queue, $input->getOptions());
+        // This is 5.5+
+        if (function_exists('cli_set_process_title')) {
+            cli_set_process_title('bernard-' . (string) $queue);
+        }
+
+        declare(ticks = 10) {
+            $this->bind($output);
+
+            while ($this->tick($queue, $input->getOptions())) {
+                // http://php.net/pcntl_signal_dispatch says that this MUST be called in each loop
+                // if using php to run long running Daemon scripts.
+                pcntl_signal_dispatch();
+            }
+        }
+    }
+
+    protected function tick($queue, $options)
+    {
+        if (time() >= $this->startTime + $options['max-runtime']) {
+            return false;
+        }
+
+        if ($this->shutdown) {
+            return false;
+        }
+
+        return $this->consumer->consume($queue, $options);
+    }
+
+    protected function bind(OutputInterface $output)
+    {
+        $callback = function ($signal) use ($output) {
+            $this->shutdown = true;
+
+            $output->writeln('Caught signal "' . $signal . '". Terminating...');
+        };
+
+        pcntl_signal(SIGINT, $callback);
     }
 }

@@ -7,13 +7,13 @@ use Pimple;
 /**
  * @package Bernard
  */
-class PimpleAwareRouter extends \Bernard\Router\SimpleRouter
+class PimpleAwareRouter extends \Bernard\Router\AbstractRouter
 {
     protected $pimple;
 
     /**
      * @param Pimple $pimple
-     * @param array $receivers
+     * @param array  $receivers
      */
     public function __construct(Pimple $pimple, array $receivers = array())
     {

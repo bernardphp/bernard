@@ -55,22 +55,10 @@ class MiddlewareBuilder
     {
         $this->factories->rewind();
 
-        $factories = iterator_to_array($this->factories);
+        $callback = function ($middleware, $factory) {
+            return $factory($middleware);
+        };
 
-        return array_reduce($factories, array($this, 'reduce'), $middleware);
-    }
-
-    /**
-     * Reduces the $factory and $callable into a single
-     * $callable and effectively creating a chain.
-     *
-     * @param Middleware $middleware
-     * @param callable   $factory
-     */
-    public function reduce(Middleware $middleware, $factory)
-    {
-        Verify::isCallable($factory);
-
-        return $factory($middleware);
+        return array_reduce(iterator_to_array($this->factories), $callback, $middleware);
     }
 }

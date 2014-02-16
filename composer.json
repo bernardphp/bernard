@@ -9,7 +9,8 @@
     },
 
     "require" : {
-        "php" : ">=5.3.3"
+        "php" : ">=5.3.3",
+        "symfony/console" : "~2.2"
     },
 
     "replace" : {
@@ -17,6 +18,9 @@
     },
 
     "require-dev" : {
+        "phpspec/phpspec"                   : "2.0.x-dev",
+        "henrikbjorn/phpspec-code-coverage" : "dev-master",
+
         "psr/log"                      : "~1.0",
         "jms/serializer"               : "~0.12",
         "pimple/pimple"                : "~1.0",

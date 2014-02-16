@@ -3,7 +3,6 @@
 namespace Bernard\Middleware;
 
 use Bernard\Middleware;
-use Bernard\QueueFactory;
 
 /**
  * @package Bernard
