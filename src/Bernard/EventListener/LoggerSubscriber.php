@@ -3,7 +3,7 @@
 namespace Bernard\EventListener;
 
 use Bernard\Event\EnvelopeEvent;
-use Bernard\Event\EnvelopeExceptionEvent;
+use Bernard\Event\RejectEnvelopeEvent;
 use Psr\Log\LoggerInterface;
 
 class LoggerSubscriber implements \Symfony\Component\EventDispatcher\EventSubscriberInterface
@@ -30,7 +30,7 @@ class LoggerSubscriber implements \Symfony\Component\EventDispatcher\EventSubscr
         ));
     }
 
-    public function onReject(EnvelopeExceptionEvent $event)
+    public function onReject(RejectEnvelopeEvent $event)
     {
         $this->logger->error('[bernard] caught exception {exception} while processing {envelope}.', array(
             'envelope' => $event->getEnvelope(),
