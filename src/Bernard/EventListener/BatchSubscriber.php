@@ -1,4 +1,4 @@
-<?ph
+<?php
 
 namespace Bernard\EventListener;
 
@@ -7,8 +7,15 @@ use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Batch\Storage;
 use Bernard\Envelope;
 
-class BatchSubscriber implements \Symfony\Component\EventDispatcher\EventDispatcherInterface
+class BatchSubscriber implements \Symfony\Component\EventDispatcher\EventSubscriberInterface
 {
+    protected $storage;
+
+    public function __construct(Storage $storage)
+    {
+        $this->storage = $storage;
+    }
+
     public function onProduce(EnvelopeEvent $event)
     {
         $envelope = $event->getEnvelope();

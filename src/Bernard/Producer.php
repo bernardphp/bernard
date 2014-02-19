@@ -42,8 +42,9 @@ class Producer
 
     protected function doProduce(Envelope $envelope, $queueName = null)
     {
-        $queueName = $queueName ?: bernard_guess_queue($envelope->getMessage());
+        $queue = $this->queues->create($queueName ?: bernard_guess_queue($envelope->getMessage()));
+        $queue->enqueue($envelope);
 
-        $this->dispatcher->dispatch('bernard.produce', new EnvelopeEvent($envelope, $this->queues->create($queueName)));
+        $this->dispatcher->dispatch('bernard.produce', new EnvelopeEvent($envelope, $queue));
     }
 }
