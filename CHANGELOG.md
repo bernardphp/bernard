@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.20.0 / xxxx-xx-xx
+0.13.0 / xxxx-xx-xx
 -------------------
 
  * Replace Middleware with Events. There is now `bernard.invoke`, `bernard.acknowledge`, `bernard.reject`, and `bernard.produce`
