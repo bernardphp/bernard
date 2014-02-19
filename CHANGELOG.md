@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.13.0 / xxxx-xx-xx
+-------------------
+
+ * Replace Middleware with Events. There is now `bernard.invoke`, `bernard.acknowledge`, `bernard.reject`, and `bernard.produce`
+ events. This makes it easier to do custom integrations that often does something on the Producer and Consumer.
+
 0.11.0 / 2013-10-07
 -------------------
 
