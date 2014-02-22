@@ -4,19 +4,20 @@
   </a>
 </p>
 
-Bernard is a library that helps with writing distributed systems and offloading task to the background. It supports
-different backends such as:
+Bernard makes it super easy and enjoyable to do background processing in PHP. It does this by utilizing queues and long running processes. It supports normal queueing drivers but also implements simple ones with Redis and Doctrine.
 
-* Predis / PhpRedis
-* Amazon SQS
-* Iron MQ
-* Doctrine DBAL
+Currently theese are the supported backends, with more coming with each release:
 
-There is plenty more to discover in the [documentation located right here][documentation].
+ * Predis / PhpRedis
+ * Amazon SQS
+ * Iron MQ
+ * Doctrine DBAL
+
+You can learn more on our website about Bernard and its [releated projcets][website] or just dive directly into [the
+documentation][documentation].
 
 [![Build Status](https://travis-ci.org/bernardphp/bernard.png?branch=master)][travis]
 
-[documentation]: http://bernardphp.com
-[peytz]: http://peytz.dk
-[fortrabbit]: http://fortrabbit.com
+[documentation]: http://bernardphp.com/docs/bernard
+[website]: http://bernardphp.com/
 [travis]: https://travis-ci.org/bernardphp/bernard
