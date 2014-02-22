@@ -17,17 +17,17 @@ class PersistentQueue extends AbstractQueue
     protected $receipts;
 
     /**
-     * @param string     $name
-     * @param Driver     $driver
-     * @param Serializer $serializer
+     * @param string  $name
+     * @param Driver  $driver
+     * @param Encoder $serializer
      */
     public function __construct($name, Driver $driver, Serializer $serializer)
     {
         parent::__construct($name);
 
-        $this->driver     = $driver;
-        $this->serializer = $serializer;
-        $this->receipts   = array();
+        $this->driver   = $driver;
+        $this->serializer  = $serializer;
+        $this->receipts = array();
 
         $this->register();
     }
@@ -97,7 +97,7 @@ class PersistentQueue extends AbstractQueue
         }
 
         if ($serialized) {
-            $envelope = $this->serializer->deserialize($serialized);
+            $envelope = $this->serializer->unserialize($serialized);
 
             return $this->receipts[$receipt] = $envelope;
         }
@@ -112,6 +112,6 @@ class PersistentQueue extends AbstractQueue
 
         $messages = $this->driver->peekQueue($this->name, $index, $limit);
 
-        return array_map(array($this->serializer, 'deserialize'), $messages);
+        return array_map(array($this->serializer, 'unserialize'), $messages);
     }
 }

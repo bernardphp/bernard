@@ -36,7 +36,7 @@ class PersistentQueueTest extends AbstractQueueTest
         $this->driver->expects($this->once())->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue(array('message', 'receipt')));
 
-        $this->serializer->expects($this->once())->method('deserialize')
+        $this->serializer->expects($this->once())->method('unserialize')
             ->will($this->returnValue($envelope));
 
         $queue = $this->createQueue('send-newsletter');
@@ -74,7 +74,7 @@ class PersistentQueueTest extends AbstractQueueTest
         $this->driver->expects($this->at(2))->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue(null));
 
-        $this->serializer->expects($this->once())->method('deserialize')->with($this->equalTo('serialized'))
+        $this->serializer->expects($this->once())->method('unserialize')->with($this->equalTo('serialized'))
             ->will($this->returnValue($messageWrapper));
 
         $queue = $this->createQueue('send-newsletter');
@@ -86,11 +86,11 @@ class PersistentQueueTest extends AbstractQueueTest
     /**
      * @dataProvider peekDataProvider
      */
-    public function testPeekDeserializesMessages($index, $limit)
+    public function testPeekDserializesMessages($index, $limit)
     {
-        $this->serializer->expects($this->at(0))->method('deserialize')->with($this->equalTo('message1'));
-        $this->serializer->expects($this->at(1))->method('deserialize')->with($this->equalTo('message2'));
-        $this->serializer->expects($this->at(2))->method('deserialize')->with($this->equalTo('message3'));
+        $this->serializer->expects($this->at(0))->method('unserialize')->with($this->equalTo('message1'));
+        $this->serializer->expects($this->at(1))->method('unserialize')->with($this->equalTo('message2'));
+        $this->serializer->expects($this->at(2))->method('unserialize')->with($this->equalTo('message3'));
 
         $this->driver->expects($this->once())->method('peekQueue')->with($this->equalTo('send-newsletter'), $this->equalTo($index), $this->equalTo($limit))
             ->will($this->returnValue(array('message1', 'message2', 'message3')));

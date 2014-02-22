@@ -6,7 +6,7 @@ use Bernard\Message;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\SimpleRouter;
-use Bernard\Serializer\SimpleSerializer;
+use Bernard\Serializer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -25,7 +25,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 function get_serializer() {
-    return new SimpleSerializer;
+    return new Serializer;
 }
 
 function get_event_dispatcher() {

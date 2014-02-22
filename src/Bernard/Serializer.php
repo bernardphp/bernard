@@ -2,19 +2,34 @@
 
 namespace Bernard;
 
-/**
- * @package Bernard
- */
-interface Serializer
-{
-    /**
-     * @param  Envelope $envelope
-     * @return string
-     */
-    public function serialize(Envelope $envelope);
+use Normalt\Normalizer\AggregateNormalizer;
 
-    /**
-     * @return Envelope
-     */
-    public function deserialize($serialized);
+class Serializer
+{
+    protected $aggregate;
+
+    public function __construct(AggregateNormalizer $aggregate = null)
+    {
+        $this->aggregate = $aggregate ?: $this->createAggregateNormalizer();
+    }
+
+    public function serialize(Envelope $envelope)
+    {
+        return json_encode($this->aggregate->normalize($envelope));
+    }
+
+    public function unserialize($contents)
+    {
+        $data = json_decode($contents, true);
+
+        return $this->aggregate->denormalize($data, 'Bernard\Envelope');
+    }
+
+    private function createAggregateNormalizer()
+    {
+        return new AggregateNormalizer(array(
+            new Normalizer\EnvelopeNormalizer,
+            new Normalizer\DefaultMessageNormalizer,
+        ));
+    }
 }
