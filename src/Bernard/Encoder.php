@@ -39,9 +39,16 @@ class Encoder
     {
         $envelope = new Envelope($this->normalizer->denormalize($data['class'], $data['message']));
 
-        bernard_force_property_value($envelope, 'class', $data['class']);
-        bernard_force_property_value($envelope, 'timestamp', $data['timestamp']);
+        $this->forcePropertyValue($envelope, 'class', $data['class']);
+        $this->forcePropertyValue($envelope, 'timestamp', $data['timestamp']);
 
         return $envelope;
+    }
+
+    private function forcePropertyValue(Envelope $envelope, $property, $value)
+    {
+        $property = new \ReflectionProperty($envelope, $property);
+        $property->setAccessible(true);
+        $property->setValue($envelope, $value);
     }
 }
