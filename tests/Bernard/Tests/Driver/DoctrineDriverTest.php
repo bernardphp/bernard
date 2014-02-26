@@ -12,6 +12,10 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped('Doctrine have incompatibility issues with HHVM.');
+        }
+
         $this->connection = $this->setUpDatabase();
         $this->driver = new DoctrineDriver($this->connection);
     }
