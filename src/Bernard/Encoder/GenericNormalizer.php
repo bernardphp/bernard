@@ -12,13 +12,16 @@ class GenericNormalizer implements Normalizer
     {
         Verify::isInstanceOf($message, 'Bernard\Message\DefaultMessage');
 
-        return array('name' => $message->getName()) + get_object_vars($message);
+        return array(
+            'name' => $message->getName(),
+            'arguments' => $message->all(),
+        );
     }
 
     public function denormalize($class, array $data)
     {
         Verify::eq($class, 'Bernard\Message\DefaultMessage');
 
-        return new DefaultMessage($data['name'], $data);
+        return new DefaultMessage($data['name'], $data['arguments']);
     }
 }

@@ -15,8 +15,10 @@ class GenericNormalizerSpec extends \PhpSpec\ObjectBehavior
 
         $this->normalize($message)->shouldReturn(array(
             'name' => 'Import',
-            'id' => 'hello',
-            'values' => array(1,2,3,4),
+            'arguments' => array(
+                'id' => 'hello',
+                'values' => array(1,2,3,4),
+            ),
         ));
     }
 
@@ -24,22 +26,13 @@ class GenericNormalizerSpec extends \PhpSpec\ObjectBehavior
     {
         $message = $this->denormalize('Bernard\\Message\\DefaultMessage', array(
             'name' => 'Import',
-            'id' => 'hello',
+            'arguments' => array(
+                'id' => 'hello',
+            ),
         ));
 
         $message->getName()->shouldReturn('Import');
-        $message->shouldHavePropertyValue('id', 'hello');
-    }
-
-    function it_does_not_override_name_when_normalizing()
-    {
-        $message = new DefaultMessage('Import', array(
-            'name' => 'OtherThanImport',
-        ));
-
-        $this->normalize($message)->shouldReturn(array(
-            'name' => 'Import',
-        ));
+        $message->offsetGet('id')->shouldReturn('hello');
     }
 
     /**
@@ -51,14 +44,5 @@ class GenericNormalizerSpec extends \PhpSpec\ObjectBehavior
 
         $this->shouldThrow('InvalidArgumentException')
             ->duringDenormalize('Bernard\\Message', array());
-    }
-
-    public function getMatchers()
-    {
-        return array(
-            'havePropertyValue' => function ($subject, $property, $value) {
-                return property_exists($subject, $property) && $subject->$property == $value;
-            },
-        );
     }
 }
