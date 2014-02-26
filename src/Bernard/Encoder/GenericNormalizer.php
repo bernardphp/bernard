@@ -2,15 +2,23 @@
 
 namespace Bernard\Encoder;
 
+use Bernard\Message;
 use Bernard\Message\DefaultMessage;
+use Bernard\Verify;
 
 class GenericNormalizer implements Normalizer
 {
-    public function normalize(DefaultMessage $message)
+    public function normalize(Message $message)
     {
+        Verify::isInstanceOf($message, 'Bernard\Message\DefaultMessage');
+
+        return array('name' => $message->getName()) + get_object_vars($message);
     }
 
-    public function denormalize(array $data)
+    public function denormalize($class, array $data)
     {
+        Verify::eq($class, 'Bernard\Message\DefaultMessage');
+
+        return new DefaultMessage($data['name'], $data);
     }
 }

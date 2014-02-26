@@ -8,5 +8,5 @@ interface Normalizer
 {
     public function normalize(Message $message);
 
-    public function denormalize(array $data);
+    public function denormalize($class, array $data);
 }

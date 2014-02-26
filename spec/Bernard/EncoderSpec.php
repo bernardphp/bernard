@@ -35,7 +35,7 @@ class EncoderSpec extends \PhpSpec\ObjectBehavior
      */
     function it_decodes_into_envelope($message, $normalizer)
     {
-        $normalizer->denormalize(array('arg1' => 'value'))->willReturn($message);
+        $normalizer->denormalize('Bernard\\Message', array('arg1' => 'value'))->willReturn($message);
 
         $envelope = $this->decode('{"class":"Bernard\\\\Message","timestamp":1337,"message":{"arg1":"value"}}');
         $envelope->getTimestamp()->shouldReturn(1337);

@@ -3,14 +3,15 @@
 namespace Bernard;
 
 use Bernard\Encoder\Normalizer;
+use Bernard\Encoder\GenericNormalizer;
 
 class Encoder
 {
     protected $normalizer;
 
-    public function __construct(Normalizer $normalizer)
+    public function __construct(Normalizer $normalizer = null)
     {
-        $this->normalizer = $normalizer;
+        $this->normalizer = $normalizer ?: new GenericNormalizer;
     }
 
     public function encode(Envelope $envelope)
@@ -36,7 +37,7 @@ class Encoder
 
     private function denormalizeEnvelope(array $data)
     {
-        $envelope = new Envelope($this->normalizer->denormalize($data['message']));
+        $envelope = new Envelope($this->normalizer->denormalize($data['class'], $data['message']));
 
         bernard_force_property_value($envelope, 'class', $data['class']);
         bernard_force_property_value($envelope, 'timestamp', $data['timestamp']);
