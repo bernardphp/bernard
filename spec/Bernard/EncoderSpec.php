@@ -5,7 +5,7 @@ namespace spec\Bernard;
 class EncoderSpec extends \PhpSpec\ObjectBehavior
 {
     /**
-     * @param Bernard\Encoder\Normalizer $normalizer
+     * @param Bernard\Normalizer\AggregateNormalizer $normalizer
      */
     function let($normalizer)
     {
@@ -14,32 +14,36 @@ class EncoderSpec extends \PhpSpec\ObjectBehavior
 
     /**
      * @param Bernard\Envelope $envelope
-     * @param Bernard\Message $message
+     * @param Bernard\Message\DefaultMessage $message
      */
-    function it_encodes_envelope_and_message_into_json($envelope, $message, $normalizer)
+    function it_encodes_normalized_envelope_into_json($envelope, $message, $normalizer)
     {
         $envelope->getMessage()->willReturn($message);
-        $envelope->getClass()->willReturn('Bernard\Message');
+        $envelope->getClass()->willReturn('Bernard\\Message\\DefaultMessage');
         $envelope->getTimestamp()->willReturn(1337);
 
-        $normalizer->normalize($message)->willReturn(array(
+        $message->getName()->willReturn('Import');
+        $message->all()->willReturn(array(
             'arg1' => 'value',
         ));
 
-        // \\\\ is because the \\ is escaped so it should be doubled!
-        $this->encode($envelope)->shouldReturn('{"class":"Bernard\\\\Message","timestamp":1337,"message":{"arg1":"value"}}');
+        $this->encode($envelope)
+            ->shouldReturn('{"class":"Bernard\\\\Message\\\\DefaultMessage","timestamp":1337,"message":{"name":"Import","arguments":{"arg1":"value"}}}');
     }
 
     /**
-     * @param Bernard\Message $message
+     * @param Bernard\Envelope $envelope
      */
-    function it_decodes_into_envelope($message, $normalizer)
+    function it_decodes_into_envelope($envelope, $normalizer)
     {
-        $normalizer->denormalize('Bernard\\Message', array('arg1' => 'value'))->willReturn($message);
+        $envelope = $this->decode('{"class":"Bernard\\\\Message\\\\DefaultMessage","timestamp":1337,"message":{"name":"Import","arguments":{"arg1":"value"}}}');
 
-        $envelope = $this->decode('{"class":"Bernard\\\\Message","timestamp":1337,"message":{"arg1":"value"}}');
+        $envelope->getClass()->shouldReturn('Bernard\\Message\\DefaultMessage');
         $envelope->getTimestamp()->shouldReturn(1337);
-        $envelope->getClass()->shouldReturn('Bernard\\Message');
-        $envelope->getMessage()->shouldReturn($message);
+
+        $message = $envelope->getMessage();
+        $message->shouldBeAnInstanceOf('Bernard\\Message\\DefaultMessage');
+        $message->getName()->shouldReturn('Import');
+        $message->all()->shouldReturn(array('arg1' => 'value'));
     }
 }

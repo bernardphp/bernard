@@ -10,7 +10,8 @@
 
     "require" : {
         "php"                      : ">=5.3.3",
-        "symfony/event-dispatcher" : ">2.1,<3.0"
+        "symfony/event-dispatcher" : ">2.1,<3.0",
+        "symfony/serializer"       : ">2.1,<3.0"
     },
 
     "replace" : {
@@ -24,7 +25,6 @@
         "predis/predis"                : "~0.8",
         "symfony/console"              : "~2.0",
         "symfony/dependency-injection" : "~2.0",
-        "symfony/serializer"           : "~2.2",
         "doctrine/dbal"                : "~2.3",
         "iron-io/iron_mq"              : "~1.4",
         "aws/aws-sdk-php"              : "~2.4"
