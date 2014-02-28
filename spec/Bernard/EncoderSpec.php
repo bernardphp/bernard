@@ -5,7 +5,7 @@ namespace spec\Bernard;
 class EncoderSpec extends \PhpSpec\ObjectBehavior
 {
     /**
-     * @param Bernard\Normalizer\AggregateNormalizer $normalizer
+     * @param Normalt\NormalizerSet $normalizer
      */
     function let($normalizer)
     {

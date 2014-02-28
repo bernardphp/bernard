@@ -2,7 +2,7 @@
 
 namespace Bernard;
 
-use Bernard\Normalizer\AggregateNormalizer;
+use Normalt\NormalizerSet;
 
 class Encoder
 {
@@ -10,7 +10,10 @@ class Encoder
 
     public function __construct()
     {
-        $this->normalizer = new AggregateNormalizer;
+        $this->normalizer = new NormalizerSet(array(
+            new Normalizer\EnvelopeNormalizer,
+            new Normalizer\DefaultMessageNormalizer,
+        ));
     }
 
     public function encode(Envelope $envelope)
