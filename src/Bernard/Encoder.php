@@ -2,15 +2,15 @@
 
 namespace Bernard;
 
-use Normalt\NormalizerSet;
+use Normalt\Marshaller;
 
 class Encoder
 {
-    protected $normalizer;
+    protected $marshaller;
 
     public function __construct()
     {
-        $this->normalizer = new NormalizerSet(array(
+        $this->marshaller = new Marshaller(array(
             new Normalizer\EnvelopeNormalizer,
             new Normalizer\DefaultMessageNormalizer,
         ));
@@ -18,13 +18,13 @@ class Encoder
 
     public function encode(Envelope $envelope)
     {
-        return json_encode($this->normalizer->normalize($envelope));
+        return json_encode($this->marshaller->normalize($envelope));
     }
 
     public function decode($contents)
     {
         $data = json_decode($contents, true);
 
-        return $this->normalizer->denormalize($data, 'Bernard\Envelope');
+        return $this->marshaller->denormalize($data, 'Bernard\Envelope');
     }
 }

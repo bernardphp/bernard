@@ -8,11 +8,10 @@ use Prophecy\Argument;
 class EnvelopeNormalizerSpec extends ObjectBehavior
 {
     /**
-     * @param Symfony\Component\Serializer\Normalizer\NormalizerInterface $normalizer
+     * @param Normalt\Marshaller $marshaller
      */
-    function let($normalizer)
+    function let($marshaller)
     {
-        $normalizer->implement('Symfony\Component\Serializer\Normalizer\DenormalizerInterface');
     }
 
     function it_is_a_normalizer_and_denormailzer()
@@ -25,17 +24,17 @@ class EnvelopeNormalizerSpec extends ObjectBehavior
      * @param Bernard\Envelope $envelope
      * @param Bernard\Message $message
      */
-    function it_normalizes_envelope_and_delegates_message_to_normalizer($envelope, $message, $normalizer)
+    function it_normalizes_envelope_and_delegates_message_to_marshaller($envelope, $message, $marshaller)
     {
         $envelope->getMessage()->willReturn($message);
         $envelope->getClass()->willReturn('Bernard\Message');
         $envelope->getTimestamp()->willReturn(1337);
 
-        $normalizer->normalize($message)->willReturn(array(
+        $marshaller->normalize($message)->willReturn(array(
             'key' => 'value',
         ));
 
-        $this->setNormalizer($normalizer);
+        $this->setMarshaller($marshaller);
 
         $this->normalize($envelope)->shouldReturn(array(
             'class'     => 'Bernard\\Message',
@@ -47,11 +46,11 @@ class EnvelopeNormalizerSpec extends ObjectBehavior
     /**
      * @param Bernard\Message $message
      */
-    function it_denormalizes_envelope_and_delegates_message_to_normalizer($message, $normalizer)
+    function it_denormalizes_envelope_and_delegates_message_to_marshaller($message, $marshaller)
     {
-        $this->setNormalizer($normalizer);
+        $this->setMarshaller($marshaller);
 
-        $normalizer->denormalize(array('key' => 'value'), 'Bernard\\Message', null)->willReturn($message);
+        $marshaller->denormalize(array('key' => 'value'), 'Bernard\\Message', null)->willReturn($message);
 
         $normalized = array(
             'class'     => 'Bernard\\Message',
