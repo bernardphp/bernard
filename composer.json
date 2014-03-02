@@ -8,14 +8,9 @@
         "files" : ["src/Bernard/functions.php"]
     },
 
-    "repositories" : [{
-        "type" : "vcs",
-        "url" : "git://github.com/bernardphp/normalt.git"
-    }],
-
     "require" : {
         "php"                      : ">=5.3.3",
-        "bernard/normalt"          : "dev-master",
+        "bernard/normalt"          : "~0.1",
         "symfony/event-dispatcher" : ">=2.3,<3.0",
         "symfony/serializer"       : ">=2.3,<3.0"
     },
