@@ -16,7 +16,7 @@ Currently theese are the supported backends, with more coming with each release:
 You can learn more on our website about Bernard and its [releated projcets][website] or just dive directly into [the
 documentation][documentation].
 
-[![Build Status](https://travis-ci.org/bernardphp/bernard.png?branch=master)][travis]
+[![Build Status](https://travis-ci.org/bernardphp/bernard.png?branch=master)][travis] [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/bernardphp/bernard/badges/quality-score.png?s=f752c78d347624081f5b6d3d818fe14eef0311c2)](https://scrutinizer-ci.com/g/bernardphp/bernard/)
 
 [documentation]: http://bernardphp.com/docs/bernard
 [website]: http://bernardphp.com/
