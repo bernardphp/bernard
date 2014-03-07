@@ -5,7 +5,7 @@ namespace Bernard\Queue;
 use SplObjectStorage;
 use Bernard\Driver;
 use Bernard\Envelope;
-use Bernard\Serializer;
+use Bernard\Encoder;
 
 /**
  * @package Bernard
@@ -13,21 +13,21 @@ use Bernard\Serializer;
 class PersistentQueue extends AbstractQueue
 {
     protected $driver;
-    protected $serializer;
+    protected $encoder;
     protected $receipts;
 
     /**
-     * @param string     $name
-     * @param Driver     $driver
-     * @param Serializer $serializer
+     * @param string  $name
+     * @param Driver  $driver
+     * @param Encoder $encoder
      */
-    public function __construct($name, Driver $driver, Serializer $serializer)
+    public function __construct($name, Driver $driver, Encoder $encoder)
     {
         parent::__construct($name);
 
-        $this->driver     = $driver;
-        $this->serializer = $serializer;
-        $this->receipts   = array();
+        $this->driver   = $driver;
+        $this->encoder  = $encoder;
+        $this->receipts = array();
 
         $this->register();
     }
@@ -66,7 +66,7 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        $this->driver->pushMessage($this->name, $this->serializer->serialize($envelope));
+        $this->driver->pushMessage($this->name, $this->encoder->encode($envelope));
     }
 
     /**
@@ -90,14 +90,14 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        list($serialized, $receipt) = $this->driver->popMessage($this->name);
+        list($encoded, $receipt) = $this->driver->popMessage($this->name);
 
-        if (!$serialized) {
+        if (!$encoded) {
             return;
         }
 
-        if ($serialized) {
-            $envelope = $this->serializer->deserialize($serialized);
+        if ($encoded) {
+            $envelope = $this->encoder->decode($encoded);
 
             return $this->receipts[$receipt] = $envelope;
         }
@@ -112,6 +112,6 @@ class PersistentQueue extends AbstractQueue
 
         $messages = $this->driver->peekQueue($this->name, $index, $limit);
 
-        return array_map(array($this->serializer, 'deserialize'), $messages);
+        return array_map(array($this->encoder, 'decode'), $messages);
     }
 }

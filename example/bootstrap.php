@@ -6,7 +6,7 @@ use Bernard\Message;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\SimpleRouter;
-use Bernard\Serializer\SimpleSerializer;
+use Bernard\Encoder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -24,8 +24,8 @@ require __DIR__ . '/EchoTimeService.php';
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-function get_serializer() {
-    return new SimpleSerializer;
+function get_encoder() {
+    return new Encoder;
 }
 
 function get_event_dispatcher() {
@@ -37,7 +37,7 @@ function get_event_dispatcher() {
 }
 
 function get_queue_factory() {
-    return new PersistentFactory(get_driver(), get_serializer());
+    return new PersistentFactory(get_driver(), get_encoder());
 }
 
 function get_producer() {
