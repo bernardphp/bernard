@@ -10,9 +10,8 @@
 
     "require" : {
         "php"                      : ">=5.3.3",
-        "bernard/normalt"          : "dev-master",
-        "symfony/event-dispatcher" : ">=2.3,<3.0",
-        "symfony/serializer"       : ">=2.3,<3.0"
+        "bernard/normalt"          : "~0.2",
+        "symfony/event-dispatcher" : ">=2.3,<3.0"
     },
 
     "require-dev" : {
