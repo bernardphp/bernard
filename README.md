@@ -18,6 +18,6 @@ documentation][documentation].
 
 [![Build Status](https://travis-ci.org/bernardphp/bernard.png?branch=master)][travis] [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/bernardphp/bernard/badges/quality-score.png?s=f752c78d347624081f5b6d3d818fe14eef0311c2)](https://scrutinizer-ci.com/g/bernardphp/bernard/)
 
-[documentation]: http://bernardphp.com/docs/bernard
+[documentation]: https://bernard.readthedocs.org
 [website]: http://bernardphp.com/
 [travis]: https://travis-ci.org/bernardphp/bernard
