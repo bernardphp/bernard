@@ -29,10 +29,21 @@ class Producer
      */
     public function produce(Message $message, $queueName = null)
     {
-        $queueName = $queueName ?: bernard_guess_queue($message);
+        if ($message instanceof Batch) {
+            foreach ($message->flush() as $envelope) {
+                $this->doProduce($envelope, $queueName);
+            }
 
-        $queue = $this->queues->create($queueName);
-        $queue->enqueue($envelope = new Envelope($message));
+            return;
+        }
+
+        $this->doProduce(new Envelope($message), $queueName);
+    }
+
+    protected function doProduce(Envelope $envelope, $queueName = null)
+    {
+        $queue = $this->queues->create($queueName ?: bernard_guess_queue($envelope->getMessage()));
+        $queue->enqueue($envelope);
 
         $this->dispatcher->dispatch('bernard.produce', new EnvelopeEvent($envelope, $queue));
     }

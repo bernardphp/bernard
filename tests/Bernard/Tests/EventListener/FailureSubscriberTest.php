@@ -5,13 +5,16 @@ namespace Bernard\Tests\EventListener;
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\EventListener\FailureSubscriber;
 use Bernard\QueueFactory\InMemoryFactory;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class FailureSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->queues = new InMemoryFactory;
-        $this->subscriber = new FailureSubscriber($this->queues);
+
+        $this->dispatcher = new EventDispatcher;
+        $this->dispatcher->addSubscriber(new FailureSubscriber($this->queues));
     }
 
     public function testAcknowledgeMessageAndEnqueue()
@@ -22,7 +25,7 @@ class FailureSubscriberTest extends \PHPUnit_Framework_TestCase
         $queue = $this->getMock('Bernard\Queue');
         $queue->expects($this->once())->method('acknowledge')->with($envelope);
 
-        $this->subscriber->onReject(new RejectEnvelopeEvent($envelope, $queue, new \Exception));
+        $this->dispatcher->dispatch('bernard.reject', new RejectEnvelopeEvent($envelope, $queue, new \Exception()));
 
         $this->assertCount(1, $this->queues->create('failed'));
         $this->assertSame($envelope, $this->queues->create('failed')->dequeue());

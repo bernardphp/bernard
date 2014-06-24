@@ -13,15 +13,17 @@ class Envelope
     protected $message;
     protected $class;
     protected $timestamp;
+    protected $stamps;
 
     /**
      * @param Message $message
      */
-    public function __construct(Message $message)
+    public function __construct(Message $message, array $stamps = array())
     {
         $this->message   = $message;
         $this->class     = get_class($message);
         $this->timestamp = time();
+        $this->stamps    = array_filter($stamps, 'is_scalar');
     }
 
     /**
@@ -54,5 +56,27 @@ class Envelope
     public function getTimestamp()
     {
         return $this->timestamp;
+    }
+
+    /**
+     * @return array 
+     */
+    public function getStamps()
+    {
+        return $this->stamps;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getStamp($name, $default = null)
+    {
+        if (!isset($this->stamps[$name])) {
+            return $default;
+        }
+
+        return $this->stamps[$name];
     }
 }

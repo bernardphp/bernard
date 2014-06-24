@@ -69,4 +69,18 @@ class SimpleSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($envelope, $this->serializer->deserialize($json));
     }
+
+
+    public function testItDeserializesDefaultMessageWithStamps()
+    {
+        $envelope = new Envelope(new DefaultMessage('SendNewsletter', array()), array(
+            'stamp_01' => 'this is the value for "stamp_01"',
+            'stamp_02' => 'this is the value for "stamp_02"',
+            'stamp_03' => 8151,
+        ));
+        $json = $this->serializer->serialize($envelope);
+
+        $this->assertEquals($envelope, $this->serializer->deserialize($json));
+    }
+
 }

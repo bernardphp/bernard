@@ -69,8 +69,37 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($message, $this->serializer->deserialize($json));
     }
 
-    public function createWrappedDefaultMessage($name, array $properties = array())
+    public function testItDeserializesDefaultMessageWithStamps()
     {
-        return new Envelope(new DefaultMessage($name, $properties));
+        $message = $this->createWrappedDefaultMessage('SendNewsletter', array(), array(
+            'stamp_01' => 'this is the value for "stamp_01"',
+            'stamp_02' => 'this is the value for "stamp_02"',
+            'stamp_03' => 8151,
+        ));
+
+        $json = $this->serializer->serialize($message);
+
+        $this->assertEquals($message, $this->serializer->deserialize($json));
+    }
+
+    public function testItDeserializesStampsWithoutOvervideOfEnvelopeParameters()
+    {
+        $envelope = $this->createWrappedDefaultMessage('SendNewsletter', array(), array(
+            'timestamp' => 'timestamp is not allow',
+            'class' => 'class is not allowed',
+            'args' => 'args are not allowed',
+        ));
+
+        $json = $this->serializer->serialize($envelope);
+        $envelope = $this->serializer->deserialize($json);
+
+        $this->assertNull($envelope->getStamp('timestamp'));
+        $this->assertNull($envelope->getStamp('class'));
+        $this->assertNull($envelope->getStamp('args'));
+    }
+
+    public function createWrappedDefaultMessage($name, array $properties = array(), array $stamps = array())
+    {
+        return new Envelope(new DefaultMessage($name, $properties), $stamps);
     }
 }
