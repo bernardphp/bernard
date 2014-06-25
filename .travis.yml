@@ -7,7 +7,15 @@ php:
     - 5.4
     - 5.5
 
+env:
+  - MONGO_VERSION=1.2.12
+  - MONGO_VERSION=1.3.2
+  - MONGO_VERSION=1.4.4
+
+services: mongodb
+
 before_script:
+  - pecl -q install -f mongo-${MONGO_VERSION} && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
     - "pyrus install pecl/redis && pyrus build pecl/redis"
     - "echo \"extension=redis.so\" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini"
     - "echo '{\"config\":{\"github-oauth\": {\"github.com\":\"fa354b2f030836334eac842f8fd69a03e353d247\"}}}' > ~/.composer/config.json"
