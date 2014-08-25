@@ -14,7 +14,7 @@
 
     "require" : {
         "php"                      : ">=5.3.3",
-        "bernard/normalt"          : "~0.2",
+        "bernard/normalt"          : "~1.0",
         "symfony/event-dispatcher" : "~2.3"
     },
 
