@@ -8,7 +8,7 @@
          stopOnFailure="false"
          syntaxCheck="false"
          strict="true"
-         bootstrap="tests/bootstrap.php">
+         bootstrap="vendor/autoload.php">
 
     <testsuites>
         <testsuite name="Bernard TestSuite">
