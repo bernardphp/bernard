@@ -19,6 +19,7 @@ class Consumer
     protected $configured = false;
     protected $options = array(
         'max-runtime' => PHP_INT_MAX,
+        'max-messages' => null,
     );
 
     /**
@@ -70,9 +71,14 @@ class Consumer
             return true;
         }
 
+
         $this->invoke($envelope, $queue);
 
-        return true;
+        if (null === $this->options['max-messages']) {
+            return true;
+        }
+
+        return (boolean) --$this->options['max-messages'];
     }
 
     /**

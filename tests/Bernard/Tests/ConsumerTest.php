@@ -92,6 +92,20 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($service::$importUsers);
     }
 
+    public function testMaxMessages()
+    {
+        $this->router->add('ImportUsers', new Fixtures\Service);
+
+        $queue = new InMemoryQueue('send-newsletter');
+        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+
+        $this->assertFalse($this->consumer->tick($queue, array('max-messages' => 1)));
+        $this->assertTrue($this->consumer->tick($queue));
+        $this->assertTrue($this->consumer->tick($queue, array('max-messages' => 100)));
+    }
+
     /**
      * @group debug
      */
