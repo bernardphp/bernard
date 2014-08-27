@@ -2,6 +2,7 @@
 
 namespace Bernard\Normalizer;
 
+use Assert\Assertion;
 use Bernard\Envelope;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -19,6 +20,12 @@ class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements Nor
 
     public function denormalize($data, $class, $format = null, array $context = array())
     {
+        Assertion::notEmptyKey($data, 'message');
+        Assertion::notEmptyKey($data, 'class');
+        Assertion::notEmptyKey($data, 'timestamp');
+
+        Assertion::classExists($data['class']);
+
         $envelope = new Envelope($this->aggregate->denormalize($data['message'], $data['class']));
 
         $this->forcePropertyValue($envelope, 'class', $data['class']);

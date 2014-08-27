@@ -2,6 +2,7 @@
 
 namespace Bernard\Normalizer;
 
+use Assert\Assertion;
 use Bernard\Message\DefaultMessage;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -18,6 +19,9 @@ class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInter
 
     public function denormalize($data, $class, $format = null, array $context = array())
     {
+        Assert::notEmptyKey($data, 'name');
+        Assert::notEmptyKey($data, 'arguments');
+
         return new DefaultMessage($data['name'], $data['arguments']);
     }
 
