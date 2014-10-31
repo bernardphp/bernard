@@ -16,7 +16,20 @@ function get_driver() {
         'driver' => 'pdo_mysql',
     ));
 
-    return new DoctrineDriver($connection);
+    $doctrineDriver = new DoctrineDriver($connection);
+
+    //Don't do this in your application. Use a database set up script instead.
+    try {
+        $doctrineDriver->listQueues();
+    } catch (\Exception $ex) {
+        $schema = new \Doctrine\DBAL\Schema\Schema();
+
+        \Bernard\Doctrine\MessagesSchema::create($schema);
+
+        array_map(array($connection, 'executeQuery'), $schema->toSql($connection->getDatabasePlatform()));
+    }
+
+    return $doctrineDriver;
 }
 
 require 'bootstrap.php';
