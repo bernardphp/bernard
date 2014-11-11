@@ -90,24 +90,19 @@ class IronMqDriver extends AbstractPrefetchDriver
             return $message;
         }
 
-        $runtime = microtime(true) + $interval;
+        $messages = $this->ironmq->getMessages(
+            $queueName, $this->prefetch, IronMQ::GET_MESSAGE_TIMEOUT, $interval
+        );
 
-        while ($runtime > microtime(true)) {
-            $messages = $this->ironmq->getMessages($queueName, $this->prefetch);
-
-            if (!$messages) {
-                usleep(10000);
-                continue;
-            }
-
-            foreach ($messages as $message) {
-                $this->cache->push($queueName, array($message->body, $message->id));
-            }
-
-            return $this->cache->pop($queueName);
+        if (!$messages) {
+            return array(null, null);
         }
 
-        return array(null, null);
+        foreach ($messages as $message) {
+            $this->cache->push($queueName, array($message->body, $message->id));
+        }
+
+        return $this->cache->pop($queueName);
     }
 
     /**
