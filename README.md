@@ -12,6 +12,7 @@ Currently theese are the supported backends, with more coming with each release:
  * Amazon SQS
  * Iron MQ
  * Doctrine DBAL
+ * Pheanstalk
 
 You can learn more on our website about Bernard and its [releated projcets][website] or just dive directly into [the
 documentation][documentation].
