@@ -11,7 +11,14 @@ use Bernard\Exception\InvalidOperationException;
  */
 abstract class AbstractQueue implements \Bernard\Queue
 {
+    /**
+     * @var boolean
+     */
     protected $closed;
+
+    /**
+     * @var string
+     */
     protected $name;
 
     /**

@@ -9,6 +9,9 @@ namespace Bernard\Driver;
  */
 class PhpRedisDriver implements \Bernard\Driver
 {
+    /**
+     * @var Redis
+     */
     protected $redis;
 
     /**

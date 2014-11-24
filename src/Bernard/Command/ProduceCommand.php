@@ -14,6 +14,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ProduceCommand extends \Symfony\Component\Console\Command\Command
 {
+    /**
+     * @var Producer
+     */
     protected $producer;
 
     /**

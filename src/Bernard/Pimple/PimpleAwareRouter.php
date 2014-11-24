@@ -9,6 +9,9 @@ use Pimple;
  */
 class PimpleAwareRouter extends \Bernard\Router\SimpleRouter
 {
+    /**
+     * @var Pimple
+     */
     protected $pimple;
 
     /**

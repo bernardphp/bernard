@@ -13,7 +13,14 @@ use ArrayAccess;
  */
 class DefaultMessage extends AbstractMessage implements ArrayAccess
 {
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var array
+     */
     protected $arguments;
 
     /**
@@ -26,16 +33,27 @@ class DefaultMessage extends AbstractMessage implements ArrayAccess
         $this->arguments = $arguments;
     }
 
+    /**
+     * @return array
+     */
     public function all()
     {
         return $this->arguments;
     }
 
+    /**
+     * @param  string $name
+     * @return mixed
+     */
     public function get($name)
     {
         return $this->offsetGet($name);
     }
 
+    /**
+     * @param  string  $name
+     * @return boolean
+     */
     public function has($name)
     {
         return $this->offsetExists($name);
@@ -55,6 +73,9 @@ class DefaultMessage extends AbstractMessage implements ArrayAccess
 
     public function offsetUnset($offset) { }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;

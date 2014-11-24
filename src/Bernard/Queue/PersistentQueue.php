@@ -12,14 +12,25 @@ use Bernard\Serializer;
  */
 class PersistentQueue extends AbstractQueue
 {
+    /**
+     * @var Driver
+     */
     protected $driver;
+
+    /**
+     * @var Serializer
+     */
     protected $serializer;
+
+    /**
+     * @var array
+     */
     protected $receipts;
 
     /**
-     * @param string  $name
-     * @param Driver  $driver
-     * @param Encoder $serializer
+     * @param string     $name
+     * @param Driver     $driver
+     * @param Serializer $serializer
      */
     public function __construct($name, Driver $driver, Serializer $serializer)
     {
@@ -52,6 +63,9 @@ class PersistentQueue extends AbstractQueue
         return $this->driver->countMessages($this->name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function close()
     {
         parent::close();

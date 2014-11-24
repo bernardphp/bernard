@@ -12,7 +12,14 @@ use Aws\Sqs\SqsClient;
  */
 class SqsDriver extends AbstractPrefetchDriver
 {
+    /**
+     * @var SqsClient
+     */
     protected $sqs;
+
+    /**
+     * @var array
+     */
     protected $queueUrls;
 
     /**

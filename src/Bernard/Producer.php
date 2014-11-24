@@ -10,11 +10,18 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class Producer
 {
+    /**
+     * @var QueueFactory
+     */
     protected $queues;
+
+    /**
+     * @var EventDispatcherInterface
+     */
     protected $dispatcher;
 
     /**
-     * @param QueueFactory    $queues
+     * @param QueueFactory             $queues
      * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(QueueFactory $queues, EventDispatcherInterface $dispatcher)

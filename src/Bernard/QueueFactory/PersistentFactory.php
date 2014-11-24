@@ -14,8 +14,19 @@ use Bernard\Serializer;
  */
 class PersistentFactory implements \Bernard\QueueFactory
 {
+    /**
+     * @var PersistentQueue[]
+     */
     protected $queues;
+
+    /**
+     * @var Driver
+     */
     protected $driver;
+
+    /**
+     * @var Serializer
+     */
     protected $serializer;
 
     /**

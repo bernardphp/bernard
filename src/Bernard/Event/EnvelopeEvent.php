@@ -7,20 +7,37 @@ use Bernard\Queue;
 
 class EnvelopeEvent extends \Symfony\Component\EventDispatcher\Event
 {
+    /**
+     * @var Envelope
+     */
     protected $envelope;
+
+    /**
+     * @var Queue
+     */
     protected $queue;
 
+    /**
+     * @param Envelope $envelope
+     * @param Queue    $queue
+     */
     public function __construct(Envelope $envelope, Queue $queue)
     {
         $this->envelope = $envelope;
         $this->queue = $queue;
     }
 
+    /**
+     * @return Envelope
+     */
     public function getEnvelope()
     {
         return $this->envelope;
     }
 
+    /**
+     * @return Queue
+     */
     public function getQueue()
     {
         return $this->queue;

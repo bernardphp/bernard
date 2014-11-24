@@ -14,7 +14,14 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ConsumeCommand extends \Symfony\Component\Console\Command\Command
 {
+    /**
+     * @var Consumer
+     */
     protected $consumer;
+
+    /**
+     * @var QueueFactory
+     */
     protected $queues;
 
     /**

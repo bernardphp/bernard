@@ -10,8 +10,19 @@ namespace Bernard;
  */
 class Envelope
 {
+    /**
+     * @var Message
+     */
     protected $message;
+
+    /**
+     * @var string
+     */
     protected $class;
+
+    /**
+     * @var integer
+     */
     protected $timestamp;
 
     /**

@@ -18,8 +18,6 @@ class FlatFileDriver implements Driver
     private $baseDirectory;
 
     /**
-     * Constructor
-     *
      * @param string $baseDirectory The base directory
      */
     public function __construct($baseDirectory)
@@ -28,9 +26,7 @@ class FlatFileDriver implements Driver
     }
 
     /**
-     * Returns a list of all queue names.
-     *
-     * @return array
+     * {@inheritDoc}
      */
     public function listQueues()
     {
@@ -51,9 +47,7 @@ class FlatFileDriver implements Driver
     }
 
     /**
-     * Create a queue.
-     *
-     * @param string $queueName
+     * {@inheritDoc}
      */
     public function createQueue($queueName)
     {
@@ -67,9 +61,7 @@ class FlatFileDriver implements Driver
     }
 
     /**
-     * Count the number of messages in queue. This can be a approximately number.
-     *
-     * @return integer
+     * {@inheritDoc}
      */
     public function countMessages($queueName)
     {
@@ -81,10 +73,7 @@ class FlatFileDriver implements Driver
     }
 
     /**
-     * Insert a message at the top of the queue.
-     *
-     * @param string $queueName
-     * @param string $message
+     * {@inheritDoc}
      */
     public function pushMessage($queueName, $message)
     {
@@ -96,12 +85,7 @@ class FlatFileDriver implements Driver
     }
 
     /**
-     * Remove the next message in line. And if no message is available
-     * wait $interval seconds.
-     *
-     * @param  string  $queueName
-     * @param  integer $interval
-     * @return array   An array like array($message, $receipt);
+     * {@inheritDoc}
      */
     public function popMessage($queueName, $interval = 5)
     {
@@ -129,11 +113,7 @@ class FlatFileDriver implements Driver
     }
 
     /**
-     * If the driver supports it, this will be called when a message
-     * have been consumed.
-     *
-     * @param string $queueName
-     * @param mixed  $receipt
+     * {@inheritDoc}
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
@@ -148,12 +128,7 @@ class FlatFileDriver implements Driver
     }
 
     /**
-     * Returns a $limit numbers of messages without removing them
-     * from the queue.
-     *
-     * @param string  $queueName
-     * @param integer $index
-     * @param integer $limit
+     * {@inheritDoc}
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
@@ -177,9 +152,7 @@ class FlatFileDriver implements Driver
     }
 
     /**
-     * Removes the queue.
-     *
-     * @param string $queueName
+     * {@inheritDoc}
      */
     public function removeQueue($queueName)
     {
@@ -196,7 +169,7 @@ class FlatFileDriver implements Driver
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function info()
     {

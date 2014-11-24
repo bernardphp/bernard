@@ -12,6 +12,9 @@ use Bernard\Queue\InMemoryQueue;
  */
 class InMemoryFactory implements \Bernard\QueueFactory
 {
+    /**
+     * @var InMemoryQueue[]
+     */
     protected $queues;
 
     /**

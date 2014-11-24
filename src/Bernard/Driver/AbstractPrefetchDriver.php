@@ -10,7 +10,14 @@ namespace Bernard\Driver;
  */
 abstract class AbstractPrefetchDriver implements \Bernard\Driver
 {
+    /**
+     * @var integer
+     */
     protected $prefetch;
+
+    /**
+     * @var PrefetchMessageCache
+     */
     protected $cache;
 
     /**
