@@ -2,12 +2,13 @@
 
 namespace Bernard\Pimple;
 
+use Bernard\Router\SimpleRouter;
 use Pimple;
 
 /**
  * @package Bernard
  */
-class PimpleAwareRouter extends \Bernard\Router\SimpleRouter
+class PimpleAwareRouter extends SimpleRouter
 {
     /**
      * @var Pimple

@@ -5,8 +5,9 @@ namespace Bernard\EventListener;
 use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\RejectEnvelopeEvent;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class LoggerSubscriber implements \Symfony\Component\EventDispatcher\EventSubscriberInterface
+class LoggerSubscriber implements EventSubscriberInterface
 {
     protected $logger;
 

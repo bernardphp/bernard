@@ -2,12 +2,15 @@
 
 namespace Bernard\Driver;
 
+use Bernard\Driver;
+use Redis;
+
 /**
  * Implements a Driver for use with https://github.com/nicolasff/phpredis
  *
  * @package Bernard
  */
-class PhpRedisDriver implements \Bernard\Driver
+class PhpRedisDriver implements Driver
 {
     /**
      * @var Redis
@@ -17,7 +20,7 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * @param Redis $redis
      */
-    public function __construct(\Redis $redis)
+    public function __construct(Redis $redis)
     {
         $this->redis = $redis;
     }

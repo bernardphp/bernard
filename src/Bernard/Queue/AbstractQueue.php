@@ -9,7 +9,7 @@ use Bernard\Exception\InvalidOperationException;
 /**
  * @package Bernard
  */
-abstract class AbstractQueue implements \Bernard\Queue
+abstract class AbstractQueue implements Queue
 {
     /**
      * @var boolean

@@ -2,6 +2,7 @@
 
 namespace Bernard\QueueFactory;
 
+use Bernard\QueueFactory;
 use Bernard\Queue\InMemoryQueue;
 
 /**
@@ -10,7 +11,7 @@ use Bernard\Queue\InMemoryQueue;
  *
  * @package Bernard
  */
-class InMemoryFactory implements \Bernard\QueueFactory
+class InMemoryFactory implements QueueFactory
 {
     /**
      * @var InMemoryQueue[]

@@ -4,6 +4,7 @@ namespace Bernard\Command;
 
 use Bernard\Consumer;
 use Bernard\QueueFactory;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @package Bernard
  */
-class ConsumeCommand extends \Symfony\Component\Console\Command\Command
+class ConsumeCommand extends Command
 {
     /**
      * @var Consumer

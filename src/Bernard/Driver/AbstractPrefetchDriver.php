@@ -2,13 +2,15 @@
 
 namespace Bernard\Driver;
 
+use Bernard\Driver;
+
 /**
  * For some drivers it gives a performance boost not to query the backend
  * all the time. This is mostly for SQS and IronMQ.
  *
  * @package Bernard
  */
-abstract class AbstractPrefetchDriver implements \Bernard\Driver
+abstract class AbstractPrefetchDriver implements Driver
 {
     /**
      * @var integer

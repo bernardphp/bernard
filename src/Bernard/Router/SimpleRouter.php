@@ -2,6 +2,7 @@
 
 namespace Bernard\Router;
 
+use Bernard\Router;
 use Bernard\Envelope;
 use Bernard\Exception\ReceiverNotFoundException;
 
@@ -10,7 +11,7 @@ use Bernard\Exception\ReceiverNotFoundException;
  *
  * @package Bernard
  */
-class SimpleRouter implements \Bernard\Router
+class SimpleRouter implements Router
 {
     /**
      * @var array

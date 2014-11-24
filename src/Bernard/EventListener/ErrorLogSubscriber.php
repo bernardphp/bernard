@@ -4,9 +4,10 @@ namespace Bernard\EventListener;
 
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Envelope;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Exception;
 
-class ErrorLogSubscriber implements \Symfony\Component\EventDispatcher\EventSubscriberInterface
+class ErrorLogSubscriber implements EventSubscriberInterface
 {
     public function onReject(RejectEnvelopeEvent $event)
     {

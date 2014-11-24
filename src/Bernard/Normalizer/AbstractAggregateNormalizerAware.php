@@ -3,8 +3,9 @@
 namespace Bernard\Normalizer;
 
 use Normalt\Normalizer\AggregateNormalizer;
+use Normalt\Normalizer\AggregateNormalizerAware;
 
-class AbstractAggregateNormalizerAware implements \Normalt\Normalizer\AggregateNormalizerAware
+class AbstractAggregateNormalizerAware implements AggregateNormalizerAware
 {
     /**
      * @var AggregateNormalizer

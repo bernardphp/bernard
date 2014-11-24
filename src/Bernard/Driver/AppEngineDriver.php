@@ -2,6 +2,7 @@
 
 namespace Bernard\Driver;
 
+use Bernard\Driver;
 use google\appengine\api\taskqueue\PushTask;
 
 /**
@@ -11,7 +12,7 @@ use google\appengine\api\taskqueue\PushTask;
  *
  * @package Bernard
  */
-class AppEngineDriver implements \Bernard\Driver
+class AppEngineDriver implements Driver
 {
     /**
      * @var array

@@ -4,8 +4,9 @@ namespace Bernard\EventListener;
 
 use Bernard\QueueFactory;
 use Bernard\Event\RejectEnvelopeEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class FailureSubscriber implements \Symfony\Component\EventDispatcher\EventSubscriberInterface
+class FailureSubscriber implements EventSubscriberInterface
 {
     protected $queues;
     protected $name;
