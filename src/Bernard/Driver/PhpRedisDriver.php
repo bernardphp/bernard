@@ -88,9 +88,7 @@ class PhpRedisDriver implements Driver
     /**
      * {@inheritDoc}
      */
-    public function acknowledgeMessage($queueName, $receipt)
-    {
-    }
+    public function acknowledgeMessage($queueName, $receipt) { }
 
     /**
      * {@inheritDoc}
@@ -112,7 +110,8 @@ class PhpRedisDriver implements Driver
     /**
      * Transform the queueName into a key.
      *
-     * @param  string $queueName
+     * @param string $queueName
+     *
      * @return string
      */
     protected function resolveKey($queueName)

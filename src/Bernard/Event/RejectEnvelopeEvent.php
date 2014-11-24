@@ -5,6 +5,9 @@ namespace Bernard\Event;
 use Bernard\Envelope;
 use Bernard\Queue;
 
+/**
+ * @package Bernard
+ */
 class RejectEnvelopeEvent extends EnvelopeEvent
 {
     /**

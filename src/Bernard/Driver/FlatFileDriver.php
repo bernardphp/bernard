@@ -173,8 +173,14 @@ class FlatFileDriver implements Driver
      */
     public function info()
     {
+        return array();
     }
 
+    /**
+     * @param string $queueName
+     *
+     * @return string
+     */
     private function getQueueDirectory($queueName)
     {
         return $this->baseDirectory.DIRECTORY_SEPARATOR.str_replace(array('\\', '.'), '-', $queueName);

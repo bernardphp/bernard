@@ -61,9 +61,7 @@ class SqsDriver extends AbstractPrefetchDriver
     /**
      * {@inheritDoc}
      */
-    public function createQueue($queueName)
-    {
-    }
+    public function createQueue($queueName) { }
 
     /**
      * {@inheritDoc}
@@ -149,9 +147,7 @@ class SqsDriver extends AbstractPrefetchDriver
     /**
      * {@inheritDoc}
      */
-    public function removeQueue($queueName)
-    {
-    }
+    public function removeQueue($queueName) { }
 
     /**
      * {@inheritDoc}
@@ -166,7 +162,8 @@ class SqsDriver extends AbstractPrefetchDriver
     /**
      * AWS works with queue URLs rather than queue names. Returns either queue URL (if queue exists) for given name or null if not.
      *
-     * @param  string $queueName
+     * @param string $queueName
+     *
      * @return mixed
      */
     protected function resolveUrl($queueName)

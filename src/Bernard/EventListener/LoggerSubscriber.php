@@ -7,15 +7,27 @@ use Bernard\Event\RejectEnvelopeEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * @package Bernard
+ */
 class LoggerSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
 
+    /**
+     * @param LoggerInterface $logger
+     */
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
+    /**
+     * @param EnvelopeEvent $event
+     */
     public function onProduce(EnvelopeEvent $event)
     {
         $this->logger->info('[bernard] produced {envelope} onto {queue}.', array(
@@ -24,6 +36,9 @@ class LoggerSubscriber implements EventSubscriberInterface
         ));
     }
 
+    /**
+     * @param EnvelopeEvent $event
+     */
     public function onInvoke(EnvelopeEvent $event)
     {
         $this->logger->info('[bernard] invoking receiver for {envelope}.', array(
@@ -31,6 +46,9 @@ class LoggerSubscriber implements EventSubscriberInterface
         ));
     }
 
+    /**
+     * @param  RejectEnvelopeEvent $event
+     */
     public function onReject(RejectEnvelopeEvent $event)
     {
         $this->logger->error('[bernard] caught exception {exception} while processing {envelope}.', array(
@@ -39,6 +57,9 @@ class LoggerSubscriber implements EventSubscriberInterface
         ));
     }
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return array(

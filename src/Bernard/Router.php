@@ -10,9 +10,11 @@ interface Router
     /**
      * Returns the right Receiver (callable) based on the Envelope.
      *
-     * @param  Envelope                  $envelope
-     * @throws ReceiverNotFoundException
+     * @param Envelope $envelope
+     *
      * @return array
+     *
+     * @throws ReceiverNotFoundException
      */
     public function map(Envelope $envelope);
 }

@@ -11,7 +11,8 @@ namespace Bernard;
 interface QueueFactory extends \Countable
 {
     /**
-     * @param  string $queueName
+     * @param string $queueName
+     *
      * @return Queue
      */
     public function create($queueName);
@@ -22,7 +23,8 @@ interface QueueFactory extends \Countable
     public function all();
 
     /**
-     * @param  string  $queueName
+     * @param string  $queueName
+     *
      * @return boolean
      */
     public function exists($queueName);

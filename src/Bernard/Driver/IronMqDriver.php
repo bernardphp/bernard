@@ -53,10 +53,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * {@inheritDoc}
      */
-    public function createQueue($queueName)
-    {
-        // not needed, auto-created on use
-    }
+    public function createQueue($queueName) { }
 
     /**
      * {@inheritDoc}
@@ -143,8 +140,9 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * The missing array_pluck but for objects array
      *
-     * @param  array  $objects
-     * @param  string $property
+     * @param array  $objects
+     * @param string $property
+     *
      * @return array
      */
     protected function pluck(array $objects, $property)

@@ -23,7 +23,8 @@ class Serializer
     }
 
     /**
-     * @param  Envelope $envelope
+     * @param Envelope $envelope
+     *
      * @return string
      */
     public function serialize(Envelope $envelope)
@@ -32,7 +33,8 @@ class Serializer
     }
 
     /**
-     * @param  string $contents
+     * @param string $contents
+     *
      * @return Envelope
      */
     public function unserialize($contents)

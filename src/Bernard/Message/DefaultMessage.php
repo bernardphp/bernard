@@ -42,7 +42,8 @@ class DefaultMessage extends AbstractMessage implements ArrayAccess
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return mixed
      */
     public function get($name)
@@ -51,7 +52,8 @@ class DefaultMessage extends AbstractMessage implements ArrayAccess
     }
 
     /**
-     * @param  string  $name
+     * @param string  $name
+     *
      * @return boolean
      */
     public function has($name)
@@ -74,7 +76,7 @@ class DefaultMessage extends AbstractMessage implements ArrayAccess
     public function offsetUnset($offset) { }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getName()
     {

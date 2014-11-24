@@ -147,7 +147,8 @@ class DoctrineDriver implements Driver
     /**
      * Execute the actual query and process the response
      *
-     * @param  string $queueName
+     * @param string $queueName
+     *
      * @return array|null
      */
     protected function doPopMessage($queueName)

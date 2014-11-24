@@ -19,7 +19,8 @@ class InMemoryFactory implements QueueFactory
     protected $queues;
 
     /**
-     * @param  string               $queueName
+     * @param string $queueName
+     *
      * @return InMemoryQueueFactory
      */
     public function create($queueName)
@@ -48,7 +49,8 @@ class InMemoryFactory implements QueueFactory
     }
 
     /**
-     * @param  string  $queueName
+     * @param string $queueName
+     *
      * @return boolean
      */
     public function exists($queueName)

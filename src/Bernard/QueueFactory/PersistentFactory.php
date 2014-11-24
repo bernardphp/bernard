@@ -31,7 +31,7 @@ class PersistentFactory implements QueueFactory
     protected $serializer;
 
     /**
-     * @param Driver  $driver
+     * @param Driver     $driver
      * @param Serializer $serializer
      */
     public function __construct(Driver $driver, Serializer $serializer)
