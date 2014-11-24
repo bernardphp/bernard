@@ -31,32 +31,6 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * {@inheritDoc}
      */
-    public function countMessages($queueName)
-    {
-        if ($info = $this->ironmq->getQueue($queueName)) {
-            return $info->size;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createQueue($queueName)
-    {
-        // not needed, auto-created on use
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeQueue($queueName)
-    {
-        $this->ironmq->deleteQueue($queueName);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function listQueues()
     {
         $queueNames = array();
@@ -74,6 +48,24 @@ class IronMqDriver extends AbstractPrefetchDriver
         }
 
         return $queueNames;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function createQueue($queueName)
+    {
+        // not needed, auto-created on use
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function countMessages($queueName)
+    {
+        if ($info = $this->ironmq->getQueue($queueName)) {
+            return $info->size;
+        }
     }
 
     /**
@@ -128,6 +120,14 @@ class IronMqDriver extends AbstractPrefetchDriver
         }
 
         return array();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeQueue($queueName)
+    {
+        $this->ironmq->deleteQueue($queueName);
     }
 
     /**

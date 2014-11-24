@@ -38,39 +38,6 @@ class SqsDriver extends AbstractPrefetchDriver
     /**
      * {@inheritDoc}
      */
-    public function countMessages($queueName)
-    {
-        $queueUrl = $this->resolveUrl($queueName);
-
-        $result = $this->sqs->getQueueAttributes(array(
-            'QueueUrl'       => $queueUrl,
-            'AttributeNames' => array('ApproximateNumberOfMessages'),
-        ));
-
-        if (isset($result['Attributes']['ApproximateNumberOfMessages'])) {
-            return $result['Attributes']['ApproximateNumberOfMessages'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createQueue($queueName)
-    {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeQueue($queueName)
-    {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function listQueues()
     {
         $result = $this->sqs->listQueues();
@@ -89,6 +56,32 @@ class SqsDriver extends AbstractPrefetchDriver
         }
 
         return array_keys($this->queueUrls);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function createQueue($queueName)
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function countMessages($queueName)
+    {
+        $queueUrl = $this->resolveUrl($queueName);
+
+        $result = $this->sqs->getQueueAttributes(array(
+            'QueueUrl'       => $queueUrl,
+            'AttributeNames' => array('ApproximateNumberOfMessages'),
+        ));
+
+        if (isset($result['Attributes']['ApproximateNumberOfMessages'])) {
+            return $result['Attributes']['ApproximateNumberOfMessages'];
+        }
+
+        return 0;
     }
 
     /**
@@ -151,6 +144,13 @@ class SqsDriver extends AbstractPrefetchDriver
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
         return array();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeQueue($queueName)
+    {
     }
 
     /**

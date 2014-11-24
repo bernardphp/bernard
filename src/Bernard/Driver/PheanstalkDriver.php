@@ -39,6 +39,7 @@ class PheanstalkDriver implements Driver
      */
     public function createQueue($queueName)
     {
+        // not needed, auto-created on use
     }
 
     /**
@@ -93,6 +94,7 @@ class PheanstalkDriver implements Driver
      */
     public function removeQueue($queueName)
     {
+        // not needed
     }
 
     /**

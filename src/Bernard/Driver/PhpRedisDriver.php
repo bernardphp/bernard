@@ -28,9 +28,9 @@ class PhpRedisDriver implements Driver
     /**
      * {@inheritDoc}
      */
-    public function countMessages($queueName)
+    public function listQueues()
     {
-        return $this->redis->lLen('queue:' . $queueName);
+        return $this->redis->sMembers('queues');
     }
 
     /**
@@ -44,18 +44,9 @@ class PhpRedisDriver implements Driver
     /**
      * {@inheritDoc}
      */
-    public function removeQueue($queueName)
+    public function countMessages($queueName)
     {
-        $this->redis->sRem('queues', $queueName);
-        $this->redis->del($this->resolveKey($queueName));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function listQueues()
-    {
-        return $this->redis->sMembers('queues');
+        return $this->redis->lLen('queue:' . $queueName);
     }
 
     /**
@@ -99,6 +90,15 @@ class PhpRedisDriver implements Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeQueue($queueName)
+    {
+        $this->redis->sRem('queues', $queueName);
+        $this->redis->del($this->resolveKey($queueName));
     }
 
     /**
