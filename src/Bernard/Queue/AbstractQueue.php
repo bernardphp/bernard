@@ -2,14 +2,13 @@
 
 namespace Bernard\Queue;
 
-use Bernard\Queue;
 use Bernard\Envelope;
 use Bernard\Exception\InvalidOperationException;
 
 /**
  * @package Bernard
  */
-abstract class AbstractQueue implements Queue
+abstract class AbstractQueue implements \Bernard\Queue
 {
     /**
      * @var boolean

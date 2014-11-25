@@ -2,7 +2,6 @@
 
 namespace Bernard\QueueFactory;
 
-use Bernard\QueueFactory;
 use Bernard\Driver;
 use Bernard\Queue\PersistentQueue;
 use Bernard\Serializer;
@@ -13,7 +12,7 @@ use Bernard\Serializer;
  *
  * @package Bernard
  */
-class PersistentFactory implements QueueFactory
+class PersistentFactory implements \Bernard\QueueFactory
 {
     /**
      * @var PersistentQueue[]

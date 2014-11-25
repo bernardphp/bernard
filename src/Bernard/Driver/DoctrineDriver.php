@@ -2,7 +2,6 @@
 
 namespace Bernard\Driver;
 
-use Bernard\Driver;
 use Doctrine\DBAL\Connection;
 
 /**
@@ -10,7 +9,7 @@ use Doctrine\DBAL\Connection;
  *
  * @package Bernard
  */
-class DoctrineDriver implements Driver
+class DoctrineDriver implements \Bernard\Driver
 {
     /**
      * @var Connection

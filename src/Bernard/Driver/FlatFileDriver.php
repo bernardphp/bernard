@@ -2,15 +2,13 @@
 
 namespace Bernard\Driver;
 
-use Bernard\Driver;
-
 /**
  * Flat file driver to provide a simple job queue without any
  * database.
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */
-class FlatFileDriver implements Driver
+class FlatFileDriver implements \Bernard\Driver
 {
     /**
      * @var string

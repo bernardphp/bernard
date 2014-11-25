@@ -2,7 +2,6 @@
 
 namespace Bernard\Driver;
 
-use Bernard\Driver;
 use Redis;
 
 /**
@@ -10,7 +9,7 @@ use Redis;
  *
  * @package Bernard
  */
-class PhpRedisDriver implements Driver
+class PhpRedisDriver implements \Bernard\Driver
 {
     /**
      * @var Redis
