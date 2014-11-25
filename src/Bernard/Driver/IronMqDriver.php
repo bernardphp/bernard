@@ -28,32 +28,6 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * {@inheritDoc}
      */
-    public function countMessages($queueName)
-    {
-        if ($info = $this->ironmq->getQueue($queueName)) {
-            return $info->size;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createQueue($queueName)
-    {
-        // not needed, auto-created on use
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeQueue($queueName)
-    {
-        $this->ironmq->deleteQueue($queueName);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function listQueues()
     {
         $queueNames = array();
@@ -71,6 +45,21 @@ class IronMqDriver extends AbstractPrefetchDriver
         }
 
         return $queueNames;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function createQueue($queueName) { }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function countMessages($queueName)
+    {
+        if ($info = $this->ironmq->getQueue($queueName)) {
+            return $info->size;
+        }
     }
 
     /**
@@ -130,6 +119,14 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * {@inheritDoc}
      */
+    public function removeQueue($queueName)
+    {
+        $this->ironmq->deleteQueue($queueName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function info()
     {
         return array(
@@ -140,8 +137,9 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * The missing array_pluck but for objects array
      *
-     * @param  array  $objects
-     * @param  string $property
+     * @param array  $objects
+     * @param string $property
+     *
      * @return array
      */
     protected function pluck(array $objects, $property)

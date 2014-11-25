@@ -26,34 +26,9 @@ class AppEngineDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function pushMessage($queueName, $message)
-    {
-        $task = new PushTask($this->resolveEndpoint($queueName), compact('message'));
-        $task->add($queueName);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function listQueues()
     {
         return array_flip($this->queueMap);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function info()
-    {
-        return array();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function peekQueue($queueName, $index = 0, $limit = 20)
-    {
-        return array();
     }
 
     /**
@@ -69,6 +44,15 @@ class AppEngineDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
+    public function pushMessage($queueName, $message)
+    {
+        $task = new PushTask($this->resolveEndpoint($queueName), compact('message'));
+        $task->add($queueName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function popMessage($queueName, $interval = 5) { }
 
     /**
@@ -80,6 +64,22 @@ class AppEngineDriver implements \Bernard\Driver
      * {@inheritDoc}
      */
     public function removeQueue($queueName) { }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function peekQueue($queueName, $index = 0, $limit = 20)
+    {
+        return array();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function info()
+    {
+        return array();
+    }
 
     /**
      * @param  string                   $queueName

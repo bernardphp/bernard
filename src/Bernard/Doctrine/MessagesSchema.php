@@ -20,6 +20,11 @@ class MessagesSchema
         static::createMessagesTable($schema);
     }
 
+    /**
+     * Creates queue table on the current schema given.
+     *
+     * @param Schema $schema
+     */
     protected static function createQueueTable(Schema $schema)
     {
         $table = $schema->createTable('bernard_queues');
@@ -27,6 +32,11 @@ class MessagesSchema
         $table->setPrimaryKey(array('name'));
     }
 
+    /**
+     * Creates message table on the current schema given.
+     *
+     * @param Schema $schema
+     */
     protected static function createMessagesTable(Schema $schema)
     {
         $table = $schema->createTable('bernard_messages');

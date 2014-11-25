@@ -18,7 +18,7 @@ class Consumer
     protected $shutdown = false;
     protected $configured = false;
     protected $options = array(
-        'max-runtime' => PHP_INT_MAX,
+        'max-runtime'  => PHP_INT_MAX,
         'max-messages' => null,
     );
 
@@ -51,8 +51,9 @@ class Consumer
      * Returns true do indicate it should be run again or false to indicate
      * it should not be run again.
      *
-     * @param  Queue   $queue
-     * @param  array   $options
+     * @param Queue $queue
+     * @param array $options
+     *
      * @return boolean
      */
     public function tick(Queue $queue, array $options = array())

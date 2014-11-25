@@ -2,7 +2,6 @@
 
 namespace Bernard\Driver;
 
-use Bernard\Driver;
 use Pheanstalk\PheanstalkInterface;
 use Pheanstalk\Job;
 
@@ -11,11 +10,8 @@ use Pheanstalk\Job;
  *
  * @package Bernard
  */
-class PheanstalkDriver implements Driver
+class PheanstalkDriver implements \Bernard\Driver
 {
-    /**
-     * @var PheanstalkInterface
-     */
     protected $pheanstalk;
 
     /**
@@ -37,9 +33,7 @@ class PheanstalkDriver implements Driver
     /**
      * {@inheritDoc}
      */
-    public function createQueue($queueName)
-    {
-    }
+    public function createQueue($queueName) { }
 
     /**
      * {@inheritDoc}
@@ -91,9 +85,7 @@ class PheanstalkDriver implements Driver
     /**
      * {@inheritDoc}
      */
-    public function removeQueue($queueName)
-    {
-    }
+    public function removeQueue($queueName) { }
 
     /**
      * {@inheritDoc}

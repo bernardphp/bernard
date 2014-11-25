@@ -86,7 +86,7 @@ Use the following method for creating the needed bernard tables.
     use Doctrine\DBAL\Schema\Schema;
 
     MessagesSchema::create($schema = new Schema);
-    
+
     // setup Doctrine DBAL
     $connection = ...;
 
@@ -323,3 +323,27 @@ something like this:
         }
     }
 
+Pheanstalk
+----------
+
+Requires the installation of pda/pheanstalk. Add the following to your
+``composer.json`` file for this:
+
+.. code-block:: json
+
+    {
+        "require" : {
+            "pda/pheanstalk" : "~3.0"
+        }
+    }
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\PheanstalkDriver;
+    use Pheanstalk\Pheanstalk;
+
+    $pheanstalk = new Pheanstalk('localhost');
+
+    $driver = new PheanstalkDriver($pheanstalk);

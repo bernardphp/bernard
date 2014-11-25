@@ -14,7 +14,7 @@ class Producer
     protected $dispatcher;
 
     /**
-     * @param QueueFactory    $queues
+     * @param QueueFactory             $queues
      * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(QueueFactory $queues, EventDispatcherInterface $dispatcher)

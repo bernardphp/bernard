@@ -2,6 +2,8 @@
 
 namespace Bernard\Driver;
 
+use Redis;
+
 /**
  * Implements a Driver for use with https://github.com/nicolasff/phpredis
  *
@@ -14,7 +16,7 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * @param Redis $redis
      */
-    public function __construct(\Redis $redis)
+    public function __construct(Redis $redis)
     {
         $this->redis = $redis;
     }
@@ -22,9 +24,9 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function countMessages($queueName)
+    public function listQueues()
     {
-        return $this->redis->lLen('queue:' . $queueName);
+        return $this->redis->sMembers('queues');
     }
 
     /**
@@ -38,18 +40,9 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function removeQueue($queueName)
+    public function countMessages($queueName)
     {
-        $this->redis->sRem('queues', $queueName);
-        $this->redis->del($this->resolveKey($queueName));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function listQueues()
-    {
-        return $this->redis->sMembers('queues');
+        return $this->redis->lLen('queue:' . $queueName);
     }
 
     /**
@@ -91,8 +84,15 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function acknowledgeMessage($queueName, $receipt)
+    public function acknowledgeMessage($queueName, $receipt) { }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeQueue($queueName)
     {
+        $this->redis->sRem('queues', $queueName);
+        $this->redis->del($this->resolveKey($queueName));
     }
 
     /**
@@ -106,7 +106,8 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * Transform the queueName into a key.
      *
-     * @param  string $queueName
+     * @param string $queueName
+     *
      * @return string
      */
     protected function resolveKey($queueName)

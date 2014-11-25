@@ -25,7 +25,8 @@ class PrefetchMessageCache
      * Get the next message in line. Or nothing if there is no more
      * in the cache.
      *
-     * @param  string     $queueName
+     * @param string $queueName
+     *
      * @return array|null
      */
     public function pop($queueName)

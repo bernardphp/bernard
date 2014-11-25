@@ -99,24 +99,6 @@ class DoctrineDriver implements \Bernard\Driver
         }
     }
 
-    protected function doPopMessage($queueName)
-    {
-        $query = 'SELECT id, message FROM bernard_messages
-                  WHERE queue = :queue AND visible = :visible
-                  ORDER BY sentAt, id ' . $this->connection->getDatabasePlatform()->getForUpdateSql();
-
-        list($id, $message) = $this->connection->fetchArray($query, array(
-            'queue' => $queueName,
-            'visible' => true,
-        ));
-
-        if ($id) {
-            $this->connection->update('bernard_messages', array('visible' => 0), compact('id'));
-
-            return array($message, $id);
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -156,5 +138,30 @@ class DoctrineDriver implements \Bernard\Driver
         unset($params['user'], $params['password']);
 
         return $params;
+    }
+
+    /**
+     * Execute the actual query and process the response
+     *
+     * @param string $queueName
+     *
+     * @return array|null
+     */
+    protected function doPopMessage($queueName)
+    {
+        $query = 'SELECT id, message FROM bernard_messages
+                  WHERE queue = :queue AND visible = :visible
+                  ORDER BY sentAt, id ' . $this->connection->getDatabasePlatform()->getForUpdateSql();
+
+        list($id, $message) = $this->connection->fetchArray($query, array(
+            'queue' => $queueName,
+            'visible' => true,
+        ));
+
+        if ($id) {
+            $this->connection->update('bernard_messages', array('visible' => 0), compact('id'));
+
+            return array($message, $id);
+        }
     }
 }

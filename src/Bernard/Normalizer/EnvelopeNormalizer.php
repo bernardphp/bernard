@@ -6,8 +6,14 @@ use Bernard\Envelope;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
+/**
+ * @package Bernard
+ */
 class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements NormalizerInterface, DenormalizerInterface
 {
+    /**
+     * {@inheritDoc}
+     */
     public function normalize($object, $format = null, array $context = array())
     {
         return array(
@@ -17,6 +23,9 @@ class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements Nor
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function denormalize($data, $class, $format = null, array $context = array())
     {
         $envelope = new Envelope($this->aggregate->denormalize($data['message'], $data['class']));
@@ -27,16 +36,27 @@ class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements Nor
         return $envelope;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function supportsDenormalization($data, $type, $format = null)
     {
         return $type === 'Bernard\Envelope';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function supportsNormalization($data, $format = null)
     {
         return $data instanceof Envelope;
     }
 
+    /**
+     * @param Envelope $envelope
+     * @param string   $property
+     * @param mixed    $value
+     */
     private function forcePropertyValue(Envelope $envelope, $property, $value)
     {
         $property = new \ReflectionProperty($envelope, $property);

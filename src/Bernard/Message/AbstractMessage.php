@@ -2,10 +2,12 @@
 
 namespace Bernard\Message;
 
+use Bernard\Message;
+
 /**
  * @package Bernard
  */
-abstract class AbstractMessage implements \Bernard\Message
+abstract class AbstractMessage implements Message
 {
     /**
      * {@inheritDoc}

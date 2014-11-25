@@ -10,6 +10,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ContainerAwareRouter extends \Bernard\Router\SimpleRouter
 {
+    /**
+     * @param ContainerInterface $container
+     * @param array              $receivers
+     */
     public function __construct(ContainerInterface $container, array $receivers = array())
     {
         $this->container = $container;

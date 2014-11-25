@@ -17,9 +17,9 @@ class PersistentQueue extends AbstractQueue
     protected $receipts;
 
     /**
-     * @param string  $name
-     * @param Driver  $driver
-     * @param Encoder $serializer
+     * @param string     $name
+     * @param Driver     $driver
+     * @param Serializer $serializer
      */
     public function __construct($name, Driver $driver, Serializer $serializer)
     {
@@ -52,6 +52,9 @@ class PersistentQueue extends AbstractQueue
         return $this->driver->countMessages($this->name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function close()
     {
         parent::close();
