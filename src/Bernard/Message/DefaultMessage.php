@@ -13,14 +13,7 @@ use ArrayAccess;
  */
 class DefaultMessage extends AbstractMessage implements ArrayAccess
 {
-    /**
-     * @var string
-     */
     protected $name;
-
-    /**
-     * @var array
-     */
     protected $arguments;
 
     /**

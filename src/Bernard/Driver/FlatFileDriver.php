@@ -10,9 +10,6 @@ namespace Bernard\Driver;
  */
 class FlatFileDriver implements \Bernard\Driver
 {
-    /**
-     * @var string
-     */
     private $baseDirectory;
 
     /**

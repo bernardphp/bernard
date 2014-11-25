@@ -12,9 +12,6 @@ use Bernard\Exception\ReceiverNotFoundException;
  */
 class SimpleRouter implements \Bernard\Router
 {
-    /**
-     * @var array
-     */
     protected $receivers = array();
 
     /**

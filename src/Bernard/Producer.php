@@ -10,14 +10,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class Producer
 {
-    /**
-     * @var QueueFactory
-     */
     protected $queues;
-
-    /**
-     * @var EventDispatcherInterface
-     */
     protected $dispatcher;
 
     /**

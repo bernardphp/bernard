@@ -12,9 +12,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class LoggerSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var LoggerInterface
-     */
     protected $logger;
 
     /**

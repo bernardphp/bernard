@@ -13,9 +13,6 @@ use google\appengine\api\taskqueue\PushTask;
  */
 class AppEngineDriver implements \Bernard\Driver
 {
-    /**
-     * @var array
-     */
     protected $queueMap;
 
     /**

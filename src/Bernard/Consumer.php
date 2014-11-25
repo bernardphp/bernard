@@ -13,31 +13,12 @@ declare(ticks=1);
  */
 class Consumer
 {
-    /**
-     * @var Router
-     */
     protected $router;
-
-    /**
-     * @var EventDispatcherInterface
-     */
     protected $dispatcher;
-
-    /**
-     * @var boolean
-     */
     protected $shutdown = false;
-
-    /**
-     * @var boolean
-     */
     protected $configured = false;
-
-    /**
-     * @var array
-     */
     protected $options = array(
-        'max-runtime' => PHP_INT_MAX,
+        'max-runtime'  => PHP_INT_MAX,
         'max-messages' => null,
     );
 

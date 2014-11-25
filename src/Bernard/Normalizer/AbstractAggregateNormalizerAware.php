@@ -7,9 +7,6 @@ use Normalt\Normalizer\AggregateNormalizerAware;
 
 class AbstractAggregateNormalizerAware implements AggregateNormalizerAware
 {
-    /**
-     * @var AggregateNormalizer
-     */
     protected $aggregate;
 
     /**

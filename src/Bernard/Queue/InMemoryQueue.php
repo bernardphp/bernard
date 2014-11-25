@@ -12,9 +12,6 @@ use SplQueue;
  */
 class InMemoryQueue extends AbstractQueue
 {
-    /**
-     * @var SplQueue
-     */
     protected $queue;
 
     /**

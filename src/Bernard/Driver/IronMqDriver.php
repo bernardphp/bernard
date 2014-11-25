@@ -12,9 +12,6 @@ use IronMQ;
  */
 class IronMqDriver extends AbstractPrefetchDriver
 {
-    /**
-     * @var IronMQ
-     */
     protected $ironmq;
 
     /**

@@ -12,9 +12,6 @@ use Pheanstalk\Job;
  */
 class PheanstalkDriver implements \Bernard\Driver
 {
-    /**
-     * @var PheanstalkInterface
-     */
     protected $pheanstalk;
 
     /**

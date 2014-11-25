@@ -12,19 +12,8 @@ use Bernard\Serializer;
  */
 class PersistentQueue extends AbstractQueue
 {
-    /**
-     * @var Driver
-     */
     protected $driver;
-
-    /**
-     * @var Serializer
-     */
     protected $serializer;
-
-    /**
-     * @var array
-     */
     protected $receipts;
 
     /**

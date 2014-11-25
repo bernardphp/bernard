@@ -9,9 +9,6 @@ use Normalt\Normalizer\AggregateNormalizer;
  */
 class Serializer
 {
-    /**
-     * @var AggregateNormalizer
-     */
     protected $aggregate;
 
     /**

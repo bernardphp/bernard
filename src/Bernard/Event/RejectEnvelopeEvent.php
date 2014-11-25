@@ -10,9 +10,6 @@ use Bernard\Queue;
  */
 class RejectEnvelopeEvent extends EnvelopeEvent
 {
-    /**
-     * @var Exception
-     */
     protected $exception;
 
     /**

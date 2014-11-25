@@ -11,14 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FailureSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var QueueFactory
-     */
     protected $queues;
-
-    /**
-     * @var string
-     */
     protected $name;
 
     /**

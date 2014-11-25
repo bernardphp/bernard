@@ -9,9 +9,6 @@ use Predis\ClientInterface;
  */
 class PredisDriver extends PhpRedisDriver
 {
-    /**
-     * @var ClientInterface
-     */
     protected $redis;
 
     /**

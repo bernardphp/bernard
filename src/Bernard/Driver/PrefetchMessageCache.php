@@ -7,9 +7,6 @@ namespace Bernard\Driver;
  */
 class PrefetchMessageCache
 {
-    /**
-     * @var array
-     */
     protected $caches = array();
 
     /**

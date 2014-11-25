@@ -11,9 +11,6 @@ use Doctrine\DBAL\Connection;
  */
 class DoctrineDriver implements \Bernard\Driver
 {
-    /**
-     * @var Connection
-     */
     protected $connection;
 
     /**

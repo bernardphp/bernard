@@ -10,14 +10,7 @@ use Bernard\Queue;
  */
 class EnvelopeEvent extends \Symfony\Component\EventDispatcher\Event
 {
-    /**
-     * @var Envelope
-     */
     protected $envelope;
-
-    /**
-     * @var Queue
-     */
     protected $queue;
 
     /**
