@@ -3,134 +3,186 @@
 namespace Bernard\Tests\Driver;
 
 use Bernard\Driver\MongoDBDriver;
+use ArrayIterator;
+use MongoDate;
+use MongoId;
 
 class MongoDBDriverTest extends \PHPUnit_Framework_TestCase
 {
-    protected $db;
-    protected $driver;
+    private $messages;
+    private $queues;
+    private $driver;
 
     public function setUp()
     {
-        $this->db = $this->setUpDatabase();
-        $this->driver = new MongoDBDriver($this->db);
-    }
+        if ( ! class_exists('MongoCollection')) {
+            $this->markTestSkipped('MongoDB extension is not available.');
+        }
 
-    public function tearDown()
-    {
-        $this->db->dropCollection('bernardMessages');
-        $this->db->dropCollection('bernardQueues');
+        $this->queues = $this->getMockMongoCollection();
+        $this->messages = $this->getMockMongoCollection();
+        $this->driver = new MongoDBDriver($this->queues, $this->messages);
     }
 
     public function testListQueues()
     {
-        $this->driver->createQueue('import');
-        $this->driver->createQueue('send-newsletter');
+        $this->queues->expects($this->once())
+            ->method('distinct')
+            ->with('_id')
+            ->will($this->returnValue(array('foo', 'bar')));
 
-        $this->assertSimilarArrays(array('import', 'send-newsletter'), $this->driver->listQueues());
+        $this->assertSame(array('foo', 'bar'), $this->driver->listQueues());
     }
 
-    public function testPopMessage()
+    public function testCreateQueue()
     {
-        $this->driver->pushMessage('import', 'message1');
-        $this->driver->pushMessage('import', 'message2');
+        $this->queues->expects($this->once())
+            ->method('update')
+            ->with(array('_id' => 'foo'), array('_id' => 'foo'), array('upsert' => true));
 
-        $message = $this->driver->popMessage('import');
-        $this->assertNotNull($message[1], 'there should be an id');
-        $this->assertInternalType('string', $message[1], 'the id should be a string');
-        $this->assertSame('message1', $message[0], 'the first item pushed should be the first popped');
-
-        $message = $this->driver->popMessage('import');
-        $this->assertSame('message2', $message[0], 'the second item pushed should be popped');
-
-        $this->assertEmpty($this->driver->popMessage('import'), 'there should be nothing left to pop');
+        $this->driver->createQueue('foo');
     }
 
-    public function testCountAndAcknowledgeMessages()
+    public function testCountMessages()
     {
-        $this->assertEquals(0, $this->driver->countMessages('import-users'));
+        $this->messages->expects($this->once())
+            ->method('count')
+            ->with(array('queue' => 'foo', 'visible' => true))
+            ->will($this->returnValue(2));
 
-        $this->driver->pushMessage('send-newsletter', 'my-message-1');
-        $this->driver->pushMessage('send-newsletter', 'my-message-2');
-        $this->assertEquals(2, $this->driver->countMessages('send-newsletter'));
-
-        list($message, $id) = $this->driver->popMessage('send-newsletter');
-        $this->driver->acknowledgeMessage('send-newsletter', $id);
-
-        $this->assertEquals(1, $this->driver->countMessages('send-newsletter'));
+        $this->assertSame(2, $this->driver->countMessages('foo'));
     }
 
-    public function testRemoveQueue()
+    public function testPushMessage()
     {
-        $this->driver->pushMessage('import', 'message1');
-        $this->driver->pushMessage('import', 'message2');
+        $this->messages->expects($this->once())
+            ->method('insert')
+            ->with($this->callback(function($data) {
+                return $data['queue'] === 'foo' &&
+                       $data['message'] === 'message1' &&
+                       $data['sentAt'] instanceof MongoDate &&
+                       $data['visible'] === true;
+            }));
 
-        $this->assertEquals(2, $this->driver->countMessages('import'));
-        $this->driver->removeQueue('import');
-
-        $this->assertEquals(0, $this->driver->countMessages('import'));
+        $this->driver->pushMessage('foo', 'message1');
     }
 
-    public function testCreateAndRemoveQueue()
+    public function testPopMessageWithFoundMessage()
     {
-        // Duplicates are not taking into account.
-        $this->driver->createQueue('import-users');
-        $this->driver->createQueue('send-newsletter');
-        $this->driver->createQueue('import-users');
+        $this->messages->expects($this->atLeastOnce())
+            ->method('findAndModify')
+            ->with(
+                array('queue' => 'foo', 'visible' => true),
+                array('$set' => array('visible' => false)),
+                array('message' => 1),
+                array('sort' => array('sentAt' => 1))
+            )
+            ->will($this->returnValue(array('message' => 'message1', '_id' => '000000000000000000000000')));
 
-        $this->assertSimilarArrays(array('import-users',  'send-newsletter'), $this->driver->listQueues());
-
-        $this->driver->removeQueue('import-users');
-
-        $this->assertEquals(array('send-newsletter'), $this->driver->listQueues());
+        list($message, $receipt) = $this->driver->popMessage('foo');
+        $this->assertSame('message1', $message);
+        $this->assertSame('000000000000000000000000', $receipt);
     }
 
-    public function testPopMessageWithInterval()
+    public function testPopMessageWithMissingMessage()
     {
-        $microtime = microtime(true);
+        $this->messages->expects($this->atLeastOnce())
+            ->method('findAndModify')
+            ->with(
+                array('queue' => 'foo', 'visible' => true),
+                array('$set' => array('visible' => false)),
+                array('message' => 1),
+                array('sort' => array('sentAt' => 1))
+            )
+            ->will($this->returnValue(false));
 
-        $this->driver->popMessage('non-existent-queue', 0.001);
-
-        $this->assertTrue((microtime(true) - $microtime) >= 0.001);
+        list($message, $receipt) = $this->driver->popMessage('foo');
+        $this->assertNull($message);
+        $this->assertNull($receipt);
     }
 
-    public function testRemoveQueueRemovesMessages()
+    public function testAcknowledgeMessage()
     {
-        $this->driver->pushMessage('send-newsletter', 'something');
-        $this->assertEquals(1, $this->driver->countMessages('send-newsletter'));
+        $this->messages->expects($this->once())
+            ->method('remove')
+            ->with($this->callback(function($query) {
+                return $query['_id'] instanceof MongoId &&
+                       (string) $query['_id'] === '000000000000000000000000' &&
+                       $query['queue'] === 'foo';
+            }));
 
-        $this->driver->removeQueue('send-newsletter');
-
-        $this->assertEquals(0, $this->driver->countMessages('send-newsletter'));
+        $this->driver->acknowledgeMessage('foo', '000000000000000000000000');
     }
 
     public function testPeekQueue()
     {
-        $this->driver->pushMessage('send-newsletter', 'my-message-1');
-        $this->driver->pushMessage('send-newsletter', 'my-message-2');
+        $cursor = $this->getMockBuilder('MongoCursor')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        // peeking
-        $this->assertSimilarArrays(array('my-message-1', 'my-message-2'), $this->driver->peekQueue('send-newsletter'));
-        $this->assertEquals(array('my-message-2'), $this->driver->peekQueue('send-newsletter', 1));
-        $this->assertEquals(array('my-message-1'), $this->driver->peekQueue('send-newsletter', 0, 1));
-        $this->assertEquals(array(), $this->driver->peekQueue('import-users'));
+        $this->messages->expects($this->once())
+            ->method('find')
+            ->with(array('queue' => 'foo', 'visible' => true), array('_id' => 0, 'message' => 1))
+            ->will($this->returnValue($cursor));
+
+        $cursor->expects($this->at(0))
+            ->method('sort')
+            ->with(array('sentAt' => 1))
+            ->will($this->returnValue($cursor));
+
+        $cursor->expects($this->at(1))
+            ->method('limit')
+            ->with(20)
+            ->will($this->returnValue($cursor));
+
+        /* Rather than mock MongoCursor's iterator interface, take advantage of
+         * the final fluent method call and return an ArrayIterator. */
+        $cursor->expects($this->at(2))
+            ->method('skip')
+            ->with(0)
+            ->will($this->returnValue(new ArrayIterator(array(
+                array('message' => 'message1'),
+                array('message' => 'message2'),
+            ))));
+
+        $this->assertSame(array('message1', 'message2'), $this->driver->peekQueue('foo'));
+    }
+
+    public function testRemoveQueue()
+    {
+        $this->queues->expects($this->once())
+            ->method('remove')
+            ->with(array('_id' => 'foo'));
+
+        $this->messages->expects($this->once())
+            ->method('remove')
+            ->with(array('queue' => 'foo'));
+
+        $this->driver->removeQueue('foo');
     }
 
     public function testInfo()
     {
-        $params = array('db' => 'bernardQueueTest', 'type' => 'MongoDB');
+        $this->queues->expects($this->once())
+            ->method('__toString')
+            ->will($this->returnValue('db.queues'));
 
-        $this->assertEquals($params, $this->driver->info());
+        $this->messages->expects($this->once())
+            ->method('__toString')
+            ->will($this->returnValue('db.messages'));
+
+        $info = array(
+            'messages' => 'db.messages',
+            'queues' => 'db.queues',
+        );
+
+        $this->assertSame($info, $this->driver->info());
     }
 
-    protected function assertSimilarArrays($expected, $actual, $message = '')
+    private function getMockMongoCollection()
     {
-        $this->assertTrue(count($expected) == count(array_intersect($expected, $actual)), $message);
-    }
-
-    protected function setUpDatabase()
-    {
-        $client = new \MongoClient();
-
-        return $client->selectDB('bernardQueueTest');
+        return $this->getMockBuilder('MongoCollection')
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 }

@@ -2,6 +2,10 @@
 
 namespace Bernard\Driver;
 
+use MongoCollection;
+use MongoDate;
+use MongoId;
+
 /**
  * Driver supporting MongoDB
  *
@@ -9,18 +13,19 @@ namespace Bernard\Driver;
  */
 class MongoDBDriver implements \Bernard\Driver
 {
-    protected $db;
-    protected $collection;
-    protected $queueCollection;
+    private $messages;
+    private $queues;
 
     /**
-     * {@inheritDoc}
+     * Constructor.
+     *
+     * @param MongoCollection $queues   Collection where queues will be stored
+     * @param MongoCollection $messages Collection where messages will be stored
      */
-    public function __construct(\MongoDB $db)
+    public function __construct(MongoCollection $queues, MongoCollection $messages)
     {
-        $this->db = $db;
-        $this->collection = $db->selectCollection('bernardMessages');
-        $this->queueCollection = $db->selectCollection('bernardQueues');
+        $this->queues = $queues;
+        $this->messages = $messages;
     }
 
     /**
@@ -28,7 +33,7 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function listQueues()
     {
-        return $this->queueCollection->distinct('queue');
+        return $this->queues->distinct('_id');
     }
 
     /**
@@ -36,8 +41,9 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function createQueue($queueName)
     {
-        $query = array('queue' => $queueName);
-        $this->queueCollection->update($query, $query, array('upsert' => true));
+        $data = array('_id' => (string) $queueName);
+
+        $this->queues->update($data, $data, array('upsert' => true));
     }
 
     /**
@@ -45,7 +51,10 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        return $this->collection->count(array('queue' => $queueName));
+        return $this->messages->count(array(
+            'queue' => (string) $queueName,
+            'visible' => true,
+        ));
     }
 
     /**
@@ -54,13 +63,13 @@ class MongoDBDriver implements \Bernard\Driver
     public function pushMessage($queueName, $message)
     {
         $data = array(
-            'queue'   => $queueName,
-            'message' => $message,
-            'sentAt'  => microtime(),
+            'queue'   => (string) $queueName,
+            'message' => (string) $message,
+            'sentAt'  => new MongoDate(),
             'visible' => true,
         );
 
-        $this->collection->insert($data);
+        $this->messages->insert($data);
     }
 
     /**
@@ -69,18 +78,23 @@ class MongoDBDriver implements \Bernard\Driver
     public function popMessage($queueName, $interval = 5)
     {
         $runtime = microtime(true) + $interval;
-        $query = array('queue' => $queueName, 'visible' => true);
-        $update = array('$set' => array('visible' => false));
-        $options = array('sort' => array('sentAt' => 1), 'new' => true);
 
         while (microtime(true) < $runtime) {
-            if ($result = $this->collection->findAndModify($query, $update, array(), $options)) {
-                return array($result['message'], (string) $result['_id']);
+            $result = $this->messages->findAndModify(
+                array('queue' => (string) $queueName, 'visible' => true),
+                array('$set' => array('visible' => false)),
+                array('message' => 1),
+                array('sort' => array('sentAt' => 1))
+            );
+
+            if ($result) {
+                return array((string) $result['message'], (string) $result['_id']);
             }
 
-            //sleep for 10 ms
             usleep(10000);
         }
+
+        return array(null, null);
     }
 
     /**
@@ -88,7 +102,10 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
-        $this->collection->remove(array('_id' => new \MongoId($receipt)));
+        $this->messages->remove(array(
+            '_id' => new MongoId((string) $receipt),
+            'queue' => (string) $queueName,
+        ));
     }
 
     /**
@@ -96,21 +113,19 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        $query = array(
-            '$orderby'  => array('sentAt' => 1),
-            '$query' => array('queue' => $queueName, 'visible' => true),
-        );
-        $fields = array(
-            'message' => 1,
-            '_id' => 0,
-        );
-
-        $cursor = $this->collection->find($query, $fields)
+        $cursor = $this->messages->find(
+                array('queue' => (string) $queueName, 'visible' => true),
+                array('_id' => 0, 'message' => 1)
+            )
+            ->sort(array('sentAt' => 1))
             ->limit($limit)
             ->skip($index)
         ;
 
-        return array_map(function ($item) { return $item['message']; }, iterator_to_array($cursor));
+        return array_map(
+            function ($result) { return (string) $result['message']; },
+            iterator_to_array($cursor, false)
+        );
     }
 
     /**
@@ -118,8 +133,8 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function removeQueue($queueName)
     {
-        $this->collection->remove(array('queue' => $queueName));
-        $this->queueCollection->remove(array('queue' => $queueName));
+        $this->queues->remove(array('_id' => $queueName));
+        $this->messages->remove(array('queue' => (string) $queueName));
     }
 
     /**
@@ -128,8 +143,8 @@ class MongoDBDriver implements \Bernard\Driver
     public function info()
     {
         return array(
-            'db' => (string) $this->db,
-            'type' => 'MongoDB',
+            'messages' => (string) $this->messages,
+            'queues' => (string) $this->queues,
         );
     }
 }
