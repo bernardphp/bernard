@@ -27,8 +27,7 @@
         "doctrine/dbal"                : "~2.3",
         "iron-io/iron_mq"              : "~1.4",
         "aws/aws-sdk-php"              : "~2.4",
-        "pda/pheanstalk"               : "~3.0",
-        "ext-mongo"                    : ">=1.2.12,<1.6-dev"
+        "pda/pheanstalk"               : "~3.0"
     },
 
     "extra" : {
