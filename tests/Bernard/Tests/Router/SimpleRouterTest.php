@@ -55,10 +55,12 @@ class SimpleRouterTest extends \PHPUnit_Framework_TestCase
 
     public function provideCallable()
     {
+        $callable = function () {};
+
         return array(
             array('Bernard\Tests\Fixtures\Service', array('Bernard\Tests\Fixtures\Service', 'sendNewsletter')),
             array('var_dump', 'var_dump'),
-            array(function () {}, function () {}),
+            array($callable, $callable),
             array(new \stdClass, array(new \stdClass, 'sendNewsletter'))
         );
     }

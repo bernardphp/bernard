@@ -15,6 +15,9 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()->getMock();
     }
 
+    /**
+     * @medium
+     */
     public function testItConsumes()
     {
         $command = new ConsumeCommand($this->consumer, $this->queues);
