@@ -84,6 +84,9 @@ class MongoDBDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('000000000000000000000000', $receipt);
     }
 
+    /**
+     * @medium
+     */
     public function testPopMessageWithMissingMessage()
     {
         $this->messages->expects($this->atLeastOnce())
@@ -96,7 +99,7 @@ class MongoDBDriverTest extends \PHPUnit_Framework_TestCase
             )
             ->will($this->returnValue(false));
 
-        list($message, $receipt) = $this->driver->popMessage('foo');
+        list($message, $receipt) = $this->driver->popMessage('foo', 1);
         $this->assertNull($message);
         $this->assertNull($receipt);
     }

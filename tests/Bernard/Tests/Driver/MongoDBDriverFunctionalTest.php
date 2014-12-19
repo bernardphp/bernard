@@ -48,6 +48,7 @@ class MongoDBDriverFunctionalTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @medium
      * @covers ::acknowledgeMessage()
      * @covers ::countMessages()
      * @covers ::popMessage()
@@ -73,7 +74,7 @@ class MongoDBDriverFunctionalTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('/^[a-f\d]{24}$/i', $receipt2, 'The message receipt is an ObjectId');
         $this->assertEquals(0, $this->driver->countMessages('foo'));
 
-        list($message3, $receipt3) = $this->driver->popMessage('foo');
+        list($message3, $receipt3) = $this->driver->popMessage('foo', 1);
         $this->assertNull($message3, 'Null message is returned when popping an empty queue');
         $this->assertNull($receipt3, 'Null receipt is returned when popping an empty queue');
 
