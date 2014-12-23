@@ -9,6 +9,7 @@ Several different types of drivers are supported. Currently these are available:
 * `IronMQ`_
 * `Amazon SQS`_
 * `Google AppEngine`_
+* `MongoDB`_
 
 Redis Extension
 ---------------
@@ -347,3 +348,45 @@ Requires the installation of pda/pheanstalk. Add the following to your
     $pheanstalk = new Pheanstalk('localhost');
 
     $driver = new PheanstalkDriver($pheanstalk);
+
+MongoDB
+-------
+
+The MongoDB driver requires the `mongo PECL extension <http://pecl.php.net/package/mongo>`_.
+On platforms where the PECL extension is unavailable, such as HHVM,
+`mongofill <https://github.com/mongofill/mongofill>`_ may be used instead.
+
+The driver should be constructed with two MongoCollection objects, which
+corresponding to the queue and message collections, respectively.
+
+.. code-block:: php
+
+    <?php
+
+    $mongoClient = new \MongoClient();
+    $driver = new \Bernard\Driver\MongoDBDriver(
+        $mongoClient->selectCollection('bernardDatabase', 'queues'),
+        $mongoClient->selectCollection('bernardDatabase', 'messages'),
+    );
+
+.. note::
+
+    If you are using Doctrine MongoDB or the ODM, you can access the
+    MongoCollection objects through the ``getMongoCollection()`` method on the
+    ``Doctrine\MongoDB\Collection`` wrapper class, which in turn may be
+    retrieved from a ``Doctrine\MongoDB\Database`` wrapper or DocumentManager
+    directly.
+
+To support message queries, the following index should also be created:
+
+.. code-block:: php
+
+    <?php
+
+    $mongoClient = new \MongoClient();
+    $collection = $mongoClient->selectCollection('bernardDatabase', 'messages');
+    $collection->createIndex([
+        'queue' => 1,
+        'visible' => 1,
+        'sentAt' => 1,
+    ]);
