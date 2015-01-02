@@ -5,7 +5,7 @@ namespace Bernard\Tests\Driver;
 use Bernard\Driver\MongoDBDriver;
 use MongoClient;
 use MongoCollection;
-use MongoException;
+use MongoConnectionException;
 
 /**
  * @coversDefaultClass Bernard\Driver\MongoDBDriver
