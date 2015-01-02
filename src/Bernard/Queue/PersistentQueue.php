@@ -82,7 +82,7 @@ class PersistentQueue extends AbstractQueue
         if ($this->receipts->contains($envelope)) {
             $this->driver->acknowledgeMessage($this->name, $this->receipts[$envelope]);
 
-            unset($this->receipts[$envelope]);
+            $this->receipts->detach($envelope);
         }
     }
 
@@ -102,7 +102,7 @@ class PersistentQueue extends AbstractQueue
         if ($serialized) {
             $envelope = $this->serializer->unserialize($serialized);
 
-            $this->receipts[$envelope] = $receipt;
+            $this->receipts->attach($envelope, $receipt);
 
             return $envelope;
         }
