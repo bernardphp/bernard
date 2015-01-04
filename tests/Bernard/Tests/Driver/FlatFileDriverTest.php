@@ -76,7 +76,9 @@ class FlatFileDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->driver->pushMessage('send-newsletter', 'job #1');
 
-        $this->driver->acknowledgeMessage('send-newsletter', '1.job');
+        $message = $this->driver->popMessage('send-newsletter');
+
+        $this->driver->acknowledgeMessage('send-newsletter', $message[1]);
 
         $this->assertCount(0, glob($this->baseDir.'/send-newsletter/*.job'));
     }

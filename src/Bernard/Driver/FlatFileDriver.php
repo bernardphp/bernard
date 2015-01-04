@@ -113,7 +113,7 @@ class FlatFileDriver implements \Bernard\Driver
     public function acknowledgeMessage($queueName, $receipt)
     {
         $queueDir = $this->getQueueDirectory($queueName);
-        $path = $queueDir.DIRECTORY_SEPARATOR.$receipt;
+        $path = $queueDir.DIRECTORY_SEPARATOR.$receipt.'.proceed';
 
         if (!is_file($path)) {
             return;
