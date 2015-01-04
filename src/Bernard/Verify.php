@@ -2,30 +2,15 @@
 
 namespace Bernard;
 
+use Assert\Assertion;
+
 /**
  * Verify class that throws exception when assertion isn't fulfilled.
  *
  * @package Bernard
  */
-final class Verify
+final class Verify extends Assertion
 {
-    /**
-     * Check the two values are equal
-     *
-     * @param mixed $first
-     * @param mixed $second
-     *
-     * @throws InvalidArgumentException If the two values are not equal
-     */
-    public static function eq($first, $second)
-    {
-        if ($first == $second) {
-            return;
-        }
-
-        throw new \InvalidArgumentException(sprintf('Expected "%s" to equal "%s".', $first, $second));
-    }
-
     /**
      * Check if a value is part of an array
      *
@@ -36,11 +21,7 @@ final class Verify
      */
     public static function any($needle, array $haystack)
     {
-        if (in_array($needle, $haystack, true)) {
-            return;
-        }
-
-        throw new \InvalidArgumentException(sprintf('Expected "%s" to one of ["%s"].', $needle, implode('", "', $haystack)));
+        self::choice($needle, $haystack, 'Expected "%s" to one of ["%s"].');
     }
 
     /**
@@ -57,22 +38,5 @@ final class Verify
         }
 
         throw new \InvalidArgumentException('Argument must be a "callable".');
-    }
-
-    /**
-     * Check if an object is instance of the passed name
-     *
-     * @param object $object
-     * @param string $name
-     *
-     * @throws InvalidArgumentException If the object is not an instance of the passed name
-     */
-    public static function isInstanceOf($object, $name)
-    {
-        if (is_a($object, $name)) {
-            return;
-        }
-
-        throw new \InvalidArgumentException(sprintf('Expected instance of "%s" but got "%s".', $name, get_class($object)));
     }
 }
