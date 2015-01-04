@@ -29,9 +29,7 @@ class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements Nor
      */
     public function denormalize($data, $class, $format = null, array $context = array())
     {
-        Assertion::notEmptyKey($data, 'message');
-        Assertion::notEmptyKey($data, 'class');
-        Assertion::notEmptyKey($data, 'timestamp');
+        Assertion::choicesNotEmpty($data, array('message', 'class', 'timestamp'));
 
         Assertion::classExists($data['class']);
 

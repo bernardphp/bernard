@@ -28,8 +28,7 @@ class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInter
      */
     public function denormalize($data, $class, $format = null, array $context = array())
     {
-        Assertion::notEmptyKey($data, 'name');
-        Assertion::notEmptyKey($data, 'arguments');
+        Assertion::choicesNotEmpty($data, array('name', 'arguments'));
 
         return new DefaultMessage($data['name'], $data['arguments']);
     }
