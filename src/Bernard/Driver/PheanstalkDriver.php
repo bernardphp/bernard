@@ -59,7 +59,7 @@ class PheanstalkDriver implements \Bernard\Driver
     public function popMessage($queueName, $interval = 5)
     {
         if ($job = $this->pheanstalk->reserveFromTube($queueName, $interval)) {
-            return array($job->getData(), $job->getId());
+            return array($job->getData(), $job);
         }
 
         return array(null, null);
@@ -70,7 +70,6 @@ class PheanstalkDriver implements \Bernard\Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
-        $receipt = new Job($receipt, null);
         $this->pheanstalk->delete($receipt);
     }
 

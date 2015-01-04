@@ -65,7 +65,7 @@ class PheanstalkDriverTest extends \PHPUnit_Framework_TestCase
         $this->pheanstalk->expects($this->once())->method('delete')
             ->with($this->isInstanceOf('Pheanstalk\Job'));
 
-        $this->driver->acknowledgeMessage('my-queue', 'receipt1');
+        $this->driver->acknowledgeMessage('my-queue', new Job(1, null));
     }
 
     public function testItPeeksInAQueue()
@@ -89,20 +89,20 @@ class PheanstalkDriverTest extends \PHPUnit_Framework_TestCase
             ->expects($this->at(0))
             ->method('reserveFromTube')
             ->with($this->equalTo('my-queue1'), $this->equalTo(5))
-            ->will($this->returnValue(new Job(1, 'message1')));
+            ->will($this->returnValue($job1 = new Job(1, 'message1')));
         $this->pheanstalk
             ->expects($this->at(1))
             ->method('reserveFromTube')
             ->with($this->equalTo('my-queue2'), $this->equalTo(5))
-            ->will($this->returnValue(new Job(2, 'message2')));
+            ->will($this->returnValue($job2 = new Job(2, 'message2')));
         $this->pheanstalk
             ->expects($this->at(1))
             ->method('reserveFromTube')
             ->with($this->equalTo('my-queue2'), $this->equalTo(5))
             ->will($this->returnValue(null));
 
-        $this->assertEquals(array('message1', 1), $this->driver->popMessage('my-queue1'));
-        $this->assertEquals(array('message2', 2), $this->driver->popMessage('my-queue2'));
+        $this->assertEquals(array('message1', $job1), $this->driver->popMessage('my-queue1'));
+        $this->assertEquals(array('message2', $job2), $this->driver->popMessage('my-queue2'));
         $this->assertEquals(array(null, null), $this->driver->popMessage('my-queue2'));
     }
 }
