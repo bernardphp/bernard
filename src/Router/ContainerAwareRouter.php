@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ContainerAwareRouter extends SimpleRouter
 {
+    private $container;
+
     /**
      * @param ContainerInterface $container
      * @param array              $receivers
