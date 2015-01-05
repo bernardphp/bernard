@@ -28,8 +28,10 @@ class PheanstalkDriverTest extends \PHPUnit_Framework_TestCase
     {
         $driver = new PheanstalkDriver($this->pheanstalk);
 
+        $info = new \ArrayObject(array('info' => true));
+
         $this->pheanstalk->expects($this->once())->method('stats')
-            ->will($this->returnValue(array('info' => true)));
+            ->will($this->returnValue($info));
 
         $this->assertEquals(array('info' => true), $driver->info());
     }

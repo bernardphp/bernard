@@ -91,6 +91,9 @@ class PheanstalkDriver implements \Bernard\Driver
      */
     public function info()
     {
-        return $this->pheanstalk->stats();
+        return $this->pheanstalk
+            ->stats()
+            ->getArrayCopy()
+        ;
     }
 }
