@@ -1,13 +1,13 @@
 <?php
 
-namespace Bernard\Pimple;
+namespace Bernard\Router;
 
 use Pimple;
 
 /**
  * @package Bernard
  */
-class PimpleAwareRouter extends \Bernard\Router\SimpleRouter
+class PimpleAwareRouter extends SimpleRouter
 {
     protected $pimple;
 
