@@ -3,7 +3,6 @@
 namespace spec\Bernard\EventListener;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 class ErrorLogSubscriberSpec extends ObjectBehavior
 {

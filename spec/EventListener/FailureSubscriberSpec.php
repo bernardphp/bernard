@@ -7,7 +7,6 @@ use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Envelope;
 use Bernard\Queue;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 class FailureSubscriberSpec extends ObjectBehavior
 {
