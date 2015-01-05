@@ -115,11 +115,16 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        $query = 'SELECT message FROM bernard_messages WHERE queue = ? ORDER BY sentAt, id LIMIT ' . $limit . ' OFFSET ' . $index;
+        $parameters = array($queueName, $limit, $index);
+        $types = array('string', 'integer', 'integer');
 
-        $statement = $this->connection->executeQuery($query, array($queueName), array('string'));
+        $query = 'SELECT message FROM bernard_messages WHERE queue = ? ORDER BY sentAt, id LIMIT ? OFFSET ?';
 
-        return $statement->fetchAll(\PDO::FETCH_COLUMN);
+        return $this
+            ->connection
+            ->executeQuery($query, $parameters, $types)
+            ->fetchAll(\PDO::FETCH_COLUMN)
+        ;
     }
 
     /**
