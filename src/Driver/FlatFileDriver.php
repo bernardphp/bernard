@@ -189,7 +189,6 @@ class FlatFileDriver implements \Bernard\Driver
     private function getJobFilename($queueName)
     {
         $path = $this->baseDirectory.'/bernard.meta';
-        $meta = array();
 
         if (!is_file($path)) {
             touch($path);
