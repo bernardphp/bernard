@@ -1,10 +1,10 @@
 <?php
 
-namespace Bernard\Tests\Pimple;
+namespace Bernard\Tests\Router;
 
 use Bernard\Envelope;
 use Bernard\Message\DefaultMessage;
-use Bernard\Pimple\PimpleAwareRouter;
+use Bernard\Router\PimpleAwareRouter;
 use Pimple;
 
 class PimpleAwareRouterTest extends \PHPUnit_Framework_TestCase

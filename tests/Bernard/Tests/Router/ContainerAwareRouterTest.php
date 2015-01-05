@@ -1,10 +1,10 @@
 <?php
 
-namespace Bernard\Tests\Symfony;
+namespace Bernard\Tests\Router;
 
 use Bernard\Envelope;
 use Bernard\Message\DefaultMessage;
-use Bernard\Symfony\ContainerAwareRouter;
+use Bernard\Router\ContainerAwareRouter;
 use Symfony\Component\DependencyInjection\Container;
 
 class ContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
