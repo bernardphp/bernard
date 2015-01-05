@@ -9,7 +9,7 @@
     },
 
     "autoload-dev" : {
-        "psr-4" : { "Bernard\\Tests\\" : "tests/Bernard/Tests" }
+        "psr-4" : { "Bernard\\Tests\\" : "tests/" }
     },
 
     "require" : {
