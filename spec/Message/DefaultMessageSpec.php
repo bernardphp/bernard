@@ -42,4 +42,11 @@ class DefaultMessageSpec extends ObjectBehavior
         $this->__get('newsletterId')->shouldReturn(10);
         $this->has('newsletterId')->shouldReturn(true);
     }
+
+    function it_throws_an_exception_when_trying_to_modify_a_property()
+    {
+        $this->shouldThrow('LogicException')->duringOffsetSet('property', 'value');
+        $this->shouldThrow('LogicException')->during__set('property', 'value');
+        $this->shouldThrow('LogicException')->duringOffsetUnset('property');
+    }
 }
