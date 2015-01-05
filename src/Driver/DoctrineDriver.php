@@ -54,6 +54,8 @@ class DoctrineDriver implements \Bernard\Driver
             'queue' => $queueName,
             'visible' => true,
         ));
+
+        return (integer) $this->connection->fetchColumn($query, array('queue' => $queueName));
     }
 
     /**
