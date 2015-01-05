@@ -74,7 +74,8 @@ class InMemoryQueueSpec extends ObjectBehavior
         $this->count()->shouldReturn(2);
 
         $this->peek()->shouldReturn(array($first, $second));
-        $this->peek(2)->shouldReturn(array($second));
-        $this->peek(1, 1)->shouldReturn(array($first));
+        $this->peek(1)->shouldReturn(array($second));
+        $this->peek(0, 1)->shouldReturn(array($first));
+        $this->peek(2)->shouldReturn(array());
     }
 }
