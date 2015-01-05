@@ -29,7 +29,7 @@ class Producer
      */
     public function produce(Message $message, $queueName = null)
     {
-        $queueName = $queueName ?: bernard_guess_queue($message);
+        $queueName = $queueName ?: Util::guessQueue($message);
 
         $queue = $this->queues->create($queueName);
         $queue->enqueue($envelope = new Envelope($message));

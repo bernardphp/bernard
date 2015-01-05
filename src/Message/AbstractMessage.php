@@ -3,6 +3,7 @@
 namespace Bernard\Message;
 
 use Bernard\Message;
+use Bernard\Util;
 
 /**
  * @package Bernard
@@ -28,6 +29,6 @@ abstract class AbstractMessage implements Message
      */
     public function getQueue()
     {
-        return trim(strtolower(preg_replace('/[A-Z]/', '-\\0', $this->getName())), '-');
+        return Util::guessQueue($this);
     }
 }
