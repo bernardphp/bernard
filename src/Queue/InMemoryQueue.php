@@ -64,7 +64,7 @@ class InMemoryQueue extends AbstractQueue
     /**
      * {@inheritDoc}
      */
-    public function peek($index = 1, $limit = 20)
+    public function peek($index = 0, $limit = 20)
     {
         $this->errorIfClosed();
 
