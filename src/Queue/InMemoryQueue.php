@@ -70,9 +70,9 @@ class InMemoryQueue extends AbstractQueue
 
         $envelopes = array();
         $queue = clone $this->queue;
-        $key = -1;
+        $key = 0;
 
-        while ($this->count() && count($envelopes) < $limit && $envelope = $queue->dequeue()) {
+        while ($queue->count() && count($envelopes) < $limit && $envelope = $queue->dequeue()) {
             if ($key++ < $index) {
                 continue;
             }

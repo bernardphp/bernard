@@ -32,7 +32,7 @@ class InMemoryQueueTest extends AbstractQueueTest
         $queue->enqueue($envelope3 = $this->getEnvelope());
 
         $this->assertCount(4, $queue);
-        $this->assertEquals(array(
+        $this->assertSame(array(
             $envelope1,
             $envelope2,
         ), $queue->peek(1, 2));
