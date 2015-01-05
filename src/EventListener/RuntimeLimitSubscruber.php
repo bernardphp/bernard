@@ -12,6 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RuntimeLimitSubscriber implements EventSubscriberInterface
 {
     protected $timeLimit;
+    protected $initialized = false;
 
     /**
      * @param integer $timeLimit
@@ -28,19 +29,13 @@ class RuntimeLimitSubscriber implements EventSubscriberInterface
      */
     public function onCycle(ConsumerCycleEvent $event)
     {
+        if (!$this->initialized) {
+            $this->timeLimit += microtime(true);
+            $this->initialized = true;
+        }
         if ($this->timeLimit <= microtime(true)) {
             $event->shutdown();
         }
-    }
-
-    /**
-     * Counts an invoke
-     *
-     * @param Event $event
-     */
-    public function onStart(Event $event)
-    {
-        $this->timeLimit += microtime(true);
     }
 
     /**
@@ -50,7 +45,6 @@ class RuntimeLimitSubscriber implements EventSubscriberInterface
     {
         return array(
             'bernard.cycle' => array('onCycle'),
-            'bernard.start' => array('onStart'),
         );
     }
 }

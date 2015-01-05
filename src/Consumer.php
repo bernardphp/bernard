@@ -37,7 +37,6 @@ class Consumer
     public function consume(Queue $queue)
     {
         $this->bind();
-        $this->dispatcher->dispatch('bernard.start');
 
         while ($this->consume) {
             if ($envelope = $queue->dequeue()) {
