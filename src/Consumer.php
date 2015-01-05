@@ -5,6 +5,7 @@ namespace Bernard;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\RejectEnvelopeEvent;
+use Bernard\Event\ConsumerCycleEvent;
 
 declare(ticks=1);
 
@@ -15,12 +16,7 @@ class Consumer
 {
     protected $router;
     protected $dispatcher;
-    protected $shutdown = false;
-    protected $configured = false;
-    protected $options = array(
-        'max-runtime'  => PHP_INT_MAX,
-        'max-messages' => null,
-    );
+    protected $listen = true;
 
     /**
      * @param Router                   $router
@@ -38,48 +34,18 @@ class Consumer
      * @param Queue $queue
      * @param array $options
      */
-    public function consume(Queue $queue, array $options = array())
+    public function consume(Queue $queue)
     {
         $this->bind();
+        $this->dispatcher->dispatch('bernard.start');
 
-        while ($this->tick($queue, $options)) {
-            // NO op
+        while ($this->listen) {
+            if ($envelope = $queue->dequeue()) {
+                $this->invoke($envelope, $queue);
+            }
+
+            $this->dispatcher->dispatch('bernard.cycle', new ConsumerCycleEvent($this));
         }
-    }
-
-    /**
-     * Returns true do indicate it should be run again or false to indicate
-     * it should not be run again.
-     *
-     * @param Queue $queue
-     * @param array $options
-     *
-     * @return boolean
-     */
-    public function tick(Queue $queue, array $options = array())
-    {
-        $this->configure($options);
-
-        if ($this->shutdown) {
-            return false;
-        }
-
-        if (microtime(true) > $this->options['max-runtime']) {
-            return false;
-        }
-
-        if (!$envelope = $queue->dequeue()) {
-            return true;
-        }
-
-
-        $this->invoke($envelope, $queue);
-
-        if (null === $this->options['max-messages']) {
-            return true;
-        }
-
-        return (boolean) --$this->options['max-messages'];
     }
 
     /**
@@ -87,7 +53,7 @@ class Consumer
      */
     public function shutdown()
     {
-        $this->shutdown = true;
+        $this->listen = false;
     }
 
     /**
@@ -116,20 +82,6 @@ class Consumer
             // Emit an event to let others log that exception
             $this->dispatcher->dispatch('bernard.reject', new RejectEnvelopeEvent($envelope, $queue, $e));
         }
-    }
-
-    /**
-     * @param array $options
-     */
-    protected function configure(array $options)
-    {
-        if ($this->configured) {
-            return $this->options;
-        }
-
-        $this->options = array_filter($options) + $this->options;
-        $this->options['max-runtime'] += microtime(true);
-        $this->configured = true;
     }
 
     /**
