@@ -12,7 +12,7 @@ interface Router
      *
      * @param Envelope $envelope
      *
-     * @return array
+     * @return callable
      *
      * @throws ReceiverNotFoundException
      */
