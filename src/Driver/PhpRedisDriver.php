@@ -84,7 +84,9 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function acknowledgeMessage($queueName, $receipt) { }
+    public function acknowledgeMessage($queueName, $receipt)
+    {
+    }
 
     /**
      * {@inheritDoc}
