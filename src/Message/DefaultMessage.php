@@ -64,9 +64,15 @@ class DefaultMessage extends AbstractMessage implements ArrayAccess
         return $this->offsetExists($offset) ? $this->arguments[$offset] : null;
     }
 
-    public function offsetSet($offset, $value) { }
+    public function offsetSet($offset, $value)
+    {
+        throw new \LogicException('Message is immutable');
+    }
 
-    public function offsetUnset($offset) { }
+    public function offsetUnset($offset)
+    {
+        throw new \LogicException('Message is immutable');
+    }
 
     /**
      * {@inheritDoc}
