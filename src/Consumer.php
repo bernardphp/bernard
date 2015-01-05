@@ -16,7 +16,7 @@ class Consumer
 {
     protected $router;
     protected $dispatcher;
-    protected $listen = true;
+    protected $consume = true;
 
     /**
      * @param Router                   $router
@@ -39,7 +39,7 @@ class Consumer
         $this->bind();
         $this->dispatcher->dispatch('bernard.start');
 
-        while ($this->listen) {
+        while ($this->consume) {
             if ($envelope = $queue->dequeue()) {
                 $this->invoke($envelope, $queue);
             }
@@ -53,7 +53,7 @@ class Consumer
      */
     public function shutdown()
     {
-        $this->listen = false;
+        $this->consume = false;
     }
 
     /**
