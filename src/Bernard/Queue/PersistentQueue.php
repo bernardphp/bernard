@@ -95,10 +95,6 @@ class PersistentQueue extends AbstractQueue
 
         list($serialized, $receipt) = $this->driver->popMessage($this->name);
 
-        if (!$serialized) {
-            return;
-        }
-
         if ($serialized) {
             $envelope = $this->serializer->unserialize($serialized);
 
