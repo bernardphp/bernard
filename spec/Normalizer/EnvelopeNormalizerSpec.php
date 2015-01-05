@@ -60,7 +60,7 @@ class EnvelopeNormalizerSpec extends ObjectBehavior
 
     function it_supports_denormalization_of_an_envelope()
     {
-        $this->supportsDenormalization([], 'Bernard\Envelope')->shouldReturn(true);
+        $this->supportsDenormalization(array(), 'Bernard\Envelope')->shouldReturn(true);
     }
 
     function it_supports_normalization_of_an_envelope(Envelope $envelope)

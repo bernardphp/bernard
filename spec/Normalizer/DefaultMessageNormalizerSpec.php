@@ -45,7 +45,7 @@ class DefaultMessageNormalizerSpec extends ObjectBehavior
 
     function it_supports_denormalization_of_a_default_message()
     {
-        $this->supportsDenormalization([], 'Bernard\Message\DefaultMessage')->shouldReturn(true);
+        $this->supportsDenormalization(array(), 'Bernard\Message\DefaultMessage')->shouldReturn(true);
     }
 
     function it_supports_normalization_of_a_default_message(DefaultMessage $message)
