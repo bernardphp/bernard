@@ -139,6 +139,6 @@ class Consumer
     {
         pcntl_signal(SIGTERM, array($this, 'shutdown'));
         pcntl_signal(SIGQUIT, array($this, 'shutdown'));
-        pcntl_signal(SIGINT,  array($this, 'shutdown'));
+        pcntl_signal(SIGINT, array($this, 'shutdown'));
     }
 }

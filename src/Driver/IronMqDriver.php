@@ -50,7 +50,9 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * {@inheritDoc}
      */
-    public function createQueue($queueName) { }
+    public function createQueue($queueName)
+    {
+    }
 
     /**
      * {@inheritDoc}
@@ -79,9 +81,9 @@ class IronMqDriver extends AbstractPrefetchDriver
             return $message;
         }
 
-        $messages = $this->ironmq->getMessages(
-            $queueName, $this->prefetch, IronMQ::GET_MESSAGE_TIMEOUT, $interval
-        );
+        $timeout = IronMQ::GET_MESSAGE_TIMEOUT;
+
+        $messages = $this->ironmq->getMessages($queueName, $this->prefetch, $timeout, $interval);
 
         if (!$messages) {
             return array(null, null);

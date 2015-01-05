@@ -34,12 +34,16 @@ class AppEngineDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function createQueue($queueName) { }
+    public function createQueue($queueName)
+    {
+    }
 
     /**
      * {@inheritDoc}
      */
-    public function countMessages($queueName) { }
+    public function countMessages($queueName)
+    {
+    }
 
     /**
      * {@inheritDoc}
@@ -53,17 +57,23 @@ class AppEngineDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = 5) { }
+    public function popMessage($queueName, $interval = 5)
+    {
+    }
 
     /**
      * {@inheritDoc}
      */
-    public function acknowledgeMessage($queueName, $receipt) { }
+    public function acknowledgeMessage($queueName, $receipt)
+    {
+    }
 
     /**
      * {@inheritDoc}
      */
-    public function removeQueue($queueName) { }
+    public function removeQueue($queueName)
+    {
+    }
 
     /**
      * {@inheritDoc}

@@ -113,19 +113,21 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        $cursor = $this->messages->find(
-                array('queue' => (string) $queueName, 'visible' => true),
-                array('_id' => 0, 'message' => 1)
-            )
+        $query = array('queue' => (string) $queueName, 'visible' => true);
+        $fields = array('_id' => 0, 'message' => 1);
+
+        $cursor = $this->messages
+            ->find($query, $fields)
             ->sort(array('sentAt' => 1))
             ->limit($limit)
             ->skip($index)
         ;
 
-        return array_map(
-            function ($result) { return (string) $result['message']; },
-            iterator_to_array($cursor, false)
-        );
+        $mapper = function ($result) {
+            return (string) $result['message'];
+        };
+
+        return array_map($mapper, iterator_to_array($cursor, false));
     }
 
     /**

@@ -33,7 +33,9 @@ class PheanstalkDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function createQueue($queueName) { }
+    public function createQueue($queueName)
+    {
+    }
 
     /**
      * {@inheritDoc}
@@ -84,7 +86,9 @@ class PheanstalkDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function removeQueue($queueName) { }
+    public function removeQueue($queueName)
+    {
+    }
 
     /**
      * {@inheritDoc}
