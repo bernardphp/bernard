@@ -21,7 +21,7 @@ class PimpleAwareRouterTest extends \PHPUnit_Framework_TestCase
 
     public function testUndefinedServicesAreNotAccepted()
     {
-        $this->setExpectedException('Bernard\Exception\ReceiverNotFoundException');
+        $this->setExpectedException('InvalidArgumentException');
 
         $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
 

@@ -42,15 +42,13 @@ class SimpleRouter implements \Bernard\Router
      */
     public function map(Envelope $envelope)
     {
-        if (!isset($this->receivers[$name = $envelope->getName()])) {
+        $receiver = $this->get($envelope->getName());
+
+        if (false == $receiver) {
             throw new ReceiverNotFoundException();
         }
 
-        if (!$receiver = $this->get($name)) {
-            throw new ReceiverNotFoundException();
-        }
-
-        if (is_callable($receiver = $this->get($name))) {
+        if (is_callable($receiver)) {
             return $receiver;
         }
 
@@ -74,6 +72,6 @@ class SimpleRouter implements \Bernard\Router
      */
     protected function get($name)
     {
-        return $this->receivers[$name];
+        return isset($this->receivers[$name]) ? $this->receivers[$name] : null;
     }
 }

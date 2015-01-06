@@ -15,17 +15,16 @@ class ContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
         $this->container->set('my.service', function () {
             return 'var_dump';
         });
-
-        $this->router = new ContainerAwareRouter($this->container);
     }
 
     public function testUndefinedServicesAreNotAccepted()
     {
-        $this->setExpectedException('Bernard\Exception\ReceiverNotFoundException');
+        $this->setExpectedException('Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException');
 
         $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
 
-        $this->router->map($envelope);
+        $router = new ContainerAwareRouter($this->container);
+        $router->map($envelope);
     }
 
     public function testAcceptsInConstructor()
@@ -40,7 +39,10 @@ class ContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
     {
         $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
 
-        $this->router->add('SendNewsletter', 'my.service');
-        $this->assertSame($this->container->get('my.service'), $this->router->map($envelope));
+        $router = new ContainerAwareRouter($this->container, array(
+            'SendNewsletter' => 'my.service',
+        ));
+
+        $this->assertSame($this->container->get('my.service'), $router->map($envelope));
     }
 }
