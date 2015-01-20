@@ -7,8 +7,9 @@ use Bernard\Driver\DoctrineDriver;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Platforms\MySqlPlatform;
 
-class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -16,8 +17,28 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Doctrine have incompatibility issues with HHVM.');
         }
 
+        if (!$this->isSupported()) {
+            $this->markTestSkipped('The driver isn\'t installed on your machine');
+        }
+
         $this->connection = $this->setUpDatabase();
         $this->driver = new DoctrineDriver($this->connection);
+    }
+
+    protected function tearDown()
+    {
+        if ($this->connection->getDatabasePlatform() instanceof MySqlPlatform) {
+            $this->connection->exec('SET FOREIGN_KEY_CHECKS = 0');
+        }
+
+        foreach ($this->connection->getSchemaManager()->listTables() as $table) {
+            $sql = $this->connection->getDatabasePlatform()->getDropTableSQL($table->getName());
+            $this->connection->exec($sql);
+        }
+
+        if ($this->connection->getDatabasePlatform() instanceof MySqlPlatform) {
+            $this->connection->exec('SET FOREIGN_KEY_CHECKS = 0');
+        }
     }
 
     public function testPopMessageWithInterval()
@@ -109,14 +130,7 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->driver->removeQueue('import');
 
         $this->assertEquals(0, $this->driver->countMessages('import'));
-    }
-
-    public function testInfo()
-    {
-        $params = array('memory' => true, 'driver' => 'pdo_sqlite');
-
-        $this->assertEquals($params, $this->driver->info());
-    }
+    }    
 
     protected function insertMessage($queue, $message)
     {
@@ -125,12 +139,7 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
 
     protected function setUpDatabase()
     {
-        $connection = DriverManager::getConnection(array(
-            'memory' => true,
-            'driver' => 'pdo_sqlite',
-            'user' => 'henrik',
-            'password' => 'notused',
-        ));
+        $connection = $this->createConnection();
 
         $schema = new Schema;
 
