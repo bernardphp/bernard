@@ -130,7 +130,7 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->driver->removeQueue('import');
 
         $this->assertEquals(0, $this->driver->countMessages('import'));
-    }    
+    }
 
     protected function insertMessage($queue, $message)
     {
