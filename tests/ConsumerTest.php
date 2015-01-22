@@ -15,10 +15,11 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->router = new SimpleRouter;
-        $this->router->add('ImportUsers', new Fixtures\Service);
 
         $this->dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $this->consumer = new Consumer($this->router, $this->dispatcher);
+
+        $this->router->add('ImportUsers', new Fixtures\Service($this->consumer));
     }
 
     public function testEmitsConsumeEvent()
@@ -52,33 +53,9 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->consumer->invoke($envelope, $queue);
     }
 
-    public function testShutdown()
-    {
-        $queue = new InMemoryQueue('queue');
-
-        $this->consumer->shutdown();
-
-        $this->assertFalse($this->consumer->tick($queue));
-    }
-
-    public function testMaxRuntime()
-    {
-        $queue = new InMemoryQueue('queue');
-
-        $this->assertFalse($this->consumer->tick($queue, array(
-            'max-runtime' => -1 * PHP_INT_MAX,
-        )));
-    }
-
-    public function testNoEnvelopeInQueue()
-    {
-        $queue = new InMemoryQueue('queue');
-        $this->assertTrue($this->consumer->tick($queue));
-    }
-
     public function testEnvelopeIsAcknowledged()
     {
-        $service = new Fixtures\Service();
+        $service = new Fixtures\Service($this->consumer);
         $envelope = new Envelope(new DefaultMessage('ImportUsers'));
 
         $this->router->add('ImportUsers', $service);
@@ -87,23 +64,9 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $queue->expects($this->once())->method('dequeue')->will($this->returnValue($envelope));
         $queue->expects($this->once())->method('acknowledge')->with($this->equalTo($envelope));
 
-        $this->consumer->tick($queue);
+        $this->consumer->consume($queue);
 
         $this->assertTrue($service::$importUsers);
-    }
-
-    public function testMaxMessages()
-    {
-        $this->router->add('ImportUsers', new Fixtures\Service);
-
-        $queue = new InMemoryQueue('send-newsletter');
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
-
-        $this->assertFalse($this->consumer->tick($queue, array('max-messages' => 1)));
-        $this->assertTrue($this->consumer->tick($queue));
-        $this->assertTrue($this->consumer->tick($queue, array('max-messages' => 100)));
     }
 
     /**
@@ -111,14 +74,14 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
      */
     public function testEnvelopeWillBeInvoked()
     {
-        $service = new Fixtures\Service();
+        $service = new Fixtures\Service($this->consumer);
 
         $this->router->add('ImportUsers', $service);
 
         $queue = new InMemoryQueue('send-newsletter');
         $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
 
-        $this->consumer->tick($queue);
+        $this->consumer->consume($queue);
 
         $this->assertTrue($service::$importUsers);
     }
