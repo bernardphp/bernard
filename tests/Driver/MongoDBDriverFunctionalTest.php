@@ -9,6 +9,7 @@ use MongoConnectionException;
 
 /**
  * @coversDefaultClass Bernard\Driver\MongoDBDriver
+ * @group functional
  */
 class MongoDBDriverFunctionalTest extends \PHPUnit_Framework_TestCase
 {
