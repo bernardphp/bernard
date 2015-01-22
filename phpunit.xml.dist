@@ -16,6 +16,12 @@
         </testsuite>
     </testsuites>
 
+    <groups>
+        <exclude>
+            <group>functional</group>
+        </exclude>
+    </groups>
+
     <filter>
         <whitelist>
             <directory>src</directory>

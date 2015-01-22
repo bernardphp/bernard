@@ -8,6 +8,9 @@ use Bernard\Driver\DoctrineDriver;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;
 
+/**
+ * @group functional
+ */
 class MySQLDoctrineDriverTest extends AbstractDoctrineDriverTest
 {
     protected function isSupported()

@@ -26,4 +26,5 @@ before_script:
 
 script:
   - phpunit
+  - phpunit --group functional
   - php vendor/bin/phpspec run
