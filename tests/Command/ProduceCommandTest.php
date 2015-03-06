@@ -55,4 +55,20 @@ class ProduceCommandTest extends \PHPUnit_Framework_TestCase
             'message' => '{"foo":"bar"}'
         ));
     }
+
+    public function testItTakesQueueName()
+    {
+        $queueNameInput = 'test-queue';
+        $this->producer->expects($this->once())
+                       ->method('produce')
+                       ->with($this->anything(), $this->equalTo($queueNameInput));
+
+        $command = new ProduceCommand($this->producer);
+        $tester = new CommandTester($command);
+        $tester->execute(array(
+            'name'      => 'SendNewsletter',
+            'message'   => '{"foo":"bar"}',
+            'queueName' => $queueNameInput,
+        ));
+    }
 }
