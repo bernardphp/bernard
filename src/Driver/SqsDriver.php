@@ -179,7 +179,7 @@ class SqsDriver extends AbstractPrefetchDriver
         } catch (SqsException $exception) {
             if ($exception->getExceptionCode() === 'AWS.SimpleQueueService.NonExistentQueue') {
                 throw new SqsException(
-                    'The queue "' . $queueName . '" is neither aliased locally to an AWS URL nor could it be resolved by SQS.',
+                    'The queue "' . $queueName . '" is neither aliased locally to an SQS URL nor could it be resolved by SQS.',
                     $exception->getCode(),
                     $exception
                 );
