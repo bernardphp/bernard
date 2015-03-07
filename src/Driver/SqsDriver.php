@@ -162,6 +162,7 @@ class SqsDriver extends AbstractPrefetchDriver
      * @param string $queueName
      *
      * @return mixed
+     * @throws SqsException
      */
     protected function resolveUrl($queueName)
     {
@@ -169,9 +170,23 @@ class SqsDriver extends AbstractPrefetchDriver
             return $this->queueUrls[$queueName];
         }
 
-        $result = $this->sqs->getQueueUrl(array(
-            'QueueName' => $queueName,
-        ));
+        try {
+            $result = $this->sqs->getQueueUrl(
+                array(
+                    'QueueName' => $queueName,
+                )
+            );
+        } catch (SqsException $exception) {
+            if ($exception->getExceptionCode() === 'AWS.SimpleQueueService.NonExistentQueue') {
+                throw new SqsException(
+                    'The queue "' . $queueName . '" is neither aliased locally to an SQS URL nor could it be resolved by SQS.',
+                    $exception->getCode(),
+                    $exception
+                );
+            }
+
+            throw $exception;
+        }
 
         if ($result && $queueUrl = $result->get('QueueUrl')) {
             return $this->queueUrls[$queueName] = $queueUrl;
