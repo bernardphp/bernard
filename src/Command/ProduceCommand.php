@@ -52,7 +52,6 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
             throw new \RuntimeException('Could not decode invalid JSON [' . json_last_error() . ']');
         }
 
-        $this->producer->produce(new DefaultMessage($name, $message), $queue);
         $this->producer->produce(new DefaultMessage($name, $message), $queueName);
     }
 }
