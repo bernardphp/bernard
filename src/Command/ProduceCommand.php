@@ -44,7 +44,7 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $name    = $input->getArgument('name');
-        $message = json_decode($input->getArgument('message'), true) ?: array();
+        $message = json_decode($input->getArgument('message'), true) ?: [];
         $queue   = $input->getOption('queue');
 
         if (json_last_error()) {

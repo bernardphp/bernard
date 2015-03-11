@@ -3,7 +3,6 @@
 namespace Bernard\Queue;
 
 use Bernard\Envelope;
-use SplQueue;
 
 /**
  * Wrapper around SplQueue
@@ -21,8 +20,8 @@ class InMemoryQueue extends AbstractQueue
     {
         parent::__construct($name);
 
-        $this->queue = new SplQueue;
-        $this->queue->setIteratorMode(SplQueue::IT_MODE_DELETE);
+        $this->queue = new \SplQueue;
+        $this->queue->setIteratorMode(\SplQueue::IT_MODE_DELETE);
     }
 
     /**

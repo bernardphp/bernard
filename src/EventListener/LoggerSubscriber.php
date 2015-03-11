@@ -27,10 +27,10 @@ class LoggerSubscriber implements EventSubscriberInterface
      */
     public function onProduce(EnvelopeEvent $event)
     {
-        $this->logger->info('[bernard] produced {envelope} onto {queue}.', array(
+        $this->logger->info('[bernard] produced {envelope} onto {queue}.', [
             'envelope' => $event->getEnvelope(),
-            'queue' => $event->getQueue(),
-        ));
+            'queue'    => $event->getQueue(),
+        ]);
     }
 
     /**
@@ -38,9 +38,9 @@ class LoggerSubscriber implements EventSubscriberInterface
      */
     public function onInvoke(EnvelopeEvent $event)
     {
-        $this->logger->info('[bernard] invoking receiver for {envelope}.', array(
+        $this->logger->info('[bernard] invoking receiver for {envelope}.', [
             'envelope' => $event->getEnvelope(),
-        ));
+        ]);
     }
 
     /**
@@ -48,10 +48,10 @@ class LoggerSubscriber implements EventSubscriberInterface
      */
     public function onReject(RejectEnvelopeEvent $event)
     {
-        $this->logger->error('[bernard] caught exception {exception} while processing {envelope}.', array(
-            'envelope' => $event->getEnvelope(),
+        $this->logger->error('[bernard] caught exception {exception} while processing {envelope}.', [
+            'envelope'  => $event->getEnvelope(),
             'exception' => $event->getException(),
-        ));
+        ]);
     }
 
     /**
@@ -59,10 +59,10 @@ class LoggerSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            'bernard.produce' => array('onProduce'),
-            'bernard.invoke' => array('onInvoke'),
-            'bernard.reject' => array('onReject'),
-        );
+        return [
+            'bernard.produce' => ['onProduce'],
+            'bernard.invoke'  => ['onInvoke'],
+            'bernard.reject'  => ['onReject'],
+        ];
     }
 }

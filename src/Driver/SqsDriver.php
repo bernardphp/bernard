@@ -20,7 +20,7 @@ class SqsDriver extends AbstractPrefetchDriver
      * @param array        $queueUrls
      * @param integer|null $prefetch
      */
-    public function __construct(SqsClient $sqs, array $queueUrls = array(), $prefetch = null)
+    public function __construct(SqsClient $sqs, array $queueUrls = [], $prefetch = null)
     {
         parent::__construct($prefetch);
 
@@ -65,10 +65,10 @@ class SqsDriver extends AbstractPrefetchDriver
     {
         $queueUrl = $this->resolveUrl($queueName);
 
-        $result = $this->sqs->getQueueAttributes(array(
+        $result = $this->sqs->getQueueAttributes([
             'QueueUrl'       => $queueUrl,
-            'AttributeNames' => array('ApproximateNumberOfMessages'),
-        ));
+            'AttributeNames' => ['ApproximateNumberOfMessages'],
+        ]);
 
         if (isset($result['Attributes']['ApproximateNumberOfMessages'])) {
             return $result['Attributes']['ApproximateNumberOfMessages'];
@@ -84,10 +84,10 @@ class SqsDriver extends AbstractPrefetchDriver
     {
         $queueUrl = $this->resolveUrl($queueName);
 
-        $this->sqs->sendMessage(array(
+        $this->sqs->sendMessage([
             'QueueUrl'    => $queueUrl,
             'MessageBody' => $message
-        ));
+        ]);
     }
 
     /**
@@ -101,18 +101,18 @@ class SqsDriver extends AbstractPrefetchDriver
 
         $queueUrl = $this->resolveUrl($queueName);
 
-        $result = $this->sqs->receiveMessage(array(
+        $result = $this->sqs->receiveMessage([
             'QueueUrl'            => $queueUrl,
             'MaxNumberOfMessages' => $this->prefetch,
             'WaitTimeSeconds'     => $interval
-        ));
+        ]);
 
         if (!$result || !$messages = $result->get('Messages')) {
-            return array(null, null);
+            return [null, null];
         }
 
         foreach ($messages as $message) {
-            $this->cache->push($queueName, array($message['Body'], $message['ReceiptHandle']));
+            $this->cache->push($queueName, [$message['Body'], $message['ReceiptHandle']]);
         }
 
         return $this->cache->pop($queueName);
@@ -125,10 +125,10 @@ class SqsDriver extends AbstractPrefetchDriver
     {
         $queueUrl = $this->resolveUrl($queueName);
 
-        $this->sqs->deleteMessage(array(
+        $this->sqs->deleteMessage([
             'QueueUrl'      => $queueUrl,
             'ReceiptHandle' => $receipt,
-        ));
+        ]);
     }
 
     /**
@@ -136,7 +136,7 @@ class SqsDriver extends AbstractPrefetchDriver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -151,9 +151,9 @@ class SqsDriver extends AbstractPrefetchDriver
      */
     public function info()
     {
-        return array(
+        return [
             'prefetch' => $this->prefetch,
-        );
+        ];
     }
 
     /**
@@ -171,11 +171,7 @@ class SqsDriver extends AbstractPrefetchDriver
         }
 
         try {
-            $result = $this->sqs->getQueueUrl(
-                array(
-                    'QueueName' => $queueName,
-                )
-            );
+            $result = $this->sqs->getQueueUrl(['QueueName' => $queueName]);
         } catch (SqsException $exception) {
             if ($exception->getExceptionCode() === 'AWS.SimpleQueueService.NonExistentQueue') {
                 throw new SqsException(

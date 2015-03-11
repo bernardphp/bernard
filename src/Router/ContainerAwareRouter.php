@@ -16,7 +16,7 @@ class ContainerAwareRouter extends SimpleRouter
      * @param ContainerInterface $container
      * @param array              $receivers
      */
-    public function __construct(ContainerInterface $container, array $receivers = array())
+    public function __construct(ContainerInterface $container, array $receivers = [])
     {
         $this->container = $container;
 

@@ -26,11 +26,11 @@ class ErrorLogSubscriber implements EventSubscriberInterface
      */
     protected function format(Envelope $envelope, Exception $exception)
     {
-        $replacements = array(
+        $replacements = [
             '{class}' => get_class($exception),
             '{message}' => $exception->getMessage(),
             '{envelope}' => $envelope->getName(),
-        );
+        ];
 
         return strtr('[bernard] caught exception {class}::{message} while processing {envelope}.', $replacements);
     }
@@ -40,8 +40,8 @@ class ErrorLogSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            'bernard.reject' => array('onReject'),
-        );
+        return [
+            'bernard.reject' => ['onReject'],
+        ];
     }
 }

@@ -115,7 +115,7 @@ class IronMqDriver extends AbstractPrefetchDriver
             return $this->pluck($messages, 'body');
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -131,9 +131,9 @@ class IronMqDriver extends AbstractPrefetchDriver
      */
     public function info()
     {
-        return array(
+        return [
             'prefetch' => $this->prefetch,
-        );
+        ];
     }
 
     /**

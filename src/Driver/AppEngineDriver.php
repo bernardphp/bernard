@@ -80,7 +80,7 @@ class AppEngineDriver implements \Bernard\Driver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -88,7 +88,7 @@ class AppEngineDriver implements \Bernard\Driver
      */
     public function info()
     {
-        return array();
+        return [];
     }
 
     /**

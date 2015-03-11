@@ -66,9 +66,9 @@ class PhpRedisDriver implements \Bernard\Driver
         // "BLPOP" "bernard:queue:my-queue" "5"
         //
         // see https://github.com/nicolasff/phpredis/issues/158
-        list(, $message) = $this->redis->blpop(array($this->resolveKey($queueName)), $interval) ?: null;
+        list(, $message) = $this->redis->blpop([$this->resolveKey($queueName)], $interval) ?: null;
 
-        return array($message, null);
+        return [$message, null];
     }
 
     /**

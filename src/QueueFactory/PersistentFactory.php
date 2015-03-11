@@ -24,8 +24,8 @@ class PersistentFactory implements \Bernard\QueueFactory
      */
     public function __construct(Driver $driver, Serializer $serializer)
     {
-        $this->queues  = array();
-        $this->driver  = $driver;
+        $this->queues     = [];
+        $this->driver     = $driver;
         $this->serializer = $serializer;
     }
 
@@ -49,7 +49,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     public function all()
     {
         // Calls $this->create on every name returned from the driver
-        array_map(array($this, 'create'), $this->driver->listQueues());
+        array_map([$this, 'create'], $this->driver->listQueues());
 
         return $this->queues;
     }

@@ -15,20 +15,20 @@ class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInter
     /**
      * {@inheritDoc}
      */
-    public function normalize($object, $format = null, array $context = array())
+    public function normalize($object, $format = null, array $context = [])
     {
-        return array(
+        return [
             'name'      => $object->getName(),
             'arguments' => $object->all(),
-        );
+        ];
     }
 
     /**
      * {@inheritDoc}
      */
-    public function denormalize($data, $class, $format = null, array $context = array())
+    public function denormalize($data, $class, $format = null, array $context = [])
     {
-        Assertion::choicesNotEmpty($data, array('name', 'arguments'));
+        Assertion::choicesNotEmpty($data, ['name', 'arguments']);
 
         return new DefaultMessage($data['name'], $data['arguments']);
     }

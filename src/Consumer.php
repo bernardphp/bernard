@@ -17,10 +17,10 @@ class Consumer
     protected $dispatcher;
     protected $shutdown = false;
     protected $configured = false;
-    protected $options = array(
+    protected $options = [
         'max-runtime'  => PHP_INT_MAX,
         'max-messages' => null,
-    );
+    ];
 
     /**
      * @param Router                   $router
@@ -38,7 +38,7 @@ class Consumer
      * @param Queue $queue
      * @param array $options
      */
-    public function consume(Queue $queue, array $options = array())
+    public function consume(Queue $queue, array $options = [])
     {
         $this->bind();
 
@@ -56,7 +56,7 @@ class Consumer
      *
      * @return boolean
      */
-    public function tick(Queue $queue, array $options = array())
+    public function tick(Queue $queue, array $options = [])
     {
         $this->configure($options);
 
@@ -137,8 +137,8 @@ class Consumer
      */
     protected function bind()
     {
-        pcntl_signal(SIGTERM, array($this, 'shutdown'));
-        pcntl_signal(SIGQUIT, array($this, 'shutdown'));
-        pcntl_signal(SIGINT, array($this, 'shutdown'));
+        pcntl_signal(SIGTERM, [$this, 'shutdown']);
+        pcntl_signal(SIGQUIT, [$this, 'shutdown']);
+        pcntl_signal(SIGINT, [$this, 'shutdown']);
     }
 }

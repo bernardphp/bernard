@@ -29,7 +29,7 @@ class MessagesSchema
     {
         $table = $schema->createTable('bernard_queues');
         $table->addColumn('name', 'string');
-        $table->setPrimaryKey(array('name'));
+        $table->setPrimaryKey(['name']);
     }
 
     /**
@@ -40,17 +40,17 @@ class MessagesSchema
     protected static function createMessagesTable(Schema $schema)
     {
         $table = $schema->createTable('bernard_messages');
-        $table->addColumn('id', 'integer', array(
+        $table->addColumn('id', 'integer', [
             'autoincrement' => true,
             'unsigned'      => true,
             'notnull'       => true,
-        ));
+        ]);
 
         $table->addColumn('queue', 'string');
         $table->addColumn('message', 'text');
-        $table->addColumn('visible', 'boolean', array('default' => true));
+        $table->addColumn('visible', 'boolean', ['default' => true]);
         $table->addColumn('sentAt', 'datetime');
-        $table->setPrimaryKey(array('id'));
-        $table->addIndex(array('queue', 'sentAt', 'visible'));
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['queue', 'sentAt', 'visible']);
     }
 }

@@ -20,7 +20,7 @@ class DefaultMessage extends AbstractMessage implements ArrayAccess
      * @param string $name
      * @param array  $arguments
      */
-    public function __construct($name, array $arguments = array())
+    public function __construct($name, array $arguments = [])
     {
         $this->name = $name;
         $this->arguments = $arguments;

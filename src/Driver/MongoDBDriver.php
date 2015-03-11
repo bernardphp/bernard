@@ -17,8 +17,6 @@ class MongoDBDriver implements \Bernard\Driver
     private $queues;
 
     /**
-     * Constructor.
-     *
      * @param MongoCollection $queues   Collection where queues will be stored
      * @param MongoCollection $messages Collection where messages will be stored
      */
@@ -41,9 +39,9 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function createQueue($queueName)
     {
-        $data = array('_id' => (string) $queueName);
+        $data = ['_id' => (string) $queueName];
 
-        $this->queues->update($data, $data, array('upsert' => true));
+        $this->queues->update($data, $data, ['upsert' => true]);
     }
 
     /**
@@ -51,10 +49,10 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        return $this->messages->count(array(
+        return $this->messages->count([
             'queue' => (string) $queueName,
             'visible' => true,
-        ));
+        ]);
     }
 
     /**
@@ -62,12 +60,12 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function pushMessage($queueName, $message)
     {
-        $data = array(
+        $data = [
             'queue'   => (string) $queueName,
             'message' => (string) $message,
             'sentAt'  => new MongoDate(),
             'visible' => true,
-        );
+        ];
 
         $this->messages->insert($data);
     }
@@ -81,20 +79,20 @@ class MongoDBDriver implements \Bernard\Driver
 
         while (microtime(true) < $runtime) {
             $result = $this->messages->findAndModify(
-                array('queue' => (string) $queueName, 'visible' => true),
-                array('$set' => array('visible' => false)),
-                array('message' => 1),
-                array('sort' => array('sentAt' => 1))
+                ['queue' => (string) $queueName, 'visible' => true],
+                ['$set' => ['visible' => false]],
+                ['message' => 1],
+                ['sort' => ['sentAt' => 1]]
             );
 
             if ($result) {
-                return array((string) $result['message'], (string) $result['_id']);
+                return [(string) $result['message'], (string) $result['_id']];
             }
 
             usleep(10000);
         }
 
-        return array(null, null);
+        return [null, null];
     }
 
     /**
@@ -102,10 +100,10 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
-        $this->messages->remove(array(
+        $this->messages->remove([
             '_id' => new MongoId((string) $receipt),
             'queue' => (string) $queueName,
-        ));
+        ]);
     }
 
     /**
@@ -113,12 +111,12 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        $query = array('queue' => (string) $queueName, 'visible' => true);
-        $fields = array('_id' => 0, 'message' => 1);
+        $query = ['queue' => (string) $queueName, 'visible' => true];
+        $fields = ['_id' => 0, 'message' => 1];
 
         $cursor = $this->messages
             ->find($query, $fields)
-            ->sort(array('sentAt' => 1))
+            ->sort(['sentAt' => 1])
             ->limit($limit)
             ->skip($index)
         ;
@@ -135,8 +133,8 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function removeQueue($queueName)
     {
-        $this->queues->remove(array('_id' => $queueName));
-        $this->messages->remove(array('queue' => (string) $queueName));
+        $this->queues->remove(['_id' => $queueName]);
+        $this->messages->remove(['queue' => (string) $queueName]);
     }
 
     /**
@@ -144,9 +142,9 @@ class MongoDBDriver implements \Bernard\Driver
      */
     public function info()
     {
-        return array(
+        return [
             'messages' => (string) $this->messages,
             'queues' => (string) $this->queues,
-        );
+        ];
     }
 }
