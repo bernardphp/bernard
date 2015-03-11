@@ -8,7 +8,10 @@
     },
 
     "autoload-dev" : {
-        "psr-4" : { "Bernard\\Tests\\" : "tests/" }
+        "psr-4" : {
+            "Bernard\\Tests\\" : "tests/",
+            "Bernard\\Stub\\" : "stub/"
+        }
     },
 
     "require" : {
@@ -27,7 +30,9 @@
         "doctrine/dbal"                : "~2.3",
         "iron-io/iron_mq"              : "~1.4",
         "aws/aws-sdk-php"              : "~2.4",
-        "pda/pheanstalk"               : "~3.0"
+        "pda/pheanstalk"               : "~3.0",
+        "phpspec/phpspec"              : "~2.1",
+        "henrikbjorn/phpspec-code-coverage" : "~1.0"
     },
 
     "extra" : {

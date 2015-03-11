@@ -1,0 +1,5 @@
+suites:
+  bernard_suite:
+    namespace: Bernard
+    psr4_prefix: Bernard
+formatter.name: pretty

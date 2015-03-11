@@ -1,0 +1,10 @@
+suites:
+  bernard_suite:
+    namespace: Bernard
+    psr4_prefix: Bernard
+extensions:
+  - PhpSpec\Extension\CodeCoverageExtension
+formatter.name: pretty
+code_coverage:
+  format: clover
+  output: _build/coverage.xml
