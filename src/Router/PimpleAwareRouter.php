@@ -15,7 +15,7 @@ class PimpleAwareRouter extends SimpleRouter
      * @param Pimple $pimple
      * @param array  $receivers
      */
-    public function __construct(Pimple $pimple, array $receivers = array())
+    public function __construct(Pimple $pimple, array $receivers = [])
     {
         $this->pimple = $pimple;
 

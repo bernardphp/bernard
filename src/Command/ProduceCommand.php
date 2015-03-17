@@ -44,11 +44,15 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $name    = $input->getArgument('name');
-        $message = json_decode($input->getArgument('message'), true) ?: array();
         $queue   = $input->getOption('queue');
+        $message = [];
 
-        if (json_last_error()) {
-            throw new \RuntimeException('Could not decode invalid JSON [' . json_last_error() . ']');
+        if ($input->getArgument('message')) {
+            $message = json_decode($input->getArgument('message'), true);
+
+            if (json_last_error()) {
+                throw new \RuntimeException('Could not decode invalid JSON [' . json_last_error() . ']');
+            }
         }
 
         $this->producer->produce(new DefaultMessage($name, $message), $queue);

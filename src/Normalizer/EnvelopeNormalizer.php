@@ -15,21 +15,21 @@ class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements Nor
     /**
      * {@inheritDoc}
      */
-    public function normalize($object, $format = null, array $context = array())
+    public function normalize($object, $format = null, array $context = [])
     {
-        return array(
+        return [
             'class'     => $object->getClass(),
             'timestamp' => $object->getTimestamp(),
             'message'   => $this->aggregate->normalize($object->getMessage()),
-        );
+        ];
     }
 
     /**
      * {@inheritDoc}
      */
-    public function denormalize($data, $class, $format = null, array $context = array())
+    public function denormalize($data, $class, $format = null, array $context = [])
     {
-        Assertion::choicesNotEmpty($data, array('message', 'class', 'timestamp'));
+        Assertion::choicesNotEmpty($data, ['message', 'class', 'timestamp']);
 
         Assertion::classExists($data['class']);
 

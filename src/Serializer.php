@@ -46,9 +46,9 @@ class Serializer
      */
     private function createAggregateNormalizer()
     {
-        return new AggregateNormalizer(array(
+        return new AggregateNormalizer([
             new Normalizer\EnvelopeNormalizer,
             new Normalizer\DefaultMessageNormalizer,
-        ));
+        ]);
     }
 }

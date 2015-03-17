@@ -27,7 +27,7 @@ class FlatFileDriver implements \Bernard\Driver
     {
         $it = new \DirectoryIterator($this->baseDirectory, \FilesystemIterator::SKIP_DOTS);
 
-        $queues = array();
+        $queues = [];
 
         foreach ($it as $file) {
             /** @var $file \SplFileInfo */
@@ -137,7 +137,7 @@ class FlatFileDriver implements \Bernard\Driver
 
         $files = array_slice($files, $index, $limit);
 
-        $messages = array();
+        $messages = [];
 
         foreach ($files as $file) {
             array_push($messages, file_get_contents($queueDir.DIRECTORY_SEPARATOR.$file));
@@ -168,7 +168,7 @@ class FlatFileDriver implements \Bernard\Driver
      */
     public function info()
     {
-        return array();
+        return [];
     }
 
     /**

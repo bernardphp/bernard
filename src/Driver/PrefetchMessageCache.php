@@ -7,7 +7,7 @@ namespace Bernard\Driver;
  */
 class PrefetchMessageCache
 {
-    protected $caches = array();
+    protected $caches = [];
 
     /**
      * Pushes a $message to the end of the cache.

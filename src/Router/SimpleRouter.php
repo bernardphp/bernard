@@ -12,12 +12,12 @@ use Bernard\Exception\ReceiverNotFoundException;
  */
 class SimpleRouter implements \Bernard\Router
 {
-    protected $receivers = array();
+    protected $receivers = [];
 
     /**
      * @param array $receivers
      */
-    public function __construct(array $receivers = array())
+    public function __construct(array $receivers = [])
     {
         foreach ($receivers as $name => $receiver) {
             $this->add($name, $receiver);

@@ -61,7 +61,7 @@ class PheanstalkDriver implements \Bernard\Driver
     public function popMessage($queueName, $interval = 5)
     {
         if ($job = $this->pheanstalk->reserveFromTube($queueName, $interval)) {
-            return array($job->getData(), $job);
+            return [$job->getData(), $job];
         }
 
         return array(null, null);
@@ -80,7 +80,7 @@ class PheanstalkDriver implements \Bernard\Driver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        return array();
+        return [];
     }
 
     /**

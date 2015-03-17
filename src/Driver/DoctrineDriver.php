@@ -38,7 +38,7 @@ class DoctrineDriver implements \Bernard\Driver
     public function createQueue($queueName)
     {
         try {
-            $this->connection->insert('bernard_queues', array('name' => $queueName));
+            $this->connection->insert('bernard_queues', ['name' => $queueName]);
         } catch (\Exception $e) {
             // Because SQL server does not support a portable INSERT ON IGNORE syntax
             // this ignores error based on primary key.
@@ -52,10 +52,10 @@ class DoctrineDriver implements \Bernard\Driver
     {
         $query = 'SELECT COUNT(id) FROM bernard_messages WHERE queue = :queue AND visible = :visible';
 
-        return (integer) $this->connection->fetchColumn($query, array(
+        return (integer) $this->connection->fetchColumn($query, [
             'queue' => $queueName,
             'visible' => true,
-        ));
+        ]);
     }
 
     /**
@@ -63,12 +63,12 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function pushMessage($queueName, $message)
     {
-        $types = array('string', 'string', 'datetime');
-        $data = array(
+        $types = ['string', 'string', 'datetime'];
+        $data = [
             'queue'   => $queueName,
             'message' => $message,
             'sentAt'  => new \DateTime(),
-        );
+        ];
 
         $this->createQueue($queueName);
         $this->connection->insert('bernard_messages', $data, $types);
@@ -107,7 +107,7 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
-        $this->connection->delete('bernard_messages', array('id' => $receipt, 'queue' => $queueName));
+        $this->connection->delete('bernard_messages', ['id' => $receipt, 'queue' => $queueName]);
     }
 
     /**
@@ -115,8 +115,8 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        $parameters = array($queueName, $limit, $index);
-        $types = array('string', 'integer', 'integer');
+        $parameters = [$queueName, $limit, $index];
+        $types = ['string', 'integer', 'integer'];
 
         $query = 'SELECT message FROM bernard_messages WHERE queue = ? ORDER BY sentAt, id LIMIT ? OFFSET ?';
 
@@ -132,8 +132,8 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function removeQueue($queueName)
     {
-        $this->connection->delete('bernard_messages', array('queue' => $queueName));
-        $this->connection->delete('bernard_queues', array('name' => $queueName));
+        $this->connection->delete('bernard_messages', ['queue' => $queueName]);
+        $this->connection->delete('bernard_queues', ['name' => $queueName]);
     }
 
     /**
@@ -161,15 +161,15 @@ class DoctrineDriver implements \Bernard\Driver
                   WHERE queue = :queue AND visible = :visible
                   ORDER BY sentAt, id ' . $this->connection->getDatabasePlatform()->getForUpdateSql();
 
-        list($id, $message) = $this->connection->fetchArray($query, array(
+        list($id, $message) = $this->connection->fetchArray($query, [
             'queue' => $queueName,
             'visible' => true,
-        ));
+        ]);
 
         if ($id) {
-            $this->connection->update('bernard_messages', array('visible' => 0), compact('id'));
+            $this->connection->update('bernard_messages', ['visible' => 0], compact('id'));
 
-            return array($message, $id);
+            return [$message, $id];
         }
     }
 }

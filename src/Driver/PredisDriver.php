@@ -26,7 +26,7 @@ class PredisDriver extends PhpRedisDriver
     {
         list(, $message) = $this->redis->blpop($this->resolveKey($queueName), $interval) ?: null;
 
-        return array($message, null);
+        return [$message, null];
     }
 
     /**

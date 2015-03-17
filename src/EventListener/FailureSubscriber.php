@@ -41,8 +41,8 @@ class FailureSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            'bernard.reject' => array('onReject'),
-        );
+        return [
+            'bernard.reject' => ['onReject'],
+        ];
     }
 }
