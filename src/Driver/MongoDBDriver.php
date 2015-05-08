@@ -73,9 +73,9 @@ class MongoDBDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = 5)
+    public function popMessage($queueName, $duration = 5)
     {
-        $runtime = microtime(true) + $interval;
+        $runtime = microtime(true) + $duration;
 
         while (microtime(true) < $runtime) {
             $result = $this->messages->findAndModify(

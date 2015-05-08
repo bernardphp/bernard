@@ -75,7 +75,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = 5)
+    public function popMessage($queueName, $duration = 5)
     {
         if ($message = $this->cache->pop($queueName)) {
             return $message;
@@ -83,7 +83,7 @@ class IronMqDriver extends AbstractPrefetchDriver
 
         $timeout = IronMQ::GET_MESSAGE_TIMEOUT;
 
-        $messages = $this->ironmq->getMessages($queueName, $this->prefetch, $timeout, $interval);
+        $messages = $this->ironmq->getMessages($queueName, $this->prefetch, $timeout, $duration);
 
         if (!$messages) {
             return array(null, null);

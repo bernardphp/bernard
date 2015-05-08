@@ -38,14 +38,14 @@ interface Driver
 
     /**
      * Remove the next message in line. And if no message is available
-     * wait $interval seconds.
+     * wait $duration seconds.
      *
      * @param string  $queueName
-     * @param integer $interval
+     * @param integer $duration
      *
      * @return array An array like array($message, $receipt);
      */
-    public function popMessage($queueName, $interval = 5);
+    public function popMessage($queueName, $duration = 5);
 
     /**
      * If the driver supports it, this will be called when a message

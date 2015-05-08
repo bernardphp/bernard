@@ -56,7 +56,7 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = 5)
+    public function popMessage($queueName, $duration = 5)
     {
         // When PhpRedis is set up with an Redis::OPT_PREFIX
         // it does set the prefix to the key and to the timeout value something like:
@@ -66,7 +66,7 @@ class PhpRedisDriver implements \Bernard\Driver
         // "BLPOP" "bernard:queue:my-queue" "5"
         //
         // see https://github.com/nicolasff/phpredis/issues/158
-        list(, $message) = $this->redis->blpop([$this->resolveKey($queueName)], $interval) ?: null;
+        list(, $message) = $this->redis->blpop([$this->resolveKey($queueName)], $duration) ?: null;
 
         return [$message, null];
     }
