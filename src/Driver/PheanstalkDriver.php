@@ -58,9 +58,9 @@ class PheanstalkDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = 5)
+    public function popMessage($queueName, $duration = 5)
     {
-        if ($job = $this->pheanstalk->reserveFromTube($queueName, $interval)) {
+        if ($job = $this->pheanstalk->reserveFromTube($queueName, $duration)) {
             return [$job->getData(), $job];
         }
 

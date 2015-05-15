@@ -57,7 +57,7 @@ class AppEngineDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = 5)
+    public function popMessage($queueName, $duration = 5)
     {
     }
 

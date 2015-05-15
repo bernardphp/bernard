@@ -22,9 +22,9 @@ class PredisDriver extends PhpRedisDriver
     /**
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = 5)
+    public function popMessage($queueName, $duration = 5)
     {
-        list(, $message) = $this->redis->blpop($this->resolveKey($queueName), $interval) ?: null;
+        list(, $message) = $this->redis->blpop($this->resolveKey($queueName), $duration) ?: null;
 
         return [$message, null];
     }

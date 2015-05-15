@@ -93,7 +93,7 @@ class SqsDriver extends AbstractPrefetchDriver
     /**
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = 5)
+    public function popMessage($queueName, $duration = 5)
     {
         if ($message = $this->cache->pop($queueName)) {
             return $message;
@@ -104,7 +104,7 @@ class SqsDriver extends AbstractPrefetchDriver
         $result = $this->sqs->receiveMessage([
             'QueueUrl'            => $queueUrl,
             'MaxNumberOfMessages' => $this->prefetch,
-            'WaitTimeSeconds'     => $interval
+            'WaitTimeSeconds'     => $duration
         ]);
 
         if (!$result || !$messages = $result->get('Messages')) {

@@ -82,9 +82,9 @@ class FlatFileDriver implements \Bernard\Driver
     /**
      * {@inheritDoc}
      */
-    public function popMessage($queueName, $interval = 5)
+    public function popMessage($queueName, $duration = 5)
     {
-        $runtime = microtime(true) + $interval;
+        $runtime = microtime(true) + $duration;
         $queueDir = $this->getQueueDirectory($queueName);
 
         $it = new \GlobIterator($queueDir.DIRECTORY_SEPARATOR.'*.job', \FilesystemIterator::KEY_AS_FILENAME);
