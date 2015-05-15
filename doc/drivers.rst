@@ -10,6 +10,7 @@ Several different types of drivers are supported. Currently these are available:
 * `Amazon SQS`_
 * `Google AppEngine`_
 * `MongoDB`_
+* `PhpAmqp / RabbitMQ`_
 
 Redis Extension
 ---------------
@@ -390,3 +391,26 @@ To support message queries, the following index should also be created:
         'visible' => 1,
         'sentAt' => 1,
     ]);
+
+PhpAmqp / RabbitMQ
+------------------
+
+The RabbitMQ driver leans on the php-amqp library by Alvaro Videla.
+
+The driver should be constructed with an ``AMQPConnection`` object, an exchange name and optionally the default message
+parameters.
+
+.. code-block:: php
+
+    <?php
+
+    $connection = new \PhpAmqpLib\Connection\AMQPConnection('localhost', 5672, 'foo', 'bar');
+
+    $driver = new \Bernard\Driver\PhpAmqpDriver($connection, 'my-exchange');
+
+    // Or with default message params
+    $driver = new \Bernard\Driver\PhpAmqpDriver(
+        $connection,
+        'my-exchange',
+        ['content_type' => 'application/json', 'delivery_mode' => 2]
+    );
