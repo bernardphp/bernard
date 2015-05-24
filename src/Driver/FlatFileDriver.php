@@ -31,7 +31,7 @@ class FlatFileDriver implements \Bernard\Driver
 
         foreach ($it as $file) {
             /** @var $file \SplFileInfo */
-            if (!$file->isDir()) {
+            if (!$file->isDir() || in_array($file->getBaseName(), array('.', '..'))) {
                 continue;
             }
 
