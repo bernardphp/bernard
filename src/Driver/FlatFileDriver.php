@@ -25,7 +25,7 @@ class FlatFileDriver implements \Bernard\Driver
      */
     public function listQueues()
     {
-        $it = new \DirectoryIterator($this->baseDirectory, \FilesystemIterator::SKIP_DOTS);
+        $it = new \DirectoryIterator($this->baseDirectory);
 
         $queues = [];
 
