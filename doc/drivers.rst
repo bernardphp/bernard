@@ -92,7 +92,7 @@ as appropriate for your use case.
     use Bernard\Command\Doctrine as BernardCommands;
     use Doctrine\DBAL\Tools\Console\ConsoleRunner;
     use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-    use Symfony\Component\Console\Helper\Application;
+    use Symfony\Component\Console\Application;
     use Symfony\Component\Console\Helper\HelperSet;
 
     $connection = ...;
