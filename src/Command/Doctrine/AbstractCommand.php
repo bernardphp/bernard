@@ -16,11 +16,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class AbstractCommand extends Command
 {
-    protected $name = 'abstract';
-
-    public function __construct()
+    public function __construct($name)
     {
-        parent::__construct('bernard:doctrine:' . $this->name);
+        parent::__construct('bernard:doctrine:' . $name);
     }
 
     /**
@@ -42,12 +40,13 @@ abstract class AbstractCommand extends Command
 
         if ($input->getOption('dump-sql')) {
             $output->writeln(implode(';' . PHP_EOL, $this->getSql($sync, $schema)) . ';');
-        } else {
-            $output->writeln('<comment>ATTENTION</comment>: This operation should not be executed in a production environment.' . PHP_EOL);
-            $output->writeln('Applying database schema changes...');
-            $this->applySql($sync, $schema);
-            $output->writeln('Schema changes applied successfully!'); 
+            return;
         }
+
+        $output->writeln('<comment>ATTENTION</comment>: This operation should not be executed in a production environment.' . PHP_EOL);
+        $output->writeln('Applying database schema changes...');
+        $this->applySql($sync, $schema);
+        $output->writeln('Schema changes applied successfully!');
     }
 
     /**

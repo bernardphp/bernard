@@ -10,7 +10,10 @@ use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer as Synchronizer
  */
 class DropCommand extends AbstractCommand
 {
-    protected $name = 'drop';
+    public function __construct()
+    {
+        parent::__construct('drop');
+    }
 
     /**
      * {@inheritDoc}

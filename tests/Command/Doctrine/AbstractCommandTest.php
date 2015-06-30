@@ -22,7 +22,9 @@ class AbstractCommandTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($connection));
 
         $this->command = $this->getMockBuilder('Bernard\\Command\\Doctrine\\AbstractCommand')
-            ->setMethods(['getSql', 'applySql', 'getHelper'])->getMock();
+            ->setMethods(['getSql', 'applySql', 'getHelper'])
+            ->setConstructorArgs(['abstract'])
+            ->getMock();
         $this->command
             ->expects($this->any())
             ->method('getHelper')

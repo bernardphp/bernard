@@ -10,7 +10,10 @@ use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer as Synchronizer
  */
 class UpdateCommand extends AbstractCommand
 {
-    protected $name = 'update';
+    public function __construct()
+    {
+        parent::__construct('update');
+    }
 
     /**
      * {@inheritDoc}
