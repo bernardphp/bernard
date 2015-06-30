@@ -103,11 +103,11 @@ as appropriate for your use case.
     ];
 
     // To create a new application from scratch ...
-    $helperSet = new HelperSet(['db' => new ConnectionHelper($connection)]);
+    $helperSet = new HelperSet(['connection' => new ConnectionHelper($connection)]);
     $cli = new Application('Bernard Doctrine Command Line Interface');
     $cli->setCatchExceptions(true);
-    $cli->addCommands($commands);
     $cli->setHelperSet($helperSet);
+    $cli->addCommands($commands);
 
     // ... or, if you're using Doctrine ORM 2.5+,
     // just re-use the existing Doctrine application ...
@@ -117,6 +117,12 @@ as appropriate for your use case.
 
     // Finally, run the application
     $cli->run();
+
+And run the console application like so:
+
+.. code-block:: shell
+
+    php doctrine.php bernard:doctrine:create
 
 Alternatively, use the following method for creating the tables manually.
 
