@@ -13,9 +13,9 @@ class RejectEnvelopeEvent extends EnvelopeEvent
     protected $exception;
 
     /**
-     * @param Envelope  $envelope
-     * @param Queue     $queue
-     * @param Exception $exception
+     * @param Envelope   $envelope
+     * @param Queue      $queue
+     * @param \Exception $exception
      */
     public function __construct(Envelope $envelope, Queue $queue, \Exception $exception)
     {
@@ -25,7 +25,7 @@ class RejectEnvelopeEvent extends EnvelopeEvent
     }
 
     /**
-     * @return Exception
+     * @return \Exception
      */
     public function getException()
     {
