@@ -397,14 +397,14 @@ PhpAmqp / RabbitMQ
 
 The RabbitMQ driver leans on the php-amqp library by Alvaro Videla.
 
-The driver should be constructed with an ``AMQPConnection`` object, an exchange name and optionally the default message
+The driver should be constructed with an ``AMQPStreamConnection`` object, an exchange name and optionally the default message
 parameters.
 
 .. code-block:: php
 
     <?php
 
-    $connection = new \PhpAmqpLib\Connection\AMQPConnection('localhost', 5672, 'foo', 'bar');
+    $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection('localhost', 5672, 'foo', 'bar');
 
     $driver = new \Bernard\Driver\PhpAmqpDriver($connection, 'my-exchange');
 
