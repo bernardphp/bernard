@@ -4,13 +4,13 @@ namespace Bernard\Tests\Driver;
 
 use Bernard\Driver\PhpAmqpDriver;
 use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Connection\AMQPConnection;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class PhpAmqpDriverTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var AMQPConnection
+     * @var AMQPStreamConnection
      */
     private $phpAmqpConnection;
 
@@ -44,7 +44,7 @@ class PhpAmqpDriverTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->phpAmqpConnection = $this->getMock(
-            '\PhpAmqpLib\Connection\AMQPConnection',
+            '\PhpAmqpLib\Connection\AMQPStreamConnection',
             array('channel'),
             array(),
             '',
