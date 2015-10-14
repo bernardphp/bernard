@@ -61,6 +61,20 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->consumer->tick($queue));
     }
 
+    public function testPauseResume()
+    {
+        $queue = new InMemoryQueue('queue');
+        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+
+        $this->consumer->pause();
+
+        $this->assertFalse($this->consumer->tick($queue));
+
+        $this->consumer->resume();
+
+        $this->assertTrue($this->consumer->tick($queue));
+    }
+
     public function testMaxRuntime()
     {
         $queue = new InMemoryQueue('queue');

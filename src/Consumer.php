@@ -14,6 +14,7 @@ class Consumer
     protected $router;
     protected $dispatcher;
     protected $shutdown = false;
+    protected $pause = false;
     protected $configured = false;
     protected $options = [
         'max-runtime'  => PHP_INT_MAX,
@@ -68,6 +69,10 @@ class Consumer
             return false;
         }
 
+        if ($this->pause) {
+            return true;
+        }
+
         if (!$envelope = $queue->dequeue()) {
             return true;
         }
@@ -88,6 +93,22 @@ class Consumer
     public function shutdown()
     {
         $this->shutdown = true;
+    }
+
+    /**
+     * Pause consuming
+     */
+    public function pause()
+    {
+        $this->pause = true;
+    }
+
+    /**
+     * Resume consuming
+     */
+    public function resume()
+    {
+        $this->pause = false;
     }
 
     /**
@@ -138,7 +159,9 @@ class Consumer
     protected function bind()
     {
         pcntl_signal(SIGTERM, [$this, 'shutdown']);
+        pcntl_signal(SIGINT,  [$this, 'shutdown']);
         pcntl_signal(SIGQUIT, [$this, 'shutdown']);
-        pcntl_signal(SIGINT, [$this, 'shutdown']);
+        pcntl_signal(SIGUSR2, [$this, 'pause']);
+        pcntl_signal(SIGCONT, [$this, 'resume']);
     }
 }
