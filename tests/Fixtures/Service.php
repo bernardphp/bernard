@@ -4,7 +4,7 @@ namespace Bernard\Tests\Fixtures;
 
 class Service
 {
-    public static $importUsers = false;
+    public $importUsers = false;
 
     public function failSendNewsletter()
     {
@@ -13,7 +13,7 @@ class Service
 
     public function importUsers()
     {
-        static::$importUsers = true;
+        $this->importUsers = true;
     }
 
     public function createFile()
