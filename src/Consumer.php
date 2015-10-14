@@ -6,8 +6,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\RejectEnvelopeEvent;
 
-declare(ticks=1);
-
 /**
  * @package Consumer
  */
@@ -40,6 +38,8 @@ class Consumer
      */
     public function consume(Queue $queue, array $options = [])
     {
+        declare(ticks=1);
+
         $this->bind();
 
         while ($this->tick($queue, $options)) {
