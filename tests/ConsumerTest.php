@@ -61,6 +61,26 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->consumer->tick($queue));
     }
 
+    public function testPauseResume()
+    {
+        $service = new Fixtures\Service();
+
+        $this->router->add('ImportUsers', $service);
+
+        $queue = new InMemoryQueue('queue');
+        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+
+        $this->consumer->pause();
+
+        $this->assertTrue($this->consumer->tick($queue));
+        $this->assertFalse($service->importUsers);
+
+        $this->consumer->resume();
+
+        $this->assertTrue($this->consumer->tick($queue));
+        $this->assertTrue($service->importUsers);
+    }
+
     public function testMaxRuntime()
     {
         $queue = new InMemoryQueue('queue');
@@ -89,7 +109,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
 
         $this->consumer->tick($queue);
 
-        $this->assertTrue($service::$importUsers);
+        $this->assertTrue($service->importUsers);
     }
 
     public function testMaxMessages()
@@ -120,6 +140,6 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
 
         $this->consumer->tick($queue);
 
-        $this->assertTrue($service::$importUsers);
+        $this->assertTrue($service->importUsers);
     }
 }
