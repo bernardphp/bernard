@@ -46,15 +46,20 @@ class RoundRobinQueue implements Queue
      */
     public function dequeue()
     {
-        while (current($this->queues) !== false) {
-            if ($envelope = current($this->queues)->dequeue()) {
-                break;
-            }
-            next($this->queues);
-        }
+        $envelope = null;
+        $checked = [];
 
-        if (false === next($this->queues)) {
-            reset($this->queues);
+        while (count($checked) < count($this->queues)) {
+            $queue = current($this->queues);
+            $envelope = $queue->dequeue();
+            if (false === next($this->queues)) {
+                reset($this->queues);
+            }
+            if ($envelope) {
+                break;
+            } else {
+                $checked[] = $queue;
+            }
         }
 
         return $envelope;
@@ -89,7 +94,9 @@ class RoundRobinQueue implements Queue
         $shift = 0;
 
         $key = key($this->queues);
-        for ($it->rewind(); $it->key() != $key; $it->next());
+        for ($it->rewind(); $it->key() != $key; $it->next()) {
+            // noop
+        }
 
         while (count($envelopes) < $limit && count($drained) < $it->count()) {
             $queue = $it->current();
@@ -150,7 +157,7 @@ class RoundRobinQueue implements Queue
                 return !$queue instanceof Queue;
             }
         );
-        if ($filtered) {
+        if (!empty($filtered)) {
             throw new \DomainException('All elements of $queues must implement Queue');
         }
     }
