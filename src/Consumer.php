@@ -19,6 +19,7 @@ class Consumer
     protected $options = [
         'max-runtime'  => PHP_INT_MAX,
         'max-messages' => null,
+        'round-robin'  => false,
     ];
 
     /**
@@ -34,17 +35,23 @@ class Consumer
     /**
      * Starts an infinite loop calling Consumer::tick();
      *
-     * @param Queue $queue
+     * @param array|Queue $queues
      * @param array $options
      */
-    public function consume(Queue $queue, array $options = [])
+    public function consume($queues, array $options = [])
     {
         declare(ticks=1);
 
         $this->bind();
 
-        while ($this->tick($queue, $options)) {
-            // NO op
+        if ($queues instanceof Queue) {
+            $queues = [$queues];
+        }
+
+        foreach ($queues as $queue) {
+            while ($this->tick($queue, $options)) {
+                // NO op
+            }
         }
     }
 
@@ -74,9 +81,8 @@ class Consumer
         }
 
         if (!$envelope = $queue->dequeue()) {
-            return true;
+            return !$this->options['round-robin'];
         }
-
 
         $this->invoke($envelope, $queue);
 

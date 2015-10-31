@@ -126,6 +126,28 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->consumer->tick($queue, array('max-messages' => 100)));
     }
 
+    public function testRoundRobin()
+    {
+        $services = $envelopes = $queues = $callbacks = $invocations = [];
+
+        for ($i = 1; $i <= 2; $i++) {
+            $service = 'Service' . $i;
+            $invocations[$i] = 0;
+            $callbacks[$i] = function() use (&$invocations, $i) { $invocations[$i]++; };
+            $this->router->add($service, $callbacks[$i]);
+            $envelopes[$i] = new Envelope(new DefaultMessage($service));
+            $queues[$i] = $this->getMock('Bernard\Queue');
+            $queues[$i]->expects($this->at(0))->method('dequeue')->will($this->returnValue($envelopes[$i]));
+            $queues[$i]->expects($this->at(1))->method('acknowledge')->with($this->equalTo($envelopes[$i]));
+            $queues[$i]->expects($this->at(2))->method('dequeue')->will($this->returnValue(null));
+        }
+
+        $this->consumer->consume($queues, ['round-robin' => true]);
+
+        $this->assertEquals($invocations[1], 1);
+        $this->assertEquals($invocations[2], 1);
+    }
+
     /**
      * @group debug
      */
