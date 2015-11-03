@@ -19,7 +19,7 @@ class Consumer
     protected $options = [
         'max-runtime'  => PHP_INT_MAX,
         'max-messages' => null,
-        'stop-after-last-message' => false
+        'stop-when-empty' => false
     ];
 
     /**
@@ -75,7 +75,7 @@ class Consumer
         }
 
         if (!$envelope = $queue->dequeue()) {
-            return !$this->options['stop-after-last-message'];
+            return !$this->options['stop-when-empty'];
         }
 
 

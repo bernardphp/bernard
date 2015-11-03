@@ -134,9 +134,9 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
         $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
 
-        $this->assertTrue($this->consumer->tick($queue, array('stop-after-last-message' => true)));
-        $this->assertTrue($this->consumer->tick($queue, array('stop-after-last-message' => true)));
-        $this->assertFalse($this->consumer->tick($queue, array('stop-after-last-message' => true)));
+        $this->assertTrue($this->consumer->tick($queue, array('stop-when-empty' => true)));
+        $this->assertTrue($this->consumer->tick($queue, array('stop-when-empty' => true)));
+        $this->assertFalse($this->consumer->tick($queue, array('stop-when-empty' => true)));
     }
 
     /**

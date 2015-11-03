@@ -26,12 +26,14 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
         $this->consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo(array(
             'max-runtime' => 100,
             'max-messages' => 10,
+            'stop-when-empty' => true,
         )));
 
         $tester = new CommandTester($command);
         $tester->execute(array(
             '--max-runtime' => 100,
             '--max-messages' => 10,
+            '--stop-when-empty' => true,
             'queue' => 'send-newsletter',
         ));
     }
