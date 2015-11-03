@@ -126,6 +126,19 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->consumer->tick($queue, array('max-messages' => 100)));
     }
 
+    public function testStopAfterLastMessage()
+    {
+        $this->router->add('ImportUsers', new Fixtures\Service);
+
+        $queue = new InMemoryQueue('send-newsletter');
+        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+
+        $this->assertTrue($this->consumer->tick($queue, array('stop-after-last-message' => true)));
+        $this->assertTrue($this->consumer->tick($queue, array('stop-after-last-message' => true)));
+        $this->assertFalse($this->consumer->tick($queue, array('stop-after-last-message' => true)));
+    }
+
     /**
      * @group debug
      */

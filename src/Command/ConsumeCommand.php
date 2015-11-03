@@ -37,6 +37,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
         $this
             ->addOption('max-runtime', null, InputOption::VALUE_OPTIONAL, 'Maximum time in seconds the consumer will run.', null)
             ->addOption('max-messages', null, InputOption::VALUE_OPTIONAL, 'Maximum number of messages that should be consumed.', null)
+            ->addOption('stop-after-last-message', null, InputOption::VALUE_NONE, 'Stop consumer after the last message is consumed.', null)
             ->addArgument('queue', InputArgument::REQUIRED, 'Name of queue that will be consumed.')
         ;
     }
