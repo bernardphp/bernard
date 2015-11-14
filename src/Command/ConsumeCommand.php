@@ -38,7 +38,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
             ->addOption('max-runtime', null, InputOption::VALUE_OPTIONAL, 'Maximum time in seconds the consumer will run.', null)
             ->addOption('max-messages', null, InputOption::VALUE_OPTIONAL, 'Maximum number of messages that should be consumed.', null)
             ->addOption('stop-when-empty', null, InputOption::VALUE_NONE, 'Stop consumer when queue is empty.', null)
-            ->addArgument('queue', InputArgument::REQUIRED, 'Names of one or more queues that will be consumed, separated by commas.')
+            ->addArgument('queue', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Names of one or more queues that will be consumed.')
         ;
     }
 
@@ -53,15 +53,15 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     }
 
     /**
-     * @param string $queue
+     * @param array $queue
      * @return Queue
      */
     protected function getQueue($queue)
     {
-        if (strpos($queue, ',') !== false) {
+        if (count($queue) > 1) {
             $queues = array_map([$this->queues, 'create'], explode(',', $queue));
             return new \Bernard\Queue\RoundRobinQueue($queues);
         }
-        return $this->queues->create($queue);
+        return $this->queues->create(array_shift($queue));
     }
 }
