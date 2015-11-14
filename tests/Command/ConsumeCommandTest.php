@@ -55,7 +55,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
             '--max-runtime' => 100,
             '--max-messages' => 10,
             '--stop-when-empty' => true,
-            'queue' => 'queue-1,queue-2',
+            'queue' => ['queue-1', 'queue-2'],
         ));
     }
 }
