@@ -68,14 +68,10 @@ class RoundRobinQueueTest extends \PHPUnit_Framework_TestCase
 
     public function testClose()
     {
-        $builder = $this->getMockBuilder('Bernard\\Queue');
+        $builder = $this->getMockBuilder('Bernard\\Queue\\InMemoryQueue')->setMethods(['close']);
         $queues = [];
         for ($name = 1; $name <= 3; $name++) {
-            $queue = $builder->getMock();
-            $queue
-                ->expects($this->any())
-                ->method('__toString')
-                ->will($this->returnValue((string) $name));
+            $queue = $builder->setConstructorArgs([$name])->getMock();
             $queue
                 ->expects($this->once())
                 ->method('close');
@@ -110,20 +106,17 @@ class RoundRobinQueueTest extends \PHPUnit_Framework_TestCase
 
     public function testAcknowledgeWithRecognizedQueue()
     {
-        $builder = $this->getMockBuilder('Bernard\\Queue');
+        $builder = $this->getMockBuilder('Bernard\\Queue\\InMemoryQueue')->setMethods(['acknowledge']);
         $envelope = $this->getEnvelope('2');
 
         $queues = [
-            $queue_1 = $builder->getMock(),
-            $queue_2 = $builder->getMock(),
-            $queue_3 = $builder->getMock(),
+            $queue_1 = $builder->setConstructorArgs(['1'])->getMock(),
+            $queue_2 = $builder->setConstructorArgs(['2'])->getMock(),
+            $queue_3 = $builder->setConstructorArgs(['3'])->getMock(),
         ];
 
-        $queue_1->expects($this->any())->method('__toString')->will($this->returnValue('1'));
         $queue_1->expects($this->never())->method('acknowledge');
-        $queue_2->expects($this->any())->method('__toString')->will($this->returnValue('2'));
         $queue_2->expects($this->once())->method('acknowledge')->with($envelope);
-        $queue_3->expects($this->any())->method('__toString')->will($this->returnValue('3'));
         $queue_3->expects($this->never())->method('acknowledge');
 
         $round = new RoundRobinQueue($queues);
