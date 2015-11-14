@@ -3,6 +3,7 @@
 namespace Bernard\Command;
 
 use Bernard\Consumer;
+use Bernard\Queue\RoundRobinQueue;
 use Bernard\QueueFactory;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -60,7 +61,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     {
         if (count($queue) > 1) {
             $queues = array_map([$this->queues, 'create'], explode(',', $queue));
-            return new \Bernard\Queue\RoundRobinQueue($queues);
+            return new RoundRobinQueue($queues);
         }
         return $this->queues->create(array_shift($queue));
     }
