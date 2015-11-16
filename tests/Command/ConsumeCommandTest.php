@@ -37,4 +37,25 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
             'queue' => 'send-newsletter',
         ));
     }
+
+    public function testItConsumesRoundRobin()
+    {
+        $command = new ConsumeCommand($this->consumer, $this->queues);
+
+        $args = array(
+            'max-runtime' => 100,
+            'max-messages' => 10,
+            'stop-when-empty' => true,
+        );
+
+        $this->consumer->expects($this->once())->method('consume')->with($this->isInstanceOf('Bernard\Queue\RoundRobinQueue'), $args);
+
+        $tester = new CommandTester($command);
+        $tester->execute(array(
+            '--max-runtime' => 100,
+            '--max-messages' => 10,
+            '--stop-when-empty' => true,
+            'queue' => ['queue-1', 'queue-2'],
+        ));
+    }
 }
