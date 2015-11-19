@@ -29,8 +29,7 @@
         "aws/aws-sdk-php"              : "~2.4",
         "pda/pheanstalk"               : "~3.0",
         "league/container"             : "~1.0",
-        "videlalvaro/php-amqplib"      : "~2.5",
-        "phpunit/phpunit"              : "~4.5.0"
+        "videlalvaro/php-amqplib"      : "~2.5"
     },
 
     "extra" : {
