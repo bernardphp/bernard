@@ -74,6 +74,8 @@ class Consumer
             return true;
         }
 
+        $this->dispatcher->dispatch('bernard.ping');
+
         if (!$envelope = $queue->dequeue()) {
             return !$this->options['stop-when-empty'];
         }
