@@ -9,6 +9,7 @@ use Bernard\Message\DefaultMessage;
 use Bernard\Router\SimpleRouter;
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Event\EnvelopeEvent;
+use Bernard\Event\PingEvent;
 
 class ConsumerTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,7 +34,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($envelope);
 
         $this->dispatcher->expects($this->at(0))->method('dispatch')
-            ->with('bernard.ping');
+            ->with('bernard.ping', new PingEvent($queue));
 
         $this->dispatcher->expects($this->at(1))->method('dispatch')
             ->with('bernard.invoke', new EnvelopeEvent($envelope, $queue));

@@ -4,6 +4,7 @@ namespace Bernard;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Bernard\Event\EnvelopeEvent;
+use Bernard\Event\PingEvent;
 use Bernard\Event\RejectEnvelopeEvent;
 
 /**
@@ -74,7 +75,7 @@ class Consumer
             return true;
         }
 
-        $this->dispatcher->dispatch('bernard.ping');
+        $this->dispatcher->dispatch('bernard.ping', new PingEvent($queue));
 
         if (!$envelope = $queue->dequeue()) {
             return !$this->options['stop-when-empty'];
