@@ -9,6 +9,7 @@ use Bernard\Message\DefaultMessage;
 use Bernard\Router\SimpleRouter;
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Event\EnvelopeEvent;
+use Bernard\Event\PingEvent;
 
 class ConsumerTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,15 +25,24 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
     public function testEmitsConsumeEvent()
     {
         $envelope = new Envelope(new DefaultMessage('ImportUsers'));
-        $queue = new InMemoryQueue('queue');
+        $queue = $this->getMock('Bernard\Queue\InMemoryQueue', [
+            'dequeue'
+        ], ['queue']);
+
+        $queue->expects($this->once())
+            ->method('dequeue')
+            ->willReturn($envelope);
 
         $this->dispatcher->expects($this->at(0))->method('dispatch')
-            ->with('bernard.invoke', new EnvelopeEvent($envelope, $queue));
+            ->with('bernard.ping', new PingEvent($queue));
 
         $this->dispatcher->expects($this->at(1))->method('dispatch')
+            ->with('bernard.invoke', new EnvelopeEvent($envelope, $queue));
+
+        $this->dispatcher->expects($this->at(2))->method('dispatch')
             ->with('bernard.acknowledge', new EnvelopeEvent($envelope, $queue));
 
-        $this->consumer->invoke($envelope, $queue);
+        $this->assertTrue($this->consumer->tick($queue));
     }
 
     public function testEmitsExceptionEvent()
