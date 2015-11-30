@@ -43,6 +43,14 @@ class Envelope
     /**
      * @return string
      */
+    public function getQueue()
+    {
+        return $this->message->getQueue();
+    }
+
+    /**
+     * @return string
+     */
     public function getClass()
     {
         return $this->class;

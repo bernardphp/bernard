@@ -123,7 +123,7 @@ class RoundRobinQueue implements Queue
     {
         $this->verifyEnvelope($envelope);
 
-        $this->queues[$envelope->getName()]->acknowledge($envelope);
+        $this->queues[$envelope->getQueue()]->acknowledge($envelope);
     }
 
     /**
@@ -184,7 +184,7 @@ class RoundRobinQueue implements Queue
      */
     protected function verifyEnvelope(Envelope $envelope)
     {
-        $queue = $envelope->getName();
+        $queue = $envelope->getQueue();
         if (isset($this->queues[$queue])) {
             return;
         }
