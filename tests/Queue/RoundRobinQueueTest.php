@@ -101,7 +101,11 @@ class RoundRobinQueueTest extends \PHPUnit_Framework_TestCase
             'Unrecognized queue specified: foo'
         );
 
-        $this->round->acknowledge($this->getEnvelope('foo'));
+        $envelope = $this->getEnvelope('foo');
+        $this->round->enqueue($envelope);
+        $dequeued = $this->round->dequeue($envelope);
+        $this->assertSame($envelope, $dequeued);
+        $this->round->acknowledge($dequeued);
     }
 
     public function testAcknowledgeWithRecognizedQueue()
@@ -120,6 +124,9 @@ class RoundRobinQueueTest extends \PHPUnit_Framework_TestCase
         $queue_3->expects($this->never())->method('acknowledge');
 
         $round = new RoundRobinQueue($queues);
+        $round->enqueue($envelope);
+        $dequeued = $round->dequeue();
+        $this->assertSame($envelope, $dequeued);
         $round->acknowledge($envelope);
     }
 
