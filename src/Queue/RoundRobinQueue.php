@@ -21,6 +21,11 @@ class RoundRobinQueue implements Queue
     protected $closed;
 
     /**
+     * @var \SplObjectStorage
+     */
+    protected $envelopes;
+
+    /**
      * @param Queue[] $queues
      */
     public function __construct(array $queues)
@@ -28,6 +33,7 @@ class RoundRobinQueue implements Queue
         $this->validateQueues($queues);
 
         $this->queues = $this->indexQueues($queues);
+        $this->envelopes = new \SplObjectStorage;
         $this->closed = false;
     }
 
@@ -56,6 +62,7 @@ class RoundRobinQueue implements Queue
                 reset($this->queues);
             }
             if ($envelope) {
+                $this->envelopes->attach($envelope, $queue);
                 break;
             } else {
                 $checked[] = $queue;
@@ -121,9 +128,15 @@ class RoundRobinQueue implements Queue
      */
     public function acknowledge(Envelope $envelope)
     {
-        $this->verifyEnvelope($envelope);
+        if (!$this->envelopes->contains($envelope)) {
+            throw new \DomainException(
+                'Unrecognized queue specified: ' . $envelope->getName()
+            );
+        }
 
-        $this->queues[$envelope->getName()]->acknowledge($envelope);
+        $queue = $this->envelopes[$envelope];
+        $queue->acknowledge($envelope);
+        $this->envelopes->detach($envelope);
     }
 
     /**
