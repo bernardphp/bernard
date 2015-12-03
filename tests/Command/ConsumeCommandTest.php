@@ -23,7 +23,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
         $command = new ConsumeCommand($this->consumer, $this->queues);
         $queue = $this->queues->create('send-newsletter');
 
-        $this->consumer->expects($this->once())->method('consume')->with($this->equalTo($queue), $this->equalTo(array(
+        $this->consumer->expects($this->once())->method('consume')->with($this->identicalTo($queue), $this->equalTo(array(
             'max-runtime' => 100,
             'max-messages' => 10,
             'stop-when-empty' => true,
