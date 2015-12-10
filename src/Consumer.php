@@ -167,7 +167,7 @@ class Consumer
     protected function bind()
     {
         pcntl_signal(SIGTERM, [$this, 'shutdown']);
-        pcntl_signal(SIGINT,  [$this, 'shutdown']);
+        pcntl_signal(SIGINT, [$this, 'shutdown']);
         pcntl_signal(SIGQUIT, [$this, 'shutdown']);
         pcntl_signal(SIGUSR2, [$this, 'pause']);
         pcntl_signal(SIGCONT, [$this, 'resume']);

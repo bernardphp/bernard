@@ -26,13 +26,15 @@ class Producer
     /**
      * @param Message     $message
      * @param string|null $queueName
+     * @param array       $options
      */
-    public function produce(Message $message, $queueName = null)
+    public function produce(Message $message, $queueName = null, array $options = [])
     {
         $queueName = $queueName ?: Util::guessQueue($message);
+        $envelope = new Envelope($message);
 
-        $queue = $this->queues->create($queueName);
-        $queue->enqueue($envelope = new Envelope($message));
+        $queue = $this->queues->create($queueName, $options);
+        $queue->enqueue($envelope, $options);
 
         $this->dispatcher->dispatch('bernard.produce', new EnvelopeEvent($envelope, $queue));
     }

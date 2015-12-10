@@ -40,11 +40,11 @@ class RoundRobinQueue implements Queue
     /**
      * {@inheritdoc}
      */
-    public function enqueue(Envelope $envelope)
+    public function enqueue(Envelope $envelope, array $options = [])
     {
         $this->verifyEnvelope($envelope);
 
-        $this->queues[$envelope->getName()]->enqueue($envelope);
+        $this->queues[$envelope->getName()]->enqueue($envelope, $options);
     }
 
     /**

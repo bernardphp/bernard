@@ -1,6 +1,7 @@
 <?php
 
 namespace Bernard\Driver;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Flat file driver to provide a simple job queue without any
@@ -8,7 +9,7 @@ namespace Bernard\Driver;
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */
-class FlatFileDriver implements \Bernard\Driver
+class FlatFileDriver extends AbstractDriver
 {
     private $baseDirectory;
 
@@ -43,7 +44,7 @@ class FlatFileDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function createQueue($queueName)
+    public function createQueue($queueName, array $options = [])
     {
         $queueDir = $this->getQueueDirectory($queueName);
 
@@ -69,7 +70,7 @@ class FlatFileDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $queueDir = $this->getQueueDirectory($queueName);
 

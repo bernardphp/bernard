@@ -10,7 +10,8 @@
         "php": "~5.4|~7.0",
         "bernard/normalt": "~1.0",
         "symfony/event-dispatcher": "~2.3|~3.0",
-        "beberlei/assert": "~2.0"
+        "beberlei/assert": "~2.0",
+        "symfony/options-resolver": "~2.3|~3.0"
     },
     "require-dev" : {
         "psr/log": "~1.0",

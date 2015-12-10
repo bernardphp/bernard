@@ -35,7 +35,7 @@ class DoctrineDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function createQueue($queueName)
+    public function createQueue($queueName, array $options = [])
     {
         try {
             $this->connection->insert('bernard_queues', ['name' => $queueName]);
@@ -61,7 +61,7 @@ class DoctrineDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $types = ['string', 'string', 'datetime'];
         $data = [

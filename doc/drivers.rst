@@ -12,6 +12,8 @@ Several different types of drivers are supported. Currently these are available:
 * `MongoDB`_
 * `PhpAmqp / RabbitMQ`_
 
+You can pass option when you create a queue or push a message, see the driver for more specific info on which options can be passed.
+
 Redis Extension
 ---------------
 
@@ -205,6 +207,11 @@ correct service. An example of this:
         }
     }
 
+When pushing a message these are the allowed options:
+- timeout
+- delay
+- expires_in
+
 Amazon SQS
 ----------
 
@@ -325,6 +332,14 @@ something like this:
         }
     }
 
+When pushing a message these are the allowed options:
+- method
+- name
+- delay_seconds
+- header
+
+See the `official docs <https://cloud.google.com/appengine/docs/php/refdocs/classes/google.appengine.api.taskqueue.PushTask#method___construct>`_ for more info about the allowed options
+
 Pheanstalk
 ----------
 
@@ -349,6 +364,11 @@ Requires the installation of pda/pheanstalk. Add the following to your
     $pheanstalk = new Pheanstalk('localhost');
 
     $driver = new PheanstalkDriver($pheanstalk);
+
+When pushing a message these are the allowed options:
+- priority
+- delay
+- ttr
 
 MongoDB
 -------
@@ -392,6 +412,15 @@ To support message queries, the following index should also be created:
         'sentAt' => 1,
     ]);
 
+When creating a queue the allowed option is `upsert`
+
+When pushing a message these are the allowed options:
+- fsync
+- j
+- socketTimeoutMS
+- w
+- wTimeoutMS
+
 PhpAmqp / RabbitMQ
 ------------------
 
@@ -414,3 +443,11 @@ parameters.
         'my-exchange',
         ['content_type' => 'application/json', 'delivery_mode' => 2]
     );
+
+When creating a queue the allowed option is `routingkey`
+
+When pushing a message these are the allowed options:
+- routingkey
+- mandatory
+- immediate
+- ticket

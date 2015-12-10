@@ -18,8 +18,11 @@ interface Driver
      * Create a queue.
      *
      * @param string $queueName
+     * @param array  $options
+     *
+     * @return
      */
-    public function createQueue($queueName);
+    public function createQueue($queueName, array $options = []);
 
     /**
      * Count the number of messages in queue. This can be a approximately number.
@@ -33,8 +36,11 @@ interface Driver
      *
      * @param string $queueName
      * @param string $message
+     * @param array  $options
+     *
+     * @return
      */
-    public function pushMessage($queueName, $message);
+    public function pushMessage($queueName, $message, array $options = []);
 
     /**
      * Remove the next message in line. And if no message is available

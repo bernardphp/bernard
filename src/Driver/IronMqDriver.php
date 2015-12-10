@@ -3,6 +3,7 @@
 namespace Bernard\Driver;
 
 use IronMQ;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Implements a Driver for use with Iron MQ:
@@ -50,7 +51,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * {@inheritdoc}
      */
-    public function createQueue($queueName)
+    public function createQueue($queueName, array $options = [])
     {
     }
 
@@ -67,9 +68,11 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
-        $this->ironmq->postMessage($queueName, $message);
+        $options = $this->validatePushOptions($options);
+
+        $this->ironmq->postMessage($queueName, $message, $options);
     }
 
     /**
@@ -134,6 +137,29 @@ class IronMqDriver extends AbstractPrefetchDriver
         return [
             'prefetch' => $this->prefetch,
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configurePushOptions(OptionsResolver $resolver)
+    {
+        //BC layer to support 2.3+ and 2.7+/3.0+ versions
+        if (interface_exists('Symfony\Component\OptionsResolver\OptionsResolverInterface')) {
+            //2.3+
+            $resolver->setOptional(array(
+                'timeout',
+                'delay',
+                'expires_in'
+            ));
+        } else {
+            //2.7+
+            $resolver
+                ->setDefined('timeout')
+                ->setDefined('delay')
+                ->setDefined('expires_in')
+            ;
+        }
     }
 
     /**

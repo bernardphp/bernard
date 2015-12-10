@@ -37,7 +37,7 @@ class InMemoryQueue extends AbstractQueue
     /**
      * {@inheritdoc}
      */
-    public function enqueue(Envelope $envelope)
+    public function enqueue(Envelope $envelope, array $options = [])
     {
         $this->errorIfClosed();
 

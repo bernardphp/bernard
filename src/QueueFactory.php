@@ -12,10 +12,11 @@ interface QueueFactory extends \Countable
 {
     /**
      * @param string $queueName
+     * @param array  $options
      *
      * @return Queue
      */
-    public function create($queueName);
+    public function create($queueName, array $options = []);
 
     /**
      * @return Queue[]

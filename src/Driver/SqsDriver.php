@@ -54,7 +54,7 @@ class SqsDriver extends AbstractPrefetchDriver
     /**
      * {@inheritdoc}
      */
-    public function createQueue($queueName)
+    public function createQueue($queueName, array $options = [])
     {
     }
 
@@ -80,7 +80,7 @@ class SqsDriver extends AbstractPrefetchDriver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $queueUrl = $this->resolveUrl($queueName);
 
