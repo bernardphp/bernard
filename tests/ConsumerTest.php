@@ -150,6 +150,21 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException \Bernard\Exception\ReceiverNotFoundException
+     */
+    public function testStopOnError()
+    {
+        $this->router->add('ImportUsers', new Fixtures\Service);
+
+        $queue = new InMemoryQueue('send-newsletter');
+        $queue->enqueue(new Envelope(new DefaultMessage('DifferentMessageKey')));
+
+        $this->consumer->tick($queue, array('stop-on-error' => true));
+
+        $this->assertEquals(1, $queue->count());
+    }
+
+    /**
      * @group debug
      */
     public function testEnvelopeWillBeInvoked()
