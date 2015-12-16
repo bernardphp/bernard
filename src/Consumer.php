@@ -20,7 +20,8 @@ class Consumer
     protected $options = [
         'max-runtime'  => PHP_INT_MAX,
         'max-messages' => null,
-        'stop-when-empty' => false
+        'stop-when-empty' => false,
+        'stop-on-error' => false,
     ];
 
     /**
@@ -140,6 +141,10 @@ class Consumer
             //
             // Emit an event to let others log that exception
             $this->dispatcher->dispatch('bernard.reject', new RejectEnvelopeEvent($envelope, $queue, $e));
+
+            if ($this->options['stop-on-error']) {
+                throw $e;
+            }
         }
     }
 
