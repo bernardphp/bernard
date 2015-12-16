@@ -1,35 +1,45 @@
 {
-    "name"        : "bernard/bernard",
-    "description" : "Message queue implemented in PHP with Redis as a backend.",
-    "license"     : "MIT",
+    "name": "bernard/bernard",
+    "description": "Message queue implemented in PHP with Redis as a backend.",
+    "keywords": ["message queue", "message", "queue", "bernard"],
+    "homepage": "https://github.com/bernardphp/bernard",
+    "type": "library",
+    "license": "MIT",
+
+    "require": {
+        "php": "~5.4|~7.0",
+        "bernard/normalt": "~1.0",
+        "symfony/event-dispatcher": "~2.3|~3.0",
+        "beberlei/assert": "~2.0"
+    },
+    "require-dev" : {
+        "psr/log": "~1.0",
+        "pimple/pimple": "~1.0",
+        "predis/predis": "~0.8",
+        "symfony/console": "~2.0|~3.0",
+        "symfony/dependency-injection": "~2.0|~3.0",
+        "doctrine/dbal": "~2.3",
+        "iron-io/iron_mq": "~1.4",
+        "aws/aws-sdk-php": "~2.4",
+        "pda/pheanstalk": "~3.0",
+        "league/container": "~1.0",
+        "videlalvaro/php-amqplib": "~2.5"
+    },
+    "suggest": {
+        "videlalvaro/php-amqplib": "Allow sending messages to an AMQP server using php-amqplib",
+        "doctrine/dbal": "Allow sending messages to simulated message queue in a database via doctrine dbal",
+        "iron-io/iron_mq": "Allow sending messages to IronMQ",
+        "pda/pheanstalk": "Allow sending messages to Beanstalk using pheanstalk",
+        "predis/predis": "Allow sending messages to Redis using predis",
+        "aws/aws-sdk-php": "Allow sending messages to AWS services like Simple Queue Service",
+        "mongodb/mongodb": "Allow sending messages to a MongoDB server via PHP Driver"
+    },
 
     "autoload" : {
         "psr-4" : { "Bernard\\" : "src/" }
     },
-
     "autoload-dev" : {
         "psr-4" : { "Bernard\\Tests\\" : "tests/" }
-    },
-
-    "require" : {
-        "php"                      : "~5.4 || ~7.0",
-        "bernard/normalt"          : "~1.0",
-        "symfony/event-dispatcher" : "~2.3 || ~3.0",
-        "beberlei/assert"          : "~2.0"
-    },
-
-    "require-dev" : {
-        "psr/log"                      : "~1.0",
-        "pimple/pimple"                : "~1.0",
-        "predis/predis"                : "~0.8",
-        "symfony/console"              : "~2.0 || ~3.0",
-        "symfony/dependency-injection" : "~2.0 || ~3.0",
-        "doctrine/dbal"                : "~2.3",
-        "iron-io/iron_mq"              : "~1.4",
-        "aws/aws-sdk-php"              : "~2.4",
-        "pda/pheanstalk"               : "~3.0",
-        "league/container"             : "~1.0",
-        "videlalvaro/php-amqplib"      : "~2.5"
     },
 
     "extra" : {
