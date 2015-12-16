@@ -27,6 +27,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
             'max-runtime' => 100,
             'max-messages' => 10,
             'stop-when-empty' => true,
+            'stop-on-error' => false,
         )));
 
         $tester = new CommandTester($command);
@@ -34,6 +35,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
             '--max-runtime' => 100,
             '--max-messages' => 10,
             '--stop-when-empty' => true,
+            '--stop-on-error' => false,
             'queue' => 'send-newsletter',
         ));
     }
@@ -46,6 +48,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
             'max-runtime' => 100,
             'max-messages' => 10,
             'stop-when-empty' => true,
+            'stop-on-error' => false,
         );
 
         $this->consumer->expects($this->once())->method('consume')->with($this->isInstanceOf('Bernard\Queue\RoundRobinQueue'), $args);
@@ -55,6 +58,7 @@ class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
             '--max-runtime' => 100,
             '--max-messages' => 10,
             '--stop-when-empty' => true,
+            '--stop-on-error' => false,
             'queue' => ['queue-1', 'queue-2'],
         ));
     }
