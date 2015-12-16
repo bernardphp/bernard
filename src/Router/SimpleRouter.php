@@ -45,7 +45,7 @@ class SimpleRouter implements \Bernard\Router
         $receiver = $this->get($envelope->getName());
 
         if (false == $receiver) {
-            throw new ReceiverNotFoundException();
+            throw new ReceiverNotFoundException(sprintf('No receiver found with name "%s".', $envelope->getName()));
         }
 
         if (is_callable($receiver)) {
