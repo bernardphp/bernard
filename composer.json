@@ -20,7 +20,7 @@
 
     "require-dev" : {
         "psr/log"                      : "~1.0",
-        "pimple/pimple"                : "~1.0",
+        "pimple/pimple"                : "~3.0",
         "predis/predis"                : "~0.8",
         "symfony/console"              : "~2.0 || ~3.0",
         "symfony/dependency-injection" : "~2.0 || ~3.0",

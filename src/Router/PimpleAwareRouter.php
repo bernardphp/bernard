@@ -1,8 +1,7 @@
 <?php
 
 namespace Bernard\Router;
-
-use Pimple;
+use Pimple\Container;
 
 /**
  * @package Bernard
@@ -12,10 +11,10 @@ class PimpleAwareRouter extends SimpleRouter
     protected $pimple;
 
     /**
-     * @param Pimple $pimple
+     * @param Container $pimple
      * @param array  $receivers
      */
-    public function __construct(Pimple $pimple, array $receivers = [])
+    public function __construct(Container $pimple, array $receivers = [])
     {
         $this->pimple = $pimple;
 
