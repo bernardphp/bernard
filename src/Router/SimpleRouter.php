@@ -31,7 +31,7 @@ class SimpleRouter implements \Bernard\Router
     public function add($name, $receiver)
     {
         if (!$this->accepts($receiver)) {
-            throw new \InvalidArgumentException('Given "$receiver" is not supported.');
+            throw new \InvalidArgumentException(sprintf('Given "%s" is not supported.', $receiver));
         }
 
         $this->receivers[$name] = $receiver;
@@ -45,7 +45,7 @@ class SimpleRouter implements \Bernard\Router
         $receiver = $this->get($envelope->getName());
 
         if (false == $receiver) {
-            throw new ReceiverNotFoundException();
+            throw new ReceiverNotFoundException(sprintf('No receiver found with name "%s".', $envelope->getName()));
         }
 
         if (is_callable($receiver)) {
