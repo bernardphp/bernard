@@ -27,7 +27,7 @@ class MongoDBDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listQueues()
     {
@@ -35,7 +35,7 @@ class MongoDBDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createQueue($queueName)
     {
@@ -45,7 +45,7 @@ class MongoDBDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function countMessages($queueName)
     {
@@ -56,14 +56,14 @@ class MongoDBDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function pushMessage($queueName, $message)
     {
         $data = [
-            'queue'   => (string) $queueName,
+            'queue' => (string) $queueName,
             'message' => (string) $message,
-            'sentAt'  => new MongoDate(),
+            'sentAt' => new MongoDate(),
             'visible' => true,
         ];
 
@@ -71,7 +71,7 @@ class MongoDBDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function popMessage($queueName, $duration = 5)
     {
@@ -96,7 +96,7 @@ class MongoDBDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
@@ -107,7 +107,7 @@ class MongoDBDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
@@ -129,7 +129,7 @@ class MongoDBDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeQueue($queueName)
     {
@@ -138,7 +138,7 @@ class MongoDBDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function info()
     {

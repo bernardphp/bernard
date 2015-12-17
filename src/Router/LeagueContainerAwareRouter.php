@@ -2,7 +2,6 @@
 
 namespace Bernard\Router;
 
-use Bernard\Envelope;
 use League\Container\ContainerInterface;
 
 /**
@@ -24,7 +23,7 @@ class LeagueContainerAwareRouter extends SimpleRouter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function get($name)
     {
@@ -34,7 +33,7 @@ class LeagueContainerAwareRouter extends SimpleRouter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function accepts($receiver)
     {

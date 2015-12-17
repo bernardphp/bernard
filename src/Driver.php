@@ -24,7 +24,7 @@ interface Driver
     /**
      * Count the number of messages in queue. This can be a approximately number.
      *
-     * @return integer
+     * @return int
      */
     public function countMessages($queueName);
 
@@ -40,8 +40,8 @@ interface Driver
      * Remove the next message in line. And if no message is available
      * wait $duration seconds.
      *
-     * @param string  $queueName
-     * @param integer $duration
+     * @param string $queueName
+     * @param int    $duration
      *
      * @return array An array like array($message, $receipt);
      */
@@ -60,9 +60,9 @@ interface Driver
      * Returns a $limit numbers of messages without removing them
      * from the queue.
      *
-     * @param string  $queueName
-     * @param integer $index
-     * @param integer $limit
+     * @param string $queueName
+     * @param int    $index
+     * @param int    $limit
      */
     public function peekQueue($queueName, $index = 0, $limit = 20);
 

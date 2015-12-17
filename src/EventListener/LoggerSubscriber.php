@@ -29,7 +29,7 @@ class LoggerSubscriber implements EventSubscriberInterface
     {
         $this->logger->info('[bernard] produced {envelope} onto {queue}.', [
             'envelope' => $event->getEnvelope(),
-            'queue'    => $event->getQueue(),
+            'queue' => $event->getQueue(),
         ]);
     }
 
@@ -44,12 +44,12 @@ class LoggerSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param  RejectEnvelopeEvent $event
+     * @param RejectEnvelopeEvent $event
      */
     public function onReject(RejectEnvelopeEvent $event)
     {
         $this->logger->error('[bernard] caught exception {exception} while processing {envelope}.', [
-            'envelope'  => $event->getEnvelope(),
+            'envelope' => $event->getEnvelope(),
             'exception' => $event->getException(),
         ]);
     }
@@ -61,8 +61,8 @@ class LoggerSubscriber implements EventSubscriberInterface
     {
         return [
             'bernard.produce' => ['onProduce'],
-            'bernard.invoke'  => ['onInvoke'],
-            'bernard.reject'  => ['onReject'],
+            'bernard.invoke' => ['onInvoke'],
+            'bernard.reject' => ['onReject'],
         ];
     }
 }

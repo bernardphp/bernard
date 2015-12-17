@@ -14,11 +14,11 @@ abstract class AbstractPrefetchDriver implements \Bernard\Driver
     protected $cache;
 
     /**
-     * @param integer|null $prefetch
+     * @param int|null $prefetch
      */
     public function __construct($prefetch = null)
     {
         $this->prefetch = $prefetch ? (integer) $prefetch : 2;
-        $this->cache = new PrefetchMessageCache;
+        $this->cache = new PrefetchMessageCache();
     }
 }

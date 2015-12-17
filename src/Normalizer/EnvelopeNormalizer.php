@@ -13,19 +13,19 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements NormalizerInterface, DenormalizerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function normalize($object, $format = null, array $context = [])
     {
         return [
-            'class'     => $object->getClass(),
+            'class' => $object->getClass(),
             'timestamp' => $object->getTimestamp(),
-            'message'   => $this->aggregate->normalize($object->getMessage()),
+            'message' => $this->aggregate->normalize($object->getMessage()),
         ];
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
@@ -42,7 +42,7 @@ class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements Nor
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
@@ -50,7 +50,7 @@ class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements Nor
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supportsNormalization($data, $format = null)
     {

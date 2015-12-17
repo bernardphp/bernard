@@ -24,7 +24,7 @@ class AppEngineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listQueues()
     {
@@ -32,21 +32,21 @@ class AppEngineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createQueue($queueName)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function countMessages($queueName)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function pushMessage($queueName, $message)
     {
@@ -55,28 +55,28 @@ class AppEngineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function popMessage($queueName, $duration = 5)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeQueue($queueName)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
@@ -84,7 +84,7 @@ class AppEngineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function info()
     {
@@ -92,7 +92,8 @@ class AppEngineDriver implements \Bernard\Driver
     }
 
     /**
-     * @param  string                   $queueName
+     * @param string $queueName
+     *
      * @throws InvalidArgumentException
      */
     protected function resolveEndpoint($queueName)

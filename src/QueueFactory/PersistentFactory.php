@@ -24,13 +24,13 @@ class PersistentFactory implements \Bernard\QueueFactory
      */
     public function __construct(Driver $driver, Serializer $serializer)
     {
-        $this->queues     = [];
-        $this->driver     = $driver;
+        $this->queues = [];
+        $this->driver = $driver;
         $this->serializer = $serializer;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function create($queueName)
     {
@@ -44,7 +44,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function all()
     {
@@ -55,7 +55,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function exists($queueName)
     {
@@ -63,7 +63,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function count()
     {
@@ -71,7 +71,7 @@ class PersistentFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function remove($queueName)
     {

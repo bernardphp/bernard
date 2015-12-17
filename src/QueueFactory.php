@@ -23,9 +23,9 @@ interface QueueFactory extends \Countable
     public function all();
 
     /**
-     * @param string  $queueName
+     * @param string $queueName
      *
-     * @return boolean
+     * @return bool
      */
     public function exists($queueName);
 

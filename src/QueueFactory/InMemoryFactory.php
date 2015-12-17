@@ -15,7 +15,7 @@ class InMemoryFactory implements \Bernard\QueueFactory
     protected $queues;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function create($queueName)
     {
@@ -27,7 +27,7 @@ class InMemoryFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function all()
     {
@@ -35,7 +35,7 @@ class InMemoryFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function count()
     {
@@ -43,7 +43,7 @@ class InMemoryFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function exists($queueName)
     {
@@ -51,7 +51,7 @@ class InMemoryFactory implements \Bernard\QueueFactory
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function remove($queueName)
     {

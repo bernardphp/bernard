@@ -45,9 +45,9 @@ class DefaultMessage extends AbstractMessage implements ArrayAccess
     }
 
     /**
-     * @param string  $name
+     * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function has($name)
     {
@@ -75,7 +75,7 @@ class DefaultMessage extends AbstractMessage implements ArrayAccess
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {

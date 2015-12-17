@@ -14,7 +14,7 @@ class DoctrineDriver implements \Bernard\Driver
     protected $connection;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __construct(Connection $connection)
     {
@@ -22,7 +22,7 @@ class DoctrineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listQueues()
     {
@@ -33,7 +33,7 @@ class DoctrineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createQueue($queueName)
     {
@@ -46,7 +46,7 @@ class DoctrineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function countMessages($queueName)
     {
@@ -59,15 +59,15 @@ class DoctrineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function pushMessage($queueName, $message)
     {
         $types = ['string', 'string', 'datetime'];
         $data = [
-            'queue'   => $queueName,
+            'queue' => $queueName,
             'message' => $message,
-            'sentAt'  => new \DateTime(),
+            'sentAt' => new \DateTime(),
         ];
 
         $this->createQueue($queueName);
@@ -75,7 +75,7 @@ class DoctrineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function popMessage($queueName, $duration = 5)
     {
@@ -88,7 +88,6 @@ class DoctrineDriver implements \Bernard\Driver
                 $message = $this->doPopMessage($queueName);
 
                 $this->connection->commit();
-
             } catch (\Exception $e) {
                 $this->connection->rollback();
             }
@@ -103,7 +102,7 @@ class DoctrineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
@@ -111,7 +110,7 @@ class DoctrineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
@@ -128,7 +127,7 @@ class DoctrineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeQueue($queueName)
     {
@@ -137,7 +136,7 @@ class DoctrineDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function info()
     {

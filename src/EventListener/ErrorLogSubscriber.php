@@ -21,8 +21,8 @@ class ErrorLogSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param  Envelope  $envelope
-     * @param  Exception $exception
+     * @param Envelope  $envelope
+     * @param Exception $exception
      */
     protected function format(Envelope $envelope, Exception $exception)
     {

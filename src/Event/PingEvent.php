@@ -2,7 +2,6 @@
 
 namespace Bernard\Event;
 
-use Bernard\Envelope;
 use Bernard\Queue;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -14,7 +13,7 @@ class PingEvent extends Event
     protected $queue;
 
     /**
-     * @param Queue    $queue
+     * @param Queue $queue
      */
     public function __construct(Queue $queue)
     {

@@ -38,7 +38,7 @@ class SimpleRouter implements \Bernard\Router
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function map(Envelope $envelope)
     {
@@ -58,7 +58,7 @@ class SimpleRouter implements \Bernard\Router
     /**
      * @param mixed $receiver
      *
-     * @return boolean
+     * @return bool
      */
     protected function accepts($receiver)
     {

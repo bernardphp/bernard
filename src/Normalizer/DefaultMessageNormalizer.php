@@ -13,18 +13,18 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function normalize($object, $format = null, array $context = [])
     {
         return [
-            'name'      => $object->getName(),
+            'name' => $object->getName(),
             'arguments' => $object->all(),
         ];
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
@@ -34,7 +34,7 @@ class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
@@ -42,7 +42,7 @@ class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supportsNormalization($data, $format = null)
     {

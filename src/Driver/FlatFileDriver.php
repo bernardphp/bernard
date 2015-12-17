@@ -21,7 +21,7 @@ class FlatFileDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listQueues()
     {
@@ -30,7 +30,6 @@ class FlatFileDriver implements \Bernard\Driver
         $queues = [];
 
         foreach ($it as $file) {
-            /** @var $file \SplFileInfo */
             if (!$file->isDir()) {
                 continue;
             }
@@ -42,7 +41,7 @@ class FlatFileDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createQueue($queueName)
     {
@@ -56,7 +55,7 @@ class FlatFileDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function countMessages($queueName)
     {
@@ -68,7 +67,7 @@ class FlatFileDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function pushMessage($queueName, $message)
     {
@@ -80,7 +79,7 @@ class FlatFileDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function popMessage($queueName, $duration = 5)
     {
@@ -108,7 +107,7 @@ class FlatFileDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
@@ -123,7 +122,7 @@ class FlatFileDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
@@ -147,7 +146,7 @@ class FlatFileDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeQueue($queueName)
     {
@@ -156,7 +155,7 @@ class FlatFileDriver implements \Bernard\Driver
         $iterator = new \RegexIterator($iterator, '#\.job$#');
 
         foreach ($iterator as $file) {
-            /** @var $file \SplFileInfo */
+            /* @var $file \DirectoryIterator */
             unlink($file->getRealPath());
         }
 
@@ -164,7 +163,7 @@ class FlatFileDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function info()
     {

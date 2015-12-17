@@ -11,7 +11,7 @@ use Bernard\Util;
 abstract class AbstractMessage implements Message
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -25,7 +25,7 @@ abstract class AbstractMessage implements Message
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getQueue()
     {
