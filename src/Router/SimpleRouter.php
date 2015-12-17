@@ -31,7 +31,7 @@ class SimpleRouter implements \Bernard\Router
     public function add($name, $receiver)
     {
         if (!$this->accepts($receiver)) {
-            throw new \InvalidArgumentException('Given "$receiver" is not supported.');
+            throw new \InvalidArgumentException(sprintf('Given "%s" is not supported.', $receiver));
         }
 
         $this->receivers[$name] = $receiver;
