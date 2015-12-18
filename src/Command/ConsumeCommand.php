@@ -3,6 +3,7 @@
 namespace Bernard\Command;
 
 use Bernard\Consumer;
+use Bernard\Queue;
 use Bernard\Queue\RoundRobinQueue;
 use Bernard\QueueFactory;
 use Symfony\Component\Console\Input\InputArgument;
@@ -31,7 +32,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configure()
     {
@@ -45,7 +46,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
@@ -56,6 +57,7 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
 
     /**
      * @param array|string $queue
+     *
      * @return Queue
      */
     protected function getQueue($queue)

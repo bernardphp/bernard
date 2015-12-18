@@ -20,7 +20,7 @@ class PredisDriver extends PhpRedisDriver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function popMessage($queueName, $duration = 5)
     {
@@ -30,7 +30,7 @@ class PredisDriver extends PhpRedisDriver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function info()
     {

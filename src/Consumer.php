@@ -18,7 +18,7 @@ class Consumer
     protected $pause = false;
     protected $configured = false;
     protected $options = [
-        'max-runtime'  => PHP_INT_MAX,
+        'max-runtime' => PHP_INT_MAX,
         'max-messages' => null,
         'stop-when-empty' => false,
         'stop-on-error' => false,
@@ -42,7 +42,7 @@ class Consumer
      */
     public function consume(Queue $queue, array $options = [])
     {
-        declare(ticks=1);
+        declare (ticks = 1);
 
         $this->bind();
 
@@ -58,7 +58,7 @@ class Consumer
      * @param Queue $queue
      * @param array $options
      *
-     * @return boolean
+     * @return bool
      */
     public function tick(Queue $queue, array $options = [])
     {
@@ -81,7 +81,6 @@ class Consumer
         if (!$envelope = $queue->dequeue()) {
             return !$this->options['stop-when-empty'];
         }
-
 
         $this->invoke($envelope, $queue);
 

@@ -15,8 +15,8 @@ class IronMqDriver extends AbstractPrefetchDriver
     protected $ironmq;
 
     /**
-     * @param IronMQ       $ironmq
-     * @param integer|null $prefetch
+     * @param IronMQ   $ironmq
+     * @param int|null $prefetch
      */
     public function __construct(IronMQ $ironmq, $prefetch = null)
     {
@@ -26,7 +26,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listQueues()
     {
@@ -48,14 +48,14 @@ class IronMqDriver extends AbstractPrefetchDriver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createQueue($queueName)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function countMessages($queueName)
     {
@@ -65,7 +65,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function pushMessage($queueName, $message)
     {
@@ -73,7 +73,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function popMessage($queueName, $duration = 5)
     {
@@ -97,7 +97,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
@@ -107,7 +107,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * IronMQ does not support an offset when peeking messages.
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
@@ -119,7 +119,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeQueue($queueName)
     {
@@ -127,7 +127,7 @@ class IronMqDriver extends AbstractPrefetchDriver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function info()
     {

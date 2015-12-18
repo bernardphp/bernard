@@ -11,12 +11,12 @@ use Bernard\Queue;
 class RoundRobinQueue implements Queue
 {
     /**
-     * @var Queue[] $queues
+     * @var Queue[]
      */
     protected $queues;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $closed;
 
@@ -33,12 +33,12 @@ class RoundRobinQueue implements Queue
         $this->validateQueues($queues);
 
         $this->queues = $this->indexQueues($queues);
-        $this->envelopes = new \SplObjectStorage;
+        $this->envelopes = new \SplObjectStorage();
         $this->closed = false;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function enqueue(Envelope $envelope)
     {
@@ -48,7 +48,7 @@ class RoundRobinQueue implements Queue
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function dequeue()
     {
@@ -73,7 +73,7 @@ class RoundRobinQueue implements Queue
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function close()
     {
@@ -89,7 +89,7 @@ class RoundRobinQueue implements Queue
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function peek($index = 0, $limit = 20)
     {
@@ -120,11 +120,12 @@ class RoundRobinQueue implements Queue
             }
             $it->next();
         }
+
         return $envelopes;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function acknowledge(Envelope $envelope)
     {
@@ -140,7 +141,7 @@ class RoundRobinQueue implements Queue
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __toString()
     {
@@ -148,7 +149,7 @@ class RoundRobinQueue implements Queue
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function count()
     {
@@ -166,7 +167,7 @@ class RoundRobinQueue implements Queue
 
         $filtered = array_filter(
             $queues,
-            function($queue) {
+            function ($queue) {
                 return !$queue instanceof Queue;
             }
         );
@@ -177,13 +178,14 @@ class RoundRobinQueue implements Queue
 
     /**
      * @param Queue[] $queues
+     *
      * @return Queue[]
      */
     protected function indexQueues(array $queues)
     {
         return array_combine(
             array_map(
-                function($queue) {
+                function ($queue) {
                     return (string) $queue;
                 },
                 $queues

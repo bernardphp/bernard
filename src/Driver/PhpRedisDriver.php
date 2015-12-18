@@ -22,7 +22,7 @@ class PhpRedisDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listQueues()
     {
@@ -30,7 +30,7 @@ class PhpRedisDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createQueue($queueName)
     {
@@ -38,7 +38,7 @@ class PhpRedisDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function countMessages($queueName)
     {
@@ -46,7 +46,7 @@ class PhpRedisDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function pushMessage($queueName, $message)
     {
@@ -54,7 +54,7 @@ class PhpRedisDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function popMessage($queueName, $duration = 5)
     {
@@ -72,7 +72,7 @@ class PhpRedisDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
@@ -82,14 +82,14 @@ class PhpRedisDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeQueue($queueName)
     {
@@ -98,7 +98,7 @@ class PhpRedisDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function info()
     {

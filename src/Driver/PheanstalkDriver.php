@@ -3,7 +3,6 @@
 namespace Bernard\Driver;
 
 use Pheanstalk\PheanstalkInterface;
-use Pheanstalk\Job;
 
 /**
  * Implements a Driver for use with https://github.com/pda/pheanstalk
@@ -23,7 +22,7 @@ class PheanstalkDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listQueues()
     {
@@ -31,14 +30,14 @@ class PheanstalkDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createQueue($queueName)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function countMessages($queueName)
     {
@@ -48,7 +47,7 @@ class PheanstalkDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function pushMessage($queueName, $message)
     {
@@ -56,7 +55,7 @@ class PheanstalkDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function popMessage($queueName, $duration = 5)
     {
@@ -68,7 +67,7 @@ class PheanstalkDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
@@ -76,7 +75,7 @@ class PheanstalkDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
@@ -84,14 +83,14 @@ class PheanstalkDriver implements \Bernard\Driver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeQueue($queueName)
     {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function info()
     {

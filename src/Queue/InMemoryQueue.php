@@ -14,18 +14,18 @@ class InMemoryQueue extends AbstractQueue
     protected $queue;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __construct($name)
     {
         parent::__construct($name);
 
-        $this->queue = new \SplQueue;
+        $this->queue = new \SplQueue();
         $this->queue->setIteratorMode(\SplQueue::IT_MODE_DELETE);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function count()
     {
@@ -35,7 +35,7 @@ class InMemoryQueue extends AbstractQueue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function enqueue(Envelope $envelope)
     {
@@ -45,7 +45,7 @@ class InMemoryQueue extends AbstractQueue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function dequeue()
     {
@@ -57,11 +57,11 @@ class InMemoryQueue extends AbstractQueue
 
         usleep(10000);
 
-        return null;
+        return;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function peek($index = 0, $limit = 20)
     {

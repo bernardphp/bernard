@@ -19,8 +19,8 @@ class Envelope
      */
     public function __construct(Message $message)
     {
-        $this->message   = $message;
-        $this->class     = get_class($message);
+        $this->message = $message;
+        $this->class = get_class($message);
         $this->timestamp = time();
     }
 
@@ -49,7 +49,7 @@ class Envelope
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getTimestamp()
     {

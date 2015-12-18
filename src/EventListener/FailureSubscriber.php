@@ -29,7 +29,6 @@ class FailureSubscriber implements EventSubscriberInterface
      */
     public function onReject(RejectEnvelopeEvent $event)
     {
-
         $envelope = $event->getEnvelope();
 
         $event->getQueue()->acknowledge($envelope);

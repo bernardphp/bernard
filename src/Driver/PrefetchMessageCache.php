@@ -49,6 +49,6 @@ class PrefetchMessageCache
             return $this->caches[$queueName];
         }
 
-        return $this->caches[$queueName] = new \SplQueue;
+        return $this->caches[$queueName] = new \SplQueue();
     }
 }

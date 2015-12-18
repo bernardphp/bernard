@@ -2,7 +2,6 @@
 
 namespace Bernard\Router;
 
-use Bernard\Envelope;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,7 +23,7 @@ class ContainerAwareRouter extends SimpleRouter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function get($name)
     {
@@ -34,7 +33,7 @@ class ContainerAwareRouter extends SimpleRouter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function accepts($receiver)
     {

@@ -22,7 +22,7 @@ abstract class AbstractQueue implements \Bernard\Queue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function close()
     {
@@ -32,7 +32,7 @@ abstract class AbstractQueue implements \Bernard\Queue
     /**
      * By Default this is not implemented. For Memory queues it does not make sense.
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acknowledge(Envelope $envelope)
     {
@@ -50,7 +50,7 @@ abstract class AbstractQueue implements \Bernard\Queue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __toString()
     {

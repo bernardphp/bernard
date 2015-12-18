@@ -24,8 +24,8 @@ interface Queue extends \Countable
     public function close();
 
     /**
-     * @param integer $index
-     * @param integer $limit
+     * @param int $index
+     * @param int $limit
      *
      * @return array
      */

@@ -5,7 +5,6 @@ namespace Bernard\Driver;
 use Bernard\Driver;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
-use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class PhpAmqpDriver implements Driver
@@ -31,8 +30,8 @@ class PhpAmqpDriver implements Driver
 
     /**
      * @param AMQPStreamConnection $connection
-     * @param string $exchange
-     * @param array $defaultMessageParams
+     * @param string               $exchange
+     * @param array                $defaultMessageParams
      */
     public function __construct(AMQPStreamConnection $connection, $exchange, array $defaultMessageParams = null)
     {
@@ -50,7 +49,6 @@ class PhpAmqpDriver implements Driver
      */
     public function listQueues()
     {
-
     }
 
     /**
@@ -68,11 +66,10 @@ class PhpAmqpDriver implements Driver
     /**
      * Count the number of messages in queue. This can be a approximately number.
      *
-     * @return integer
+     * @return int
      */
     public function countMessages($queueName)
     {
-
     }
 
     /**
@@ -92,7 +89,7 @@ class PhpAmqpDriver implements Driver
      * wait $interval seconds.
      *
      * @param string $queueName
-     * @param integer $interval
+     * @param int    $interval
      *
      * @return array An array like array($message, $receipt);
      */
@@ -102,6 +99,7 @@ class PhpAmqpDriver implements Driver
         if (!$message) {
             // sleep for 10 ms to prevent hammering CPU
             usleep(10000);
+
             return [null, null];
         }
 
@@ -113,7 +111,7 @@ class PhpAmqpDriver implements Driver
      * have been consumed.
      *
      * @param string $queueName
-     * @param mixed $receipt
+     * @param mixed  $receipt
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
@@ -125,12 +123,11 @@ class PhpAmqpDriver implements Driver
      * from the queue.
      *
      * @param string $queueName
-     * @param integer $index
-     * @param integer $limit
+     * @param int    $index
+     * @param int    $limit
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-
     }
 
     /**
@@ -140,7 +137,6 @@ class PhpAmqpDriver implements Driver
      */
     public function removeQueue($queueName)
     {
-
     }
 
     /**
@@ -148,7 +144,6 @@ class PhpAmqpDriver implements Driver
      */
     public function info()
     {
-
     }
 
     public function __destruct()

@@ -23,7 +23,7 @@ class PimpleAwareRouter extends SimpleRouter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function get($name)
     {
@@ -31,7 +31,7 @@ class PimpleAwareRouter extends SimpleRouter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function accepts($receiver)
     {

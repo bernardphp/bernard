@@ -42,8 +42,8 @@ class MessagesSchema
         $table = $schema->createTable('bernard_messages');
         $table->addColumn('id', 'integer', [
             'autoincrement' => true,
-            'unsigned'      => true,
-            'notnull'       => true,
+            'unsigned' => true,
+            'notnull' => true,
         ]);
 
         $table->addColumn('queue', 'string');

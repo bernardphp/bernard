@@ -24,9 +24,9 @@ class PersistentQueue extends AbstractQueue
     {
         parent::__construct($name);
 
-        $this->driver   = $driver;
-        $this->serializer  = $serializer;
-        $this->receipts = new \SplObjectStorage;
+        $this->driver = $driver;
+        $this->serializer = $serializer;
+        $this->receipts = new \SplObjectStorage();
 
         $this->register();
     }
@@ -42,7 +42,7 @@ class PersistentQueue extends AbstractQueue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function count()
     {
@@ -52,7 +52,7 @@ class PersistentQueue extends AbstractQueue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function close()
     {
@@ -62,7 +62,7 @@ class PersistentQueue extends AbstractQueue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function enqueue(Envelope $envelope)
     {
@@ -72,7 +72,7 @@ class PersistentQueue extends AbstractQueue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acknowledge(Envelope $envelope)
     {
@@ -86,7 +86,7 @@ class PersistentQueue extends AbstractQueue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function dequeue()
     {
@@ -104,7 +104,7 @@ class PersistentQueue extends AbstractQueue
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function peek($index = 0, $limit = 20)
     {

@@ -27,7 +27,7 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function configure()
     {
@@ -39,12 +39,12 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $name    = $input->getArgument('name');
-        $queue   = $input->getOption('queue');
+        $name = $input->getArgument('name');
+        $queue = $input->getOption('queue');
         $message = [];
 
         if ($input->getArgument('message')) {
