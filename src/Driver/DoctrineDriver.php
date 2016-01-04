@@ -158,7 +158,7 @@ class DoctrineDriver implements \Bernard\Driver
     {
         $query = 'SELECT id, message FROM bernard_messages
                   WHERE queue = :queue AND visible = :visible
-                  ORDER BY sentAt, id ' . $this->connection->getDatabasePlatform()->getForUpdateSql();
+                  ORDER BY sentAt, id LIMIT 1 ' . $this->connection->getDatabasePlatform()->getForUpdateSql();
 
         list($id, $message) = $this->connection->fetchArray($query, [
             'queue' => $queueName,
