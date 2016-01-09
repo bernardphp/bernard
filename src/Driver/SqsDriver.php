@@ -2,11 +2,12 @@
 
 namespace Bernard\Driver;
 
+use Aws\Sqs\Exception\SqsException;
 use Aws\Sqs\SqsClient;
 
 /**
  * Implements a Driver for use with AWS SQS client API:
- * http://docs.aws.amazon.com/aws-sdk-php-2/latest/class-Aws.Sqs.SqsClient.html
+ * @link http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html
  *
  * @package Bernard
  */
@@ -171,19 +172,7 @@ class SqsDriver extends AbstractPrefetchDriver
             return $this->queueUrls[$queueName];
         }
 
-        try {
-            $result = $this->sqs->getQueueUrl(['QueueName' => $queueName]);
-        } catch (SqsException $exception) {
-            if ($exception->getExceptionCode() === 'AWS.SimpleQueueService.NonExistentQueue') {
-                throw new SqsException(
-                    'The queue "' . $queueName . '" is neither aliased locally to an SQS URL nor could it be resolved by SQS.',
-                    $exception->getCode(),
-                    $exception
-                );
-            }
-
-            throw $exception;
-        }
+        $result = $this->sqs->getQueueUrl(['QueueName' => $queueName]);
 
         if ($result && $queueUrl = $result->get('QueueUrl')) {
             return $this->queueUrls[$queueName] = $queueUrl;

@@ -2,6 +2,7 @@
 
 namespace Bernard\Tests\Driver;
 
+use Aws\Result;
 use Aws\Sqs\SqsClient;
 use Bernard\Driver\SqsDriver;
 use Guzzle\Service\Resource\Model;
@@ -25,15 +26,15 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
             ))
             ->getMock();
 
-        $this->driver = new SqsDriver($this->sqs, array('send-newsletter' => 'url'));
+        $this->driver = new SqsDriver($this->sqs, ['send-newsletter' => 'url']);
     }
 
     public function testItExposesInfo()
     {
-        $driver = new SqsDriver($this->sqs, array(), 10);
+        $driver = new SqsDriver($this->sqs, [], 10);
 
-        $this->assertEquals(array('prefetch' => 10), $driver->info());
-        $this->assertEquals(array('prefetch' => 2), $this->driver->info());
+        $this->assertEquals(['prefetch' => 10], $driver->info());
+        $this->assertEquals(['prefetch' => 2], $this->driver->info());
     }
 
     public function testItImplementsDriverInterface()
@@ -47,14 +48,14 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
         $this->sqs
             ->expects($this->once())
             ->method('getQueueAttributes')
-            ->with($this->equalTo(array(
+            ->with($this->equalTo([
                 'QueueUrl'       => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME,
                 'AttributeNames' => array('ApproximateNumberOfMessages'),
-            )))
+            ]))
             ->will($this->returnValue(
-                new Model(array(
-                    'Attributes' => array('ApproximateNumberOfMessages' => 4),
-                ))
+                $this->wrapResult([
+                    'Attributes' => ['ApproximateNumberOfMessages' => 4],
+                ])
             ));
 
         $this->assertEquals(4, $this->driver->countMessages(self::DUMMY_QUEUE_NAME));
@@ -69,20 +70,20 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testItGetsAllQueues()
     {
-        $driver = new SqsDriver($this->sqs, array(
+        $driver = new SqsDriver($this->sqs, [
             'import-users' => 'alreadyknowurl/import_users_prod'
-        ));
+        ]);
 
         $this->sqs
             ->expects($this->once())
             ->method('listQueues')
-            ->will($this->returnValue(new Model(array(
-                'QueueUrls' => array(
+            ->will($this->returnValue($this->wrapResult([
+                'QueueUrls' => [
                     'https://sqs.eu-west-1.amazonaws.com/123123/failed',
                     'https://sqs.eu-west-1.amazonaws.com/123123/queue1',
                     'alreadyknowurl/import_users_prod',
-                )
-            ))));
+                ]
+            ])));
 
         $queues = array('import-users', 'failed', 'queue1');
 
@@ -97,18 +98,18 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
             'WaitTimeSeconds'     => 5,
         );
 
-        $sqsMessages = new Model(array(
-            'Messages' => array(
-                array('Body' => 'message0', 'ReceiptHandle' => 'r0'),
-                array('Body' => 'message1', 'ReceiptHandle' => 'r1'),
-            ),
-        ));
+        $sqsMessages = $this->wrapResult([
+            'Messages' => [
+                ['Body' => 'message0', 'ReceiptHandle' => 'r0'],
+                ['Body' => 'message1', 'ReceiptHandle' => 'r1'],
+            ],
+        ]);
 
         $this->sqs->expects($this->once())->method('receiveMessage')
             ->with($this->equalTo($query))->will($this->returnValue($sqsMessages));
 
-        $this->assertEquals(array('message0', 'r0'), $this->driver->popMessage('send-newsletter'));
-        $this->assertEquals(array('message1', 'r1'), $this->driver->popMessage('send-newsletter'));
+        $this->assertEquals(['message0', 'r0'], $this->driver->popMessage('send-newsletter'));
+        $this->assertEquals(['message1', 'r1'], $this->driver->popMessage('send-newsletter'));
     }
 
     public function testItPushesMessages()
@@ -117,10 +118,10 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
         $this->sqs
             ->expects($this->once())
             ->method('sendMessage')
-            ->with($this->equalTo(array(
+            ->with($this->equalTo([
                 'QueueUrl'    => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME,
                 'MessageBody' => 'This is a message'
-            )));
+            ]));
         $this->driver->pushMessage('my-queue', 'This is a message');
     }
 
@@ -129,56 +130,62 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
         $this->sqs
             ->expects($this->at(0))
             ->method('getQueueUrl')
-            ->with($this->equalTo(array(
+            ->with($this->equalTo([
                 'QueueName' => self::DUMMY_QUEUE_NAME. '0',
-            )))
-            ->will($this->returnValue(new Model(array('QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME. '0'))));
+            ]))
+            ->will($this->returnValue($this->wrapResult([
+                'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX
+                    . '/'. self::DUMMY_QUEUE_NAME. '0',
+            ])));
         $this->sqs
             ->expects($this->at(1))
             ->method('receiveMessage')
-            ->with($this->equalTo(array(
+            ->with($this->equalTo([
                 'QueueUrl'            => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME. '0',
                 'MaxNumberOfMessages' => 2,
                 'WaitTimeSeconds'     => 5,
-            )))
-            ->will($this->returnValue(new Model(array(
-                'Messages' => array(
-                    array('Body' => 'message0', 'ReceiptHandle' => 'r0')
-                )
-            ))));
+            ]))
+            ->will($this->returnValue($this->wrapResult([
+                'Messages' => [
+                    ['Body' => 'message0', 'ReceiptHandle' => 'r0']
+                ]
+            ])));
 
         $this->sqs
             ->expects($this->at(2))
             ->method('getQueueUrl')
-            ->with($this->equalTo(array(
+            ->with($this->equalTo([
                 'QueueName' => self::DUMMY_QUEUE_NAME. '1'
-            )))
-            ->will($this->returnValue(new Model(array(
+            ]))
+            ->will($this->returnValue($this->wrapResult([
                 'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX . '/my-queue1',
-            ))));
+            ])));
         $this->sqs
             ->expects($this->at(3))
             ->method('receiveMessage')
-            ->with($this->equalTo(array(
+            ->with($this->equalTo([
                 'QueueUrl'            => self::DUMMY_QUEUE_URL_PREFIX. '/my-queue1',
                 'MaxNumberOfMessages' => 2,
                 'WaitTimeSeconds'     => 30,
-            )))
-            ->will($this->returnValue(new Model(array(
-                'Messages' => array(
-                    array('Body' => 'message1', 'ReceiptHandle' => 'r1')
-                )
-            ))));
+            ]))
+            ->will($this->returnValue($this->wrapResult([
+                'Messages' => [
+                    ['Body' => 'message1', 'ReceiptHandle' => 'r1'],
+                ],
+            ])));
 
-        $this->assertEquals(array('message0', 'r0'), $this->driver->popMessage('my-queue0'));
-        $this->assertEquals(array('message1', 'r1'), $this->driver->popMessage('my-queue1', 30));
-        $this->assertEquals(array(null, null), $this->driver->popMessage('send-newsletter'));
+        $this->assertEquals(['message0', 'r0'], $this->driver->popMessage('my-queue0'));
+        $this->assertEquals(['message1', 'r1'], $this->driver->popMessage('my-queue1', 30));
+        $this->assertEquals([null, null], $this->driver->popMessage('send-newsletter'));
     }
 
     public function testAcknowledgeMessage()
     {
         $this->sqs->expects($this->once())->method('deleteMessage')
-            ->with($this->equalTo(array('QueueUrl' => 'url', 'ReceiptHandle' => 'r0')));
+            ->with($this->equalTo([
+                'QueueUrl' => 'url',
+                'ReceiptHandle' => 'r0',
+            ]));
 
         $this->driver->acknowledgeMessage('send-newsletter', 'r0');
     }
@@ -188,9 +195,17 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
         $this->sqs
             ->expects($this->once())
             ->method('getQueueUrl')
-            ->with($this->equalTo(array(
-                'QueueName' => self::DUMMY_QUEUE_NAME
-            )))
-            ->will($this->returnValue(new Model(array('QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME))));
+            ->with($this->equalTo(['QueueName' => self::DUMMY_QUEUE_NAME]))
+            ->will($this->returnValue($this->wrapResult([
+                'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX
+                    . '/'. self::DUMMY_QUEUE_NAME,
+            ])));
+    }
+
+    private function wrapResult($data = [])
+    {
+        return class_exists('Aws\Common\Aws')
+            ? new Model($data)
+            : new Result($data);
     }
 }
