@@ -8,9 +8,10 @@ fi
 
 if [ $TRAVIS_PHP_VERSION = "hhvm" ]; then
 	composer require --dev mongofill/mongofill=dev-master --no-update;
+	composer update --no-progress --no-plugins;
+else
+    composer update --no-progress --no-plugins $COMPOSER_OPTS;
 fi
 
-composer require --dev phpspec/phpspec:~2.0 --no-update
-composer install --no-progress --no-plugins
 mysql -e "CREATE DATABASE bernard_test;"
 psql -c 'CREATE DATABASE bernard_test;' -U postgres
