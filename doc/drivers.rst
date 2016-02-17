@@ -395,7 +395,7 @@ To support message queries, the following index should also be created:
 PhpAmqp / RabbitMQ
 ------------------
 
-The RabbitMQ driver leans on the php-amqp library by Alvaro Videla.
+The RabbitMQ driver leans on the php-amqp library by php-amqplib.
 
 The driver should be constructed with an ``AMQPStreamConnection`` object, an exchange name and optionally the default message
 parameters.
