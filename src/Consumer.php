@@ -76,7 +76,7 @@ class Consumer
             return true;
         }
 
-        $this->dispatcher->dispatch('bernard.ping', new PingEvent($queue));
+        $this->dispatcher->dispatch(BernardEvents::PING, new PingEvent($queue));
 
         if (!$envelope = $queue->dequeue()) {
             return !$this->options['stop-when-empty'];
@@ -125,7 +125,7 @@ class Consumer
     public function invoke(Envelope $envelope, Queue $queue)
     {
         try {
-            $this->dispatcher->dispatch('bernard.invoke', new EnvelopeEvent($envelope, $queue));
+            $this->dispatcher->dispatch(BernardEvents::INVOKE, new EnvelopeEvent($envelope, $queue));
 
             // for 5.3 support where a function name is not a callable
             call_user_func($this->router->map($envelope), $envelope->getMessage());
@@ -133,13 +133,13 @@ class Consumer
             // We successfully processed the message.
             $queue->acknowledge($envelope);
 
-            $this->dispatcher->dispatch('bernard.acknowledge', new EnvelopeEvent($envelope, $queue));
+            $this->dispatcher->dispatch(BernardEvents::ACKNOWLEDGE, new EnvelopeEvent($envelope, $queue));
         } catch (\Exception $e) {
             // Make sure the exception is not interfering.
             // Previously failing jobs handling have been moved to a middleware.
             //
             // Emit an event to let others log that exception
-            $this->dispatcher->dispatch('bernard.reject', new RejectEnvelopeEvent($envelope, $queue, $e));
+            $this->dispatcher->dispatch(BernardEvents::REJECT, new RejectEnvelopeEvent($envelope, $queue, $e));
 
             if ($this->options['stop-on-error']) {
                 throw $e;
