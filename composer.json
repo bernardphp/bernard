@@ -23,10 +23,10 @@
         "aws/aws-sdk-php": "~2.4",
         "pda/pheanstalk": "~3.0",
         "league/container": "~1.0",
-        "videlalvaro/php-amqplib": "~2.5"
+        "php-amqplib/php-amqplib": "~2.5"
     },
     "suggest": {
-        "videlalvaro/php-amqplib": "Allow sending messages to an AMQP server using php-amqplib",
+        "php-amqplib/php-amqplib": "Allow sending messages to an AMQP server using php-amqplib",
         "doctrine/dbal": "Allow sending messages to simulated message queue in a database via doctrine dbal",
         "iron-io/iron_mq": "Allow sending messages to IronMQ",
         "pda/pheanstalk": "Allow sending messages to Beanstalk using pheanstalk",
