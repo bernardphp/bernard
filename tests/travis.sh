@@ -4,6 +4,9 @@ if [ $TRAVIS_PHP_VERSION != "hhvm" ] && [ $TRAVIS_PHP_VERSION != "7.0" ]; then
 	pyrus install pecl/redis;
 	pyrus build pecl/redis;
 	echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini;
+
+	#Add mongo extension
+	echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 fi
 
 if [ $TRAVIS_PHP_VERSION = "hhvm" ]; then

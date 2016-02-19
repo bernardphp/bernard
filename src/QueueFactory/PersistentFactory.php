@@ -32,13 +32,13 @@ class PersistentFactory implements \Bernard\QueueFactory
     /**
      * {@inheritdoc}
      */
-    public function create($queueName)
+    public function create($queueName, array $options = [])
     {
         if (isset($this->queues[$queueName])) {
             return $this->queues[$queueName];
         }
 
-        $queue = new PersistentQueue($queueName, $this->driver, $this->serializer);
+        $queue = new PersistentQueue($queueName, $this->driver, $this->serializer, $options);
 
         return $this->queues[$queueName] = $queue;
     }

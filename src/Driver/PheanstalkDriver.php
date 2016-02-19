@@ -3,13 +3,14 @@
 namespace Bernard\Driver;
 
 use Pheanstalk\PheanstalkInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Implements a Driver for use with https://github.com/pda/pheanstalk
  *
  * @package Bernard
  */
-class PheanstalkDriver implements \Bernard\Driver
+class PheanstalkDriver extends AbstractDriver
 {
     protected $pheanstalk;
 
@@ -32,7 +33,7 @@ class PheanstalkDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function createQueue($queueName)
+    public function createQueue($queueName, array $options = [])
     {
     }
 
@@ -49,9 +50,17 @@ class PheanstalkDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
-        $this->pheanstalk->putInTube($queueName, $message);
+        $options = $this->validatePushOptions($options);
+
+        $this->pheanstalk->putInTube(
+            $queueName,
+            $message,
+            $options['priority'],
+            $options['delay'],
+            $options['ttr']
+        );
     }
 
     /**
@@ -98,5 +107,17 @@ class PheanstalkDriver implements \Bernard\Driver
             ->stats()
             ->getArrayCopy()
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configurePushOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'priority' => PheanstalkInterface::DEFAULT_PRIORITY,
+            'delay' => PheanstalkInterface::DEFAULT_DELAY,
+            'ttr' => PheanstalkInterface::DEFAULT_TTR,
+        ));
     }
 }

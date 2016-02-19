@@ -3,6 +3,7 @@
 namespace Bernard\Driver;
 
 use google\appengine\api\taskqueue\PushTask;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Simple driver for google AppEngine. Many features are not supported.
@@ -11,7 +12,7 @@ use google\appengine\api\taskqueue\PushTask;
  *
  * @package Bernard
  */
-class AppEngineDriver implements \Bernard\Driver
+class AppEngineDriver extends AbstractDriver
 {
     protected $queueMap;
 
@@ -34,7 +35,7 @@ class AppEngineDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function createQueue($queueName)
+    public function createQueue($queueName, array $options = [])
     {
     }
 
@@ -48,9 +49,11 @@ class AppEngineDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
-        $task = new PushTask($this->resolveEndpoint($queueName), compact('message'));
+        $options = $this->validatePushOptions($options);
+
+        $task = new PushTask($this->resolveEndpoint($queueName), compact('message'), $options);
         $task->add($queueName);
     }
 
@@ -89,6 +92,39 @@ class AppEngineDriver implements \Bernard\Driver
     public function info()
     {
         return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configurePushOptions(OptionsResolver $resolver)
+    {
+        //BC layer to support 2.3+ and 2.7+/3.0+ versions
+        if (interface_exists('Symfony\Component\OptionsResolver\OptionsResolverInterface')) {
+            //2.3+
+            $resolver
+                ->setOptional(array(
+                    'method',
+                    'name',
+                    'delay_seconds',
+                    'header',
+                ))
+                ->setAllowedValues(array(
+                    'method' => array('POST', 'GET', 'HEAD', 'PUT', 'DELETE'),
+                ))
+            ;
+        } else {
+            //2.7+
+            $resolver
+                ->setDefined('method')
+                ->setDefined('name')
+                ->setDefined('delay_seconds')
+                ->setDefined('header')
+                ->setAllowedValues(
+                    'method', array('POST', 'GET', 'HEAD', 'PUT', 'DELETE')
+                )
+            ;
+        }
     }
 
     /**

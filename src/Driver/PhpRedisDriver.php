@@ -9,7 +9,7 @@ use Redis;
  *
  * @package Bernard
  */
-class PhpRedisDriver implements \Bernard\Driver
+class PhpRedisDriver extends AbstractDriver
 {
     protected $redis;
 
@@ -32,7 +32,7 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function createQueue($queueName)
+    public function createQueue($queueName, array $options = [])
     {
         $this->redis->sAdd('queues', $queueName);
     }
@@ -48,7 +48,7 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $this->redis->rpush($this->resolveKey($queueName), $message);
     }

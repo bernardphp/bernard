@@ -14,19 +14,22 @@ class PersistentQueue extends AbstractQueue
     protected $driver;
     protected $serializer;
     protected $receipts;
+    protected $options;
 
     /**
      * @param string     $name
      * @param Driver     $driver
      * @param Serializer $serializer
+     * @param array      $options
      */
-    public function __construct($name, Driver $driver, Serializer $serializer)
+    public function __construct($name, Driver $driver, Serializer $serializer, array $options = [])
     {
         parent::__construct($name);
 
         $this->driver = $driver;
         $this->serializer = $serializer;
         $this->receipts = new \SplObjectStorage();
+        $this->options = $options;
 
         $this->register();
     }
@@ -38,7 +41,7 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        $this->driver->createQueue($this->name);
+        $this->driver->createQueue($this->name, $this->options);
     }
 
     /**
@@ -64,11 +67,11 @@ class PersistentQueue extends AbstractQueue
     /**
      * {@inheritdoc}
      */
-    public function enqueue(Envelope $envelope)
+    public function enqueue(Envelope $envelope, array $options = [])
     {
         $this->errorIfClosed();
 
-        $this->driver->pushMessage($this->name, $this->serializer->serialize($envelope));
+        $this->driver->pushMessage($this->name, $this->serializer->serialize($envelope), $options);
     }
 
     /**

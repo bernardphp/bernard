@@ -6,8 +6,9 @@ use Bernard\Driver;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PhpAmqpDriver implements Driver
+class PhpAmqpDriver extends AbstractDriver
 {
     /**
      * @var AMQPStreamConnection
@@ -52,15 +53,15 @@ class PhpAmqpDriver implements Driver
     }
 
     /**
-     * Create a queue.
-     *
-     * @param string $queueName
+     * {@inheritdoc}
      */
-    public function createQueue($queueName)
+    public function createQueue($queueName, array $options = [])
     {
+        $options = $this->validateQueueOptions($options);
+
         $this->channel->exchange_declare($this->exchange, 'direct', false, true, false);
         $this->channel->queue_declare($queueName, false, true, false, false);
-        $this->channel->queue_bind($queueName, $this->exchange);
+        $this->channel->queue_bind($queueName, $this->exchange, $options['routingkey']);
     }
 
     /**
@@ -73,15 +74,21 @@ class PhpAmqpDriver implements Driver
     }
 
     /**
-     * Insert a message at the top of the queue.
-     *
-     * @param string $queueName
-     * @param string $message
+     * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $amqpMessage = new AMQPMessage($message, $this->defaultMessageParams);
-        $this->channel->basic_publish($amqpMessage, $this->exchange);
+        $options = $this->validatePushOptions($options);
+
+        $this->channel->basic_publish(
+            $amqpMessage,
+            $this->exchange,
+            $options['routingkey'],
+            $options['mandatory'],
+            $options['immediate'],
+            $options['ticket']
+        );
     }
 
     /**
@@ -150,4 +157,24 @@ class PhpAmqpDriver implements Driver
     {
         $this->channel->close();
     }
+
+    public function configureQueueOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'routingkey' => '',
+        ));
+
+    }
+
+    public function configurePushOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'routingkey' => '',
+            'mandatory' => false,
+            'immediate' => false,
+            'ticket' => null,
+        ));
+    }
+
+
 }

@@ -9,8 +9,11 @@ interface Queue extends \Countable
 {
     /**
      * @param Envelope $envelope
+     * @param array    $options
+     *
+     * @return
      */
-    public function enqueue(Envelope $envelope);
+    public function enqueue(Envelope $envelope, array $options = []);
 
     /**
      * @return Envelope

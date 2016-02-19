@@ -8,7 +8,7 @@ namespace Bernard\Driver;
  *
  * @package Bernard
  */
-abstract class AbstractPrefetchDriver implements \Bernard\Driver
+abstract class AbstractPrefetchDriver extends AbstractDriver
 {
     protected $prefetch;
     protected $cache;

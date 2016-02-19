@@ -17,7 +17,7 @@ class InMemoryFactory implements \Bernard\QueueFactory
     /**
      * {@inheritdoc}
      */
-    public function create($queueName)
+    public function create($queueName, array $options = [])
     {
         if (!$this->exists($queueName)) {
             $this->queues[$queueName] = new InMemoryQueue($queueName);

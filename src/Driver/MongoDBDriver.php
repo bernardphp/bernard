@@ -5,13 +5,14 @@ namespace Bernard\Driver;
 use MongoCollection;
 use MongoDate;
 use MongoId;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Driver supporting MongoDB
  *
  * @package Bernard
  */
-class MongoDBDriver implements \Bernard\Driver
+class MongoDBDriver extends AbstractDriver
 {
     private $messages;
     private $queues;
@@ -37,11 +38,12 @@ class MongoDBDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function createQueue($queueName)
+    public function createQueue($queueName, array $options = [])
     {
+        $options = $this->validateQueueOptions($options);
         $data = ['_id' => (string) $queueName];
 
-        $this->queues->update($data, $data, ['upsert' => true]);
+        $this->queues->update($data, $data, $options);
     }
 
     /**
@@ -58,8 +60,9 @@ class MongoDBDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
+        $options = $this->validatePushOptions($options);
         $data = [
             'queue' => (string) $queueName,
             'message' => (string) $message,
@@ -67,7 +70,7 @@ class MongoDBDriver implements \Bernard\Driver
             'visible' => true,
         ];
 
-        $this->messages->insert($data);
+        $this->messages->insert($data, $options);
     }
 
     /**
@@ -146,5 +149,48 @@ class MongoDBDriver implements \Bernard\Driver
             'messages' => (string) $this->messages,
             'queues' => (string) $this->queues,
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureQueueOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'upsert' => true
+        ));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configurePushOptions(OptionsResolver $resolver)
+    {
+        //BC layer to support 2.3+ and 2.7+/3.0+ versions
+        if (interface_exists('Symfony\Component\OptionsResolver\OptionsResolverInterface')) {
+            //2.3+
+            $resolver
+                ->setDefaults(array(
+                    'fsync' => false,
+                    'j' => false,
+                ))
+                ->setOptional(array(
+                    'socketTimeoutMS',
+                    'w',
+                    'wTimeoutMS',
+                ))
+            ;
+        } else {
+            //2.7+
+            $resolver
+                ->setDefaults(array(
+                    'fsync' => false,
+                    'j' => false,
+                ))
+                ->setDefined('socketTimeoutMS')
+                ->setDefined('w')
+                ->setDefined('wTimeoutMS')
+            ;
+        }
     }
 }
