@@ -28,6 +28,15 @@ class PhpRedisDriverTest extends \PHPUnit_Framework_TestCase
         $this->connection = new PhpRedisDriver($this->redis);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Redis must be an instance of Redis or Snc\RedisBundle\Client\Phpredis\BaseClient.
+     */
+    public function testItShouldOnlyAcceptSpecificRedisInstances()
+    {
+        new PhpRedisDriver(new \stdClass);
+    }
+
     public function testItImplementsDriverInterface()
     {
         $this->assertInstanceOf('Bernard\Driver', $this->connection);
