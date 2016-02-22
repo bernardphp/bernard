@@ -25,8 +25,8 @@ class PhpRedisDriver implements \Bernard\Driver
         if (!$redis instanceof Redis && !$redis instanceof BaseClient) {
             throw new \InvalidArgumentException(sprintf(
                 'Redis must be an instance of %s or %s.',
-                Redis::class,
-                BaseClient::class
+                'Redis',
+                'Snc\RedisBundle\Client\Phpredis\BaseClient'
             ));
         }
 
