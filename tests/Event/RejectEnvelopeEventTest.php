@@ -6,6 +6,16 @@ use Bernard\Event\RejectEnvelopeEvent;
 
 class RejectEnvelopeEventTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Bernard\Envelope|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $envelope;
+
+    /**
+     * @var \Bernard\Queue|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $queue;
+
     public function setUp()
     {
         $this->envelope = $this->getMockBuilder('Bernard\Envelope')
@@ -26,5 +36,16 @@ class RejectEnvelopeEventTest extends \PHPUnit_Framework_TestCase
         $event = new RejectEnvelopeEvent($this->envelope, $this->queue, $e);
 
         $this->assertSame($e, $event->getException());
+    }
+
+    /**
+     * @requires PHP 7.0
+     */
+    public function testCanContainThrowable()
+    {
+        $error = new \TypeError();
+        $event = new RejectEnvelopeEvent($this->envelope, $this->queue, $error);
+
+        self::assertSame($error, $event->getException());
     }
 }

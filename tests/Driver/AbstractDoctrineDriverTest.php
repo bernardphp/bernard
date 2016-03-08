@@ -11,6 +11,16 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 
 abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Doctrine\DBAL\Connection
+     */
+    private $connection;
+
+    /**
+     * @var DoctrineDriver
+     */
+    protected $driver;
+
     public function setUp()
     {
         if (defined('HHVM_VERSION')) {
@@ -149,4 +159,9 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
 
         return $connection;
     }
+
+    /**
+     * @return \Doctrine\DBAL\Connection
+     */
+    protected abstract function createConnection();
 }

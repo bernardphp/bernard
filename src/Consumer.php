@@ -121,6 +121,9 @@ class Consumer
      *
      * @param Envelope $envelope
      * @param Queue    $queue
+     *
+     * @throws \Exception
+     * @throws \Throwable
      */
     public function invoke(Envelope $envelope, Queue $queue)
     {
@@ -134,16 +137,10 @@ class Consumer
             $queue->acknowledge($envelope);
 
             $this->dispatcher->dispatch(BernardEvents::ACKNOWLEDGE, new EnvelopeEvent($envelope, $queue));
-        } catch (\Exception $e) {
-            // Make sure the exception is not interfering.
-            // Previously failing jobs handling have been moved to a middleware.
-            //
-            // Emit an event to let others log that exception
-            $this->dispatcher->dispatch(BernardEvents::REJECT, new RejectEnvelopeEvent($envelope, $queue, $e));
-
-            if ($this->options['stop-on-error']) {
-                throw $e;
-            }
+        } catch (\Throwable $error) {
+            $this->rejectDispatch($error, $envelope, $queue);
+        } catch (\Exception $exception) {
+            $this->rejectDispatch($exception, $envelope, $queue);
         }
     }
 
@@ -176,6 +173,28 @@ class Consumer
             pcntl_signal(SIGQUIT, [$this, 'shutdown']);
             pcntl_signal(SIGUSR2, [$this, 'pause']);
             pcntl_signal(SIGCONT, [$this, 'resume']);
+        }
+    }
+
+    /**
+     * @param \Throwable|\Exception $exception note that the type-hint is missing due to PHP 5.x compat
+     *
+     * @param Envelope              $envelope
+     * @param Queue                 $queue
+     *
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    private function rejectDispatch($exception, Envelope $envelope, Queue $queue)
+    {
+        // Make sure the exception is not interfering.
+        // Previously failing jobs handling have been moved to a middleware.
+        //
+        // Emit an event to let others log that exception
+        $this->dispatcher->dispatch(BernardEvents::REJECT, new RejectEnvelopeEvent($envelope, $queue, $exception));
+
+        if ($this->options['stop-on-error']) {
+            throw $exception;
         }
     }
 }

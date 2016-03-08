@@ -13,6 +13,21 @@ use Bernard\Event\PingEvent;
 
 class ConsumerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var SimpleRouter
+     */
+    private $router;
+
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $dispatcher;
+
+    /**
+     * @var Consumer
+     */
+    private $consumer;
+
     public function setUp()
     {
         $this->router = new SimpleRouter;
@@ -179,5 +194,36 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->consumer->tick($queue);
 
         $this->assertTrue($service->importUsers);
+    }
+
+    /**
+     * @requires PHP 7.0
+     */
+    public function testWillRejectDispatchOnThrowableError()
+    {
+        $this->router->add('ImportReport', new Fixtures\Service);
+
+        $queue = new InMemoryQueue('send-newsletter');
+        $queue->enqueue(new Envelope(new DefaultMessage('ImportReport')));
+
+        $this->dispatcher->expects(self::at(0))->method('dispatch')->with('bernard.ping');
+        $this->dispatcher->expects(self::at(1))->method('dispatch')->with('bernard.invoke');
+
+        $this
+            ->dispatcher
+            ->expects(self::at(2))
+            ->method('dispatch')
+            ->with(
+                'bernard.reject',
+                self::callback(function (RejectEnvelopeEvent $rejectEnvelope) {
+                    self::assertInstanceOf('TypeError', $rejectEnvelope->getException());
+
+                    return true;
+                })
+            );
+
+        self::setExpectedException('TypeError');
+
+        $this->consumer->tick($queue, ['stop-on-error' => true]);
     }
 }

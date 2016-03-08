@@ -20,4 +20,10 @@ class Service
     {
         touch(__DIR__ . '/create_file.test');
     }
+
+    public function importReport(Report $report)
+    {
+        // note: the class hinted on this method does not exist on purpose, as calling this method should cause a
+        //       Throwable to be thrown
+    }
 }
