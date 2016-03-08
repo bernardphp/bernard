@@ -16,7 +16,7 @@ class ContainerInteropAwareRouterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $container = $this->prophesize(ContainerInterface::class);
+        $container = $this->prophesize('Interop\Container\ContainerInterface');
         $container->has('my.service')->willReturn(true);
         $container->get('my.service')->willReturn($this->sendNewsLetterHandler());
 
