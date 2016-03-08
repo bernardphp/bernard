@@ -163,13 +163,19 @@ class Consumer
 
     /**
      * Setup signal handlers for unix signals.
+     *
+     * If the process control extension does not exist (e.g. on Windows), ignore the signal handlers.
+     * The difference is that when terminating the consumer, running processes will not stop gracefully
+     * and will terminate immediately.
      */
     protected function bind()
     {
-        pcntl_signal(SIGTERM, [$this, 'shutdown']);
-        pcntl_signal(SIGINT,  [$this, 'shutdown']);
-        pcntl_signal(SIGQUIT, [$this, 'shutdown']);
-        pcntl_signal(SIGUSR2, [$this, 'pause']);
-        pcntl_signal(SIGCONT, [$this, 'resume']);
+        if (function_exists('pcntl_signal')) {
+            pcntl_signal(SIGTERM, [$this, 'shutdown']);
+            pcntl_signal(SIGINT,  [$this, 'shutdown']);
+            pcntl_signal(SIGQUIT, [$this, 'shutdown']);
+            pcntl_signal(SIGUSR2, [$this, 'pause']);
+            pcntl_signal(SIGCONT, [$this, 'resume']);
+        }
     }
 }
