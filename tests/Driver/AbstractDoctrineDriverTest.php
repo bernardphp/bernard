@@ -19,7 +19,7 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
     /**
      * @var DoctrineDriver
      */
-    private $driver;
+    protected $driver;
 
     public function setUp()
     {
