@@ -23,7 +23,8 @@
         "aws/aws-sdk-php": "~2.4",
         "pda/pheanstalk": "~3.0",
         "league/container": "~1.0",
-        "php-amqplib/php-amqplib": "~2.5"
+        "php-amqplib/php-amqplib": "~2.5",
+        "container-interop/container-interop": "^1.1"
     },
     "suggest": {
         "php-amqplib/php-amqplib": "Allow sending messages to an AMQP server using php-amqplib",
