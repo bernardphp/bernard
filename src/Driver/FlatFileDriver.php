@@ -12,12 +12,16 @@ class FlatFileDriver implements \Bernard\Driver
 {
     private $baseDirectory;
 
+    private $permissions;
+
     /**
      * @param string $baseDirectory The base directory
+     * @param int    $permissions   Permissions to create the file with.
      */
-    public function __construct($baseDirectory)
+    public function __construct($baseDirectory, $permissions = 0)
     {
         $this->baseDirectory = $baseDirectory;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -59,7 +63,10 @@ class FlatFileDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        $iterator = new \RecursiveDirectoryIterator($this->getQueueDirectory($queueName), \FilesystemIterator::SKIP_DOTS);
+        $iterator = new \RecursiveDirectoryIterator(
+            $this->getQueueDirectory($queueName),
+            \FilesystemIterator::SKIP_DOTS
+        );
         $iterator = new \RecursiveIteratorIterator($iterator);
         $iterator = new \RegexIterator($iterator, '#\.job$#');
 
@@ -76,6 +83,10 @@ class FlatFileDriver implements \Bernard\Driver
         $filename = $this->getJobFilename($queueName);
 
         file_put_contents($queueDir.DIRECTORY_SEPARATOR.$filename, $message);
+
+        if ($this->permissions) {
+            chmod($queueDir . DIRECTORY_SEPARATOR . $filename, $this->permissions);
+        }
     }
 
     /**
@@ -150,7 +161,10 @@ class FlatFileDriver implements \Bernard\Driver
      */
     public function removeQueue($queueName)
     {
-        $iterator = new \RecursiveDirectoryIterator($this->getQueueDirectory($queueName), \FilesystemIterator::SKIP_DOTS);
+        $iterator = new \RecursiveDirectoryIterator(
+            $this->getQueueDirectory($queueName),
+            \FilesystemIterator::SKIP_DOTS
+        );
         $iterator = new \RecursiveIteratorIterator($iterator);
         $iterator = new \RegexIterator($iterator, '#\.job$#');
 
@@ -191,6 +205,9 @@ class FlatFileDriver implements \Bernard\Driver
 
         if (!is_file($path)) {
             touch($path);
+            if ($this->permissions) {
+                chmod($path, $this->permissions);
+            }
         }
 
         $file = new \SplFileObject($path, 'r+');
