@@ -71,6 +71,7 @@ class PersistentQueue extends AbstractQueue
         $receipt = $this->driver->pushMessage($this->name, $this->serializer->serialize($envelope));
 
         if ($receipt) {
+            $envelope->setReceipt($receipt);
             $this->receipts->attach($envelope, $receipt);
         }
     }
@@ -101,6 +102,7 @@ class PersistentQueue extends AbstractQueue
         if ($serialized) {
             $envelope = $this->serializer->unserialize($serialized);
 
+            $envelope->setReceipt($receipt);
             $this->receipts->attach($envelope, $receipt);
 
             return $envelope;
@@ -123,7 +125,8 @@ class PersistentQueue extends AbstractQueue
      * @param Envelope $envelope The envelope.
      * @return mixed
      */
-    public function getReceipt(Envelope $envelope) {
+    public function getReceipt(Envelope $envelope)
+    {
         if (!$this->receipts->contains($envelope)) {
             return null;
         }

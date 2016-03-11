@@ -13,6 +13,7 @@ class Envelope
     protected $message;
     protected $class;
     protected $timestamp;
+    protected $receipt;
 
     /**
      * @param Message $message
@@ -41,6 +42,14 @@ class Envelope
     }
 
     /**
+     * @return mixed
+     */
+    public function getReceipt()
+    {
+        return $this->receipt;
+    }
+
+    /**
      * @return string
      */
     public function getClass()
@@ -54,5 +63,13 @@ class Envelope
     public function getTimestamp()
     {
         return $this->timestamp;
+    }
+
+    /**
+     * @param mixed $receipt
+     */
+    public function setReceipt($receipt)
+    {
+        $this->receipt = $receipt;
     }
 }

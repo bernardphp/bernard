@@ -33,9 +33,9 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
         $producer = new Producer($queues, $this->dispatcher);
 
         $message = new DefaultMessage('Message');
-        $event = $producer->produce($message, 'my-queue');
+        $envelope = $producer->produce($message, 'my-queue');
 
-        $this->assertEquals($receipt, $event->getQueue()->getReceipt($event->getEnvelope()));
+        $this->assertEquals($receipt, $envelope->getReceipt());
     }
 
     public function testDispatchesEvent()
@@ -48,7 +48,7 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
 
         $message = new DefaultMessage('Message');
 
-        $this->assertInstanceOf('Bernard\Event\EnvelopeEvent', $this->producer->produce($message, 'my-queue'));
+        $this->assertInstanceOf('Bernard\Envelope', $this->producer->produce($message, 'my-queue'));
 
         $this->assertSame($message, $args['envelope']->getMessage());
         $this->assertSame($this->queues->create('my-queue'), $args['queue']);
