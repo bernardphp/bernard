@@ -26,6 +26,7 @@ class Producer
     /**
      * @param Message     $message
      * @param string|null $queueName
+     * @return EnvelopeEvent
      */
     public function produce(Message $message, $queueName = null)
     {
@@ -34,6 +35,9 @@ class Producer
         $queue = $this->queues->create($queueName);
         $queue->enqueue($envelope = new Envelope($message));
 
-        $this->dispatcher->dispatch(BernardEvents::PRODUCE, new EnvelopeEvent($envelope, $queue));
+        $event = new EnvelopeEvent($envelope, $queue);
+        $this->dispatcher->dispatch(BernardEvents::PRODUCE, $event);
+
+        return $event;
     }
 }

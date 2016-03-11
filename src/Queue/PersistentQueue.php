@@ -68,7 +68,11 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        $this->driver->pushMessage($this->name, $this->serializer->serialize($envelope));
+        $receipt = $this->driver->pushMessage($this->name, $this->serializer->serialize($envelope));
+
+        if ($receipt) {
+            $this->receipts->attach($envelope, $receipt);
+        }
     }
 
     /**
@@ -113,5 +117,17 @@ class PersistentQueue extends AbstractQueue
         $messages = $this->driver->peekQueue($this->name, $index, $limit);
 
         return array_map(array($this->serializer, 'unserialize'), $messages);
+    }
+
+    /**
+     * @param Envelope $envelope The envelope.
+     * @return mixed
+     */
+    public function getReceipt(Envelope $envelope) {
+        if (!$this->receipts->contains($envelope)) {
+            return null;
+        }
+
+        return $this->receipts->offsetGet($envelope);
     }
 }

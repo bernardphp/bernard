@@ -76,7 +76,7 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testPushMessageLazilyCreatesQueue()
     {
-        $this->driver->pushMessage('send-newsletter', 'something');
+        $this->assertNotNull($this->driver->pushMessage('send-newsletter', 'something'));
         $this->assertEquals(array('send-newsletter'), $this->driver->listQueues());
     }
 
@@ -92,8 +92,9 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testItIsAQueue()
     {
-        $this->driver->pushMessage('send-newsletter', 'my-message-1');
-        $this->driver->pushMessage('send-newsletter', 'my-message-2');
+        $id = $this->driver->pushMessage('send-newsletter', 'my-message-1');
+        $this->assertGreaterThan(0, $id);
+        $this->assertEquals($id + 1, $this->driver->pushMessage('send-newsletter', 'my-message-2'));
 
         // peeking
         $this->assertEquals(array('my-message-1', 'my-message-2'), $this->driver->peekQueue('send-newsletter'));
