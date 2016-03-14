@@ -72,6 +72,7 @@ class DoctrineDriver implements \Bernard\Driver
 
         $this->createQueue($queueName);
         $this->connection->insert('bernard_messages', $data, $types);
+        return $this->connection->lastInsertId('bernard_messages_id_seq');
     }
 
     /**

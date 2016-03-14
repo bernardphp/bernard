@@ -16,14 +16,18 @@ class PersistentQueueTest extends AbstractQueueTest
     public function testEnqueue()
     {
         $envelope = new Envelope($this->getMock('Bernard\Message'));
+        $receipt = 1337;
 
         $this->serializer->expects($this->once())->method('serialize')->with($this->equalTo($envelope))
             ->will($this->returnValue('serialized message'));
         $this->driver->expects($this->once())->method('pushMessage')
-            ->with($this->equalTo('send-newsletter'), $this->equalTo('serialized message'));
+            ->with($this->equalTo('send-newsletter'), $this->equalTo('serialized message'))
+            ->will($this->returnValue($receipt));
 
         $queue = $this->createQueue('send-newsletter');
         $queue->enqueue($envelope);
+
+        $this->assertEquals($receipt, $queue->getReceipt($envelope));
     }
 
     public function testAcknowledge()
