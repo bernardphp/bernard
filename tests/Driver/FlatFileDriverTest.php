@@ -106,4 +106,15 @@ class FlatFileDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(10, glob($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter'.\DIRECTORY_SEPARATOR.'*.job'));
     }
+    
+    public function testListQueues()
+    {
+        $this->driver->createQueue('send-newsletter');
+        
+        for ($i = 0; $i < 5; $i++) {
+            $this->driver->pushMessage('send-newsletter', 'Job #'.$i);
+        }
+
+        $this->assertCount(6, $this->driver->listQueues());
+    }
 }
