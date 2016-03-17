@@ -109,12 +109,15 @@ class FlatFileDriverTest extends \PHPUnit_Framework_TestCase
     
     public function testListQueues()
     {
-        $this->driver->createQueue('send-newsletter');
+        $this->driver->createQueue('send-newsletter-1');
         
-        for ($i = 0; $i < 5; $i++) {
-            $this->driver->pushMessage('send-newsletter', 'Job #'.$i);
-        }
-
-        $this->assertCount(6, $this->driver->listQueues());
+        $this->driver->createQueue('send-newsletter-2');
+        $this->driver->pushMessage('send-newsletter-2', 'job #1');
+        
+        $this->driver->createQueue('send-newsletter-3');
+        $this->driver->pushMessage('send-newsletter-3', 'job #1');
+        $this->driver->pushMessage('send-newsletter-3', 'job #2');
+        
+        $this->assertCount(3, $this->driver->listQueues());
     }
 }
