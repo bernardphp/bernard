@@ -4,7 +4,7 @@ Getting Started
 Installation
 ------------
 
-The easiest way to install Bernard is using `Composer <http://getcomposer.org>`_.
+The recommended way to install Bernard is using `Composer <http://getcomposer.org>`_.
 If your projects do not already use this, it is highly recommended to start
 using it.
 
@@ -12,10 +12,10 @@ To install Bernard, run:
 
 .. code-block:: bash
 
-    $ composer require bernard/bernard:0.6.0
+    $ composer require bernard/bernard
 
-Then look at what kind of drivers and serializers there is available and install
-the ones you like before you are going to use Bernard.
+Then look at what kind of drivers and serializers are available and install
+the ones you need before you are going to use Bernard.
 
 Examples
 --------
@@ -35,57 +35,13 @@ the exception is caused by ``rand()`` always returning 7.
 
 This directory is a good source for setting stuff up and can be used as a go to guide.
 
-Producing Messages
-------------------
-
-Any message sent to Bernard must be an instance of ``Bernard\Message``,
-which has a ``getName`` and ``getQueue`` method. ``getName`` is used when working on
-messages and identifies the worker service that should work on it.
-
-A message is given to a producer that sends the message to the right queue.
-It is also possible to get the queue directly from the queue factory and push
-the message there. But remember to wrap the message in an ``Envelope`` object.
-The easiest way is to give it to the producer, as the queue name
-is taken from the message object.
-
-To make it easier to send messages and not require every type to be implemented
-in a separate class, a ``Bernard\Message\DefaultMessage`` is provided. It can hold
-any number of properties and only needs a name for the message. The queue name
-is then generated from that. When generating the queue name it will insert a "_"
-before any uppercase letter and then lowercase the name.
-
-.. code-block:: php
-
-    <?php
-
-    use Bernard\Message\DefaultMessage;
-    use Bernard\Producer;
-    use Bernard\QueueFactory\PersistentFactory;
-    use Bernard\Serializer\NaiveSerializer;
-
-    // .. create $driver
-    $factory = new PersistentFactory($driver, new NaiveSerializer());
-    $producer = new Producer($factory);
-
-    $message = new DefaultMessage("SendNewsletter", array(
-        'newsletterId' => 12,
-    ));
-
-    $producer->produce($message);
-
-In Memory Queues
-~~~~~~~~~~~~~~~~
-
-Bernard comes with an implementation for ``SplQueue`` which is completly in memory.
-It is useful for development and/or testing, when you don't necessarily want actions to be
-performed.
-
-
 .. toctree::
     :maxdepth: 2
     :hidden:
 
     index
+    producing
+    queues
     drivers
     serializers
     consuming

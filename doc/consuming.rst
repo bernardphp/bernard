@@ -14,31 +14,31 @@ object should handle which messages, you are required to register them first.
 
     <?php
 
-    use Bernard\ServiceResolver\ObjectResolver;
+    use Bernard\Router\SimpleRouter;
     use Bernard\Consumer;
 
     // .. create driver and a queuefactory
     // NewsletterMessageHandler is a pseudo service object that responds to
     // sendNewsletter.
 
-    $serviceResolver = new ObjectResolver;
-    $serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
+    $router = new SimpleRouter();
+    $router->add('SendNewsletter', new NewsletterMessageHandler);
 
-    // Bernard also comes with a service resolver for Pimple (Silex) which allows you
+    // Bernard also comes with a router for Pimple (Silex) which allows you
     // to use service ids and have your service object lazy loader.
     //
-    // $serviceResolver = new \Bernard\Pimple\PimpleAwareResolver($pimple);
-    // $serviceResolver->register('SendNewsletter', 'my.service.id');
+    // $router = new \Bernard\Router\PimpleAwareRouter($pimple);
+    // $router->add('SendNewsletter', 'my.service.id');
     //
     // Symfony DependencyInjection component is also supported.
     //
-    // $serviceResolver = new \Bernard\Symfony\ContainerAwareServiceResolver($container);
-    // $serviceResolver->register('SendNewsletter', 'my.service.id');
+    // $router = new \Bernard\Router\ContainerAwareRouter($container);
+    // $router->add('SendNewsletter', 'my.service.id');
 
     // Create a Consumer and start the loop. The second argument is optional and is an array
     // of options. Currently only ``max-runtime`` is supported which specifies the max runtime
     // in seconds.
-    $consumer = new Consumer($serviceResolver);
+    $consumer = new Consumer($router, $eventDispatcher);
     $consumer->consume($queueFactory->create('send-newsletter'), array(
         'max-runtime' => 900,
     ));
@@ -53,7 +53,7 @@ component.
 
     <?php
 
-    use Bernard\Symfony\Command\ConsumeCommand;
+    use Bernard\Command\ConsumeCommand;
 
     // create $console application
     $console->add(new ConsumeCommand($consumer, $queueFactory));
@@ -64,7 +64,7 @@ a newsletter, it would look like this.
 
 .. code-block:: bash
 
-    $ /path/to/console bernard:consume 'send-newsletter'
+    $ /path/to/console bernard:consume send-newsletter
 
 
 Internals
