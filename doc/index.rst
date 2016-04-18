@@ -39,7 +39,7 @@ This directory is a good source for setting stuff up and can be used as a go to 
     :maxdepth: 2
     :hidden:
 
-    index
+    self
     producing
     queues
     drivers
