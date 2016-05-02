@@ -10,7 +10,7 @@
         "php": "~5.4|~7.0",
         "bernard/normalt": "~1.0",
         "symfony/event-dispatcher": "~2.3|~3.0",
-        "beberlei/assert": "~2.0"
+        "beberlei/assert": "~2.1"
     },
     "require-dev" : {
         "psr/log": "~1.0",
@@ -20,10 +20,11 @@
         "symfony/dependency-injection": "~2.3|~3.0",
         "doctrine/dbal": "~2.3",
         "iron-io/iron_mq": "~1.4",
-        "aws/aws-sdk-php": "~2.4",
+        "aws/aws-sdk-php": "~2.4|~3.0",
         "pda/pheanstalk": "~3.0",
         "league/container": "~1.0",
-        "php-amqplib/php-amqplib": "~2.5"
+        "php-amqplib/php-amqplib": "~2.5",
+        "phpspec/phpspec": "~2.0"
     },
     "suggest": {
         "php-amqplib/php-amqplib": "Allow sending messages to an AMQP server using php-amqplib",
