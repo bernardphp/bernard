@@ -56,7 +56,7 @@ and the ``JsonEncoder`` to being able to serialize and deserialize messages.
     use Symfony\Component\Serializer\Encoder\JsonEncoder;
     use Symfony\Component\Serializer\Serializer;
 
-    $symfonySerializer = new Serializer(array(new EnvelopeNormalizer), array(new JsonEncoder);
+    $symfonySerializer = new Serializer(array(new EnvelopeNormalizer), array(new JsonEncoder));
     $serializer = new SymfonySerializer($symfonySerializer);
 
 JMS Serializer
