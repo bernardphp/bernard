@@ -70,6 +70,27 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         self::assertStringMatchesFormat('%aCOMMIT%a', $logger->queries[7]['sql']);
     }
 
+    public function testGenericExceptionsBubbleUpWhenThrownOnQueueCreation()
+    {
+        $connection   = $this->getMockBuilder('Doctrine\DBAL\Connection')->disableOriginalConstructor()->getMock();
+        $exception    = new \Exception();
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        $connection->expects(self::once())->method('transactional')->willReturnCallback('call_user_func');
+        $connection->expects(self::once())->method('insert')->willThrowException($exception);
+        $connection->expects(self::any())->method('createQueryBuilder')->willReturn($queryBuilder);
+
+        $driver = new DoctrineDriver($connection);
+
+        try {
+            $driver->createQueue('foo');
+
+            self::fail('An exception was supposed to be thrown');
+        } catch (\Exception $thrown) {
+            self::assertSame($exception, $thrown);
+        }
+    }
+
     public function testPushMessageLazilyCreatesQueue()
     {
         $this->driver->pushMessage('send-newsletter', 'something');
