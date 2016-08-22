@@ -91,6 +91,24 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testConstraintViolationExceptionsAreIgnored()
+    {
+        $connection   = $this->getMockBuilder('Doctrine\DBAL\Connection')->disableOriginalConstructor()->getMock();
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $exception    = $this
+            ->getMockBuilder('Doctrine\DBAL\Exception\ConstraintViolationException')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connection->expects(self::once())->method('transactional')->willReturnCallback('call_user_func');
+        $connection->expects(self::once())->method('insert')->willThrowException($exception);
+        $connection->expects(self::any())->method('createQueryBuilder')->willReturn($queryBuilder);
+
+        $driver = new DoctrineDriver($connection);
+
+        $driver->createQueue('foo');
+    }
+
     public function testPushMessageLazilyCreatesQueue()
     {
         $this->driver->pushMessage('send-newsletter', 'something');
