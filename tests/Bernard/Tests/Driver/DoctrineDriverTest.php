@@ -5,11 +5,23 @@ namespace Bernard\Tests\Driver;
 use Bernard\Doctrine\MessagesSchema;
 use Bernard\Driver\DoctrineDriver;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Schema\Schema;
 
 class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var DoctrineDriver
+     */
+    private $driver;
+
     public function setUp()
     {
         $this->connection = $this->setUpDatabase();
@@ -37,6 +49,25 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->driver->removeQueue('import-users');
 
         $this->assertEquals(array('send-newsletter'), $this->driver->listQueues());
+    }
+
+    public function testCreateQueueWillNotAttemptDuplicateQueueCreation()
+    {
+        $logger = new DebugStack();
+
+        $this->connection->getConfiguration()->setSQLLogger($logger);
+
+        $this->driver->createQueue('import-users');
+        $this->driver->createQueue('import-users');
+
+        self::assertCount(7, $logger->queries);
+        self::assertStringMatchesFormat('%aSTART TRANSACTION%a', $logger->queries[1]['sql']);
+        self::assertStringStartsWith('SELECT ', $logger->queries[2]['sql']);
+        self::assertStringStartsWith('INSERT ', $logger->queries[3]['sql']);
+        self::assertStringMatchesFormat('%aCOMMIT%a', $logger->queries[4]['sql']);
+        self::assertStringMatchesFormat('%aSTART TRANSACTION%a', $logger->queries[5]['sql']);
+        self::assertStringStartsWith('SELECT ', $logger->queries[6]['sql']);
+        self::assertStringMatchesFormat('%aCOMMIT%a', $logger->queries[7]['sql']);
     }
 
     public function testPushMessageLazilyCreatesQueue()
