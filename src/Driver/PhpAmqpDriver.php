@@ -38,8 +38,6 @@ class PhpAmqpDriver implements Driver
         $this->connection = $connection;
         $this->exchange = $exchange;
         $this->defaultMessageParams = $defaultMessageParams;
-
-        $this->channel = $this->connection->channel();
     }
 
     /**
@@ -58,9 +56,10 @@ class PhpAmqpDriver implements Driver
      */
     public function createQueue($queueName)
     {
-        $this->channel->exchange_declare($this->exchange, 'direct', false, true, false);
-        $this->channel->queue_declare($queueName, false, true, false, false);
-        $this->channel->queue_bind($queueName, $this->exchange);
+        $channel = $this->getChannel();
+        $channel->exchange_declare($this->exchange, 'direct', false, true, false);
+        $channel->queue_declare($queueName, false, true, false, false);
+        $channel->queue_bind($queueName, $this->exchange);
     }
 
     /**
@@ -81,7 +80,7 @@ class PhpAmqpDriver implements Driver
     public function pushMessage($queueName, $message)
     {
         $amqpMessage = new AMQPMessage($message, $this->defaultMessageParams);
-        $this->channel->basic_publish($amqpMessage, $this->exchange);
+        $this->getChannel()->basic_publish($amqpMessage, $this->exchange);
     }
 
     /**
@@ -95,7 +94,7 @@ class PhpAmqpDriver implements Driver
      */
     public function popMessage($queueName, $interval = 5)
     {
-        $message = $this->channel->basic_get($queueName);
+        $message = $this->getChannel()->basic_get($queueName);
         if (!$message) {
             // sleep for 10 ms to prevent hammering CPU
             usleep(10000);
@@ -115,7 +114,7 @@ class PhpAmqpDriver implements Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
-        $this->channel->basic_ack($receipt);
+        $this->getChannel()->basic_ack($receipt);
     }
 
     /**
@@ -148,6 +147,17 @@ class PhpAmqpDriver implements Driver
 
     public function __destruct()
     {
-        $this->channel->close();
+        if (null !== $this->channel) {
+            $this->channel->close();
+        }
+    }
+
+    private function getChannel()
+    {
+        if (null === $this->channel) {
+            $this->channel = $this->connection->channel();
+        }
+
+        return $this->channel;
     }
 }
