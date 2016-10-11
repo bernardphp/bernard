@@ -92,12 +92,12 @@ class PhpAmqpDriver implements Driver
      *
      * @return array An array like array($message, $receipt);
      */
-    public function popMessage($queueName, $interval = 5)
+    public function popMessage($queueName, $interval = 10000)
     {
         $message = $this->getChannel()->basic_get($queueName);
         if (!$message) {
             // sleep for 10 ms to prevent hammering CPU
-            usleep(10000);
+            usleep($interval);
 
             return [null, null];
         }
