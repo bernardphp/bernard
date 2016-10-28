@@ -48,7 +48,7 @@ class Serializer
     {
         return new AggregateNormalizer([
             new Normalizer\EnvelopeNormalizer(),
-            new Normalizer\DefaultMessageNormalizer(),
+            new Normalizer\PlainMessageNormalizer(),
         ]);
     }
 }

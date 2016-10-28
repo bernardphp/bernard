@@ -3,14 +3,14 @@
 namespace Bernard\Normalizer;
 
 use Assert\Assertion;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
  * @package Bernard
  */
-class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInterface
+class PlainMessageNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     /**
      * {@inheritdoc}
@@ -30,7 +30,7 @@ class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInter
     {
         Assertion::choicesNotEmpty($data, ['name', 'arguments']);
 
-        return new DefaultMessage($data['name'], $data['arguments']);
+        return new PlainMessage($data['name'], $data['arguments']);
     }
 
     /**
@@ -38,7 +38,7 @@ class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInter
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return $type === 'Bernard\Message\DefaultMessage';
+        return $type === 'Bernard\Message\PlainMessage';
     }
 
     /**
@@ -46,6 +46,6 @@ class DefaultMessageNormalizer implements NormalizerInterface, DenormalizerInter
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof DefaultMessage;
+        return $data instanceof PlainMessage;
     }
 }

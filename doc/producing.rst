@@ -12,7 +12,7 @@ The easiest way is to give it to the producer, as the queue name
 is taken from the message object.
 
 To make it easier to send messages and not require every type to be implemented
-in a separate class, a ``Bernard\Message\DefaultMessage`` is provided. It can hold
+in a separate class, a ``Bernard\Message\PlainMessage`` is provided. It can hold
 any number of properties and only needs a name for the message. The queue name
 is then generated from that. When generating the queue name it will insert a "_"
 before any uppercase letter and then lowercase the name.
@@ -21,7 +21,7 @@ before any uppercase letter and then lowercase the name.
 
     <?php
 
-    use Bernard\Message\DefaultMessage;
+    use Bernard\Message\PlainMessage;
     use Bernard\Producer;
     use Bernard\QueueFactory\PersistentFactory;
     use Bernard\Serializer;
@@ -30,7 +30,7 @@ before any uppercase letter and then lowercase the name.
     $factory = new PersistentFactory($driver, new Serializer());
     $producer = new Producer($factory);
 
-    $message = new DefaultMessage('SendNewsletter', array(
+    $message = new PlainMessage('SendNewsletter', array(
         'newsletterId' => 12,
     ));
 

@@ -3,7 +3,7 @@
 namespace Bernard\Tests\Router;
 
 use Bernard\Envelope;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\Router\ContainerAwareRouter;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -21,7 +21,7 @@ class ContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException');
 
-        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
+        $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $router = new ContainerAwareRouter($this->container);
         $router->map($envelope);
@@ -30,14 +30,14 @@ class ContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
     public function testAcceptsInConstructor()
     {
         $router = new ContainerAwareRouter($this->container, array('SendNewsletter' => 'my.service'));
-        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
+        $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->assertSame($this->container->get('my.service'), $router->map($envelope));
     }
 
     public function testAcceptsContainerServiceAsReceiver()
     {
-        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
+        $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $router = new ContainerAwareRouter($this->container, array(
             'SendNewsletter' => 'my.service',

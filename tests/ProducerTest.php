@@ -3,7 +3,7 @@
 namespace Bernard\Tests;
 
 use Bernard\Producer;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\QueueFactory\InMemoryFactory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -24,7 +24,7 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
             $args = array('envelope' => $event->getEnvelope(), 'queue' => $event->getQueue());
         });
 
-        $message = new DefaultMessage('Message');
+        $message = new PlainMessage('Message');
 
         $this->producer->produce($message, 'my-queue');
 
@@ -34,7 +34,7 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
 
     public function testItDelegatesMessagesToQueue()
     {
-        $message = new DefaultMessage('SendNewsletter');
+        $message = new PlainMessage('SendNewsletter');
 
         $this->producer->produce($message);
 
@@ -45,7 +45,7 @@ class ProducerTest extends \PHPUnit_Framework_TestCase
 
     public function testItUsesGivenQueueName()
     {
-        $message = new DefaultMessage('SendNewsletter');
+        $message = new PlainMessage('SendNewsletter');
 
         $this->producer->produce($message, 'something-else');
 

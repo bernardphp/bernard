@@ -3,7 +3,7 @@
 namespace Bernard\Tests\Router;
 
 use Bernard\Envelope;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\Router\PimpleAwareRouter;
 use Pimple;
 
@@ -23,7 +23,7 @@ class PimpleAwareRouterTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('InvalidArgumentException');
 
-        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
+        $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->router->map($envelope);
     }
@@ -31,14 +31,14 @@ class PimpleAwareRouterTest extends \PHPUnit_Framework_TestCase
     public function testAcceptsInConstructor()
     {
         $router = new PimpleAwareRouter($this->pimple, array('SendNewsletter' => 'my.service'));
-        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
+        $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->assertSame($this->pimple['my.service'], $router->map($envelope));
     }
 
     public function testAcceptsPimpleServiceAsReceiver()
     {
-        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
+        $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->router->add('SendNewsletter', 'my.service');
 
