@@ -85,24 +85,29 @@ class PhpAmqpDriver implements Driver
 
     /**
      * Remove the next message in line. And if no message is available
-     * wait $interval seconds.
+     * wait $duration seconds.
      *
      * @param string $queueName
-     * @param int    $interval
+     * @param int    $duration
      *
      * @return array An array like array($message, $receipt);
      */
-    public function popMessage($queueName, $interval = 10000)
+    public function popMessage($queueName, $duration = 5)
     {
-        $message = $this->getChannel()->basic_get($queueName);
-        if (!$message) {
-            // sleep for 10 ms to prevent hammering CPU
-            usleep($interval);
+        $runtime = microtime(true) + $duration;
 
-            return [null, null];
+        while (microtime(true) < $runtime) {
+            $message = $this->getChannel()->basic_get($queueName);
+
+            if ($message) {
+                return [$message->body, $message->get('delivery_tag')];
+            }
+
+            // sleep for 10 ms to prevent hammering CPU
+            usleep(10000);
         }
 
-        return [$message->body, $message->get('delivery_tag')];
+        return [null, null];
     }
 
     /**
