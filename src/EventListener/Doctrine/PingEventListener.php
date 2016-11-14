@@ -21,7 +21,7 @@ class PingEventListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'bernard.ping' => 'onPing',
+            'bernard.invoke' => 'onPing',
         ];
     }
 
