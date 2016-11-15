@@ -11,7 +11,7 @@ class PingEventListenerTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
-        $this->connection = $this->prophesize(Connection::class);
+        $this->connection = $this->prophesize('Doctrine\DBAL\Connection');
 
         $this->listener = new PingEventListener($this->connection->reveal());
     }
@@ -20,7 +20,7 @@ class PingEventListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->connection->isConnected()->willReturn(true);
 
-        $platform = $this->prophesize(SqlitePlatform::class);
+        $platform = $this->prophesize('Doctrine\DBAL\Platforms\SqlitePlatform');
         $platform->getDummySelectSQL()->willReturn('SELECT 1');
 
         $this->connection->getDatabasePlatform()->willReturn($platform->reveal());
@@ -42,7 +42,7 @@ class PingEventListenerTest extends \PHPUnit_Framework_TestCase
         $this->connection->query('SELECT 1')->willThrow(new DBALException());
         $this->connection->close()->shouldBeCalled();
 
-        $platform = $this->prophesize(SqlitePlatform::class);
+        $platform = $this->prophesize('Doctrine\DBAL\Platforms\SqlitePlatform');
         $platform->getDummySelectSQL()->willReturn('SELECT 1');
 
         $this->connection->getDatabasePlatform()->willReturn($platform->reveal());
