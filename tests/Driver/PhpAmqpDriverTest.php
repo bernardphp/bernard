@@ -79,7 +79,7 @@ class PhpAmqpDriverTest extends \PHPUnit_Framework_TestCase
         $this->phpAmqpChannel
             ->expects($this->once())
             ->method('queue_bind')
-            ->with('foo-queue', self::EXCHANGE_NAME)
+            ->with('foo-queue', self::EXCHANGE_NAME, 'foo-queue')
         ;
 
         $this->driver->createQueue('foo-queue');
@@ -94,7 +94,8 @@ class PhpAmqpDriverTest extends \PHPUnit_Framework_TestCase
                 $this->callback(function(AMQPMessage $message) {
                     return $message->body == 'dummy push message';
                 }),
-                self::EXCHANGE_NAME
+                self::EXCHANGE_NAME,
+                'not-relevant'
             );
         $this->driver->pushMessage('not-relevant', 'dummy push message');
     }
@@ -114,7 +115,8 @@ class PhpAmqpDriverTest extends \PHPUnit_Framework_TestCase
                 $this->callback(function(AMQPMessage $message) {
                     return $message->get('delivery_mode') === 2;
                 }),
-                self::EXCHANGE_NAME
+                self::EXCHANGE_NAME,
+                'not-relevant'
             );
         $this->driver->pushMessage('not-relevant', 'dummy push message');
     }
