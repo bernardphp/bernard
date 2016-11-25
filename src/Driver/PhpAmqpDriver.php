@@ -59,7 +59,7 @@ class PhpAmqpDriver implements Driver
         $channel = $this->getChannel();
         $channel->exchange_declare($this->exchange, 'direct', false, true, false);
         $channel->queue_declare($queueName, false, true, false, false);
-        $channel->queue_bind($queueName, $this->exchange);
+        $channel->queue_bind($queueName, $this->exchange, $queueName);
     }
 
     /**
@@ -80,7 +80,7 @@ class PhpAmqpDriver implements Driver
     public function pushMessage($queueName, $message)
     {
         $amqpMessage = new AMQPMessage($message, $this->defaultMessageParams);
-        $this->getChannel()->basic_publish($amqpMessage, $this->exchange);
+        $this->getChannel()->basic_publish($amqpMessage, $this->exchange, $queueName);
     }
 
     /**
