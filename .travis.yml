@@ -23,6 +23,6 @@ before_script:
   - tests/travis.sh
 
 script:
-  - phpunit
-  - phpunit --group functional
+  - php vendor/bin/phpunit
+  - php vendor/bin/phpunit --group functional
   - php vendor/bin/phpspec run
