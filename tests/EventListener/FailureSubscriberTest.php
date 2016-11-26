@@ -2,29 +2,32 @@
 
 namespace Bernard\Tests\EventListener;
 
+use Bernard\Envelope;
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\EventListener\FailureSubscriber;
-use Bernard\QueueFactory\InMemoryFactory;
+use Bernard\Message\DefaultMessage;
+use Bernard\Queue\InMemoryQueue;
 
 class FailureSubscriberTest extends \PHPUnit_Framework_TestCase
 {
+    private $producer;
+    private $subscriber;
+
     public function setUp()
     {
-        $this->queues = new InMemoryFactory;
-        $this->subscriber = new FailureSubscriber($this->queues);
+        $this->producer = $this->getMockBuilder('Bernard\Producer')->disableOriginalConstructor()->getMock();
+        $this->subscriber = new FailureSubscriber($this->producer, 'failures');
     }
 
     public function testAcknowledgeMessageAndEnqueue()
     {
-        $envelope = $this->getMockBuilder('Bernard\Envelope')
-            ->disableOriginalConstructor()->getMock();
+        $envelope = new Envelope($message = new DefaultMessage('bar'));
 
-        $queue = $this->getMock('Bernard\Queue');
-        $queue->expects($this->once())->method('acknowledge')->with($envelope);
+        $this->producer->expects($this->once())
+            ->method('produce')
+            ->with($message, 'failures');
 
-        $this->subscriber->onReject(new RejectEnvelopeEvent($envelope, $queue, new \Exception));
+        $this->subscriber->onReject(new RejectEnvelopeEvent($envelope, new InMemoryQueue('foo'), new \Exception));
 
-        $this->assertCount(1, $this->queues->create('failed'));
-        $this->assertSame($envelope, $this->queues->create('failed')->dequeue());
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Bernard\EventListener;
 
-use Bernard\QueueFactory;
 use Bernard\Event\RejectEnvelopeEvent;
+use Bernard\Producer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -11,16 +11,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FailureSubscriber implements EventSubscriberInterface
 {
-    protected $queues;
+    protected $producer;
     protected $name;
 
     /**
-     * @param QueueFactory $queues
-     * @param string       $name
+     * @param Producer $producer
+     * @param string $name
      */
-    public function __construct(QueueFactory $queues, $name = 'failed')
+    public function __construct(Producer $producer, $name = 'failed')
     {
-        $this->queues = $queues;
+        $this->producer = $producer;
         $this->name = $name;
     }
 
@@ -30,9 +30,9 @@ class FailureSubscriber implements EventSubscriberInterface
     public function onReject(RejectEnvelopeEvent $event)
     {
         $envelope = $event->getEnvelope();
+        $message = $envelope->getMessage();
 
-        $event->getQueue()->acknowledge($envelope);
-        $this->queues->create($this->name)->enqueue($envelope);
+        $this->producer->produce($message, $this->name);
     }
 
     /**
