@@ -29,7 +29,7 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('The driver isn\'t installed on your machine');
         }
 
-        $this->connection = $this->setUpDatabase();
+        $this->setUpDatabase();
         $this->driver = new DoctrineDriver($this->connection);
     }
 
@@ -159,15 +159,13 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
 
     protected function setUpDatabase()
     {
-        $connection = $this->createConnection();
+        $this->connection = $this->createConnection();
 
         $schema = new Schema;
 
         MessagesSchema::create($schema);
 
-        array_map(array($connection, 'executeQuery'), $schema->toSql($connection->getDatabasePlatform()));
-
-        return $connection;
+        array_map(array($this->connection, 'executeQuery'), $schema->toSql($this->connection->getDatabasePlatform()));
     }
 
     /**
