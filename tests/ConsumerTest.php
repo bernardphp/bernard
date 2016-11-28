@@ -222,7 +222,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        self::setExpectedException('TypeError');
+        $this->setExpectedException('TypeError');
 
         $this->consumer->tick($queue, ['stop-on-error' => true]);
     }
