@@ -172,4 +172,9 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
      * @return \Doctrine\DBAL\Connection
      */
     protected abstract function createConnection();
+
+    /**
+     * @return bool
+     */
+    protected abstract function isSupported();
 }
