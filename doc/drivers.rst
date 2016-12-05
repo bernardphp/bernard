@@ -306,8 +306,8 @@ PhpAmqp / RabbitMQ
 
 The RabbitMQ driver uses the `php-amqp library by php-amqplib <https://github.com/php-amqplib/php-amqplib>`_.
 
-The driver should be constructed with an ``AMQPStreamConnection`` object, an exchange name and optionally the default message
-parameters.
+The driver should be constructed with a class that extends `AbstractConnection` (for example `AMQPStreamConnection` or `AMQPSocketConnection`),
+an exchange name and optionally the default message parameters.
 
 .. code-block:: php
 

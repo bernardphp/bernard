@@ -4,13 +4,13 @@ namespace Bernard\Driver;
 
 use Bernard\Driver;
 use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class PhpAmqpDriver implements Driver
 {
     /**
-     * @var AMQPStreamConnection
+     * @var AbstractConnection
      */
     private $connection;
 
@@ -29,11 +29,11 @@ class PhpAmqpDriver implements Driver
     private $defaultMessageParams;
 
     /**
-     * @param AMQPStreamConnection $connection
-     * @param string               $exchange
-     * @param array                $defaultMessageParams
+     * @param AbstractConnection $connection
+     * @param string             $exchange
+     * @param array              $defaultMessageParams
      */
-    public function __construct(AMQPStreamConnection $connection, $exchange, array $defaultMessageParams = null)
+    public function __construct(AbstractConnection $connection, $exchange, array $defaultMessageParams = null)
     {
         $this->connection = $connection;
         $this->exchange = $exchange;
