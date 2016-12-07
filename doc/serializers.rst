@@ -2,7 +2,7 @@ Serializers
 ===========
 
 Bernard uses the `Symfony Serializer Component <http://symfony.com/doc/current/components/serializer.html>`_ to
-serialize messages for persistent storage.
+serialize messages as JSON for persistent storage.
 
 Default serializer
 ------------------
@@ -17,7 +17,7 @@ which should be enough when you are just starting out:
     use Bernard\Serializer;
 
     $serializer = new Serializer();
-    $serializer->serialize($envelope);
+    $json = $serializer->serialize($envelope);
 
 
 Adding normalizers
@@ -30,10 +30,8 @@ message contains getters and setters for the properties it needs serializing:
 
     <?php
 
-    use Bernard\Driver\FlatFileDriver;
     use Bernard\Normalizer\DefaultMessageNormalizer;
     use Bernard\Normalizer\EnvelopeNormalizer;
-    use Bernard\QueueFactory\PersistentFactory;
     use Bernard\Serializer;
     use Normalt\Normalizer\AggregateNormalizer;
     use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -45,14 +43,13 @@ message contains getters and setters for the properties it needs serializing:
     ]);
 
     $serializer = new Serializer($aggregateNormalizer);
-    $driver = new FlatFileDriver('/path/to/queue');
-    $queue = new PersistentFactory($driver, $serializer);
+    $envelope = $serializer->deserialize($json);
 
 
-The ``AggregateNormalizer`` will check each normalizer passed to it's constructor and use the first one that can handle
+The ``AggregateNormalizer`` will check each normalizer passed to its constructor and use the first one that can handle
 the object given to it. You should always pass the ``EnvelopeNormalizer`` first. And it's a good idea to add the
 ``DefaultMessageNormalizer`` last as a fallback when none other match.
 
-If your normalization needs differ, more available from
-`Symfony <http://symfony.com/doc/current/components/serializer.html#normalizers>`_, along with the
-``DoctrineNormalizer`` and ``RecursiveReflectionNormalizer`` from `Normalt <https://github.com/bernardphp/normalt>`_.
+More normalizers are available from `Symfony <http://symfony.com/doc/current/components/serializer.html#normalizers>`_,
+along with the ``DoctrineNormalizer`` and ``RecursiveReflectionNormalizer`` from
+`Normalt <https://github.com/bernardphp/normalt>`_.
