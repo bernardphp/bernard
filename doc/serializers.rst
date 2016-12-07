@@ -14,16 +14,13 @@ which should be enough when you are just starting out:
 
     <?php
 
-    use Bernard\Driver\FlatFileDriver;
-    use Bernard\QueueFactory\PersistentFactory;
     use Bernard\Serializer;
 
     $serializer = new Serializer();
-    $driver = new FlatFileDriver('/path/to/queue');
-    $queue = new PersistentFactory($driver, $serializer);
+    $serializer->serialize($envelope);
 
 
-Custom serializers
+Adding normalizers
 ------------------
 
 If you are using your own custom message classes, you **must** provide a normalizer for them. This example assumes your
