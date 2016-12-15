@@ -10,6 +10,7 @@ if [ $TRAVIS_PHP_VERSION = "hhvm" ]; then
 	composer require --dev mongofill/mongofill=dev-master --no-update;
 	composer update --no-progress --no-plugins;
 else
+    phpenv config-rm xdebug.ini;
     composer update --no-progress --no-plugins $COMPOSER_OPTS;
 fi
 
