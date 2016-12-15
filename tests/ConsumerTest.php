@@ -5,7 +5,7 @@ namespace Bernard\Tests;
 use Bernard\Consumer;
 use Bernard\Queue\InMemoryQueue;
 use Bernard\Envelope;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\Router\SimpleRouter;
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Event\EnvelopeEvent;
@@ -39,7 +39,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
 
     public function testEmitsConsumeEvent()
     {
-        $envelope = new Envelope(new DefaultMessage('ImportUsers'));
+        $envelope = new Envelope(new PlainMessage('ImportUsers'));
         $queue = $this->getMock('Bernard\Queue\InMemoryQueue', [
             'dequeue'
         ], ['queue']);
@@ -68,7 +68,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
             throw $exception;
         });
 
-        $envelope = new Envelope(new DefaultMessage('ImportUsers'));
+        $envelope = new Envelope(new PlainMessage('ImportUsers'));
         $queue = new InMemoryQueue('queue');
 
         $this->dispatcher->expects($this->at(1))->method('dispatch')
@@ -93,7 +93,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->router->add('ImportUsers', $service);
 
         $queue = new InMemoryQueue('queue');
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+        $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
 
         $this->consumer->pause();
 
@@ -124,7 +124,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
     public function testEnvelopeIsAcknowledged()
     {
         $service = new Fixtures\Service();
-        $envelope = new Envelope(new DefaultMessage('ImportUsers'));
+        $envelope = new Envelope(new PlainMessage('ImportUsers'));
 
         $this->router->add('ImportUsers', $service);
 
@@ -142,9 +142,9 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->router->add('ImportUsers', new Fixtures\Service);
 
         $queue = new InMemoryQueue('send-newsletter');
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+        $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
+        $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
+        $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
 
         $this->assertFalse($this->consumer->tick($queue, array('max-messages' => 1)));
         $this->assertTrue($this->consumer->tick($queue));
@@ -156,8 +156,8 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->router->add('ImportUsers', new Fixtures\Service);
 
         $queue = new InMemoryQueue('send-newsletter');
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+        $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
+        $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
 
         $this->assertTrue($this->consumer->tick($queue, array('stop-when-empty' => true)));
         $this->assertTrue($this->consumer->tick($queue, array('stop-when-empty' => true)));
@@ -172,7 +172,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->router->add('ImportUsers', new Fixtures\Service);
 
         $queue = new InMemoryQueue('send-newsletter');
-        $queue->enqueue(new Envelope(new DefaultMessage('DifferentMessageKey')));
+        $queue->enqueue(new Envelope(new PlainMessage('DifferentMessageKey')));
 
         $this->consumer->tick($queue, array('stop-on-error' => true));
 
@@ -189,7 +189,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->router->add('ImportUsers', $service);
 
         $queue = new InMemoryQueue('send-newsletter');
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportUsers')));
+        $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
 
         $this->consumer->tick($queue);
 
@@ -204,7 +204,7 @@ class ConsumerTest extends \PHPUnit_Framework_TestCase
         $this->router->add('ImportReport', new Fixtures\Service);
 
         $queue = new InMemoryQueue('send-newsletter');
-        $queue->enqueue(new Envelope(new DefaultMessage('ImportReport')));
+        $queue->enqueue(new Envelope(new PlainMessage('ImportReport')));
 
         $this->dispatcher->expects(self::at(0))->method('dispatch')->with('bernard.ping');
         $this->dispatcher->expects(self::at(1))->method('dispatch')->with('bernard.invoke');

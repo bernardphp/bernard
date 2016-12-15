@@ -27,7 +27,7 @@ class EnvelopeNormalizerSpec extends ObjectBehavior
     function it_normalizes_envelope_and_delegates_message_to_aggregate($envelope, $message, $aggregate)
     {
         $envelope->getMessage()->willReturn($message);
-        $envelope->getClass()->willReturn('Bernard\Message\DefaultMessage');
+        $envelope->getClass()->willReturn('Bernard\Message\PlainMessage');
         $envelope->getTimestamp()->willReturn(1337);
 
         $aggregate->normalize($message)->willReturn(array(
@@ -37,7 +37,7 @@ class EnvelopeNormalizerSpec extends ObjectBehavior
         $this->setAggregateNormalizer($aggregate);
 
         $this->normalize($envelope)->shouldReturn(array(
-            'class'     => 'Bernard\\Message\\DefaultMessage',
+            'class'     => 'Bernard\\Message\\PlainMessage',
             'timestamp' => 1337,
             'message'   => array('key' => 'value'),
         ));
@@ -50,10 +50,10 @@ class EnvelopeNormalizerSpec extends ObjectBehavior
     {
         $this->setAggregateNormalizer($aggregate);
 
-        $aggregate->denormalize(array('key' => 'value'), 'Bernard\\Message\\DefaultMessage', null)->willReturn($message);
+        $aggregate->denormalize(array('key' => 'value'), 'Bernard\\Message\\PlainMessage', null)->willReturn($message);
 
         $normalized = array(
-            'class'     => 'Bernard\\Message\\DefaultMessage',
+            'class'     => 'Bernard\\Message\\PlainMessage',
             'timestamp' => 1337,
             'message'   => array('key' => 'value'),
         );
@@ -62,6 +62,6 @@ class EnvelopeNormalizerSpec extends ObjectBehavior
         $envelope->shouldHaveType('Bernard\\Envelope');
         $envelope->getMessage()->shouldReturn($message);
         $envelope->getTimestamp()->shouldReturn(1337);
-        $envelope->getClass()->shouldReturn('Bernard\\Message\\DefaultMessage');
+        $envelope->getClass()->shouldReturn('Bernard\\Message\\PlainMessage');
     }
 }

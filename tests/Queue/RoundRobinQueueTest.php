@@ -3,7 +3,7 @@
 namespace Bernard\Tests\Queue;
 
 use Bernard\Envelope;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\Queue\InMemoryQueue;
 use Bernard\Queue\RoundRobinQueue;
 
@@ -155,6 +155,6 @@ class RoundRobinQueueTest extends \PHPUnit_Framework_TestCase
 
     protected function getEnvelope($name)
     {
-        return new Envelope(new DefaultMessage($name));
+        return new Envelope(new PlainMessage($name));
     }
 }

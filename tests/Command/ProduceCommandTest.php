@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\Command;
 
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\Command\ProduceCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -19,7 +19,7 @@ class ProduceCommandTest extends \PHPUnit_Framework_TestCase
     public function testProduceMessageWithNoArguments()
     {
         $command = new ProduceCommand($this->producer);
-        $message = new DefaultMessage('SendNewsletter');
+        $message = new PlainMessage('SendNewsletter');
 
         $this->producer->expects($this->once())->method('produce')->with($this->equalTo($message));
 
@@ -45,7 +45,7 @@ class ProduceCommandTest extends \PHPUnit_Framework_TestCase
     public function testItProducesMessageWithData()
     {
         $command = new ProduceCommand($this->producer);
-        $message = new DefaultMessage('SendNewsletter', array('foo' => 'bar'));
+        $message = new PlainMessage('SendNewsletter', array('foo' => 'bar'));
 
         $this->producer->expects($this->once())->method('produce')->with($this->equalTo($message));
 

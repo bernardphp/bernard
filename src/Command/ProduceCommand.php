@@ -3,7 +3,7 @@
 namespace Bernard\Command;
 
 use Bernard\Producer;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -55,6 +55,6 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
             }
         }
 
-        $this->producer->produce(new DefaultMessage($name, $message), $queue);
+        $this->producer->produce(new PlainMessage($name, $message), $queue);
     }
 }

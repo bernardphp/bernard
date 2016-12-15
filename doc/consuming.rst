@@ -6,7 +6,7 @@ earlier, a message's name is used to determine which service object should
 receive that message.
 
 A service object can be any object that has a method corresponding to the name of the
-message with the first letter lower cased. So ``new DefaultMessage('SendNewsletter')`` will trigger a
+message with the first letter lower cased. So ``new PlainMessage('SendNewsletter')`` will trigger a
 call to ``$serviceObject->sendNewsletter($message)``. For the system to know which service
 object should handle which messages, you are required to register them first.
 
@@ -46,7 +46,7 @@ object should handle which messages, you are required to register them first.
 Commandline Interface
 ---------------------
 
-Bernard comes with a ``ConsumeCommand`` which can be used with Symfony Console 
+Bernard comes with a ``ConsumeCommand`` which can be used with Symfony Console
 component.
 
 .. code-block:: php

@@ -3,7 +3,7 @@
 namespace Bernard\Tests\Router;
 
 use Bernard\Envelope;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\Router\LeagueContainerAwareRouter;
 use League\Container\Container;
 
@@ -21,7 +21,7 @@ class LeagueContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('League\Container\Exception\ReflectionException');
 
-        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
+        $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $router = new LeagueContainerAwareRouter($this->container);
         $router->map($envelope);
@@ -30,7 +30,7 @@ class LeagueContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
     public function testAcceptsInConstructor()
     {
         $router = new LeagueContainerAwareRouter($this->container, array('SendNewsletter' => 'my.service'));
-        $envelope = new Envelope(new DefaultMessage('SendNewsletter'));
+        $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->assertSame($this->container->get('my.service'), $router->map($envelope));
     }

@@ -1,10 +1,10 @@
 <?php
 
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 
 class EchoTimeService
 {
-    public function echoTime(DefaultMessage $message)
+    public function echoTime(PlainMessage $message)
     {
         if (rand(0, 10) == 7) {
             throw new \RuntimeException('I failed because rand was 7');
