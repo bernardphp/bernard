@@ -5,11 +5,23 @@ namespace Bernard\Tests\Driver;
 use Bernard\Doctrine\MessagesSchema;
 use Bernard\Driver\DoctrineDriver;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\DBAL\Schema\Schema;
 
 class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var DoctrineDriver
+     */
+    private $driver;
+
     public function setUp()
     {
         $this->connection = $this->setUpDatabase();
@@ -37,6 +49,64 @@ class DoctrineDriverTest extends \PHPUnit_Framework_TestCase
         $this->driver->removeQueue('import-users');
 
         $this->assertEquals(array('send-newsletter'), $this->driver->listQueues());
+    }
+
+    public function testCreateQueueWillNotAttemptDuplicateQueueCreation()
+    {
+        $logger = new DebugStack();
+
+        $this->connection->getConfiguration()->setSQLLogger($logger);
+
+        $this->driver->createQueue('import-users');
+        $this->driver->createQueue('import-users');
+
+        self::assertCount(7, $logger->queries);
+        self::assertStringMatchesFormat('%aSTART TRANSACTION%a', $logger->queries[1]['sql']);
+        self::assertStringStartsWith('SELECT ', $logger->queries[2]['sql']);
+        self::assertStringStartsWith('INSERT ', $logger->queries[3]['sql']);
+        self::assertStringMatchesFormat('%aCOMMIT%a', $logger->queries[4]['sql']);
+        self::assertStringMatchesFormat('%aSTART TRANSACTION%a', $logger->queries[5]['sql']);
+        self::assertStringStartsWith('SELECT ', $logger->queries[6]['sql']);
+        self::assertStringMatchesFormat('%aCOMMIT%a', $logger->queries[7]['sql']);
+    }
+
+    public function testGenericExceptionsBubbleUpWhenThrownOnQueueCreation()
+    {
+        $connection   = $this->getMockBuilder('Doctrine\DBAL\Connection')->disableOriginalConstructor()->getMock();
+        $exception    = new \Exception();
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        $connection->expects(self::once())->method('transactional')->willReturnCallback('call_user_func');
+        $connection->expects(self::once())->method('insert')->willThrowException($exception);
+        $connection->expects(self::any())->method('createQueryBuilder')->willReturn($queryBuilder);
+
+        $driver = new DoctrineDriver($connection);
+
+        try {
+            $driver->createQueue('foo');
+
+            self::fail('An exception was supposed to be thrown');
+        } catch (\Exception $thrown) {
+            self::assertSame($exception, $thrown);
+        }
+    }
+
+    public function testConstraintViolationExceptionsAreIgnored()
+    {
+        $connection   = $this->getMockBuilder('Doctrine\DBAL\Connection')->disableOriginalConstructor()->getMock();
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $exception    = $this
+            ->getMockBuilder('Doctrine\DBAL\Exception\ConstraintViolationException')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connection->expects(self::once())->method('transactional')->willReturnCallback('call_user_func');
+        $connection->expects(self::once())->method('insert')->willThrowException($exception);
+        $connection->expects(self::any())->method('createQueryBuilder')->willReturn($queryBuilder);
+
+        $driver = new DoctrineDriver($connection);
+
+        $driver->createQueue('foo');
     }
 
     public function testPushMessageLazilyCreatesQueue()

@@ -3,6 +3,7 @@
 namespace Bernard\Driver;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\ConstraintViolationException;
 
 /**
  * Driver supporting Doctrine DBAL
@@ -34,12 +35,30 @@ class DoctrineDriver implements \Bernard\Driver
 
     /**
      * {@inheritDoc}
+     *
+     * @throws \Exception
      */
     public function createQueue($queueName)
     {
         try {
-            $this->connection->insert('bernard_queues', array('name' => $queueName));
-        } catch (\Exception $e) {
+            $this->connection->transactional(function () use ($queueName) {
+                $queueExistsQb = $this->connection->createQueryBuilder();
+
+                $queueExists = $queueExistsQb
+                    ->select('name')
+                    ->from('bernard_queues')
+                    ->where($queueExistsQb->expr()->eq('name', ':name'))
+                    ->setParameter('name', $queueName)
+                    ->execute();
+
+                if ($queueExists->fetch()) {
+                    // queue was already created
+                    return;
+                }
+
+                $this->connection->insert('bernard_queues', array('name' => $queueName));
+            });
+        } catch (ConstraintViolationException $ignored) {
             // Because SQL server does not support a portable INSERT ON IGNORE syntax
             // this ignores error based on primary key.
         }
