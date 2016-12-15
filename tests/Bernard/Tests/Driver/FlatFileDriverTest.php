@@ -56,6 +56,13 @@ class FlatFileDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, glob($this->baseDir.'/send-newsletter/*.job'));
     }
 
+    public function testPushMessagePermissions()
+    {
+        $this->driver = new FlatFileDriver($this->baseDir, 0770);
+        $this->testPushMessage();
+        $this->assertEquals('0770', substr(sprintf('%o', fileperms($this->baseDir . '/send-newsletter/1.job')), -4));
+    }
+
     public function testPopMessage()
     {
         $this->driver->createQueue('send-newsletter');

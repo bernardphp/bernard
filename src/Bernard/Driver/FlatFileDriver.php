@@ -18,13 +18,20 @@ class FlatFileDriver implements Driver
     private $baseDirectory;
 
     /**
+     * @var int
+     */
+    private $permissions;
+
+    /**
      * Constructor
      *
      * @param string $baseDirectory The base directory
+     * @param int    $permissions   Permissions to create the file with.
      */
-    public function __construct($baseDirectory)
+    public function __construct($baseDirectory, $permissions = 0740)
     {
         $this->baseDirectory = $baseDirectory;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -93,6 +100,7 @@ class FlatFileDriver implements Driver
         $filename = $this->getJobFilename($queueName);
 
         file_put_contents($queueDir.DIRECTORY_SEPARATOR.$filename, $message);
+        chmod($queueDir . DIRECTORY_SEPARATOR . $filename, $this->permissions);
     }
 
     /**
@@ -219,6 +227,7 @@ class FlatFileDriver implements Driver
 
         if (!is_file($path)) {
             touch($path);
+            chmod($path, $this->permissions);
         }
 
         $file = new \SplFileObject($path, 'r+');
