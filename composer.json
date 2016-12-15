@@ -24,7 +24,7 @@
         "pda/pheanstalk": "~3.0",
         "league/container": "~1.0",
         "php-amqplib/php-amqplib": "~2.5",
-        "phpspec/phpspec": "~2.0",
+        "phpspec/phpspec": "^2.4",
         "phpunit/phpunit": "^4.8"
     },
     "suggest": {
