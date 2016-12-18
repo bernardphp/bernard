@@ -69,6 +69,8 @@ class PhpAmqpDriver implements Driver
      */
     public function countMessages($queueName)
     {
+        list($queue, $messageCount, $consumerCount) = $this->getChannel()->queue_declare($queueName, true);
+        return $messageCount;
     }
 
     /**
@@ -136,6 +138,7 @@ class PhpAmqpDriver implements Driver
      */
     public function removeQueue($queueName)
     {
+        $this->getChannel()->queue_delete($queueName);
     }
 
     /**
