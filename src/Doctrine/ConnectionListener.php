@@ -20,15 +20,15 @@ class ConnectionListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return [
+        return array(
             'bernard.invoke' => 'onPing',
-        ];
+        );
     }
 
     public function __construct($connections)
     {
         if (!is_array($connections)) {
-            $connections = [$connections];
+            $connections = array($connections);
         }
 
         $this->connections = $connections;
