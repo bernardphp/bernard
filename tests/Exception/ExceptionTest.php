@@ -14,7 +14,7 @@ class ExceptionTest extends TestCase
         try {
             throw new $exception;
         } catch (\Exception $e) {
-            $this->assertInstanceOf('\Bernard\Exception\ExceptionInterface', $e);
+            $this->assertInstanceOf('\Bernard\Exception\Exception', $e);
             $this->assertInstanceOf($exception, $e);
             $this->assertInstanceOf($base, $e);
             return;

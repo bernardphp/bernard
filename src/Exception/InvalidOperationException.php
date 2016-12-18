@@ -5,6 +5,6 @@ namespace Bernard\Exception;
 /**
  * @package Bernard
  */
-class InvalidOperationException extends \Exception implements ExceptionInterface
+class InvalidOperationException extends \Exception implements Exception
 {
 }
