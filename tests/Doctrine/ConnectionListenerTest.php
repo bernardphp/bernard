@@ -2,18 +2,18 @@
 
 namespace Bernard\Tests\EventListener\Doctrine;
 
-use Bernard\EventListener\Doctrine\PingEventListener;
+use Bernard\EventListener\Doctrine\ConnectionListener;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\DBALException;
 
-class PingEventListenerTest extends \PHPUnit_Framework_TestCase
+class ConnectionListenerTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
         $this->connection = $this->prophesize('Doctrine\DBAL\Connection');
 
-        $this->listener = new PingEventListener($this->connection->reveal());
+        $this->listener = new ConnectionListener($this->connection->reveal());
     }
 
     public function testPing()

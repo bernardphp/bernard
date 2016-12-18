@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\EventListener\Doctrine;
+namespace Bernard\Doctrine;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\DBAL\DBALException;
@@ -11,7 +11,7 @@ use Doctrine\DBAL\DBALException;
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  * @package Bernard
  */
-class PingEventListener implements EventSubscriberInterface
+class ConnectionListener implements EventSubscriberInterface
 {
     /**
      * @var Connection[]
