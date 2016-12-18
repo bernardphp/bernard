@@ -1,8 +1,8 @@
 <?php
 
-namespace Bernard\Tests\EventListener\Doctrine;
+namespace Bernard\Tests\Doctrine;
 
-use Bernard\EventListener\Doctrine\ConnectionListener;
+use Bernard\Doctrine\ConnectionListener;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\DBALException;
