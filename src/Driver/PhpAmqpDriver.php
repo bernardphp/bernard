@@ -69,7 +69,8 @@ class PhpAmqpDriver implements Driver
      */
     public function countMessages($queueName)
     {
-        list($queue, $messageCount, $consumerCount) = $this->getChannel()->queue_declare($queueName, true);
+        list(,$messageCount) = $this->getChannel()->queue_declare($queueName, true);
+
         return $messageCount;
     }
 
