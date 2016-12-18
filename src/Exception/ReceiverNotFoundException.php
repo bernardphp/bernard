@@ -8,6 +8,6 @@ namespace Bernard\Exception;
  *
  * @package Bernard
  */
-class ReceiverNotFoundException extends \RuntimeException
+class ReceiverNotFoundException extends \RuntimeException implements Exception
 {
 }
