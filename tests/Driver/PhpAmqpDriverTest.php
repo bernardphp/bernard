@@ -137,13 +137,19 @@ class PhpAmqpDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testItPopsArrayWithNullsWhenThereAreNoMessages()
     {
+        $startTime = microtime(true);
+
         $this->phpAmqpChannel
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('basic_get')
             ->with($this->equalTo('foo-queue'))
             ->willReturn(null);
 
-        $this->assertEquals([null, null], $this->driver->popMessage('foo-queue'));
+        $result = $this->driver->popMessage('foo-queue', 0.1);
+        $duration = microtime(true) - $startTime;
+
+        $this->assertEquals([null, null], $result);
+        $this->assertGreaterThan(0.1, $duration);
     }
 
     public function testItAcknowledgesMessage()
