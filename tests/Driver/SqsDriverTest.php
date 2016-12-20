@@ -18,6 +18,7 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods(array(
                 'createQueue',
+                'deleteQueue',
                 'getQueueUrl',
                 'getQueueAttributes',
                 'listQueues',
@@ -51,6 +52,17 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
             ->with($this->equalTo(['QueueName' => self::DUMMY_QUEUE_NAME]));
 
         $this->driver->createQueue(self::DUMMY_QUEUE_NAME);
+    }
+
+    public function testItDeletesQueue()
+    {
+        $this->assertSqsQueueUrl();
+        $this->sqs
+            ->expects($this->once())
+            ->method('deleteQueue')
+            ->with($this->equalTo(['QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME]));
+
+        $this->driver->removeQueue(self::DUMMY_QUEUE_NAME);
     }
 
     public function testItCountsNumberOfMessagesInQueue()
