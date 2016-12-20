@@ -17,6 +17,7 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
         $this->sqs = $this->getMockBuilder('Aws\Sqs\SqsClient')
             ->disableOriginalConstructor()
             ->setMethods(array(
+                'createQueue',
                 'getQueueUrl',
                 'getQueueAttributes',
                 'listQueues',
@@ -40,6 +41,16 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
     public function testItImplementsDriverInterface()
     {
         $this->assertInstanceOf('Bernard\Driver\AbstractPrefetchDriver', $this->driver);
+    }
+
+    public function testItCreatesQueue()
+    {
+        $this->sqs
+            ->expects($this->once())
+            ->method('createQueue')
+            ->with($this->equalTo(['QueueName' => self::DUMMY_QUEUE_NAME]));
+
+        $this->driver->createQueue(self::DUMMY_QUEUE_NAME);
     }
 
     public function testItCountsNumberOfMessagesInQueue()
