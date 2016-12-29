@@ -44,8 +44,8 @@ class DoctrineDriver implements \Bernard\Driver
 
                 $queueExists = $queueExistsQb
                     ->select('name')
-                    ->from('bernard_queues')
-                    ->where($queueExistsQb->expr()->eq('name', ':name'))
+                    ->from('bernard_queues', 'bq')
+                    ->where($queueExistsQb->expr()->eq('bq.name', ':name'))
                     ->setParameter('name', $queueName)
                     ->execute();
 
