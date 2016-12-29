@@ -54,9 +54,14 @@ class SqsDriver extends AbstractPrefetchDriver
 
     /**
      * {@inheritdoc}
+     *
+     * @link http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html#createqueue
      */
     public function createQueue($queueName)
     {
+        $this->sqs->createQueue([
+            'QueueName' => $queueName,
+        ]);
     }
 
     /**
@@ -142,9 +147,16 @@ class SqsDriver extends AbstractPrefetchDriver
 
     /**
      * {@inheritdoc}
+     *
+     * @link http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html#deletequeue
      */
     public function removeQueue($queueName)
     {
+        $queueUrl = $this->resolveUrl($queueName);
+
+        $this->sqs->deleteQueue([
+            'QueueUrl' => $queueUrl,
+        ]);
     }
 
     /**
