@@ -17,6 +17,10 @@ class ErrorLogSubscriberTest extends TestCase
 
     public function setUp()
     {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped("HHVM does not support `ini_set('error_log', '/path/to/log')`");
+        }
+
         $this->envelope = $this->getMockBuilder('Bernard\Envelope')
             ->disableOriginalConstructor()->getMock();
         $this->queue = $this->getMock('Bernard\Queue');
@@ -24,6 +28,7 @@ class ErrorLogSubscriberTest extends TestCase
         $this->subscriber = new ErrorLogSubscriber($this->producer, 'failures');
         $this->iniErrorLog = ini_get('error_log');
         $this->errorLogFile = tempnam(sys_get_temp_dir(), 'phpunit');
+        ini_set('error_log', $this->errorLogFile);
         ini_set('error_log', $this->errorLogFile);
     }
 
