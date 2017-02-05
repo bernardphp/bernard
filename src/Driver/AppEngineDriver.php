@@ -95,6 +95,8 @@ class AppEngineDriver implements \Bernard\Driver
      * @param string $queueName
      *
      * @throws InvalidArgumentException
+     *
+     * @return string
      */
     protected function resolveEndpoint($queueName)
     {

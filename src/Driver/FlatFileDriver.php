@@ -194,6 +194,8 @@ class FlatFileDriver implements \Bernard\Driver
     /**
      * Generates a uuid.
      *
+     * @param string $queueName
+     *
      * @return string
      */
     private function getJobFilename($queueName)

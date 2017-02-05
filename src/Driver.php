@@ -24,6 +24,8 @@ interface Driver
     /**
      * Count the number of messages in queue. This can be a approximately number.
      *
+     * @param string $queueName
+     *
      * @return int
      */
     public function countMessages($queueName);

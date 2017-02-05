@@ -42,6 +42,8 @@ class PrefetchMessageCache
      * Create the queue cache internally if it doesn't yet exists.
      *
      * @param string $queueName
+     *
+     * @return \SplQueue
      */
     protected function get($queueName)
     {
