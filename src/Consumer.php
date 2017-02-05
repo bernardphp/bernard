@@ -146,6 +146,8 @@ class Consumer
 
     /**
      * @param array $options
+     *
+     * @return void
      */
     protected function configure(array $options)
     {
