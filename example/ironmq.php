@@ -1,6 +1,6 @@
 <?php
 
-use IronMQ;
+use IronMQ\IronMQ;
 use Bernard\Driver\IronMqDriver;
 
 /**
