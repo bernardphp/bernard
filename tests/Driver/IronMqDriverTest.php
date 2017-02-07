@@ -8,7 +8,7 @@ class IronMqDriverTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->ironmq = $this->getMockBuilder('IronMQ')
+        $this->ironmq = $this->getMockBuilder('\IronMQ\IronMQ')
             ->setMethods(array(
                 'getQueue',
                 'getQueues',
