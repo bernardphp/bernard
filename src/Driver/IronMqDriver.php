@@ -2,7 +2,7 @@
 
 namespace Bernard\Driver;
 
-use IronMQ;
+use IronMQ\IronMQ;
 
 /**
  * Implements a Driver for use with Iron MQ:
