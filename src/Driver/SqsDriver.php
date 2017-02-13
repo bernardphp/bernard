@@ -60,7 +60,7 @@ class SqsDriver extends AbstractPrefetchDriver
     public function createQueue($queueName)
     {
         try {
-            $result = $this->resolveUrl($queueName);
+            $this->resolveUrl($queueName);
         } catch (\InvalidArgumentException $e) {
             $result = $this->sqs->createQueue([
                 'QueueName' => $queueName,
