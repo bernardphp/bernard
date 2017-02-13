@@ -49,8 +49,16 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
         $this->sqs
             ->expects($this->once())
             ->method('createQueue')
-            ->with($this->equalTo(['QueueName' => self::DUMMY_QUEUE_NAME]));
+            ->with($this->equalTo(['QueueName' => self::DUMMY_QUEUE_NAME]))
+            ->will($this->returnValue(
+                $this->wrapResult([
+                    'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX,
+                ])
+            ));
 
+        // Calling this twice asserts that if queue exists
+        // there won't be attempt to create it.
+        $this->driver->createQueue(self::DUMMY_QUEUE_NAME);
         $this->driver->createQueue(self::DUMMY_QUEUE_NAME);
     }
 
