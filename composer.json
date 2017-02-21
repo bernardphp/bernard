@@ -25,7 +25,7 @@
         "phpspec/phpspec": "^2.4",
         "phpunit/phpunit": "^4.8",
         "iron-io/iron_mq": "~4.0",
-        "league/container": "~2.3.0"
+        "league/container": "~2.3"
     },
     "suggest": {
         "php-amqplib/php-amqplib": "Allow sending messages to an AMQP server using php-amqplib",
