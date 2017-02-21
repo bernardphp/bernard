@@ -40,6 +40,16 @@ interface Queue extends \Countable
     public function acknowledge(Envelope $envelope);
 
     /**
+     * @return array
+     */
+    public function getOptions();
+
+    /**
+     * @param array $options
+     */
+    public function setOptions(array $options);
+    
+    /**
      * Return the queue textual representation, normally this will be name (not the internal key)
      *
      * @return string
