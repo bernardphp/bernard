@@ -37,6 +37,6 @@ class LeagueContainerAwareRouter extends SimpleRouter
      */
     protected function accepts($receiver)
     {
-        return $this->container->isRegistered($receiver);
+        return $this->container->has($receiver);
     }
 }

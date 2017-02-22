@@ -21,11 +21,11 @@
         "doctrine/dbal": "~2.3",
         "aws/aws-sdk-php": "~2.4|~3.0",
         "pda/pheanstalk": "~3.0",
-        "league/container": "~1.0",
         "php-amqplib/php-amqplib": "~2.5",
         "phpspec/phpspec": "^2.4",
         "phpunit/phpunit": "^4.8",
-        "iron-io/iron_mq": "~4.0"
+        "iron-io/iron_mq": "~4.0",
+        "league/container": "~2.3"
     },
     "suggest": {
         "php-amqplib/php-amqplib": "Allow sending messages to an AMQP server using php-amqplib",
