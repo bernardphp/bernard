@@ -58,7 +58,7 @@ class MongoDBDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $data = [
             'queue' => (string) $queueName,
@@ -67,7 +67,7 @@ class MongoDBDriver implements \Bernard\Driver
             'visible' => true,
         ];
 
-        $this->messages->insert($data);
+        $this->messages->insert($data, $options);
     }
 
     /**

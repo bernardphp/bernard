@@ -82,10 +82,25 @@ class PhpAmqpDriver implements Driver
      * @param string $queueName
      * @param string $message
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $amqpMessage = new AMQPMessage($message, $this->defaultMessageParams);
-        $this->getChannel()->basic_publish($amqpMessage, $this->exchange, $queueName);
+
+        $defaults = [
+            'mandatory' => false,
+            'immediate' => false,
+            'ticket' => null,
+        ];
+
+        $options = array_merge($defaults, array_intersect_key($options, $defaults));
+
+        $this->getChannel()->basic_publish(
+            $amqpMessage,
+            $this->exchange,
+            $queueName,
+            $options['mandatory'],
+            $options['immediate'],
+            $options['ticket']);
     }
 
     /**

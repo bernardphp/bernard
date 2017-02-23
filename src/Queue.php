@@ -8,9 +8,11 @@ namespace Bernard;
 interface Queue extends \Countable
 {
     /**
+     * @param array $options
+     *
      * @param Envelope $envelope
      */
-    public function enqueue(Envelope $envelope);
+    public function enqueue(Envelope $envelope, array $options = []);
 
     /**
      * @return Envelope

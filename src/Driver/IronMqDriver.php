@@ -67,9 +67,9 @@ class IronMqDriver extends AbstractPrefetchDriver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
-        $this->ironmq->postMessage($queueName, $message);
+        $this->ironmq->postMessage($queueName, $message, $options);
     }
 
     /**

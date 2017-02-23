@@ -61,7 +61,7 @@ class DoctrineDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $types = ['string', 'string', 'datetime'];
         $data = [

@@ -92,14 +92,21 @@ class SqsDriver extends AbstractPrefetchDriver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $queueUrl = $this->resolveUrl($queueName);
 
-        $this->sqs->sendMessage([
-            'QueueUrl' => $queueUrl,
-            'MessageBody' => $message,
-        ]);
+        if (isset($options['delay'])) {
+            $options['DelaySeconds'] = $options['delay'];
+            unset($options['delay']);
+        }
+
+        $this->sqs->sendMessage(array_merge(
+            $options,
+            [
+                'QueueUrl' => $queueUrl,
+                'MessageBody' => $message,
+            ]));
     }
 
     /**
