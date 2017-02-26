@@ -61,7 +61,7 @@ class SqsDriver extends AbstractPrefetchDriver
     {
         try {
             $this->resolveUrl($queueName);
-        } catch (\InvalidArgumentException $e) {
+        } catch (SqsException $e) {
             $result = $this->sqs->createQueue([
                 'QueueName' => $queueName,
             ]);
@@ -196,6 +196,6 @@ class SqsDriver extends AbstractPrefetchDriver
             return $this->queueUrls[$queueName] = $queueUrl;
         }
 
-        throw new \InvalidArgumentException('Queue "' . $queueName .'" cannot be resolved to an url.');
+        throw new SqsException('Queue "' . $queueName .'" cannot be resolved to an url.');
     }
 }
