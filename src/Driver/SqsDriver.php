@@ -83,7 +83,7 @@ class SqsDriver extends AbstractPrefetchDriver
         ]);
 
         if (isset($result['Attributes']['ApproximateNumberOfMessages'])) {
-            return $result['Attributes']['ApproximateNumberOfMessages'];
+            return (int)$result['Attributes']['ApproximateNumberOfMessages'];
         }
 
         return 0;
