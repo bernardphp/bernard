@@ -2,7 +2,7 @@
 
 namespace Bernard\Driver;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 
 /**
  * Driver supporting Doctrine DBAL
