@@ -94,7 +94,53 @@ the message popped from the queue.
 
     To use Doctrine DBAL remember to setup the correct schema.
 
-Use the following method for creating the needed bernard tables.
+Creating the needed bernard tables can be automated by creating a console
+application with `custom commands <http://doctrine-orm.readthedocs.org/en/stable/reference/tools.html#adding-own-commands>`_.
+Just configure a `connection <http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#getting-a-connection>`_
+or `entity manager <http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/tutorials/getting-started.html#obtaining-the-entitymanager>`_
+as appropriate for your use case.
+
+.. code-block:: php
+
+    <?php
+    // doctrine.php
+
+    use Bernard\Command\Doctrine as BernardCommands;
+    use Doctrine\DBAL\Tools\Console\ConsoleRunner;
+    use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+    use Symfony\Component\Console\Application;
+    use Symfony\Component\Console\Helper\HelperSet;
+
+    $connection = ...;
+    $commands = [
+        new BernardCommands\CreateCommand,
+        new BernardCommands\DropCommand,
+        new BernardCommands\UpdateCommand,
+    ];
+
+    // To create a new application from scratch ...
+    $helperSet = new HelperSet(['connection' => new ConnectionHelper($connection)]);
+    $cli = new Application('Bernard Doctrine Command Line Interface');
+    $cli->setCatchExceptions(true);
+    $cli->setHelperSet($helperSet);
+    $cli->addCommands($commands);
+
+    // ... or, if you're using Doctrine ORM 2.5+,
+    // just re-use the existing Doctrine application ...
+    $entityManager = ...;
+    $helperSet = ConsoleRunner::createHelperSet($entityManager);
+    $cli = ConsoleRunner::createApplication($helperSet, $commands);
+
+    // Finally, run the application
+    $cli->run();
+
+And run the console application like so:
+
+.. code-block:: shell
+
+    php doctrine.php bernard:doctrine:create
+
+Alternatively, use the following method for creating the tables manually.
 
 .. code-block:: php
 
