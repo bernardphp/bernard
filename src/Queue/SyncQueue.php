@@ -7,7 +7,6 @@ use Bernard\Envelope;
 use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\PingEvent;
 use Bernard\Event\RejectEnvelopeEvent;
-use Bernard\Exception\InvalidOperationException;
 use Bernard\Router;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

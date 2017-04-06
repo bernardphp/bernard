@@ -23,7 +23,7 @@ class SyncQueueTest extends AbstractQueueTest
     {
         $envelope = $this->getEnvelope();
 
-        $mock = $this->getMock(SomeService::class, array('someMethod'));
+        $mock = $this->getMock('Bernard\Tests\Queue\SomeService', array('someMethod'));
         $mock->expects($this->exactly(3))
             ->method('someMethod')
             ->willReturn('some-value')

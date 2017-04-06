@@ -2,8 +2,6 @@
 
 namespace Bernard\Tests;
 
-use Bernard\Exception\InvalidOperationException;
-use Bernard\Queue\SyncQueue;
 use Bernard\QueueFactory\SyncFactory;
 use Bernard\Router\SimpleRouter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -22,7 +20,7 @@ class SyncFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveClosesQueue()
     {
-        $this->setExpectedException(InvalidOperationException::class);
+        $this->setExpectedException('Bernard\Exception\InvalidOperationException');
 
         $queue = $this->factory->create('queue');
 
@@ -45,10 +43,10 @@ class SyncFactoryTest extends \PHPUnit_Framework_TestCase
 
         $all = $this->factory->all();
 
-        $this->assertInstanceOf(SyncQueue::class, $queue1);
+        $this->assertInstanceOf('Bernard\Queue\SyncQueue', $queue1);
         $this->assertSame($queue1, $this->factory->create('queue1'));
         $this->assertCount(2, $all);
-        $this->assertContainsOnly(SyncQueue::class, $all);
+        $this->assertContainsOnly('Bernard\Queue\SyncQueue', $all);
         $this->assertSame(compact('queue1', 'queue2'), $all);
     }
 }
