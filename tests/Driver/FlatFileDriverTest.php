@@ -52,6 +52,17 @@ class FlatFileDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(is_dir($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter'));
     }
 
+    public function testRemoveQueueWithPoppedMessage()
+    {
+        $this->driver->createQueue('send-newsletter');
+        $this->driver->pushMessage('send-newsletter', 'test');
+        $this->driver->popMessage('send-newsletter');
+
+        $this->driver->removeQueue('send-newsletter');
+
+        $this->assertFalse(is_dir($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter'));
+    }
+
     public function testPushMessage()
     {
         $this->driver->createQueue('send-newsletter');
