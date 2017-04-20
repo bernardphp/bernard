@@ -163,7 +163,7 @@ class FlatFileDriver implements \Bernard\Driver
             \FilesystemIterator::SKIP_DOTS
         );
         $iterator = new \RecursiveIteratorIterator($iterator);
-        $iterator = new \RegexIterator($iterator, '#\.job$#');
+        $iterator = new \RegexIterator($iterator, '#\.job(.proceed)?$#');
 
         foreach ($iterator as $file) {
             /* @var $file \DirectoryIterator */
