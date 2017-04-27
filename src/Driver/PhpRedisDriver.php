@@ -2,6 +2,7 @@
 
 namespace Bernard\Driver;
 
+use Snc\RedisBundle\Client\Phpredis\BaseClient;
 use Redis;
 
 /**
@@ -11,13 +12,24 @@ use Redis;
  */
 class PhpRedisDriver implements \Bernard\Driver
 {
+    /**
+     * @var Redis|BaseClient
+     */
     protected $redis;
 
     /**
-     * @param Redis $redis
+     * @param Redis|BaseClient $redis
      */
-    public function __construct(Redis $redis)
+    public function __construct($redis)
     {
+        if (!$redis instanceof Redis && !$redis instanceof BaseClient) {
+            throw new \InvalidArgumentException(sprintf(
+                'Redis must be an instance of %s or %s.',
+                'Redis',
+                'Snc\RedisBundle\Client\Phpredis\BaseClient'
+            ));
+        }
+
         $this->redis = $redis;
     }
 
