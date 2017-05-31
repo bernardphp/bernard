@@ -33,15 +33,27 @@ class DoctrineDriver implements \Bernard\Driver
     }
 
     /**
+     * Return true if the $queueName has been already inserted on the database
+     *
+     * @param $queueName
+     * @return bool
+     */
+    private function isQueuePersisted($queueName)
+    {
+        $query = 'SELECT COUNT(name) FROM bernard_queues WHERE name = :name';
+
+        return $this->connection->fetchColumn($query, [
+            'name' => $queueName,
+        ]) > 0;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function createQueue($queueName)
     {
-        try {
+        if (!$this->isQueuePersisted($queueName)) {
             $this->connection->insert('bernard_queues', ['name' => $queueName]);
-        } catch (\Exception $e) {
-            // Because SQL server does not support a portable INSERT ON IGNORE syntax
-            // this ignores error based on primary key.
         }
     }
 
