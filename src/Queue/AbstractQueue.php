@@ -12,6 +12,7 @@ abstract class AbstractQueue implements \Bernard\Queue
 {
     protected $closed;
     protected $name;
+    protected $options = [];
 
     /**
      * @param string $name
@@ -47,6 +48,22 @@ abstract class AbstractQueue implements \Bernard\Queue
         if ($this->closed) {
             throw new InvalidOperationException(sprintf('Queue "%s" is closed.', $this->name));
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
     }
 
     /**

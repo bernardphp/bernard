@@ -26,6 +26,11 @@ class RoundRobinQueue implements Queue
     protected $envelopes;
 
     /**
+     * @var array
+     */
+    protected $options = [];
+
+    /**
      * @param Queue[] $queues
      */
     public function __construct(array $queues)
@@ -40,11 +45,11 @@ class RoundRobinQueue implements Queue
     /**
      * {@inheritdoc}
      */
-    public function enqueue(Envelope $envelope)
+    public function enqueue(Envelope $envelope, array $options = [])
     {
         $this->verifyEnvelope($envelope);
 
-        $this->queues[$envelope->getName()]->enqueue($envelope);
+        $this->queues[$envelope->getName()]->enqueue($envelope, $options);
     }
 
     /**
@@ -138,6 +143,22 @@ class RoundRobinQueue implements Queue
         $queue = $this->envelopes[$envelope];
         $queue->acknowledge($envelope);
         $this->envelopes->detach($envelope);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
     }
 
     /**

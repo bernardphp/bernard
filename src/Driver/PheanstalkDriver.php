@@ -49,9 +49,17 @@ class PheanstalkDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
-        $this->pheanstalk->putInTube($queueName, $message);
+        $defaults = [
+            'priority' => PheanstalkInterface::DEFAULT_PRIORITY,
+            'delay' => PheanstalkInterface::DEFAULT_DELAY,
+            'ttr' => PheanstalkInterface::DEFAULT_TTR,
+        ];
+
+        $options = array_merge($defaults, array_intersect_key($options, $defaults));
+
+        $this->pheanstalk->putInTube($queueName, $message, $options['priority'], $options['delay'], $options['ttr']);
     }
 
     /**

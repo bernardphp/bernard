@@ -76,7 +76,7 @@ class FlatFileDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $queueDir = $this->getQueueDirectory($queueName);
 

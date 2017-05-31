@@ -48,7 +48,7 @@ class AppEngineDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $task = new PushTask($this->resolveEndpoint($queueName), compact('message'));
         $task->add($queueName);

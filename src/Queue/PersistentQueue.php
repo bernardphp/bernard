@@ -64,11 +64,11 @@ class PersistentQueue extends AbstractQueue
     /**
      * {@inheritdoc}
      */
-    public function enqueue(Envelope $envelope)
+    public function enqueue(Envelope $envelope, array $options = [])
     {
         $this->errorIfClosed();
 
-        $this->driver->pushMessage($this->name, $this->serializer->serialize($envelope));
+        $this->driver->pushMessage($this->name, $this->serializer->serialize($envelope), $options);
     }
 
     /**
@@ -92,7 +92,13 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        list($serialized, $receipt) = $this->driver->popMessage($this->name);
+        $duration = // get the wait seconds from the options array or default to 5 seconds
+            (isset($this->options['duration']) 
+                ? (int)$this->options['duration'] 
+                : 0) 
+            ?: 5;
+        
+        list($serialized, $receipt) = $this->driver->popMessage($this->name, $duration);
 
         if ($serialized) {
             $envelope = $this->serializer->unserialize($serialized);

@@ -48,7 +48,7 @@ class PhpRedisDriver implements \Bernard\Driver
     /**
      * {@inheritdoc}
      */
-    public function pushMessage($queueName, $message)
+    public function pushMessage($queueName, $message, array $options = [])
     {
         $this->redis->rpush($this->resolveKey($queueName), $message);
     }

@@ -35,8 +35,9 @@ interface Driver
      *
      * @param string $queueName
      * @param string $message
+     * @param array $options
      */
-    public function pushMessage($queueName, $message);
+    public function pushMessage($queueName, $message, array $options = []);
 
     /**
      * Remove the next message in line. And if no message is available
