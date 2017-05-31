@@ -28,7 +28,9 @@ class PlainMessageNormalizer implements NormalizerInterface, DenormalizerInterfa
      */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
-        Assertion::choicesNotEmpty($data, ['name', 'arguments']);
+        Assertion::notEmptyKey($data, 'name');
+        Assertion::keyExists($data, 'arguments');
+        Assertion::isArray($data['arguments']);
 
         return new PlainMessage($data['name'], $data['arguments']);
     }
