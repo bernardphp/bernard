@@ -10,8 +10,14 @@ namespace Bernard\Driver;
  */
 class FlatFileDriver implements \Bernard\Driver
 {
+    /**
+     * @var string
+     */
     private $baseDirectory;
 
+    /**
+     * @var integer
+     */
     private $permissions;
 
     /**
@@ -63,14 +69,7 @@ class FlatFileDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        $iterator = new \RecursiveDirectoryIterator(
-            $this->getQueueDirectory($queueName),
-            \FilesystemIterator::SKIP_DOTS
-        );
-        $iterator = new \RecursiveIteratorIterator($iterator);
-        $iterator = new \RegexIterator($iterator, '#\.job$#');
-
-        return iterator_count($iterator);
+        return iterator_count($this->getJobIterator($queueName));
     }
 
     /**
@@ -83,7 +82,7 @@ class FlatFileDriver implements \Bernard\Driver
         $filename = $this->getJobFilename($queueName);
 
         file_put_contents($queueDir.DIRECTORY_SEPARATOR.$filename, $message);
-        chmod($queueDir . DIRECTORY_SEPARATOR . $filename, $this->permissions);
+        chmod($queueDir.DIRECTORY_SEPARATOR.$filename, $this->permissions);
     }
 
     /**
@@ -93,18 +92,16 @@ class FlatFileDriver implements \Bernard\Driver
     {
         $runtime = microtime(true) + $duration;
         $queueDir = $this->getQueueDirectory($queueName);
-
-        $it = new \GlobIterator($queueDir.DIRECTORY_SEPARATOR.'*.job', \FilesystemIterator::KEY_AS_FILENAME);
-        $files = array_keys(iterator_to_array($it));
+        $files = $this->getJobFiles($queueName);
 
         natsort($files);
 
         while (microtime(true) < $runtime) {
             if ($files) {
-                $id = array_pop($files);
+                $id = array_shift($files);
                 $data = array(file_get_contents($queueDir.DIRECTORY_SEPARATOR.$id), $id);
-                rename($queueDir.DIRECTORY_SEPARATOR.$id, $queueDir.DIRECTORY_SEPARATOR.$id.'.proceed');
-
+                // Set file hidden (emulating message invisibility)
+                rename($queueDir.DIRECTORY_SEPARATOR.$id, $queueDir.DIRECTORY_SEPARATOR.'.'.$id);
                 return $data;
             }
 
@@ -120,7 +117,8 @@ class FlatFileDriver implements \Bernard\Driver
     public function acknowledgeMessage($queueName, $receipt)
     {
         $queueDir = $this->getQueueDirectory($queueName);
-        $path = $queueDir.DIRECTORY_SEPARATOR.$receipt.'.proceed';
+        // Set path to hidden filename
+        $path = $queueDir.DIRECTORY_SEPARATOR.'.'.$receipt;
 
         if (!is_file($path)) {
             return;
@@ -136,11 +134,9 @@ class FlatFileDriver implements \Bernard\Driver
     {
         $queueDir = $this->getQueueDirectory($queueName);
 
-        $it = new \GlobIterator($queueDir.DIRECTORY_SEPARATOR.'*.job', \FilesystemIterator::KEY_AS_FILENAME);
-        $files = array_keys(iterator_to_array($it));
+        $files = $this->getJobFiles($queueName);
 
         natsort($files);
-        $files = array_reverse($files);
 
         $files = array_slice($files, $index, $limit);
 
@@ -158,19 +154,7 @@ class FlatFileDriver implements \Bernard\Driver
      */
     public function removeQueue($queueName)
     {
-        $iterator = new \RecursiveDirectoryIterator(
-            $this->getQueueDirectory($queueName),
-            \FilesystemIterator::SKIP_DOTS
-        );
-        $iterator = new \RecursiveIteratorIterator($iterator);
-        $iterator = new \RegexIterator($iterator, '#\.job(.proceed)?$#');
-
-        foreach ($iterator as $file) {
-            /* @var $file \DirectoryIterator */
-            unlink($file->getRealPath());
-        }
-
-        rmdir($this->getQueueDirectory($queueName));
+        $this->removeDirectoryRecursive($this->getQueueDirectory($queueName));
     }
 
     /**
@@ -225,5 +209,44 @@ class FlatFileDriver implements \Bernard\Driver
         $file->flock(LOCK_UN);
 
         return $filename;
+    }
+
+    /**
+     * Creates an iterator of all message files in the queue
+     * @param string $queueName
+     * @return \GlobIterator
+     */
+    private function getJobIterator($queueName) {
+        $queueDir = $this->getQueueDirectory($queueName);
+        $iterator = new \GlobIterator($queueDir.DIRECTORY_SEPARATOR.'*.job', \FilesystemIterator::KEY_AS_FILENAME);
+        return $iterator;
+    }
+
+    /**
+     * Retrieves an array of all message files in the queue
+     * @param string $queueName
+     * @return array
+     */
+    private function getJobFiles($queueName) {
+        $iterator = $this->getJobIterator($queueName);
+        $files = array_keys(iterator_to_array($iterator));
+        return $files;
+    }
+
+    /**
+     * Removes a directory recursively
+     * @param string $directory
+     */
+    private function removeDirectoryRecursive($directory)
+    {
+        foreach (glob("{$directory}/{,.}[!.,!..]*", GLOB_MARK|GLOB_BRACE) as $file)
+        {
+            if (is_dir($file)) {
+                $this->removeDirectoryRecursive($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($directory);
     }
 }
