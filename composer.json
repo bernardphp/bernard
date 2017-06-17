@@ -1,6 +1,6 @@
 {
     "name": "bernard/bernard",
-    "description": "Message queue implemented in PHP with Redis as a backend.",
+    "description": "Message queue abstraction layer",
     "keywords": ["message queue", "message", "queue", "bernard"],
     "homepage": "https://github.com/bernardphp/bernard",
     "type": "library",
