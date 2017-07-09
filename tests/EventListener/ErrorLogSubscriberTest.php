@@ -4,9 +4,8 @@ namespace Bernard\Tests\EventListener;
 
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\EventListener\ErrorLogSubscriber;
-use PHPUnit_Framework_TestCase as TestCase;
 
-class ErrorLogSubscriberTest extends TestCase
+class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     private $envelope;
     private $queue;

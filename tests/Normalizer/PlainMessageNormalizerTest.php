@@ -4,9 +4,8 @@ namespace Bernard\Tests\Normalizer;
 
 use Bernard\Message\PlainMessage;
 use Bernard\Normalizer\PlainMessageNormalizer;
-use PHPUnit_Framework_TestCase;
 
-class PlainMessageNormalizerTest extends PHPUnit_Framework_TestCase
+class PlainMessageNormalizerTest extends \PHPUnit\Framework\TestCase
 {
     public function testDenormalize()
     {
