@@ -13,17 +13,19 @@ class SimpleRouterTest extends \PHPUnit\Framework\TestCase
         $this->router = new SimpleRouter();
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testThrowsExceptionWhenReceiverIsNotSupported()
     {
-        $this->setExpectedException('InvalidArgumentException');
-
         $this->router->add('SendNewsletter', 1);
     }
 
+    /**
+     * @expectedException \Bernard\Exception\ReceiverNotFoundException
+     */
     public function testThrowsExceptionWhenNothingMatches()
     {
-        $this->setExpectedException('Bernard\Exception\ReceiverNotFoundException');
-
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->router->map($envelope);

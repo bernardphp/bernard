@@ -28,28 +28,24 @@ class PhpAmqpDriverTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->phpAmqpChannel = $this->getMock(
-            '\PhpAmqpLib\Channel\AMQPChannel',
-            array(
+        $this->phpAmqpChannel = $this->getMockBuilder('\PhpAmqpLib\Channel\AMQPChannel')
+            ->setMethods(array(
                 'basic_publish',
                 'basic_get',
                 'basic_ack',
                 'exchange_declare',
                 'queue_declare',
                 'queue_bind'
-            ),
-            array(),
-            '',
-            false
-        );
+            ))
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->phpAmqpConnection = $this->getMock(
-            '\PhpAmqpLib\Connection\AMQPStreamConnection',
-            array('channel'),
-            array(),
-            '',
-            false
-        );
+        $this->phpAmqpConnection = $this->getMockBuilder('\PhpAmqpLib\Connection\AMQPStreamConnection')
+            ->setMethods(array(
+                'channel',
+            ))
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->phpAmqpConnection
             ->expects($this->any())

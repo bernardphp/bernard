@@ -22,7 +22,7 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
 
         $this->envelope = $this->getMockBuilder('Bernard\Envelope')
             ->disableOriginalConstructor()->getMock();
-        $this->queue = $this->getMock('Bernard\Queue');
+        $this->queue = $this->createMock('Bernard\Queue');
         $this->producer = $this->getMockBuilder('Bernard\Producer')->disableOriginalConstructor()->getMock();
         $this->subscriber = new ErrorLogSubscriber($this->producer, 'failures');
         $this->iniErrorLog = ini_get('error_log');

@@ -33,16 +33,16 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->router = new SimpleRouter;
         $this->router->add('ImportUsers', new Fixtures\Service);
 
-        $this->dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        $this->dispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $this->consumer = new Consumer($this->router, $this->dispatcher);
     }
 
     public function testEmitsConsumeEvent()
     {
         $envelope = new Envelope(new PlainMessage('ImportUsers'));
-        $queue = $this->getMock('Bernard\Queue\InMemoryQueue', [
+        $queue = $this->getMockBuilder('Bernard\Queue\InMemoryQueue')->setMethods([
             'dequeue'
-        ], ['queue']);
+        ])->setConstructorArgs(['queue'])->getMock();
 
         $queue->expects($this->once())
             ->method('dequeue')
@@ -128,7 +128,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
 
         $this->router->add('ImportUsers', $service);
 
-        $queue = $this->getMock('Bernard\Queue');
+        $queue = $this->createMock('Bernard\Queue');
         $queue->expects($this->once())->method('dequeue')->will($this->returnValue($envelope));
         $queue->expects($this->once())->method('acknowledge')->with($this->equalTo($envelope));
 
@@ -198,6 +198,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @requires PHP 7.0
+     * @expectedException \TypeError
      */
     public function testWillRejectDispatchOnThrowableError()
     {
@@ -221,8 +222,6 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
                     return true;
                 })
             );
-
-        $this->setExpectedException('TypeError');
 
         $this->consumer->tick($queue, ['stop-on-error' => true]);
     }

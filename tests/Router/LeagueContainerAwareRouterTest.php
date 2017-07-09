@@ -17,10 +17,11 @@ class LeagueContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
         });
     }
 
+    /**
+     * @expectedException \League\Container\Exception\NotFoundException
+     */
     public function testUndefinedServicesAreNotAccepted()
     {
-        $this->setExpectedException('League\Container\Exception\NotFoundException');
-
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $router = new LeagueContainerAwareRouter($this->container);

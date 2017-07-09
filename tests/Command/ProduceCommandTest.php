@@ -29,10 +29,11 @@ class ProduceCommandTest extends \PHPUnit\Framework\TestCase
         ));
     }
 
+    /**
+     * @expectedException \RuntimeException
+     */
     public function testInvalidJsonThrowsException()
     {
-        $this->setExpectedException('RuntimeException');
-
         $command = new ProduceCommand($this->producer);
 
         $tester = new CommandTester($command);

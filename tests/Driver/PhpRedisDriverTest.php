@@ -12,7 +12,7 @@ class PhpRedisDriverTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('"redis" extension is not loaded.');
         }
 
-        $this->redis = $this->getMock('Redis', array(
+        $this->redis = $this->getMockBuilder('Redis')->setMethods(array(
             'lLen',
             'sMembers',
             'lRange',
@@ -23,7 +23,7 @@ class PhpRedisDriverTest extends \PHPUnit\Framework\TestCase
             'sContains',
             'rPush',
             'sRem',
-        ));
+        ))->getMock();
 
         $this->connection = new PhpRedisDriver($this->redis);
     }

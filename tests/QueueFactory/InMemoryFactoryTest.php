@@ -16,10 +16,11 @@ class InMemoryFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Bernard\QueueFactory', $this->factory);
     }
 
+    /**
+     * @expectedException \Bernard\Exception\InvalidOperationException
+     */
     public function testRemoveClosesQueue()
     {
-        $this->setExpectedException('Bernard\Exception\InvalidOperationException');
-
         $queue = $this->factory->create('queue');
 
         $this->assertTrue($this->factory->exists('queue'));

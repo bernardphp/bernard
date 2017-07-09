@@ -19,10 +19,11 @@ class PimpleAwareRouterTest extends \PHPUnit\Framework\TestCase
         $this->router = new PimpleAwareRouter($this->pimple);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testUndefinedServicesAreNotAccepted()
     {
-        $this->setExpectedException('InvalidArgumentException');
-
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->router->map($envelope);

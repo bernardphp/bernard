@@ -20,7 +20,7 @@ class RejectEnvelopeEventTest extends \PHPUnit\Framework\TestCase
     {
         $this->envelope = $this->getMockBuilder('Bernard\Envelope')
             ->disableOriginalConstructor()->getMock();
-        $this->queue = $this->getMock('Bernard\Queue');
+        $this->queue = $this->createMock('Bernard\Queue');
     }
 
     public function testExtendsEnvelopeEvent()

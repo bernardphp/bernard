@@ -92,10 +92,12 @@ class SqsDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(4, $this->driver->countMessages(self::DUMMY_QUEUE_NAME));
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Queue "unknown" cannot be resolved to an url.
+     */
     public function testUnresolveableQueueNameThrowsException()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Queue "unknown" cannot be resolved to an url.');
-
         $this->driver->popMessage('unknown');
     }
 

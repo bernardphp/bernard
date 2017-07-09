@@ -17,10 +17,11 @@ class ContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
         });
     }
 
+    /**
+     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     */
     public function testUndefinedServicesAreNotAccepted()
     {
-        $this->setExpectedException('Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException');
-
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $router = new ContainerAwareRouter($this->container);
