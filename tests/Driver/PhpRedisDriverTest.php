@@ -4,7 +4,7 @@ namespace Bernard\Tests\Driver;
 
 use Bernard\Driver\PhpRedisDriver;
 
-class PhpRedisDriverTest extends \PHPUnit_Framework_TestCase
+class PhpRedisDriverTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

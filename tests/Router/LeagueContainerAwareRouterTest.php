@@ -7,7 +7,7 @@ use Bernard\Message\PlainMessage;
 use Bernard\Router\LeagueContainerAwareRouter;
 use League\Container\Container;
 
-class LeagueContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
+class LeagueContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

@@ -7,7 +7,7 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-class PhpAmqpDriverTest extends \PHPUnit_Framework_TestCase
+class PhpAmqpDriverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AMQPStreamConnection

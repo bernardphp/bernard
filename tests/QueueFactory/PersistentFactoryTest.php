@@ -4,7 +4,7 @@ namespace Bernard\Tests\QueueFactory;
 
 use Bernard\QueueFactory\PersistentFactory;
 
-class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
+class PersistentFactoryTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

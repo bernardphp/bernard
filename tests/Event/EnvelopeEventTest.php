@@ -4,7 +4,7 @@ namespace Bernard\Tests\Event;
 
 use Bernard\Event\EnvelopeEvent;
 
-class EnvelopeEventTest extends \PHPUnit_Framework_TestCase
+class EnvelopeEventTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

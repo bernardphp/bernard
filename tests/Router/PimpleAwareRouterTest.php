@@ -7,7 +7,7 @@ use Bernard\Message\PlainMessage;
 use Bernard\Router\PimpleAwareRouter;
 use Pimple;
 
-class PimpleAwareRouterTest extends \PHPUnit_Framework_TestCase
+class PimpleAwareRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

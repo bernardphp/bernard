@@ -11,7 +11,7 @@ use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\PingEvent;
 
-class ConsumerTest extends \PHPUnit_Framework_TestCase
+class ConsumerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var SimpleRouter

@@ -7,7 +7,7 @@ use Bernard\Message\PlainMessage;
 use Bernard\Queue\InMemoryQueue;
 use Bernard\Queue\RoundRobinQueue;
 
-class RoundRobinQueueTest extends \PHPUnit_Framework_TestCase
+class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var InMemoryQueue[]

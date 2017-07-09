@@ -7,7 +7,7 @@ use Bernard\Message\PlainMessage;
 use Bernard\Router\ContainerAwareRouter;
 use Symfony\Component\DependencyInjection\Container;
 
-class ContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
+class ContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

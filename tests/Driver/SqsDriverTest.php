@@ -7,7 +7,7 @@ use Aws\Sqs\SqsClient;
 use Bernard\Driver\SqsDriver;
 use Guzzle\Service\Resource\Model;
 
-class SqsDriverTest extends \PHPUnit_Framework_TestCase
+class SqsDriverTest extends \PHPUnit\Framework\TestCase
 {
     const DUMMY_QUEUE_NAME       = 'my-queue';
     const DUMMY_QUEUE_URL_PREFIX = 'https://sqs.eu-west-1.amazonaws.com/123123';

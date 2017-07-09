@@ -8,7 +8,7 @@ use Bernard\EventListener\FailureSubscriber;
 use Bernard\Message\DefaultMessage;
 use Bernard\Queue\InMemoryQueue;
 
-class FailureSubscriberTest extends \PHPUnit_Framework_TestCase
+class FailureSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     private $producer;
     private $subscriber;

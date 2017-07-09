@@ -4,7 +4,7 @@ namespace Bernard\Tests;
 
 use Bernard\QueueFactory\InMemoryFactory;
 
-class InMemoryFactoryTest extends \PHPUnit_Framework_TestCase
+class InMemoryFactoryTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

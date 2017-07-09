@@ -7,7 +7,7 @@ use Bernard\Message\PlainMessage;
 use Bernard\QueueFactory\InMemoryFactory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class ProducerTest extends \PHPUnit_Framework_TestCase
+class ProducerTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

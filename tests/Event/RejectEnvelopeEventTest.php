@@ -4,7 +4,7 @@ namespace Bernard\Tests\Event;
 
 use Bernard\Event\RejectEnvelopeEvent;
 
-class RejectEnvelopeEventTest extends \PHPUnit_Framework_TestCase
+class RejectEnvelopeEventTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Bernard\Envelope|\PHPUnit_Framework_MockObject_MockObject
