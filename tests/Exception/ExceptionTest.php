@@ -2,9 +2,7 @@
 
 namespace Bernard\Tests\Exception;
 
-use PHPUnit_Framework_TestCase as TestCase;
-
-class ExceptionTest extends TestCase
+class ExceptionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider exceptionProvider

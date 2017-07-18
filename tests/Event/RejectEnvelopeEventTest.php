@@ -4,7 +4,7 @@ namespace Bernard\Tests\Event;
 
 use Bernard\Event\RejectEnvelopeEvent;
 
-class RejectEnvelopeEventTest extends \PHPUnit_Framework_TestCase
+class RejectEnvelopeEventTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Bernard\Envelope|\PHPUnit_Framework_MockObject_MockObject
@@ -20,7 +20,7 @@ class RejectEnvelopeEventTest extends \PHPUnit_Framework_TestCase
     {
         $this->envelope = $this->getMockBuilder('Bernard\Envelope')
             ->disableOriginalConstructor()->getMock();
-        $this->queue = $this->getMock('Bernard\Queue');
+        $this->queue = $this->createMock('Bernard\Queue');
     }
 
     public function testExtendsEnvelopeEvent()

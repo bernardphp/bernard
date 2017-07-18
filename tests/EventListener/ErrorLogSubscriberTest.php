@@ -4,9 +4,8 @@ namespace Bernard\Tests\EventListener;
 
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\EventListener\ErrorLogSubscriber;
-use PHPUnit_Framework_TestCase as TestCase;
 
-class ErrorLogSubscriberTest extends TestCase
+class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     private $envelope;
     private $queue;
@@ -23,7 +22,7 @@ class ErrorLogSubscriberTest extends TestCase
 
         $this->envelope = $this->getMockBuilder('Bernard\Envelope')
             ->disableOriginalConstructor()->getMock();
-        $this->queue = $this->getMock('Bernard\Queue');
+        $this->queue = $this->createMock('Bernard\Queue');
         $this->producer = $this->getMockBuilder('Bernard\Producer')->disableOriginalConstructor()->getMock();
         $this->subscriber = new ErrorLogSubscriber($this->producer, 'failures');
         $this->iniErrorLog = ini_get('error_log');

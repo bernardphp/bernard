@@ -7,7 +7,7 @@ use Bernard\Driver\FlatFileDriver;
 /**
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */
-class FlatFileDriverTest extends \PHPUnit_Framework_TestCase
+class FlatFileDriverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var FlatFileDriver

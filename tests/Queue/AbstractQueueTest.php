@@ -4,15 +4,15 @@ namespace Bernard\Tests\Queue;
 
 use Bernard\Envelope;
 
-abstract class AbstractQueueTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractQueueTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider dataClosedMethods
+     * @expectedException \Bernard\Exception\InvalidOperationexception
+     * @expectedExceptionMessage Queue "send-newsletter" is closed.
      */
     public function testNotAllowedWhenClosed($method, array $arguments = array())
     {
-        $this->setExpectedException('Bernard\Exception\InvalidOperationexception', 'Queue "send-newsletter" is closed.');
-
         $queue = $this->createQueue('send-newsletter');
         $queue->close();
 
@@ -34,10 +34,10 @@ abstract class AbstractQueueTest extends \PHPUnit_Framework_TestCase
             array('count'),
             array('dequeue'),
             array('enqueue', array(
-                new Envelope($this->getMock('Bernard\Message'))
+                new Envelope($this->createMock('Bernard\Message'))
             )),
             array('acknowledge', array(
-                new Envelope($this->getMock('Bernard\Message'))
+                new Envelope($this->createMock('Bernard\Message'))
             )),
         );
     }

@@ -7,7 +7,7 @@ use Bernard\Message\PlainMessage;
 use Bernard\Router\PimpleAwareRouter;
 use Pimple;
 
-class PimpleAwareRouterTest extends \PHPUnit_Framework_TestCase
+class PimpleAwareRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
@@ -19,10 +19,11 @@ class PimpleAwareRouterTest extends \PHPUnit_Framework_TestCase
         $this->router = new PimpleAwareRouter($this->pimple);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testUndefinedServicesAreNotAccepted()
     {
-        $this->setExpectedException('InvalidArgumentException');
-
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->router->map($envelope);

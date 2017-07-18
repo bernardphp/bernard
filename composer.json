@@ -23,7 +23,7 @@
         "pda/pheanstalk": "~3.0",
         "php-amqplib/php-amqplib": "~2.5",
         "phpspec/phpspec": "^2.4",
-        "phpunit/phpunit": "^4.8",
+        "phpunit/phpunit": "^5.5|^6.0",
         "iron-io/iron_mq": "~4.0",
         "league/container": "~2.3"
     },

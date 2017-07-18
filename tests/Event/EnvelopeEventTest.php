@@ -4,13 +4,13 @@ namespace Bernard\Tests\Event;
 
 use Bernard\Event\EnvelopeEvent;
 
-class EnvelopeEventTest extends \PHPUnit_Framework_TestCase
+class EnvelopeEventTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
         $this->envelope = $this->getMockBuilder('Bernard\Envelope')->disableOriginalConstructor()
             ->getMock();
-        $this->queue = $this->getMock('Bernard\Queue');
+        $this->queue = $this->createMock('Bernard\Queue');
     }
 
     public function testIsEvent()

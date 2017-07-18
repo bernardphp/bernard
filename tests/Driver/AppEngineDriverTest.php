@@ -5,7 +5,7 @@ namespace Bernard\Tests\Driver;
 use Bernard\Driver\AppEngineDriver;
 use google\appengine\api\taskqueue\PushTask;
 
-class AppEngineDriverTest extends \PHPUnit_Framework_TestCase
+class AppEngineDriverTest extends \PHPUnit\Framework\TestCase
 {
     public static function setUpBeforeClass()
     {

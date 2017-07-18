@@ -11,7 +11,7 @@ use MongoConnectionException;
  * @coversDefaultClass Bernard\Driver\MongoDBDriver
  * @group functional
  */
-class MongoDBDriverFunctionalTest extends \PHPUnit_Framework_TestCase
+class MongoDBDriverFunctionalTest extends \PHPUnit\Framework\TestCase
 {
     const DATABASE = 'bernardQueueTest';
     const MESSAGES = 'bernardMessages';

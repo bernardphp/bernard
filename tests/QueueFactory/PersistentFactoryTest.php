@@ -4,14 +4,14 @@ namespace Bernard\Tests\QueueFactory;
 
 use Bernard\QueueFactory\PersistentFactory;
 
-class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
+class PersistentFactoryTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
         $this->connection = $this->getMockBuilder('Bernard\Driver')
             ->disableOriginalConstructor()->getMock();
 
-        $this->factory = new PersistentFactory($this->connection, $this->getMock('Bernard\Serializer'));
+        $this->factory = new PersistentFactory($this->connection, $this->createMock('Bernard\Serializer'));
     }
 
     public function testImplementsQueueFactory()
@@ -29,10 +29,11 @@ class PersistentFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($queue, $this->factory->create('send-newsletter'));
     }
 
+    /**
+     * @expectedException \Bernard\Exception\InvalidOperationException
+     */
     public function testRemoveClosesQueue()
     {
-        $this->setExpectedException('Bernard\Exception\InvalidOperationException');
-
         $queue = $this->factory->create('send-newsletter');
 
         $this->assertTrue($this->factory->exists('send-newsletter'));

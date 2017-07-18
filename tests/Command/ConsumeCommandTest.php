@@ -6,7 +6,7 @@ use Bernard\Command\ConsumeCommand;
 use Bernard\QueueFactory\InMemoryFactory;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ConsumeCommandTest extends \PHPUnit_Framework_TestCase
+class ConsumeCommandTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

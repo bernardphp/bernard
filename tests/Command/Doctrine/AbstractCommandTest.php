@@ -5,7 +5,7 @@ namespace Bernard\Tests\Command\Doctrine;
 use Bernard\Command\Doctrine\AbstractCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class AbstractCommandTest extends \PHPUnit_Framework_TestCase
+class AbstractCommandTest extends \PHPUnit\Framework\TestCase
 {
     protected $command;
 

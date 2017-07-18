@@ -7,7 +7,7 @@ use Bernard\Message\PlainMessage;
 use Bernard\Queue\InMemoryQueue;
 use Bernard\Queue\RoundRobinQueue;
 
-class RoundRobinQueueTest extends \PHPUnit_Framework_TestCase
+class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var InMemoryQueue[]
@@ -30,13 +30,12 @@ class RoundRobinQueueTest extends \PHPUnit_Framework_TestCase
         $this->round = new RoundRobinQueue($this->queues);
     }
 
+    /**
+     * @expectedException \DomainException
+     * @expectedExceptionMessage Unrecognized queue specified: foo
+     */
     public function testEnqueueWithUnrecognizedQueue()
     {
-        $this->setExpectedException(
-            'DomainException',
-            'Unrecognized queue specified: foo'
-        );
-
         $this->round->enqueue($this->getEnvelope('foo'));
     }
 
@@ -94,13 +93,12 @@ class RoundRobinQueueTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([$envelope_3_1], $this->round->peek(1, 1));
     }
 
+    /**
+     * @expectedException \DomainException
+     * @expectedExceptionMessage Unrecognized queue specified: foo
+     */
     public function testAcknowledgeWithUnrecognizedQueue()
     {
-        $this->setExpectedException(
-            'DomainException',
-            'Unrecognized queue specified: foo'
-        );
-
         $envelope = $this->getEnvelope('foo');
         $this->round->enqueue($envelope);
         $dequeued = $this->round->dequeue($envelope);
