@@ -87,12 +87,14 @@ class PersistentQueue extends AbstractQueue
 
     /**
      * {@inheritdoc}
+     *
+     * @param int $duration Number of seconds to keep polling for messages.
      */
-    public function dequeue()
+    public function dequeue($duration = 5)
     {
         $this->errorIfClosed();
 
-        list($serialized, $receipt) = $this->driver->popMessage($this->name);
+        list($serialized, $receipt) = $this->driver->popMessage($this->name, $duration);
 
         if ($serialized) {
             $envelope = $this->serializer->unserialize($serialized);
