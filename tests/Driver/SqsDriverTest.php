@@ -10,6 +10,7 @@ use Guzzle\Service\Resource\Model;
 class SqsDriverTest extends \PHPUnit_Framework_TestCase
 {
     const DUMMY_QUEUE_NAME       = 'my-queue';
+    const DUMMY_FIFO_QUEUE_NAME  = 'my-queue.fifo';
     const DUMMY_QUEUE_URL_PREFIX = 'https://sqs.eu-west-1.amazonaws.com/123123';
 
     public function setUp()
@@ -60,6 +61,29 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
         // there won't be attempt to create it.
         $this->driver->createQueue(self::DUMMY_QUEUE_NAME);
         $this->driver->createQueue(self::DUMMY_QUEUE_NAME);
+    }
+
+    public function testItCreatesFifoQueue()
+    {
+        $this->sqs
+            ->expects($this->once())
+            ->method('createQueue')
+            ->with($this->equalTo([
+                'QueueName' => self::DUMMY_FIFO_QUEUE_NAME,
+                'Attributes' => [
+                    'FifoQueue' => 'true',
+                ]
+            ]))
+            ->will($this->returnValue(
+                $this->wrapResult([
+                    'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX,
+                ])
+            ));
+
+        // Calling this twice asserts that if queue exists
+        // there won't be attempt to create it.
+        $this->driver->createQueue(self::DUMMY_FIFO_QUEUE_NAME);
+        $this->driver->createQueue(self::DUMMY_FIFO_QUEUE_NAME);
     }
 
     public function testItDeletesQueue()
