@@ -64,12 +64,17 @@ class SqsDriver extends AbstractPrefetchDriver
         try {
             $this->resolveUrl($queueName);
         } catch (\InvalidArgumentException $e) {
-            $result = $this->sqs->createQueue([
+            $parameters = [
                 'QueueName' => $queueName,
-                'Attributes' => [
-                    'FifoQueue' => $this->isFifoQueue($queueName) ? 'true' : 'false',
-                ],
-            ]);
+            ];
+
+            if($this->isFifoQueue($queueName)) {
+                $parameters['Attributes'] = [
+                    'FifoQueue' => 'true',
+                ];
+            }
+            
+            $result = $this->sqs->createQueue($parameters);
 
             $this->queueUrls[$queueName] = $result['QueueUrl'];
         }
