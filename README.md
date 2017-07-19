@@ -14,6 +14,8 @@ Currently these are the supported backends, with more coming with each release:
  * Doctrine DBAL
  * Pheanstalk
  * PhpAmqp / RabbitMQ
+ * Queue interop
+ * Amqp interop 
 
 You can learn more on our website about Bernard and its [related projects][website] or just dive directly into [the
 documentation][documentation].
