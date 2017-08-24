@@ -14,7 +14,6 @@ Several different types of drivers are supported. Currently these are available:
 * `Predis`_
 * `Amazon SQS`_
 * `Queue Interop`_
-* `Amqp Interop`_
 
 Google AppEngine
 ----------------
@@ -500,30 +499,5 @@ For example we choose enqueue/fs one to demonstrate how it is working.
     use Enqueue\Fs\FsConnectionFactory;
 
     $context = (new FsConnectionFactory('file://'.__DIR__.'/queues'))->createContext();
-
-    $driver = new InteropDriver($context);
-
-Amqp Interop
-------------
-
-This driver adds ability to use any `amqp interop <https://github.com/queue-interop/queue-interop#compatible-projects-1>`_ compatible transport.
-For example we choose enqueue/amqp-bunny one to demonstrate how it is working.
-
-.. code-block:: json
-
-    {
-        "require" : {
-            "enqueue/amqp-bunny" : "^0.7"
-        }
-    }
-
-.. code-block:: php
-
-    <?php
-
-    use Bernard\Driver\InteropDriver;
-    use Enqueue\AmqpBunny\AmqpConnectionFactory;
-
-    $context = (new FsConnectionFactory('amqp://'))->createContext();
 
     $driver = new InteropDriver($context);

@@ -2,6 +2,8 @@
 namespace Bernard\Driver;
 
 use Bernard\Driver;
+use Interop\Amqp\AmqpContext;
+use Interop\Amqp\AmqpQueue;
 use Interop\Queue\PsrConsumer;
 use Interop\Queue\PsrContext;
 
@@ -40,6 +42,9 @@ final class InteropDriver implements Driver
      */
     public function createQueue($queueName)
     {
+        if ($this->context instanceof AmqpContext) {
+            $this->context->declareQueue($this->createAmqpQueue($queueName));
+        }
     }
 
     /**
@@ -47,6 +52,10 @@ final class InteropDriver implements Driver
      */
     public function countMessages($queueName)
     {
+        if ($this->context instanceof AmqpContext) {
+            return $this->context->declareQueue($this->createAmqpQueue($queueName));
+        }
+
         return 0;
     }
 
@@ -92,6 +101,11 @@ final class InteropDriver implements Driver
      */
     public function removeQueue($queueName)
     {
+        if ($this->context instanceof AmqpContext) {
+            $queue = $this->createAmqpQueue($queueName);
+
+            $this->context->deleteQueue($queue);
+        }
     }
 
     /**
@@ -116,6 +130,22 @@ final class InteropDriver implements Driver
         }
 
         return $this->consumers[$queueName];
+    }
+
+    /**
+     * @param string $queueName
+     *
+     * @return AmqpQueue
+     */
+    private function createAmqpQueue($queueName)
+    {
+        /** @var AmqpContext $context */
+        $context = $this->context;
+
+        $queue = $context->createQueue($queueName);
+        $queue->addFlag(AmqpQueue::FLAG_DURABLE);
+
+        return $queue;
     }
 
     /**

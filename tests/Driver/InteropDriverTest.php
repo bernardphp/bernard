@@ -3,6 +3,8 @@
 namespace Bernard\Tests\Driver;
 
 use Bernard\Driver\InteropDriver;
+use Interop\Amqp\AmqpContext;
+use Interop\Amqp\AmqpQueue;
 use Interop\Queue\PsrConsumer;
 use Interop\Queue\PsrContext;
 use Interop\Queue\PsrMessage;
@@ -208,8 +210,93 @@ class InteropDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($context, $driver->getContext());
     }
 
+    public function testCreateQueueMethodShouldDeclareAmqpQueue()
+    {
+        $queue = $this->createMock(AmqpQueue::class);
+        $queue
+            ->expects($this->once())
+            ->method('addFlag')
+            ->with(AmqpQueue::FLAG_DURABLE)
+        ;
+
+        $context = $this->createAmqpInteropContextMock();
+        $context
+            ->expects($this->once())
+            ->method('createQueue')
+            ->with('theQueueName')
+            ->willReturn($queue)
+        ;
+        $context
+            ->expects($this->once())
+            ->method('declareQueue')
+            ->with($this->identicalTo($queue))
+        ;
+
+        $driver = new InteropDriver($context);
+
+        $this->assertNull($driver->createQueue('theQueueName'));
+    }
+
+    public function testDeleteQueueMethodShouldCallDeleteQueueMethodOnAmqpContext()
+    {
+        $queue = $this->createMock(AmqpQueue::class);
+        $queue
+            ->expects($this->once())
+            ->method('addFlag')
+            ->with(AmqpQueue::FLAG_DURABLE)
+        ;
+
+        $context = $this->createAmqpInteropContextMock();
+        $context
+            ->expects($this->once())
+            ->method('createQueue')
+            ->with('theQueueName')
+            ->willReturn($queue)
+        ;
+        $context
+            ->expects($this->once())
+            ->method('deleteQueue')
+            ->with($this->identicalTo($queue))
+        ;
+
+        $driver = new InteropDriver($context);
+
+        $this->assertNull($driver->removeQueue('theQueueName'));
+    }
+
+    public function testCountMessagesMethodShouldUseCountFromAmqpDeclareQueueResult()
+    {
+        $queue = $this->createMock(AmqpQueue::class);
+
+        $context = $this->createAmqpInteropContextMock();
+        $context
+            ->expects($this->once())
+            ->method('createQueue')
+            ->with('theQueueName')
+            ->willReturn($queue)
+        ;
+        $context
+            ->expects($this->once())
+            ->method('declareQueue')
+            ->with($this->identicalTo($queue))
+            ->willReturn(123)
+        ;
+
+        $driver = new InteropDriver($context);
+
+        $this->assertSame(123, $driver->countMessages('theQueueName'));
+    }
+
     /**
-     * @return PsrContext|\PHPUnit_Framework_MockObject_MockObject|PsrContext
+     * @return \PHPUnit_Framework_MockObject_MockObject|AmqpContext
+     */
+    private function createAmqpInteropContextMock()
+    {
+        return $this->createMock(AmqpContext::class);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|PsrContext
      */
     private function createInteropContextMock()
     {
