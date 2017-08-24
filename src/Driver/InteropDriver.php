@@ -147,12 +147,4 @@ final class InteropDriver implements Driver
 
         return $queue;
     }
-
-    /**
-     * @return PsrContext
-     */
-    public function getContext()
-    {
-        return $this->context;
-    }
 }

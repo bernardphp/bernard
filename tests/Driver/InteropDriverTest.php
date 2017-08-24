@@ -201,15 +201,6 @@ class InteropDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($driver->removeQueue('aQueueName'));
     }
 
-    public function testShouldAllowGetContextSetInConstructor()
-    {
-        $context = $this->createInteropContextMock();
-
-        $driver = new InteropDriver($context);
-
-        $this->assertSame($context, $driver->getContext());
-    }
-
     public function testCreateQueueMethodShouldDeclareAmqpQueue()
     {
         $queue = $this->createMock(AmqpQueue::class);
