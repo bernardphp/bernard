@@ -130,8 +130,7 @@ class Consumer
         try {
             $this->dispatcher->dispatch(BernardEvents::INVOKE, new EnvelopeEvent($envelope, $queue));
 
-            // for 5.3 support where a function name is not a callable
-            call_user_func($this->router->map($envelope), $envelope->getMessage());
+            $this->call($envelope);
 
             // We successfully processed the message.
             $queue->acknowledge($envelope);
@@ -142,6 +141,15 @@ class Consumer
         } catch (\Exception $exception) {
             $this->rejectDispatch($exception, $envelope, $queue);
         }
+    }
+
+    /**
+     * @param Envelope $envelope
+     */
+    protected function call(Envelope $envelope)
+    {
+        // for 5.3 support where a function name is not a callable
+        call_user_func($this->router->map($envelope), $envelope->getMessage());
     }
 
     /**
