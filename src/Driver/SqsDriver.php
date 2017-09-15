@@ -13,6 +13,8 @@ use Aws\Sqs\SqsClient;
  */
 class SqsDriver extends AbstractPrefetchDriver
 {
+    const AWS_SQS_FIFO_SUFFIX = '.fifo';
+
     protected $sqs;
     protected $queueUrls;
 
@@ -62,12 +64,46 @@ class SqsDriver extends AbstractPrefetchDriver
         try {
             $this->resolveUrl($queueName);
         } catch (\InvalidArgumentException $e) {
-            $result = $this->sqs->createQueue([
+            $parameters = [
                 'QueueName' => $queueName,
-            ]);
+            ];
+
+            if($this->isFifoQueue($queueName)) {
+                $parameters['Attributes'] = [
+                    'FifoQueue' => 'true',
+                ];
+            }
+            
+            $result = $this->sqs->createQueue($parameters);
 
             $this->queueUrls[$queueName] = $result['QueueUrl'];
         }
+    }
+
+    /**
+     * @param string $queueName
+     *
+     * @return bool
+     */
+    private function isFifoQueue($queueName)
+    {
+        return $this->endsWith($queueName, self::AWS_SQS_FIFO_SUFFIX);
+    }
+
+    /**
+     * @param string $haystack
+     * @param string $needle
+     *
+     * @return bool
+     */
+    private function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length === 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
     }
 
     /**
@@ -96,10 +132,17 @@ class SqsDriver extends AbstractPrefetchDriver
     {
         $queueUrl = $this->resolveUrl($queueName);
 
-        $this->sqs->sendMessage([
+        $parameters = [
             'QueueUrl' => $queueUrl,
             'MessageBody' => $message,
-        ]);
+        ];
+
+        if($this->isFifoQueue($queueName)){
+            $parameters['MessageGroupId'] = __METHOD__;
+            $parameters['MessageDeduplicationId'] = md5($message);
+        }
+
+        $this->sqs->sendMessage($parameters);
     }
 
     /**

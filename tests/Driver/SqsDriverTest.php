@@ -10,6 +10,7 @@ use Guzzle\Service\Resource\Model;
 class SqsDriverTest extends \PHPUnit\Framework\TestCase
 {
     const DUMMY_QUEUE_NAME       = 'my-queue';
+    const DUMMY_FIFO_QUEUE_NAME  = 'my-queue.fifo';
     const DUMMY_QUEUE_URL_PREFIX = 'https://sqs.eu-west-1.amazonaws.com/123123';
 
     public function setUp()
@@ -60,6 +61,29 @@ class SqsDriverTest extends \PHPUnit\Framework\TestCase
         // there won't be attempt to create it.
         $this->driver->createQueue(self::DUMMY_QUEUE_NAME);
         $this->driver->createQueue(self::DUMMY_QUEUE_NAME);
+    }
+
+    public function testItCreatesFifoQueue()
+    {
+        $this->sqs
+            ->expects($this->once())
+            ->method('createQueue')
+            ->with($this->equalTo([
+                'QueueName' => self::DUMMY_FIFO_QUEUE_NAME,
+                'Attributes' => [
+                    'FifoQueue' => 'true',
+                ]
+            ]))
+            ->will($this->returnValue(
+                $this->wrapResult([
+                    'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX,
+                ])
+            ));
+
+        // Calling this twice asserts that if queue exists
+        // there won't be attempt to create it.
+        $this->driver->createQueue(self::DUMMY_FIFO_QUEUE_NAME);
+        $this->driver->createQueue(self::DUMMY_FIFO_QUEUE_NAME);
     }
 
     public function testItDeletesQueue()
@@ -147,15 +171,35 @@ class SqsDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testItPushesMessages()
     {
+        $message = 'This is a message';
+
         $this->assertSqsQueueUrl();
         $this->sqs
             ->expects($this->once())
             ->method('sendMessage')
             ->with($this->equalTo([
                 'QueueUrl'    => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME,
-                'MessageBody' => 'This is a message'
+                'MessageBody' => $message
             ]));
-        $this->driver->pushMessage('my-queue', 'This is a message');
+        $this->driver->pushMessage(self::DUMMY_QUEUE_NAME, $message);
+    }
+
+    public function testItPushesMessagesToFifoQueue()
+    {
+        $message = 'This is a message';
+
+        $this->assertSqsFifoQueueUrl();
+        $this->sqs
+            ->expects($this->once())
+            ->method('sendMessage')
+            ->with($this->equalTo([
+                'QueueUrl'    => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_FIFO_QUEUE_NAME,
+                'MessageBody' => $message,
+                'MessageGroupId' => \Bernard\Driver\SqsDriver::class . '::pushMessage',
+                'MessageDeduplicationId' => md5($message),
+
+            ]));
+        $this->driver->pushMessage(self::DUMMY_FIFO_QUEUE_NAME, $message);
     }
 
     public function testItPopMessages()
@@ -232,6 +276,18 @@ class SqsDriverTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($this->wrapResult([
                 'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX
                     . '/'. self::DUMMY_QUEUE_NAME,
+            ])));
+    }
+
+    private function assertSqsFifoQueueUrl()
+    {
+        $this->sqs
+            ->expects($this->once())
+            ->method('getQueueUrl')
+            ->with($this->equalTo(['QueueName' => self::DUMMY_FIFO_QUEUE_NAME]))
+            ->will($this->returnValue($this->wrapResult([
+                'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX
+                    . '/'. self::DUMMY_FIFO_QUEUE_NAME,
             ])));
     }
 
