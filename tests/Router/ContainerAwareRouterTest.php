@@ -7,7 +7,7 @@ use Bernard\Message\PlainMessage;
 use Bernard\Router\ContainerAwareRouter;
 use Symfony\Component\DependencyInjection\Container;
 
-class ContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
+class ContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
@@ -17,10 +17,11 @@ class ContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
         });
     }
 
+    /**
+     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     */
     public function testUndefinedServicesAreNotAccepted()
     {
-        $this->setExpectedException('Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException');
-
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $router = new ContainerAwareRouter($this->container);

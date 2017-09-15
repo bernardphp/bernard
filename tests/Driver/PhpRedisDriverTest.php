@@ -4,7 +4,7 @@ namespace Bernard\Tests\Driver;
 
 use Bernard\Driver\PhpRedisDriver;
 
-class PhpRedisDriverTest extends \PHPUnit_Framework_TestCase
+class PhpRedisDriverTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
@@ -12,7 +12,7 @@ class PhpRedisDriverTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('"redis" extension is not loaded.');
         }
 
-        $this->redis = $this->getMock('Redis', array(
+        $this->redis = $this->getMockBuilder('Redis')->setMethods(array(
             'lLen',
             'sMembers',
             'lRange',
@@ -23,7 +23,7 @@ class PhpRedisDriverTest extends \PHPUnit_Framework_TestCase
             'sContains',
             'rPush',
             'sRem',
-        ));
+        ))->getMock();
 
         $this->connection = new PhpRedisDriver($this->redis);
     }

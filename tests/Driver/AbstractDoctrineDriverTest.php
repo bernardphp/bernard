@@ -7,7 +7,7 @@ use Bernard\Driver\DoctrineDriver;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 
-abstract class AbstractDoctrineDriverTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractDoctrineDriverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Doctrine\DBAL\Connection

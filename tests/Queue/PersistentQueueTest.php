@@ -9,13 +9,13 @@ class PersistentQueueTest extends AbstractQueueTest
 {
     public function setUp()
     {
-        $this->driver = $this->getMock('Bernard\Driver');
-        $this->serializer = $this->getMock('Bernard\Serializer');
+        $this->driver = $this->createMock('Bernard\Driver');
+        $this->serializer = $this->createMock('Bernard\Serializer');
     }
 
     public function testEnqueue()
     {
-        $envelope = new Envelope($this->getMock('Bernard\Message'));
+        $envelope = new Envelope($this->createMock('Bernard\Message'));
 
         $this->serializer->expects($this->once())->method('serialize')->with($this->equalTo($envelope))
             ->will($this->returnValue('serialized message'));
@@ -28,7 +28,7 @@ class PersistentQueueTest extends AbstractQueueTest
 
     public function testAcknowledge()
     {
-        $envelope = new Envelope($this->getMock('Bernard\Message'));
+        $envelope = new Envelope($this->createMock('Bernard\Message'));
 
         $this->driver->expects($this->once())->method('acknowledgeMessage')
             ->with($this->equalTo('send-newsletter'), $this->equalTo('receipt'));
@@ -46,7 +46,7 @@ class PersistentQueueTest extends AbstractQueueTest
 
     public function testAcknowledgeOnlyIfReceipt()
     {
-        $envelope = new Envelope($this->getMock('Bernard\Message'));
+        $envelope = new Envelope($this->createMock('Bernard\Message'));
 
         $this->driver->expects($this->never())->method('acknowledgeMessage');
 
@@ -66,7 +66,7 @@ class PersistentQueueTest extends AbstractQueueTest
 
     public function testDequeue()
     {
-        $messageWrapper = new Envelope($this->getMock('Bernard\Message'));
+        $messageWrapper = new Envelope($this->createMock('Bernard\Message'));
 
         $this->driver->expects($this->at(1))->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue(array('serialized', null)));

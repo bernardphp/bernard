@@ -10,7 +10,7 @@ class PredisDriverTest extends PhpRedisDriverTest
     {
         // Because predis uses __call all methods that needs mocking must be
         // explicitly defined.
-        $this->redis = $this->getMock('Predis\Client', array(
+        $this->redis = $this->getMockBuilder('Predis\Client')->setMethods(array(
             'lLen',
             'sMembers',
             'lRange',
@@ -21,7 +21,7 @@ class PredisDriverTest extends PhpRedisDriverTest
             'sContains',
             'rPush',
             'sRem',
-        ));
+        ))->getMock();
 
         $this->connection = new PredisDriver($this->redis);
     }

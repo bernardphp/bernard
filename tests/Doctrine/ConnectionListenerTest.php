@@ -7,7 +7,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\DBALException;
 
-class ConnectionListenerTest extends \PHPUnit_Framework_TestCase
+class ConnectionListenerTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp()
     {

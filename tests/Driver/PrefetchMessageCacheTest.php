@@ -4,7 +4,7 @@ namespace Bernard\Tests\Driver;
 
 use Bernard\Driver\PrefetchMessageCache;
 
-class PrefetchMessageCacheTest extends \PHPUnit_Framework_TestCase
+class PrefetchMessageCacheTest extends \PHPUnit\Framework\TestCase
 {
     public function testPushesAndPop()
     {

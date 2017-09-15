@@ -7,7 +7,7 @@ use Bernard\Message\PlainMessage;
 use Bernard\Router\LeagueContainerAwareRouter;
 use League\Container\Container;
 
-class LeagueContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
+class LeagueContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
@@ -17,10 +17,11 @@ class LeagueContainerAwareRouterTest extends \PHPUnit_Framework_TestCase
         });
     }
 
+    /**
+     * @expectedException \League\Container\Exception\NotFoundException
+     */
     public function testUndefinedServicesAreNotAccepted()
     {
-        $this->setExpectedException('League\Container\Exception\NotFoundException');
-
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $router = new LeagueContainerAwareRouter($this->container);

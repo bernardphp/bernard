@@ -6,24 +6,26 @@ use Bernard\Router\SimpleRouter;
 use Bernard\Envelope;
 use Bernard\Message\PlainMessage;
 
-class SimpleRouterTest extends \PHPUnit_Framework_TestCase
+class SimpleRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
         $this->router = new SimpleRouter();
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
     public function testThrowsExceptionWhenReceiverIsNotSupported()
     {
-        $this->setExpectedException('InvalidArgumentException');
-
         $this->router->add('SendNewsletter', 1);
     }
 
+    /**
+     * @expectedException \Bernard\Exception\ReceiverNotFoundException
+     */
     public function testThrowsExceptionWhenNothingMatches()
     {
-        $this->setExpectedException('Bernard\Exception\ReceiverNotFoundException');
-
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->router->map($envelope);

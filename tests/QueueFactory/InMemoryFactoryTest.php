@@ -4,7 +4,7 @@ namespace Bernard\Tests;
 
 use Bernard\QueueFactory\InMemoryFactory;
 
-class InMemoryFactoryTest extends \PHPUnit_Framework_TestCase
+class InMemoryFactoryTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
@@ -16,10 +16,11 @@ class InMemoryFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Bernard\QueueFactory', $this->factory);
     }
 
+    /**
+     * @expectedException \Bernard\Exception\InvalidOperationException
+     */
     public function testRemoveClosesQueue()
     {
-        $this->setExpectedException('Bernard\Exception\InvalidOperationException');
-
         $queue = $this->factory->create('queue');
 
         $this->assertTrue($this->factory->exists('queue'));

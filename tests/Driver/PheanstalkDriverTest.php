@@ -5,7 +5,7 @@ namespace Bernard\Tests\Driver;
 use Bernard\Driver\PheanstalkDriver;
 use Pheanstalk\Job;
 
-class PheanstalkDriverTest extends \PHPUnit_Framework_TestCase
+class PheanstalkDriverTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {

@@ -5,7 +5,7 @@ namespace Bernard\Tests;
 use Bernard\Message\PlainMessage;
 use Bernard\Envelope;
 
-class EnvelopeTest extends \PHPUnit_Framework_TestCase
+class EnvelopeTest extends \PHPUnit\Framework\TestCase
 {
     public function testItWrapsAMessageWithMetadata()
     {

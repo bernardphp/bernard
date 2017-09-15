@@ -6,7 +6,7 @@ use Bernard\Message\PlainMessage;
 use Bernard\Command\ProduceCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ProduceCommandTest extends \PHPUnit_Framework_TestCase
+class ProduceCommandTest extends \PHPUnit\Framework\TestCase
 {
     protected $producer;
 
@@ -29,10 +29,11 @@ class ProduceCommandTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    /**
+     * @expectedException \RuntimeException
+     */
     public function testInvalidJsonThrowsException()
     {
-        $this->setExpectedException('RuntimeException');
-
         $command = new ProduceCommand($this->producer);
 
         $tester = new CommandTester($command);

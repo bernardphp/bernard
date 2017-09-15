@@ -102,10 +102,9 @@ class FlatFileDriver implements \Bernard\Driver
         while (microtime(true) < $runtime) {
             if ($files) {
                 $id = array_pop($files);
-                $data = array(file_get_contents($queueDir.DIRECTORY_SEPARATOR.$id), $id);
-                rename($queueDir.DIRECTORY_SEPARATOR.$id, $queueDir.DIRECTORY_SEPARATOR.$id.'.proceed');
-
-                return $data;
+                if (@rename($queueDir.DIRECTORY_SEPARATOR.$id, $queueDir.DIRECTORY_SEPARATOR.$id.'.proceed')) {
+                    return array(file_get_contents($queueDir.DIRECTORY_SEPARATOR.$id.'.proceed'), $id);
+                }
             }
 
             usleep(1000);
