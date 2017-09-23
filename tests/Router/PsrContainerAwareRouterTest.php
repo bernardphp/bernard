@@ -31,12 +31,14 @@ class PsrContainerAwareRouterTest extends TestCase
     public function testAcceptsInConstructor()
     {
         $router = new PsrContainerAwareRouter(
-            $this->container, [ 'SendNewsletter' => 'my.service' ]
+            $this->container,
+            ['SendNewsletter' => 'my.service']
         );
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->assertSame(
-            $this->container->get('my.service'), $router->map($envelope)
+            $this->container->get('my.service'),
+            $router->map($envelope)
         );
     }
 
@@ -45,13 +47,13 @@ class PsrContainerAwareRouterTest extends TestCase
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $router = new PsrContainerAwareRouter(
-            $this->container, [
-            'SendNewsletter' => 'my.service',
-        ]
+            $this->container,
+            ['SendNewsletter' => 'my.service']
         );
 
         $this->assertSame(
-            $this->container->get('my.service'), $router->map($envelope)
+            $this->container->get('my.service'),
+            $router->map($envelope)
         );
     }
 }
