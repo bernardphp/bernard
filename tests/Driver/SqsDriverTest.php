@@ -7,7 +7,7 @@ use Aws\Sqs\SqsClient;
 use Bernard\Driver\SqsDriver;
 use Guzzle\Service\Resource\Model;
 
-class SqsDriverTest extends \PHPUnit_Framework_TestCase
+class SqsDriverTest extends \PHPUnit\Framework\TestCase
 {
     const DUMMY_QUEUE_NAME       = 'my-queue';
     const DUMMY_FIFO_QUEUE_NAME  = 'my-queue.fifo';
@@ -116,10 +116,12 @@ class SqsDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $this->driver->countMessages(self::DUMMY_QUEUE_NAME));
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Queue "unknown" cannot be resolved to an url.
+     */
     public function testUnresolveableQueueNameThrowsException()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Queue "unknown" cannot be resolved to an url.');
-
         $this->driver->popMessage('unknown');
     }
 

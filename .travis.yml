@@ -16,12 +16,15 @@ cache:
   directories:
     - $HOME/.composer/cache/files
 
-services: mongodb
+services:
+  - mongodb
+  - mysql
+  - postgresql
 
 before_script:
   - tests/travis.sh
 
 script:
-  - php vendor/bin/phpunit
-  - php vendor/bin/phpunit --group functional
+  - php vendor/bin/phpunit -v
+  - php vendor/bin/phpunit --group functional -v
   - php vendor/bin/phpspec run

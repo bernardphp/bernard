@@ -4,7 +4,7 @@ namespace Bernard\Tests\Message;
 
 use Bernard\Message\PlainMessage;
 
-class PlainMessageTest extends \PHPUnit_Framework_TestCase
+class PlainMessageTest extends \PHPUnit\Framework\TestCase
 {
     public function testItHaveAName()
     {

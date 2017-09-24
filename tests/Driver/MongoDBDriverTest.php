@@ -7,7 +7,7 @@ use ArrayIterator;
 use MongoDate;
 use MongoId;
 
-class MongoDBDriverTest extends \PHPUnit_Framework_TestCase
+class MongoDBDriverTest extends \PHPUnit\Framework\TestCase
 {
     private $messages;
     private $queues;

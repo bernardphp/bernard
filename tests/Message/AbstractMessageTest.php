@@ -4,7 +4,7 @@ namespace Bernard\Tests\Message;
 
 use Bernard\Tests\Fixtures;
 
-class AbstractMessageTest extends \PHPUnit_Framework_TestCase
+class AbstractMessageTest extends \PHPUnit\Framework\TestCase
 {
     public function testImplementsMessage()
     {
