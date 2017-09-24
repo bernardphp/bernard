@@ -7,7 +7,7 @@ use Psr\Container\ContainerInterface;
 /**
  * @package Bernard\Router
  */
-class PsrContainerAwareRouter extends SimpleRouter
+class ContainerAwareRouter extends SimpleRouter
 {
     /**
      * @var ContainerInterface

@@ -4,11 +4,11 @@ namespace Bernard\Tests\Router;
 
 use Bernard\Envelope;
 use Bernard\Message\PlainMessage;
-use Bernard\Router\PsrContainerAwareRouter;
+use Bernard\Router\ContainerAwareRouter;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
-class PsrContainerAwareRouterTest extends TestCase
+class ContainerAwareRouterTest extends TestCase
 {
     /**
      * @var ContainerInterface
@@ -30,7 +30,7 @@ class PsrContainerAwareRouterTest extends TestCase
 
     public function testAcceptsInConstructor()
     {
-        $router = new PsrContainerAwareRouter(
+        $router = new ContainerAwareRouter(
             $this->container,
             ['SendNewsletter' => 'my.service']
         );
@@ -46,7 +46,7 @@ class PsrContainerAwareRouterTest extends TestCase
     {
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
-        $router = new PsrContainerAwareRouter(
+        $router = new ContainerAwareRouter(
             $this->container,
             ['SendNewsletter' => 'my.service']
         );
