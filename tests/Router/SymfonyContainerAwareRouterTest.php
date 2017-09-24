@@ -4,10 +4,10 @@ namespace Bernard\Tests\Router;
 
 use Bernard\Envelope;
 use Bernard\Message\PlainMessage;
-use Bernard\Router\ContainerAwareRouter;
+use Bernard\Router\SymfonyContainerAwareRouter;
 use Symfony\Component\DependencyInjection\Container;
 
-class ContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
+class SymfonyContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
@@ -24,13 +24,13 @@ class ContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
     {
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
-        $router = new ContainerAwareRouter($this->container);
+        $router = new SymfonyContainerAwareRouter($this->container);
         $router->map($envelope);
     }
 
     public function testAcceptsInConstructor()
     {
-        $router = new ContainerAwareRouter($this->container, array('SendNewsletter' => 'my.service'));
+        $router = new SymfonyContainerAwareRouter($this->container, array( 'SendNewsletter' => 'my.service'));
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->assertSame($this->container->get('my.service'), $router->map($envelope));
@@ -40,7 +40,7 @@ class ContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
     {
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
-        $router = new ContainerAwareRouter($this->container, array(
+        $router = new SymfonyContainerAwareRouter($this->container, array(
             'SendNewsletter' => 'my.service',
         ));
 

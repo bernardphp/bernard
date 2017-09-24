@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * @package Bernard
  */
-class ContainerAwareRouter extends SimpleRouter
+class SymfonyContainerAwareRouter extends SimpleRouter
 {
     private $container;
 
