@@ -35,10 +35,12 @@ object should handle which messages, you are required to register them first.
     // $router = new \Bernard\Router\ContainerAwareRouter($container);
     // $router->add('SendNewsletter', 'my.service.id');
 
-    // Create a Consumer and start the loop. The second argument is optional and is an array
+    // Create a Consumer and start the loop.
+    $consumer = new Consumer($router, $eventDispatcher);
+    
+    // The second argument is optional and is an array
     // of options. Currently only ``max-runtime`` is supported which specifies the max runtime
     // in seconds.
-    $consumer = new Consumer($router, $eventDispatcher);
     $consumer->consume($queueFactory->create('send-newsletter'), array(
         'max-runtime' => 900,
     ));
