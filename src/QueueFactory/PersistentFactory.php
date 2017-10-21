@@ -4,7 +4,7 @@ namespace Bernard\QueueFactory;
 
 use Bernard\Driver;
 use Bernard\Queue\PersistentQueue;
-use Bernard\Serializer;
+use Bernard\SerializerInterface;
 
 /**
  * Knows how to create queues and retrieve them from the used driver.
@@ -20,9 +20,9 @@ class PersistentFactory implements \Bernard\QueueFactory
 
     /**
      * @param Driver     $driver
-     * @param Serializer $serializer
+     * @param SerializerInterface $serializer
      */
-    public function __construct(Driver $driver, Serializer $serializer)
+    public function __construct(Driver $driver, SerializerInterface $serializer)
     {
         $this->queues = [];
         $this->driver = $driver;
