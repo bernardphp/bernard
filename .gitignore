@@ -3,4 +3,3 @@ vendor
 phpunit.xml
 coverage
 _build
-.idea/
