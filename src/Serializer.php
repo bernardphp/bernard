@@ -7,7 +7,7 @@ use Normalt\Normalizer\AggregateNormalizer;
 /**
  * @package Bernard
  */
-class Serializer
+class Serializer implements SerializerInterface
 {
     protected $aggregate;
 
@@ -20,9 +20,7 @@ class Serializer
     }
 
     /**
-     * @param Envelope $envelope
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function serialize(Envelope $envelope)
     {
@@ -30,15 +28,13 @@ class Serializer
     }
 
     /**
-     * @param string $contents
-     *
-     * @return Envelope
+     * {@inheritdoc}
      */
     public function unserialize($contents)
     {
         $data = json_decode($contents, true);
 
-        return $this->aggregate->denormalize($data, 'Bernard\Envelope');
+        return $this->aggregate->denormalize($data, Envelope::class);
     }
 
     /**

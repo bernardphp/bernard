@@ -4,7 +4,7 @@ namespace Bernard\Queue;
 
 use Bernard\Driver;
 use Bernard\Envelope;
-use Bernard\Serializer;
+use Bernard\SerializerInterface;
 
 /**
  * @package Bernard
@@ -18,9 +18,9 @@ class PersistentQueue extends AbstractQueue
     /**
      * @param string     $name
      * @param Driver     $driver
-     * @param Serializer $serializer
+     * @param SerializerInterface $serializer
      */
-    public function __construct($name, Driver $driver, Serializer $serializer)
+    public function __construct($name, Driver $driver, SerializerInterface $serializer)
     {
         parent::__construct($name);
 
