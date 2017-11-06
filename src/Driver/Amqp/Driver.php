@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Driver\PhpAmqp;
+namespace Bernard\Driver\Amqp;
 
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;

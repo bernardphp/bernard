@@ -1,8 +1,8 @@
 <?php
 
-namespace Bernard\Tests\Driver\PhpAmqp;
+namespace Bernard\Tests\Driver\Amqp;
 
-use Bernard\Driver\PhpAmqp\Driver;
+use Bernard\Driver\Amqp\Driver;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
