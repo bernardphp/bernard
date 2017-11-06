@@ -2,6 +2,7 @@
 
 namespace Bernard\Tests\Driver;
 
+use Ackintosh\Snidel;
 use Bernard\Driver\FlatFileDriver;
 
 /**
@@ -89,6 +90,39 @@ class FlatFileDriverTest extends \PHPUnit\Framework\TestCase
         foreach (range(3, 1) as $i) {
             list($message, ) = $this->driver->popMessage('send-newsletter');
             $this->assertEquals('job #'.$i, $message);
+        }
+    }
+
+    public function testPopMessageWhichPushedAfterTheInitialCollect()
+    {
+        $this->driver->createQueue('send-newsletter');
+        $snidel = new Snidel();
+
+        // Fork a process which pops message
+        $snidel->process(
+            function () {
+                list($message, ) = $this->driver->popMessage('send-newsletter', 10);
+                return $message;
+            },
+            [],
+            'popMessage'
+        );
+
+        // Fork another process which pushes message
+        $snidel->process(
+            function () {
+                // Push a message after the initial collect
+                sleep(5);
+                $this->driver->pushMessage('send-newsletter', 'test');
+            },
+            [],
+            'pushMessage'
+        );
+
+        foreach ($snidel->results() as $result) {
+            if ($result->getTask()->getTag() === 'popMessage') {
+                $this->assertSame('test', $result->getReturn());
+            }
         }
     }
 
