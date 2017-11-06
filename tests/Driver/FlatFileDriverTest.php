@@ -95,6 +95,11 @@ class FlatFileDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testPopMessageWhichPushedAfterTheInitialCollect()
     {
+        // Snidel is only supported on PHP.
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped();
+        }
+
         $this->driver->createQueue('send-newsletter');
         $snidel = new Snidel();
 
