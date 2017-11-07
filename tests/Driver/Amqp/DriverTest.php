@@ -1,26 +1,27 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\Amqp;
 
-use Bernard\Driver\PhpAmqpDriver;
+use Bernard\Driver\Amqp\Driver;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use PHPUnit\Framework\TestCase;
 
-class PhpAmqpDriverTest extends \PHPUnit\Framework\TestCase
+final class DriverTest extends TestCase
 {
     /**
-     * @var AMQPStreamConnection
+     * @var AMQPStreamConnection|\PHPUnit_Framework_MockObject_MockObject
      */
     private $phpAmqpConnection;
 
     /**
-     * @var AMQPChannel
+     * @var AMQPChannel|\PHPUnit_Framework_MockObject_MockObject
      */
     private $phpAmqpChannel;
 
     /**
-     * @var PhpAmqpDriver
+     * @var Driver
      */
     private $driver;
 
@@ -52,7 +53,7 @@ class PhpAmqpDriverTest extends \PHPUnit\Framework\TestCase
             ->method('channel')
             ->willReturn($this->phpAmqpChannel);
 
-        $this->driver = new PhpAmqpDriver($this->phpAmqpConnection, self::EXCHANGE_NAME);
+        $this->driver = new Driver($this->phpAmqpConnection, self::EXCHANGE_NAME);
     }
 
     public function testItImplementsDriverInterface()
@@ -65,18 +66,15 @@ class PhpAmqpDriverTest extends \PHPUnit\Framework\TestCase
         $this->phpAmqpChannel
             ->expects($this->once())
             ->method('exchange_declare')
-            ->with(self::EXCHANGE_NAME, 'direct', false, true, false)
-        ;
+            ->with(self::EXCHANGE_NAME, 'direct', false, true, false);
         $this->phpAmqpChannel
             ->expects($this->once())
             ->method('queue_declare')
-            ->with('foo-queue', false, true, false, false)
-        ;
+            ->with('foo-queue', false, true, false, false);
         $this->phpAmqpChannel
             ->expects($this->once())
             ->method('queue_bind')
-            ->with('foo-queue', self::EXCHANGE_NAME, 'foo-queue')
-        ;
+            ->with('foo-queue', self::EXCHANGE_NAME, 'foo-queue');
 
         $this->driver->createQueue('foo-queue');
     }
@@ -87,8 +85,8 @@ class PhpAmqpDriverTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('basic_publish')
             ->with(
-                $this->callback(function(AMQPMessage $message) {
-                    return $message->body == 'dummy push message';
+                $this->callback(function (AMQPMessage $message) {
+                    return $message->body === 'dummy push message';
                 }),
                 self::EXCHANGE_NAME,
                 'not-relevant'
@@ -98,7 +96,7 @@ class PhpAmqpDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testItUsesDefaultParameters()
     {
-        $this->driver = new PhpAmqpDriver(
+        $this->driver = new Driver(
             $this->phpAmqpConnection,
             self::EXCHANGE_NAME,
             array('delivery_mode' => 2)
@@ -108,7 +106,7 @@ class PhpAmqpDriverTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('basic_publish')
             ->with(
-                $this->callback(function(AMQPMessage $message) {
+                $this->callback(function (AMQPMessage $message) {
                     return $message->get('delivery_mode') === 2;
                 }),
                 self::EXCHANGE_NAME,

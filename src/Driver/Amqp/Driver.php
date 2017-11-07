@@ -1,13 +1,12 @@
 <?php
 
-namespace Bernard\Driver;
+namespace Bernard\Driver\Amqp;
 
-use Bernard\Driver;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-class PhpAmqpDriver implements Driver
+final class Driver implements \Bernard\Driver
 {
     /**
      * @var AbstractConnection
@@ -23,6 +22,7 @@ class PhpAmqpDriver implements Driver
      * @var string
      */
     private $exchange;
+
     /**
      * @var array|null
      */
