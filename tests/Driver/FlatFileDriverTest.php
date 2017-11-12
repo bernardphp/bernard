@@ -2,7 +2,6 @@
 
 namespace Bernard\Tests\Driver;
 
-use Ackintosh\Snidel;
 use Bernard\Driver\FlatFileDriver;
 
 /**
@@ -95,39 +94,23 @@ class FlatFileDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testPopMessageWhichPushedAfterTheInitialCollect()
     {
-        if (defined('HHVM_VERSION')) {
-            $this->markTestSkipped('Snidel is only supported on PHP.');
-        }
-
         $this->driver->createQueue('send-newsletter');
-        $snidel = new Snidel();
 
-        // Fork a process which pops message
-        $snidel->process(
-            function () {
-                list($message, ) = $this->driver->popMessage('send-newsletter', 10);
-                return $message;
-            },
-            [],
-            'popMessage'
-        );
+        $pid = pcntl_fork();
 
-        // Fork another process which pushes message
-        $snidel->process(
-            function () {
-                // Push a message after the initial collect
-                sleep(5);
-                $this->driver->pushMessage('send-newsletter', 'test');
-            },
-            [],
-            'pushMessage'
-        );
-
-        foreach ($snidel->results() as $result) {
-            if ($result->getTask()->getTag() === 'popMessage') {
-                $this->assertSame('test', $result->getReturn());
-            }
+        if ($pid === -1) {
+            $this->fail('Failed to fork the currently running process: ' . pcntl_strerror(pcntl_get_last_error()));
+        } elseif ($pid === 0) {
+            // Child process pushes a message after the initial collect
+            sleep(5);
+            $this->driver->pushMessage('send-newsletter', 'test');
+            exit;
         }
+
+        list($message, ) = $this->driver->popMessage('send-newsletter', 10);
+        $this->assertSame('test', $message);
+
+        pcntl_waitpid($pid, $status);
     }
 
     public function testAcknowledgeMessage()
