@@ -1,13 +1,13 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\Doctrine;
 
 use Bernard\Doctrine\MessagesSchema;
-use Bernard\Driver\DoctrineDriver;
+use Bernard\Driver\Doctrine\Driver;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 
-abstract class AbstractDoctrineDriverTest extends \PHPUnit\Framework\TestCase
+abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \Doctrine\DBAL\Connection
@@ -15,7 +15,7 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit\Framework\TestCase
     private $connection;
 
     /**
-     * @var DoctrineDriver
+     * @var Driver
      */
     protected $driver;
 
@@ -30,7 +30,7 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit\Framework\TestCase
         }
 
         $this->setUpDatabase();
-        $this->driver = new DoctrineDriver($this->connection);
+        $this->driver = new Driver($this->connection);
     }
 
     protected function tearDown()
@@ -171,10 +171,10 @@ abstract class AbstractDoctrineDriverTest extends \PHPUnit\Framework\TestCase
     /**
      * @return \Doctrine\DBAL\Connection
      */
-    protected abstract function createConnection();
+    abstract protected function createConnection();
 
     /**
      * @return bool
      */
-    protected abstract function isSupported();
+    abstract protected function isSupported();
 }

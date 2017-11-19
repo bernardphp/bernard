@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Driver;
+namespace Bernard\Driver\Doctrine;
 
 use Doctrine\DBAL\Connection;
 
@@ -9,9 +9,9 @@ use Doctrine\DBAL\Connection;
  *
  * @package Bernard
  */
-class DoctrineDriver implements \Bernard\Driver
+final class Driver implements \Bernard\Driver
 {
-    protected $connection;
+    private $connection;
 
     /**
      * {@inheritdoc}
@@ -154,7 +154,7 @@ class DoctrineDriver implements \Bernard\Driver
      *
      * @return array|null
      */
-    protected function doPopMessage($queueName)
+    private function doPopMessage($queueName)
     {
         $query = 'SELECT id, message FROM bernard_messages
                   WHERE queue = :queue AND visible = :visible

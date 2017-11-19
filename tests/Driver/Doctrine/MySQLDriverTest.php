@@ -1,17 +1,13 @@
 <?php
 
-namespace Bernard\Tests\Driver;
-
-use Bernard\Doctrine\MessagesSchema;
-use Bernard\Driver\DoctrineDriver;
+namespace Bernard\Tests\Driver\Doctrine;
 
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Schema\Schema;
 
 /**
  * @group functional
  */
-class MySQLDoctrineDriverTest extends AbstractDoctrineDriverTest
+class MySQLDriverTest extends AbstractDriverTest
 {
     protected function isSupported()
     {
