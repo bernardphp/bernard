@@ -1,24 +1,29 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\MongoDB;
 
-use Bernard\Driver\MongoDBDriver;
+use Bernard\Driver\MongoDB\Driver;
 use MongoClient;
 use MongoCollection;
 use MongoConnectionException;
 
 /**
- * @coversDefaultClass Bernard\Driver\MongoDBDriver
+ * @coversDefaultClass Bernard\Driver\MongoDB\Driver
  * @group functional
  */
-class MongoDBDriverFunctionalTest extends \PHPUnit\Framework\TestCase
+class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
 {
     const DATABASE = 'bernardQueueTest';
     const MESSAGES = 'bernardMessages';
     const QUEUES = 'bernardQueues';
 
+    /** @var MongoCollection */
     private $messages;
+
+    /** @var MongoCollection */
     private $queues;
+
+    /** @var Driver */
     private $driver;
 
     public function setUp()
@@ -35,7 +40,7 @@ class MongoDBDriverFunctionalTest extends \PHPUnit\Framework\TestCase
 
         $this->queues = $mongoClient->selectCollection(self::DATABASE, self::QUEUES);
         $this->messages = $mongoClient->selectCollection(self::DATABASE, self::MESSAGES);
-        $this->driver = new MongoDBDriver($this->queues, $this->messages);
+        $this->driver = new Driver($this->queues, $this->messages);
     }
 
     public function tearDown()

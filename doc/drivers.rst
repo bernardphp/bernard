@@ -296,7 +296,7 @@ corresponding to the queue and message collections, respectively.
     <?php
 
     $mongoClient = new \MongoClient();
-    $driver = new \Bernard\Driver\MongoDBDriver(
+    $driver = new \Bernard\Driver\MongoDB\Driver(
         $mongoClient->selectCollection('bernardDatabase', 'queues'),
         $mongoClient->selectCollection('bernardDatabase', 'messages'),
     );

@@ -1,16 +1,21 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\MongoDB;
 
-use Bernard\Driver\MongoDBDriver;
+use Bernard\Driver\MongoDB\Driver;
 use ArrayIterator;
 use MongoDate;
 use MongoId;
 
-class MongoDBDriverTest extends \PHPUnit\Framework\TestCase
+class DriverTest extends \PHPUnit\Framework\TestCase
 {
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $messages;
+
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $queues;
+
+    /** @var Driver */
     private $driver;
 
     public function setUp()
@@ -21,7 +26,7 @@ class MongoDBDriverTest extends \PHPUnit\Framework\TestCase
 
         $this->queues = $this->getMockMongoCollection();
         $this->messages = $this->getMockMongoCollection();
-        $this->driver = new MongoDBDriver($this->queues, $this->messages);
+        $this->driver = new Driver($this->queues, $this->messages);
     }
 
     public function testListQueues()
