@@ -389,13 +389,13 @@ your ``composer.json`` file, to make sure it is installed:
 
     <?php
 
-    use Bernard\Driver\PhpRedisDriver;
+    use Bernard\Driver\PhpRedis\Driver;
 
     $redis = new Redis();
     $redis->connect('127.0.0.1', 6379);
     $redis->setOption(Redis::OPT_PREFIX, 'bernard:');
 
-    $driver = new PhpRedisDriver($redis);
+    $driver = new Driver($redis);
 
 Predis
 ------
@@ -415,14 +415,14 @@ Requires the installation of predis. Add the following to your
 
     <?php
 
-    use Bernard\Driver\PredisDriver;
+    use Bernard\Driver\Predis\Driver;
     use Predis\Client;
 
     $predis = new Client('tcp://localhost', array(
         'prefix' => 'bernard:',
     ));
 
-    $driver = new PredisDriver($predis);
+    $driver = new Driver($predis);
 
 Amazon SQS
 ----------
