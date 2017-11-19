@@ -1,15 +1,19 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\Beanstalk;
 
-use Bernard\Driver\PheanstalkDriver;
+use Bernard\Driver\Beanstalk\Driver;
 use Pheanstalk\Job;
+use Pheanstalk\Pheanstalk;
 
-class PheanstalkDriverTest extends \PHPUnit\Framework\TestCase
+class DriverTest extends \PHPUnit\Framework\TestCase
 {
+    private $pheanstalk;
+    private $driver;
+
     public function setUp()
     {
-        $this->pheanstalk = $this->getMockBuilder('Pheanstalk\Pheanstalk')
+        $this->pheanstalk = $this->getMockBuilder(Pheanstalk::class)
             ->setMethods(array(
                 'listTubes',
                 'statsTube',
@@ -21,12 +25,12 @@ class PheanstalkDriverTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->driver = new PheanstalkDriver($this->pheanstalk);
+        $this->driver = new Driver($this->pheanstalk);
     }
 
     public function testItExposesInfo()
     {
-        $driver = new PheanstalkDriver($this->pheanstalk);
+        $driver = new Driver($this->pheanstalk);
 
         $info = new \ArrayObject(array('info' => true));
 
@@ -38,7 +42,7 @@ class PheanstalkDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testItImplementsDriverInterface()
     {
-        $this->assertInstanceOf('Bernard\Driver', $this->driver);
+        $this->assertInstanceOf(\Bernard\Driver::class, $this->driver);
     }
 
     public function testItCountsNumberOfMessagesInQueue()

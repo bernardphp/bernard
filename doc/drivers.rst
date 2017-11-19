@@ -341,12 +341,12 @@ Requires the installation of pda/pheanstalk. Add the following to your
 
     <?php
 
-    use Bernard\Driver\PheanstalkDriver;
+    use Bernard\Driver\Beanstalk\Driver;
     use Pheanstalk\Pheanstalk;
 
     $pheanstalk = new Pheanstalk('localhost');
 
-    $driver = new PheanstalkDriver($pheanstalk);
+    $driver = new Driver($pheanstalk);
 
 PhpAmqp / RabbitMQ
 ------------------

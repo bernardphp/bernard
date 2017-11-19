@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Driver;
+namespace Bernard\Driver\Beanstalk;
 
 use Pheanstalk\PheanstalkInterface;
 
@@ -9,9 +9,9 @@ use Pheanstalk\PheanstalkInterface;
  *
  * @package Bernard
  */
-class PheanstalkDriver implements \Bernard\Driver
+final class Driver implements \Bernard\Driver
 {
-    protected $pheanstalk;
+    private $pheanstalk;
 
     /**
      * @param PheanstalkInterface $pheanstalk
