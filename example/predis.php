@@ -1,14 +1,14 @@
 <?php
 
 use Predis\Client;
-use Bernard\Driver\PredisDriver;
+use Bernard\Driver\Predis\Driver;
 
 /**
  * Must be defined before including bootstrap.php
  * as this is the only custom part in the example.
  */
 function get_driver() {
-    return new PredisDriver(new Client(null, array(
+    return new Driver(new Client(null, array(
         'prefix' => 'bernard:',
     )));
 }

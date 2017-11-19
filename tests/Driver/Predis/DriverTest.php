@@ -1,16 +1,17 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\Predis;
 
-use Bernard\Driver\PredisDriver;
+use Bernard\Driver\Predis\Driver;
+use Predis\Client;
 
-class PredisDriverTest extends PhpRedisDriverTest
+class DriverTest extends \Bernard\Tests\Driver\PhpRedis\DriverTest
 {
     public function setUp()
     {
         // Because predis uses __call all methods that needs mocking must be
         // explicitly defined.
-        $this->redis = $this->getMockBuilder('Predis\Client')->setMethods(array(
+        $this->redis = $this->getMockBuilder(Client::class)->setMethods(array(
             'lLen',
             'sMembers',
             'lRange',
@@ -23,7 +24,7 @@ class PredisDriverTest extends PhpRedisDriverTest
             'sRem',
         ))->getMock();
 
-        $this->connection = new PredisDriver($this->redis);
+        $this->connection = new Driver($this->redis);
     }
 
     public function testItPopMessages()

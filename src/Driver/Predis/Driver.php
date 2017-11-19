@@ -1,16 +1,14 @@
 <?php
 
-namespace Bernard\Driver;
+namespace Bernard\Driver\Predis;
 
 use Predis\ClientInterface;
 
 /**
  * @package Bernard
  */
-class PredisDriver extends PhpRedisDriver
+final class Driver extends \Bernard\Driver\PhpRedis\Driver
 {
-    protected $redis;
-
     /**
      * @param ClientInterface $redis
      */
