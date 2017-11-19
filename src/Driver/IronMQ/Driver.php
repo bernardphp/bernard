@@ -1,18 +1,19 @@
 <?php
 
-namespace Bernard\Driver;
+namespace Bernard\Driver\IronMQ;
 
+use Bernard\Driver\AbstractPrefetchDriver;
 use IronMQ\IronMQ;
 
 /**
  * Implements a Driver for use with Iron MQ:
- * http://dev.iron.io/mq/reference/api/
+ * https://github.com/iron-io/iron_mq_php
  *
  * @package Bernard
  */
-class IronMqDriver extends AbstractPrefetchDriver
+final class Driver extends AbstractPrefetchDriver
 {
-    protected $ironmq;
+    private $ironmq;
 
     /**
      * @param IronMQ   $ironmq
