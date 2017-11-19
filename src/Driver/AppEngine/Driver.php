@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Driver;
+namespace Bernard\Driver\AppEngine;
 
 use google\appengine\api\taskqueue\PushTask;
 
@@ -11,9 +11,9 @@ use google\appengine\api\taskqueue\PushTask;
  *
  * @package Bernard
  */
-class AppEngineDriver implements \Bernard\Driver
+final class Driver implements \Bernard\Driver
 {
-    protected $queueMap;
+    private $queueMap;
 
     /**
      * @param array $queueMap
@@ -94,11 +94,9 @@ class AppEngineDriver implements \Bernard\Driver
     /**
      * @param string $queueName
      *
-     * @throws InvalidArgumentException
-     *
      * @return string
      */
-    protected function resolveEndpoint($queueName)
+    private function resolveEndpoint($queueName)
     {
         if (isset($this->queueMap[$queueName])) {
             return $this->queueMap[$queueName];

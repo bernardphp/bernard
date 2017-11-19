@@ -38,9 +38,9 @@ preconfigured.
 
     <?php
 
-    use Bernard\Driver\AppEngineDriver;
+    use Bernard\Driver\AppEngine\Driver;
 
-    $driver = new AppEngineDriver(array(
+    $driver = new Driver(array(
         'queue-name' => '/url_endpoint',
     ));
 
