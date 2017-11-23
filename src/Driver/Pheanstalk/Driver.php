@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Driver\Beanstalk;
+namespace Bernard\Driver\Pheanstalk;
 
 use Pheanstalk\PheanstalkInterface;
 

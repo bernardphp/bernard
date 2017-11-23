@@ -341,7 +341,7 @@ Requires the installation of pda/pheanstalk. Add the following to your
 
     <?php
 
-    use Bernard\Driver\Beanstalk\Driver;
+    use Bernard\Driver\Pheanstalk\Driver;
     use Pheanstalk\Pheanstalk;
 
     $pheanstalk = new Pheanstalk('localhost');

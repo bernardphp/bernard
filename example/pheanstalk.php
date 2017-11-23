@@ -1,7 +1,7 @@
 <?php
 
 use Pheanstalk\Pheanstalk;
-use Bernard\Driver\Beanstalk\Driver;
+use Bernard\Driver\Pheanstalk\Driver;
 
 /**
  * Must be defined before including bootstrap.php

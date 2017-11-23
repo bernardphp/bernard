@@ -1,14 +1,17 @@
 <?php
 
-namespace Bernard\Tests\Driver\Beanstalk;
+namespace Bernard\Tests\Driver\Pheanstalk;
 
-use Bernard\Driver\Beanstalk\Driver;
+use Bernard\Driver\Pheanstalk\Driver;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
 
 class DriverTest extends \PHPUnit\Framework\TestCase
 {
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $pheanstalk;
+
+    /** @var Driver */
     private $driver;
 
     public function setUp()
@@ -69,7 +72,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function testAcknowledgeMessage()
     {
         $this->pheanstalk->expects($this->once())->method('delete')
-            ->with($this->isInstanceOf('Pheanstalk\Job'));
+            ->with($this->isInstanceOf(Job::class));
 
         $this->driver->acknowledgeMessage('my-queue', new Job(1, null));
     }
