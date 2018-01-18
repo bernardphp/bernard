@@ -2,16 +2,13 @@
 
 namespace Bernard\Router;
 
-use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @package Bernard\Router
+ * @package Bernard
  */
-class ContainerAwareRouter extends SimpleRouter
+class SymfonyContainerAwareRouter extends SimpleRouter
 {
-    /**
-     * @var ContainerInterface
-     */
     private $container;
 
     /**
@@ -31,7 +28,6 @@ class ContainerAwareRouter extends SimpleRouter
     protected function get($name)
     {
         $serviceId = parent::get($name);
-        $serviceId = null !== $serviceId ? $serviceId : '';
 
         return $this->container->get($serviceId);
     }

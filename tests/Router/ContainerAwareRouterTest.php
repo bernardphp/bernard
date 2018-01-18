@@ -5,45 +5,55 @@ namespace Bernard\Tests\Router;
 use Bernard\Envelope;
 use Bernard\Message\PlainMessage;
 use Bernard\Router\ContainerAwareRouter;
-use Symfony\Component\DependencyInjection\Container;
+use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
-class ContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
+class ContainerAwareRouterTest extends TestCase
 {
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
     public function setUp()
     {
-        $this->container = new Container;
-        $this->container->set('my.service', function () {
-            return 'var_dump';
-        });
-    }
+        $container = $this->prophesize(ContainerInterface::class);
+        $container->get('my.service')->willReturn(
+            function () {
+                return 'var_dump';
+            }
+        );
+        $container->has('my.service')->willReturn(true);
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
-     */
-    public function testUndefinedServicesAreNotAccepted()
-    {
-        $envelope = new Envelope(new PlainMessage('SendNewsletter'));
-
-        $router = new ContainerAwareRouter($this->container);
-        $router->map($envelope);
+        $this->container = $container->reveal();
     }
 
     public function testAcceptsInConstructor()
     {
-        $router = new ContainerAwareRouter($this->container, array('SendNewsletter' => 'my.service'));
+        $router = new ContainerAwareRouter(
+            $this->container,
+            ['SendNewsletter' => 'my.service']
+        );
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
-        $this->assertSame($this->container->get('my.service'), $router->map($envelope));
+        $this->assertSame(
+            $this->container->get('my.service'),
+            $router->map($envelope)
+        );
     }
 
     public function testAcceptsContainerServiceAsReceiver()
     {
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
-        $router = new ContainerAwareRouter($this->container, array(
-            'SendNewsletter' => 'my.service',
-        ));
+        $router = new ContainerAwareRouter(
+            $this->container,
+            ['SendNewsletter' => 'my.service']
+        );
 
-        $this->assertSame($this->container->get('my.service'), $router->map($envelope));
+        $this->assertSame(
+            $this->container->get('my.service'),
+            $router->map($envelope)
+        );
     }
 }
