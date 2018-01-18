@@ -15,6 +15,7 @@ class SqsDriver extends AbstractPrefetchDriver
 {
     const AWS_SQS_FIFO_SUFFIX = '.fifo';
     const AWS_SQS_EXCEPTION_BAD_REQUEST = 400;
+    const AWS_SQS_EXCEPTION_NOT_FOUND = 404;
 
     protected $sqs;
     protected $queueUrls;
@@ -101,8 +102,10 @@ class SqsDriver extends AbstractPrefetchDriver
             return false;
         } catch (SqsException $exception) {
             if ($previousException = $exception->getPrevious()) {
-                if ($previousException->getCode() === self::AWS_SQS_EXCEPTION_BAD_REQUEST) {
-                    return false;
+                switch ($previousException->getCode()) {
+                    case self::AWS_SQS_EXCEPTION_BAD_REQUEST:
+                    case self::AWS_SQS_EXCEPTION_NOT_FOUND:
+                        return false;
                 }
             }
 
