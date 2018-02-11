@@ -1,15 +1,22 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\Pheanstalk;
 
-use Bernard\Driver\PheanstalkDriver;
+use Bernard\Driver\Pheanstalk\Driver;
 use Pheanstalk\Job;
+use Pheanstalk\Pheanstalk;
 
-class PheanstalkDriverTest extends \PHPUnit\Framework\TestCase
+class DriverTest extends \PHPUnit\Framework\TestCase
 {
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    private $pheanstalk;
+
+    /** @var Driver */
+    private $driver;
+
     public function setUp()
     {
-        $this->pheanstalk = $this->getMockBuilder('Pheanstalk\Pheanstalk')
+        $this->pheanstalk = $this->getMockBuilder(Pheanstalk::class)
             ->setMethods(array(
                 'listTubes',
                 'statsTube',
@@ -21,12 +28,12 @@ class PheanstalkDriverTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->driver = new PheanstalkDriver($this->pheanstalk);
+        $this->driver = new Driver($this->pheanstalk);
     }
 
     public function testItExposesInfo()
     {
-        $driver = new PheanstalkDriver($this->pheanstalk);
+        $driver = new Driver($this->pheanstalk);
 
         $info = new \ArrayObject(array('info' => true));
 
@@ -38,7 +45,7 @@ class PheanstalkDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testItImplementsDriverInterface()
     {
-        $this->assertInstanceOf('Bernard\Driver', $this->driver);
+        $this->assertInstanceOf(\Bernard\Driver::class, $this->driver);
     }
 
     public function testItCountsNumberOfMessagesInQueue()
@@ -65,7 +72,7 @@ class PheanstalkDriverTest extends \PHPUnit\Framework\TestCase
     public function testAcknowledgeMessage()
     {
         $this->pheanstalk->expects($this->once())->method('delete')
-            ->with($this->isInstanceOf('Pheanstalk\Job'));
+            ->with($this->isInstanceOf(Job::class));
 
         $this->driver->acknowledgeMessage('my-queue', new Job(1, null));
     }
