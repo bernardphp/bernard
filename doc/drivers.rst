@@ -175,7 +175,7 @@ And here is the setup of the driver for doctrine dbal:
 
     <?php
 
-    use Bernard\Driver\DoctrineDriver;
+    use Bernard\Driver\Doctrine\Driver;
     use Doctrine\DBAL\DriverManager;
 
     $connection = DriverManager::getConnection(array(
@@ -186,7 +186,7 @@ And here is the setup of the driver for doctrine dbal:
     ));
 
 
-    $driver = new DoctrineDriver($connection);
+    $driver = new Driver($connection);
 
 Flatfile
 --------

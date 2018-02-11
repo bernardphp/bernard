@@ -1,6 +1,6 @@
 <?php
 
-use Bernard\Driver\DoctrineDriver;
+use Bernard\Driver\Doctrine\Driver;
 use Doctrine\DBAL\DriverManager;
 
 /**
@@ -16,7 +16,7 @@ function get_driver() {
         'driver' => 'pdo_mysql',
     ));
 
-    $doctrineDriver = new DoctrineDriver($connection);
+    $doctrineDriver = new Driver($connection);
 
     //Don't do this in your application. Use a database set up script instead.
     try {
