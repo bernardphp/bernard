@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Driver;
+namespace Bernard\Driver\MongoDB;
 
 use MongoCollection;
 use MongoDate;
@@ -11,7 +11,7 @@ use MongoId;
  *
  * @package Bernard
  */
-class MongoDBDriver implements \Bernard\Driver
+final class Driver implements \Bernard\Driver
 {
     private $messages;
     private $queues;
