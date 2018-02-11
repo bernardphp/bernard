@@ -230,7 +230,7 @@ in the drivers constructor.
 
     <?php
 
-    use Bernard\Driver\IronMqDriver;
+    use Bernard\Driver\IronMQ\Driver;
 
     $connection = new IronMQ(array(
         'token'      => 'your-ironmq-token',
@@ -238,10 +238,10 @@ in the drivers constructor.
     ));
 
 
-    $driver = new IronMqDriver($connection);
+    $driver = new Driver($connection);
 
     // or with a prefetching number
-    $driver = new IronMqDriver($connection, 5);
+    $driver = new Driver($connection, 5);
 
 It is also possible to use push queues with some additional logic. Basically,
 it is needed to deserialize the message in the request and route it to the

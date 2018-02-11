@@ -1,14 +1,22 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\IronMQ;
 
-use Bernard\Driver\IronMqDriver;
+use Bernard\Driver\IronMQ\Driver;
+use IronMQ\IronMQ;
+use Bernard\Driver\AbstractPrefetchDriver;
 
-class IronMqDriverTest extends \PHPUnit\Framework\TestCase
+class DriverTest extends \PHPUnit\Framework\TestCase
 {
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    private $ironmq;
+
+    /** @var Driver */
+    private $driver;
+
     public function setUp()
     {
-        $this->ironmq = $this->getMockBuilder('\IronMQ\IronMQ')
+        $this->ironmq = $this->getMockBuilder(IronMQ::class)
             ->setMethods(array(
                 'getQueue',
                 'getQueues',
@@ -21,12 +29,12 @@ class IronMqDriverTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->driver = new IronMqDriver($this->ironmq);
+        $this->driver = new Driver($this->ironmq);
     }
 
     public function testItExposesInfo()
     {
-        $driver = new IronMqDriver($this->ironmq, 10);
+        $driver = new Driver($this->ironmq, 10);
 
         $this->assertEquals(array('prefetch' => 10), $driver->info());
         $this->assertEquals(array('prefetch' => 2), $this->driver->info());
@@ -34,7 +42,7 @@ class IronMqDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testItImplementsDriverInterface()
     {
-        $this->assertInstanceOf('Bernard\Driver\AbstractPrefetchDriver', $this->driver);
+        $this->assertInstanceOf(AbstractPrefetchDriver::class, $this->driver);
     }
 
     public function testItCountsNumberOfMessagesInQueue()

@@ -1,7 +1,7 @@
 <?php
 
 use IronMQ\IronMQ;
-use Bernard\Driver\IronMqDriver;
+use Bernard\Driver\IronMQ\Driver;
 
 /**
  * Must be defined before including bootstrap.php
@@ -13,7 +13,7 @@ function get_driver() {
         'project_id' => getenv('IRONMQ_PROJECT_ID'),
     ));
 
-    return new IronMqDriver($ironmq);
+    return new Driver($ironmq);
 }
 
 if (!getenv('IRONMQ_TOKEN') || !getenv('IRONMQ_PROJECT_ID')) {
