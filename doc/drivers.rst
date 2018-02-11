@@ -459,7 +459,7 @@ require a HTTP request to amazon to be resolved.
     <?php
 
     use Aws\Sqs\SqsClient;
-    use Bernard\Driver\SqsDriver;
+    use Bernard\Driver\Sqs\Driver;
 
     $connection = SqsClient::factory(array(
         'key'    => 'your-aws-access-key',
@@ -467,13 +467,13 @@ require a HTTP request to amazon to be resolved.
         'region' => 'the-aws-region-you-choose'
     ));
 
-    $driver = new SqsDriver($connection);
+    $driver = new Driver($connection);
 
     // or with prefetching
-    $driver = new SqsDriver($connection, array(), 5);
+    $driver = new Driver($connection, array(), 5);
 
     // or with aliased queue urls
-    $driver = new SqsDriver($connection, array(
+    $driver = new Driver($connection, array(
         'queue-name' => 'queue-url',
     ));
 

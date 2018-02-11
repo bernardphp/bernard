@@ -1,9 +1,10 @@
 <?php
 
-namespace Bernard\Driver;
+namespace Bernard\Driver\Sqs;
 
 use Aws\Sqs\Exception\SqsException;
 use Aws\Sqs\SqsClient;
+use Bernard\Driver\AbstractPrefetchDriver;
 
 /**
  * Implements a Driver for use with AWS SQS client API:
@@ -11,13 +12,13 @@ use Aws\Sqs\SqsClient;
  *
  * @package Bernard
  */
-class SqsDriver extends AbstractPrefetchDriver
+final class Driver extends AbstractPrefetchDriver
 {
     const AWS_SQS_FIFO_SUFFIX = '.fifo';
     const AWS_SQS_EXCEPTION_BAD_REQUEST = 400;
 
-    protected $sqs;
-    protected $queueUrls;
+    private $sqs;
+    private $queueUrls;
 
     /**
      * @param SqsClient $sqs
@@ -257,7 +258,7 @@ class SqsDriver extends AbstractPrefetchDriver
      *
      * @throws SqsException
      */
-    protected function resolveUrl($queueName)
+    private function resolveUrl($queueName)
     {
         if (isset($this->queueUrls[$queueName])) {
             return $this->queueUrls[$queueName];

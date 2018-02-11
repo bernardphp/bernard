@@ -1,21 +1,28 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\Sqs;
 
 use Aws\Result;
 use Aws\Sqs\SqsClient;
-use Bernard\Driver\SqsDriver;
+use Bernard\Driver\Sqs\Driver;
 use Guzzle\Service\Resource\Model;
+use Bernard\Driver\AbstractPrefetchDriver;
 
-class SqsDriverTest extends \PHPUnit\Framework\TestCase
+class DriverTest extends \PHPUnit\Framework\TestCase
 {
     const DUMMY_QUEUE_NAME       = 'my-queue';
     const DUMMY_FIFO_QUEUE_NAME  = 'my-queue.fifo';
     const DUMMY_QUEUE_URL_PREFIX = 'https://sqs.eu-west-1.amazonaws.com/123123';
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    private $sqs;
+
+    /** @var Driver */
+    private $driver;
+
     public function setUp()
     {
-        $this->sqs = $this->getMockBuilder('Aws\Sqs\SqsClient')
+        $this->sqs = $this->getMockBuilder(SqsClient::class)
             ->disableOriginalConstructor()
             ->setMethods(array(
                 'createQueue',
@@ -29,12 +36,12 @@ class SqsDriverTest extends \PHPUnit\Framework\TestCase
             ))
             ->getMock();
 
-        $this->driver = new SqsDriver($this->sqs, ['send-newsletter' => 'url']);
+        $this->driver = new Driver($this->sqs, ['send-newsletter' => 'url']);
     }
 
     public function testItExposesInfo()
     {
-        $driver = new SqsDriver($this->sqs, [], 10);
+        $driver = new Driver($this->sqs, [], 10);
 
         $this->assertEquals(['prefetch' => 10], $driver->info());
         $this->assertEquals(['prefetch' => 2], $this->driver->info());
@@ -42,7 +49,7 @@ class SqsDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testItImplementsDriverInterface()
     {
-        $this->assertInstanceOf('Bernard\Driver\AbstractPrefetchDriver', $this->driver);
+        $this->assertInstanceOf(AbstractPrefetchDriver::class, $this->driver);
     }
 
     public function testItCreatesQueue()
@@ -127,7 +134,7 @@ class SqsDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testItGetsAllQueues()
     {
-        $driver = new SqsDriver($this->sqs, [
+        $driver = new Driver($this->sqs, [
             'import-users' => 'alreadyknowurl/import_users_prod'
         ]);
 
@@ -195,7 +202,7 @@ class SqsDriverTest extends \PHPUnit\Framework\TestCase
             ->with($this->equalTo([
                 'QueueUrl'    => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_FIFO_QUEUE_NAME,
                 'MessageBody' => $message,
-                'MessageGroupId' => \Bernard\Driver\SqsDriver::class . '::pushMessage',
+                'MessageGroupId' => \Bernard\Driver\Sqs\Driver::class . '::pushMessage',
                 'MessageDeduplicationId' => md5($message),
 
             ]));
