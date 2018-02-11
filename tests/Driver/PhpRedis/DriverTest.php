@@ -1,10 +1,10 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\PhpRedis;
 
-use Bernard\Driver\PhpRedisDriver;
+use Bernard\Driver\PhpRedis\Driver;
 
-class PhpRedisDriverTest extends \PHPUnit\Framework\TestCase
+class DriverTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
@@ -25,12 +25,12 @@ class PhpRedisDriverTest extends \PHPUnit\Framework\TestCase
             'sRem',
         ))->getMock();
 
-        $this->connection = new PhpRedisDriver($this->redis);
+        $this->connection = new Driver($this->redis);
     }
 
     public function testItImplementsDriverInterface()
     {
-        $this->assertInstanceOf('Bernard\Driver', $this->connection);
+        $this->assertInstanceOf(\Bernard\Driver::class, $this->connection);
     }
 
     public function testItCountsNumberOfMessagesInQueue()

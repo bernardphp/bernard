@@ -1,6 +1,6 @@
 <?php
 
-use Bernard\Driver\PhpRedisDriver;
+use Bernard\Driver\PhpRedis\Driver;
 
 /**
  * Must be defined before including bootstrap.php
@@ -11,7 +11,7 @@ function get_driver() {
     $redis->connect('localhost');
     $redis->setOption(Redis::OPT_PREFIX, 'bernard:');
 
-    return new PhpRedisDriver($redis);
+    return new Driver($redis);
 }
 
 require 'bootstrap.php';
