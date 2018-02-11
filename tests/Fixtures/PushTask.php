@@ -8,7 +8,7 @@ namespace Bernard\Tests\Fixtures;
  */
 class PushTask
 {
-    static $messages = array();
+    public static $messages = array();
 
     protected $url_path;
     protected $query_data;

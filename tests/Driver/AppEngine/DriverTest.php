@@ -1,12 +1,15 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\AppEngine;
 
-use Bernard\Driver\AppEngineDriver;
+use Bernard\Driver\AppEngine\Driver;
 use google\appengine\api\taskqueue\PushTask;
 
-class AppEngineDriverTest extends \PHPUnit\Framework\TestCase
+class DriverTest extends \PHPUnit\Framework\TestCase
 {
+    /** @var Driver */
+    private $driver;
+
     public static function setUpBeforeClass()
     {
         // Very ugly hack! But AppEngine SDK isn't available outside appengine
@@ -16,7 +19,7 @@ class AppEngineDriverTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        $this->driver = new AppEngineDriver(array(
+        $this->driver = new Driver(array(
             'send-newsletter' => '/url_endpoint',
         ));
     }
