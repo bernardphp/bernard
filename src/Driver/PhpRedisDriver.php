@@ -11,6 +11,8 @@ use Redis;
  */
 class PhpRedisDriver implements \Bernard\Driver
 {
+    const QUEUE_PREFIX = 'queue:';
+    
     protected $redis;
 
     /**
@@ -42,7 +44,7 @@ class PhpRedisDriver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        return $this->redis->lLen('queue:' . $queueName);
+        return $this->redis->lLen(self::QUEUE_PREFIX . $queueName);
     }
 
     /**
@@ -114,6 +116,6 @@ class PhpRedisDriver implements \Bernard\Driver
      */
     protected function resolveKey($queueName)
     {
-        return 'queue:' . $queueName;
+        return self::QUEUE_PREFIX . $queueName;
     }
 }
