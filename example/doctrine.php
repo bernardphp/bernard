@@ -24,7 +24,7 @@ function get_driver() {
     } catch (\Exception $ex) {
         $schema = new \Doctrine\DBAL\Schema\Schema();
 
-        \Bernard\Doctrine\MessagesSchema::create($schema);
+        \Bernard\Driver\Doctrine\MessagesSchema::create($schema);
 
         array_map(array($connection, 'executeQuery'), $schema->toSql($connection->getDatabasePlatform()));
     }

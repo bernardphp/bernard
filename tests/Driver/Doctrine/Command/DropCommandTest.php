@@ -1,15 +1,15 @@
 <?php
 
-namespace Bernard\Tests\Command\Doctrine;
+namespace Bernard\Tests\Driver\Doctrine\Command;
 
-class CreateCommandTest extends BaseCommandTest
+class DropCommandTest extends BaseCommandTest
 {
     /**
      * {@inheritdoc}
      */
     public function getShortClassName()
     {
-        return 'CreateCommand';
+        return 'DropCommand';
     }
 
     /**
@@ -17,7 +17,7 @@ class CreateCommandTest extends BaseCommandTest
      */
     public function getSqlMethod()
     {
-        return 'getCreateSchema';
+        return 'getDropSchema';
     }
 
     /**
@@ -25,6 +25,6 @@ class CreateCommandTest extends BaseCommandTest
      */
     public function applySqlMethod()
     {
-        return 'createSchema';
+        return 'dropSchema';
     }
 }

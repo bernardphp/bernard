@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Command\Doctrine;
+namespace Bernard\Driver\Doctrine\Command;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer as Synchronizer;
@@ -8,11 +8,11 @@ use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer as Synchronizer
 /**
  * @package Bernard
  */
-class UpdateCommand extends AbstractCommand
+class CreateCommand extends AbstractCommand
 {
     public function __construct()
     {
-        parent::__construct('update');
+        parent::__construct('create');
     }
 
     /**
@@ -20,7 +20,7 @@ class UpdateCommand extends AbstractCommand
      */
     protected function getSql(Synchronizer $sync, Schema $schema)
     {
-        return $sync->getUpdateSchema($schema);
+        return $sync->getCreateSchema($schema);
     }
 
     /**
@@ -28,6 +28,6 @@ class UpdateCommand extends AbstractCommand
      */
     protected function applySql(Synchronizer $sync, Schema $schema)
     {
-        $sync->updateSchema($schema);
+        $sync->createSchema($schema);
     }
 }

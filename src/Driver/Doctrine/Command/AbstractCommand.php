@@ -1,8 +1,8 @@
 <?php
 
-namespace Bernard\Command\Doctrine;
+namespace Bernard\Driver\Doctrine\Command;
 
-use Bernard\Doctrine\MessagesSchema;
+use Bernard\Driver\Doctrine\MessagesSchema;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer as Synchronizer;

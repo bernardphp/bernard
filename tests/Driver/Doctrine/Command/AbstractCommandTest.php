@@ -1,8 +1,8 @@
 <?php
 
-namespace Bernard\Tests\Command\Doctrine;
+namespace Bernard\Tests\Driver\Doctrine\Command;
 
-use Bernard\Command\Doctrine\AbstractCommand;
+use Bernard\Driver\Doctrine\Command\AbstractCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class AbstractCommandTest extends \PHPUnit\Framework\TestCase
@@ -21,7 +21,7 @@ class AbstractCommandTest extends \PHPUnit\Framework\TestCase
             ->method('getConnection')
             ->will($this->returnValue($connection));
 
-        $this->command = $this->getMockBuilder('Bernard\\Command\\Doctrine\\AbstractCommand')
+        $this->command = $this->getMockBuilder(AbstractCommand::class)
             ->setMethods(['getSql', 'applySql', 'getHelper'])
             ->setConstructorArgs(['abstract'])
             ->getMock();

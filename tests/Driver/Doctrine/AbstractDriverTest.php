@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\Driver\Doctrine;
 
-use Bernard\Doctrine\MessagesSchema;
+use Bernard\Driver\Doctrine\MessagesSchema;
 use Bernard\Driver\Doctrine\Driver;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
