@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Doctrine;
+namespace Bernard\Driver\Doctrine;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\DBAL\DBALException;

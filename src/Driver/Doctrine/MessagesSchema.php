@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Doctrine;
+namespace Bernard\Driver\Doctrine;
 
 use Doctrine\DBAL\Schema\Schema;
 

@@ -106,7 +106,7 @@ as appropriate for your use case.
     <?php
     // doctrine.php
 
-    use Bernard\Command\Doctrine as BernardCommands;
+    use Bernard\Driver\Docrtrine\Command as BernardCommands;
     use Doctrine\DBAL\Tools\Console\ConsoleRunner;
     use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
     use Symfony\Component\Console\Application;
@@ -114,9 +114,9 @@ as appropriate for your use case.
 
     $connection = ...;
     $commands = [
-        new BernardCommands\CreateCommand,
-        new BernardCommands\DropCommand,
-        new BernardCommands\UpdateCommand,
+        new BernardCommands\CreateCommand(),
+        new BernardCommands\DropCommand(),
+        new BernardCommands\UpdateCommand(),
     ];
 
     // To create a new application from scratch ...
@@ -147,7 +147,7 @@ Alternatively, use the following method for creating the tables manually.
 
     <?php
 
-    use Bernard\Doctrine\MessagesSchema;
+    use Bernard\Driver\Doctrine\MessagesSchema;
     use Doctrine\DBAL\Schema\Schema;
 
     MessagesSchema::create($schema = new Schema);
