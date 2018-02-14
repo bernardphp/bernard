@@ -197,9 +197,9 @@ The flat file driver provides a simple job queue without any database
 
     <?php
 
-    use Bernard\Driver\FlatFileDriver;
+    use Bernard\Driver\FlatFile\Driver;
 
-    $driver = new FlatFileDriver('/dir/to/store/messages');
+    $driver = new Driver('/dir/to/store/messages');
 
 IronMQ
 ------
