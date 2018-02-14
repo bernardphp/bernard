@@ -1,7 +1,7 @@
 <?php
 
 use Pheanstalk\Pheanstalk;
-use Bernard\Driver\PheanstalkDriver;
+use Bernard\Driver\Pheanstalk\Driver;
 
 /**
  * Must be defined before including bootstrap.php
@@ -10,7 +10,7 @@ use Bernard\Driver\PheanstalkDriver;
 function get_driver() {
     $pheanstalk = new Pheanstalk('localhost');
 
-    return new PheanstalkDriver($pheanstalk);
+    return new Driver($pheanstalk);
 }
 
 require 'bootstrap.php';

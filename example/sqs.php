@@ -1,7 +1,7 @@
 <?php
 
 use Aws\Sqs\SqsClient;
-use Bernard\Driver\SqsDriver;
+use Bernard\Driver\Sqs\Driver;
 
 /**
  * Must be defined before including bootstrap.php
@@ -14,7 +14,7 @@ function get_driver() {
         'region' => getenv('SQS_REGION')
     ));
 
-    return new SqsDriver($sqs);
+    return new Driver($sqs);
 }
 
 if (!getenv('ACCESS_KEY') || !getenv('SECRET_KEY') || !getenv('SQS_REGION')) {
