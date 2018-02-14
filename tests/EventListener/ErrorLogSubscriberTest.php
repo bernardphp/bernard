@@ -48,7 +48,6 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testOnRejectException()
     {
-
         $this->envelope->expects($this->once())
             ->method('getName')
             ->willReturn('foo');
@@ -81,7 +80,7 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
         $this->envelope->expects($this->once())
             ->method('getName')
             ->willReturn('foo');
-        $error = new \stdClass;
+        $error = new \stdClass();
         $event = new RejectEnvelopeEvent($this->envelope, $this->queue, $error);
         $expected = ' [bernard] caught unknown error type stdClass while processing foo.';
         $this->subscriber->onReject($event);

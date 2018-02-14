@@ -5,9 +5,7 @@ namespace Bernard\Driver\Doctrine;
 use Doctrine\DBAL\Connection;
 
 /**
- * Driver supporting Doctrine DBAL
- *
- * @package Bernard
+ * Driver supporting Doctrine DBAL.
  */
 final class Driver implements \Bernard\Driver
 {
@@ -52,7 +50,7 @@ final class Driver implements \Bernard\Driver
     {
         $query = 'SELECT COUNT(id) FROM bernard_messages WHERE queue = :queue AND visible = :visible';
 
-        return (integer) $this->connection->fetchColumn($query, [
+        return (int) $this->connection->fetchColumn($query, [
             'queue' => $queueName,
             'visible' => true,
         ]);
@@ -148,7 +146,7 @@ final class Driver implements \Bernard\Driver
     }
 
     /**
-     * Execute the actual query and process the response
+     * Execute the actual query and process the response.
      *
      * @param string $queueName
      *
@@ -158,7 +156,7 @@ final class Driver implements \Bernard\Driver
     {
         $query = 'SELECT id, message FROM bernard_messages
                   WHERE queue = :queue AND visible = :visible
-                  ORDER BY sentAt LIMIT 1 ' . $this->connection->getDatabasePlatform()->getForUpdateSql();
+                  ORDER BY sentAt LIMIT 1 '.$this->connection->getDatabasePlatform()->getForUpdateSql();
 
         list($id, $message) = $this->connection->fetchArray($query, [
             'queue' => $queueName,

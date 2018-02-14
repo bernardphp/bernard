@@ -11,7 +11,7 @@ class PimpleAwareRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
-        $this->pimple = new Pimple;
+        $this->pimple = new Pimple();
         $this->pimple['my.service'] = $this->pimple->share(function () {
             return 'var_dump';
         });
@@ -31,7 +31,7 @@ class PimpleAwareRouterTest extends \PHPUnit\Framework\TestCase
 
     public function testAcceptsInConstructor()
     {
-        $router = new PimpleAwareRouter($this->pimple, array('SendNewsletter' => 'my.service'));
+        $router = new PimpleAwareRouter($this->pimple, ['SendNewsletter' => 'my.service']);
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->assertSame($this->pimple['my.service'], $router->map($envelope));

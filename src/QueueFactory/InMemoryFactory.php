@@ -6,9 +6,7 @@ use Bernard\Queue\InMemoryQueue;
 
 /**
  * This is an in memory queue factory. It creates SplQueue objects for the
- * queue. This also means it is not possible to introspect with Juno
- *
- * @package Bernard
+ * queue. This also means it is not possible to introspect with Juno.
  */
 class InMemoryFactory implements \Bernard\QueueFactory
 {

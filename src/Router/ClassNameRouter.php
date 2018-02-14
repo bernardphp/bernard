@@ -5,9 +5,6 @@ namespace Bernard\Router;
 use Bernard\Envelope;
 use Bernard\Exception\ReceiverNotFoundException;
 
-/**
- * @package Bernard
- */
 class ClassNameRouter extends SimpleRouter
 {
     /**

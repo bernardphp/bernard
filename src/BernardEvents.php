@@ -3,7 +3,7 @@
 namespace Bernard;
 
 /**
- * Contains all events dispatched by bernard
+ * Contains all events dispatched by bernard.
  */
 final class BernardEvents
 {

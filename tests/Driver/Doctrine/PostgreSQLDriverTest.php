@@ -16,21 +16,21 @@ class PostgreSQLDriverTest extends AbstractDriverTest
 
     public function testInfo()
     {
-        $params = array(
-            'driver'   => 'pdo_pgsql',
-            'dbname'   => 'bernard_test',
-        );
+        $params = [
+            'driver' => 'pdo_pgsql',
+            'dbname' => 'bernard_test',
+        ];
 
         $this->assertEquals($params, $this->driver->info());
     }
 
     protected function createConnection()
     {
-        return DriverManager::getConnection(array(
-            'driver'   => 'pdo_pgsql',
-            'user'     => 'postgres',
-            'dbname'   => 'bernard_test',
+        return DriverManager::getConnection([
+            'driver' => 'pdo_pgsql',
+            'user' => 'postgres',
+            'dbname' => 'bernard_test',
             'password' => '',
-        ));
+        ]);
     }
 }

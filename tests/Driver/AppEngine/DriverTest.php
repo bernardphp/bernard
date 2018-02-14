@@ -19,21 +19,21 @@ class DriverTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        $this->driver = new Driver(array(
+        $this->driver = new Driver([
             'send-newsletter' => '/url_endpoint',
-        ));
+        ]);
     }
 
     public function tearDown()
     {
-        PushTask::$messages = array();
+        PushTask::$messages = [];
     }
 
     public function testItQueuesPushTask()
     {
         $this->driver->pushMessage('send-newsletter', 'message');
 
-        $message = new PushTask('/url_endpoint', array('message' => 'message'));
+        $message = new PushTask('/url_endpoint', ['message' => 'message']);
         $this->assertEquals($message, PushTask::$messages['send-newsletter'][0]);
     }
 
@@ -42,10 +42,10 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->pushMessage('import-users', 'message');
         $this->driver->pushMessage('calculate-reports', 'message');
 
-        $messages = array(
-            new PushTask('/_ah/queue/import-users', array('message' => 'message')),
-            new PushTask('/_ah/queue/calculate-reports', array('message' => 'message')),
-        );
+        $messages = [
+            new PushTask('/_ah/queue/import-users', ['message' => 'message']),
+            new PushTask('/_ah/queue/calculate-reports', ['message' => 'message']),
+        ];
 
         $this->assertEquals($messages[0], PushTask::$messages['import-users'][0]);
         $this->assertEquals($messages[1], PushTask::$messages['calculate-reports'][0]);
@@ -53,6 +53,6 @@ class DriverTest extends \PHPUnit\Framework\TestCase
 
     public function testListQueues()
     {
-        $this->assertEquals(array('/url_endpoint' => 'send-newsletter'), $this->driver->listQueues());
+        $this->assertEquals(['/url_endpoint' => 'send-newsletter'], $this->driver->listQueues());
     }
 }

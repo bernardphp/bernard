@@ -34,7 +34,7 @@ class PersistentQueueTest extends AbstractQueueTest
             ->with($this->equalTo('send-newsletter'), $this->equalTo('receipt'));
 
         $this->driver->expects($this->once())->method('popMessage')->with($this->equalTo('send-newsletter'))
-            ->will($this->returnValue(array('message', 'receipt')));
+            ->will($this->returnValue(['message', 'receipt']));
 
         $this->serializer->expects($this->once())->method('unserialize')
             ->will($this->returnValue($envelope));
@@ -69,7 +69,7 @@ class PersistentQueueTest extends AbstractQueueTest
         $messageWrapper = new Envelope($this->createMock('Bernard\Message'));
 
         $this->driver->expects($this->at(1))->method('popMessage')->with($this->equalTo('send-newsletter'))
-            ->will($this->returnValue(array('serialized', null)));
+            ->will($this->returnValue(['serialized', null]));
 
         $this->driver->expects($this->at(2))->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->will($this->returnValue(null));
@@ -93,7 +93,7 @@ class PersistentQueueTest extends AbstractQueueTest
         $this->serializer->expects($this->at(2))->method('unserialize')->with($this->equalTo('message3'));
 
         $this->driver->expects($this->once())->method('peekQueue')->with($this->equalTo('send-newsletter'), $this->equalTo($index), $this->equalTo($limit))
-            ->will($this->returnValue(array('message1', 'message2', 'message3')));
+            ->will($this->returnValue(['message1', 'message2', 'message3']));
 
         $queue = $this->createQueue('send-newsletter');
         $queue->peek($index, $limit);
@@ -102,18 +102,18 @@ class PersistentQueueTest extends AbstractQueueTest
     public function dataClosedMethods()
     {
         $methods = parent::dataClosedMethods();
-        $methods[] = array('register', array());
+        $methods[] = ['register', []];
 
         return $methods;
     }
 
     public function peekDataProvider()
     {
-        return array(
-            array(0, 20),
-            array(1, 10),
-            array(20, 100),
-        );
+        return [
+            [0, 20],
+            [1, 10],
+            [20, 100],
+        ];
     }
 
     protected function createQueue($name)

@@ -17,14 +17,14 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function setUp()
     {
         $this->pheanstalk = $this->getMockBuilder(Pheanstalk::class)
-            ->setMethods(array(
+            ->setMethods([
                 'listTubes',
                 'statsTube',
                 'putInTube',
                 'reserveFromTube',
                 'delete',
                 'stats',
-            ))
+            ])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -35,12 +35,12 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     {
         $driver = new Driver($this->pheanstalk);
 
-        $info = new \ArrayObject(array('info' => true));
+        $info = new \ArrayObject(['info' => true]);
 
         $this->pheanstalk->expects($this->once())->method('stats')
             ->will($this->returnValue($info));
 
-        $this->assertEquals(array('info' => true), $driver->info());
+        $this->assertEquals(['info' => true], $driver->info());
     }
 
     public function testItImplementsDriverInterface()
@@ -51,17 +51,17 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function testItCountsNumberOfMessagesInQueue()
     {
         $this->pheanstalk->expects($this->once())->method('statsTube')
-            ->with($this->equalTo('send-newsletter'))->will($this->returnValue(array('current-jobs-ready' => 4)));
+            ->with($this->equalTo('send-newsletter'))->will($this->returnValue(['current-jobs-ready' => 4]));
 
         $this->assertEquals(4, $this->driver->countMessages('send-newsletter'));
     }
 
     public function testItListQueues()
     {
-        $queues = array(
+        $queues = [
             'failed',
             'queue1',
-        );
+        ];
 
         $this->pheanstalk->expects($this->once())->method('listTubes')
             ->will($this->returnValue($queues));
@@ -79,7 +79,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
 
     public function testItPeeksInAQueue()
     {
-        $this->assertEquals(array(), $this->driver->peekQueue('my-queue2'));
+        $this->assertEquals([], $this->driver->peekQueue('my-queue2'));
     }
 
     public function testItPushesMessages()
@@ -110,8 +110,8 @@ class DriverTest extends \PHPUnit\Framework\TestCase
             ->with($this->equalTo('my-queue2'), $this->equalTo(5))
             ->will($this->returnValue(null));
 
-        $this->assertEquals(array('message1', $job1), $this->driver->popMessage('my-queue1'));
-        $this->assertEquals(array('message2', $job2), $this->driver->popMessage('my-queue2'));
-        $this->assertEquals(array(null, null), $this->driver->popMessage('my-queue2'));
+        $this->assertEquals(['message1', $job1], $this->driver->popMessage('my-queue1'));
+        $this->assertEquals(['message2', $job2], $this->driver->popMessage('my-queue2'));
+        $this->assertEquals([null, null], $this->driver->popMessage('my-queue2'));
     }
 }

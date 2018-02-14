@@ -4,9 +4,6 @@ namespace Bernard\Driver\Predis;
 
 use Predis\ClientInterface;
 
-/**
- * @package Bernard
- */
 final class Driver extends \Bernard\Driver\PhpRedis\Driver
 {
     /**

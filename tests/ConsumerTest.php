@@ -30,8 +30,8 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        $this->router = new SimpleRouter;
-        $this->router->add('ImportUsers', new Fixtures\Service);
+        $this->router = new SimpleRouter();
+        $this->router->add('ImportUsers', new Fixtures\Service());
 
         $this->dispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
         $this->consumer = new Consumer($this->router, $this->dispatcher);
@@ -41,7 +41,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
     {
         $envelope = new Envelope(new PlainMessage('ImportUsers'));
         $queue = $this->getMockBuilder('Bernard\Queue\InMemoryQueue')->setMethods([
-            'dequeue'
+            'dequeue',
         ])->setConstructorArgs(['queue'])->getMock();
 
         $queue->expects($this->once())
@@ -110,9 +110,9 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
     {
         $queue = new InMemoryQueue('queue');
 
-        $this->assertFalse($this->consumer->tick($queue, array(
+        $this->assertFalse($this->consumer->tick($queue, [
             'max-runtime' => -1 * PHP_INT_MAX,
-        )));
+        ]));
     }
 
     public function testNoEnvelopeInQueue()
@@ -139,29 +139,29 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
 
     public function testMaxMessages()
     {
-        $this->router->add('ImportUsers', new Fixtures\Service);
+        $this->router->add('ImportUsers', new Fixtures\Service());
 
         $queue = new InMemoryQueue('send-newsletter');
         $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
         $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
         $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
 
-        $this->assertFalse($this->consumer->tick($queue, array('max-messages' => 1)));
+        $this->assertFalse($this->consumer->tick($queue, ['max-messages' => 1]));
         $this->assertTrue($this->consumer->tick($queue));
-        $this->assertTrue($this->consumer->tick($queue, array('max-messages' => 100)));
+        $this->assertTrue($this->consumer->tick($queue, ['max-messages' => 100]));
     }
 
     public function testStopAfterLastMessage()
     {
-        $this->router->add('ImportUsers', new Fixtures\Service);
+        $this->router->add('ImportUsers', new Fixtures\Service());
 
         $queue = new InMemoryQueue('send-newsletter');
         $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
         $queue->enqueue(new Envelope(new PlainMessage('ImportUsers')));
 
-        $this->assertTrue($this->consumer->tick($queue, array('stop-when-empty' => true)));
-        $this->assertTrue($this->consumer->tick($queue, array('stop-when-empty' => true)));
-        $this->assertFalse($this->consumer->tick($queue, array('stop-when-empty' => true)));
+        $this->assertTrue($this->consumer->tick($queue, ['stop-when-empty' => true]));
+        $this->assertTrue($this->consumer->tick($queue, ['stop-when-empty' => true]));
+        $this->assertFalse($this->consumer->tick($queue, ['stop-when-empty' => true]));
     }
 
     /**
@@ -169,12 +169,12 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
      */
     public function testStopOnError()
     {
-        $this->router->add('ImportUsers', new Fixtures\Service);
+        $this->router->add('ImportUsers', new Fixtures\Service());
 
         $queue = new InMemoryQueue('send-newsletter');
         $queue->enqueue(new Envelope(new PlainMessage('DifferentMessageKey')));
 
-        $this->consumer->tick($queue, array('stop-on-error' => true));
+        $this->consumer->tick($queue, ['stop-on-error' => true]);
 
         $this->assertEquals(1, $queue->count());
     }
@@ -202,7 +202,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
      */
     public function testWillRejectDispatchOnThrowableError()
     {
-        $this->router->add('ImportReport', new Fixtures\Service);
+        $this->router->add('ImportReport', new Fixtures\Service());
 
         $queue = new InMemoryQueue('send-newsletter');
         $queue->enqueue(new Envelope(new PlainMessage('ImportReport')));

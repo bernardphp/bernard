@@ -7,8 +7,6 @@ use Bernard\Exception\ReceiverNotFoundException;
 
 /**
  * Routes a Envelope to a Receiver by using the name of the Envelope.
- *
- * @package Bernard
  */
 class SimpleRouter implements \Bernard\Router
 {
@@ -52,7 +50,7 @@ class SimpleRouter implements \Bernard\Router
             return $receiver;
         }
 
-        return array($receiver, lcfirst($envelope->getName()));
+        return [$receiver, lcfirst($envelope->getName())];
     }
 
     /**

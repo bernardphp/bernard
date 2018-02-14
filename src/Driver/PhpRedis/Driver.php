@@ -5,14 +5,12 @@ namespace Bernard\Driver\PhpRedis;
 use Redis;
 
 /**
- * Implements a Driver for use with https://github.com/nicolasff/phpredis
- *
- * @package Bernard
+ * Implements a Driver for use with https://github.com/nicolasff/phpredis.
  */
 class Driver implements \Bernard\Driver
 {
     const QUEUE_PREFIX = 'queue:';
-    
+
     protected $redis;
 
     /**
@@ -44,7 +42,7 @@ class Driver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        return $this->redis->lLen(self::QUEUE_PREFIX . $queueName);
+        return $this->redis->lLen(self::QUEUE_PREFIX.$queueName);
     }
 
     /**
@@ -116,6 +114,6 @@ class Driver implements \Bernard\Driver
      */
     protected function resolveKey($queueName)
     {
-        return self::QUEUE_PREFIX . $queueName;
+        return self::QUEUE_PREFIX.$queueName;
     }
 }

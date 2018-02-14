@@ -11,9 +11,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @package Bernard
- */
 class ConsumeCommand extends \Symfony\Component\Console\Command\Command
 {
     protected $consumer;

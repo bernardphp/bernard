@@ -4,9 +4,6 @@ namespace Bernard\Driver\Doctrine;
 
 use Doctrine\DBAL\Schema\Schema;
 
-/**
- * @package Bernard
- */
 class MessagesSchema
 {
     /**

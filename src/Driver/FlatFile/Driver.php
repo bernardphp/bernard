@@ -16,7 +16,7 @@ class Driver implements \Bernard\Driver
 
     /**
      * @param string $baseDirectory The base directory
-     * @param int    $permissions   Permissions to create the file with.
+     * @param int    $permissions   permissions to create the file with
      */
     public function __construct($baseDirectory, $permissions = 0740)
     {
@@ -83,7 +83,7 @@ class Driver implements \Bernard\Driver
         $filename = $this->getJobFilename($queueName);
 
         file_put_contents($queueDir.DIRECTORY_SEPARATOR.$filename, $message);
-        chmod($queueDir . DIRECTORY_SEPARATOR . $filename, $this->permissions);
+        chmod($queueDir.DIRECTORY_SEPARATOR.$filename, $this->permissions);
     }
 
     /**
@@ -103,14 +103,14 @@ class Driver implements \Bernard\Driver
             if ($files) {
                 $id = array_pop($files);
                 if (@rename($queueDir.DIRECTORY_SEPARATOR.$id, $queueDir.DIRECTORY_SEPARATOR.$id.'.proceed')) {
-                    return array(file_get_contents($queueDir.DIRECTORY_SEPARATOR.$id.'.proceed'), $id);
+                    return [file_get_contents($queueDir.DIRECTORY_SEPARATOR.$id.'.proceed'), $id];
                 }
             }
 
             usleep(1000);
         }
 
-        return array(null, null);
+        return [null, null];
     }
 
     /**
@@ -187,7 +187,7 @@ class Driver implements \Bernard\Driver
      */
     private function getQueueDirectory($queueName)
     {
-        return $this->baseDirectory.DIRECTORY_SEPARATOR.str_replace(array('\\', '.'), '-', $queueName);
+        return $this->baseDirectory.DIRECTORY_SEPARATOR.str_replace(['\\', '.'], '-', $queueName);
     }
 
     /**
@@ -212,7 +212,7 @@ class Driver implements \Bernard\Driver
         $meta = unserialize($file->fgets());
 
         $id = isset($meta[$queueName]) ? $meta[$queueName] : 0;
-        $id++;
+        ++$id;
 
         $filename = sprintf('%d.job', $id);
         $meta[$queueName] = $id;

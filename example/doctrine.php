@@ -7,14 +7,15 @@ use Doctrine\DBAL\DriverManager;
  * Must be defined before including bootstrap.php
  * as this is the only custom part in the example.
  */
-function get_driver() {
-    $connection = DriverManager::getConnection(array(
+function get_driver()
+{
+    $connection = DriverManager::getConnection([
         'dbname' => 'bernard',
         'user' => 'root',
         'password' => null,
         'host' => 'localhost',
         'driver' => 'pdo_mysql',
-    ));
+    ]);
 
     $doctrineDriver = new Driver($connection);
 
@@ -26,7 +27,7 @@ function get_driver() {
 
         \Bernard\Driver\Doctrine\MessagesSchema::create($schema);
 
-        array_map(array($connection, 'executeQuery'), $schema->toSql($connection->getDatabasePlatform()));
+        array_map([$connection, 'executeQuery'], $schema->toSql($connection->getDatabasePlatform()));
     }
 
     return $doctrineDriver;

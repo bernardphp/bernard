@@ -16,19 +16,19 @@ class SQLiteDriverTest extends AbstractDriverTest
 
     public function testInfo()
     {
-        $params = array(
-            'memory'   => true,
-            'driver'   => 'pdo_sqlite',
-        );
+        $params = [
+            'memory' => true,
+            'driver' => 'pdo_sqlite',
+        ];
 
         $this->assertEquals($params, $this->driver->info());
     }
 
     protected function createConnection()
     {
-        return DriverManager::getConnection(array(
-            'memory'   => true,
-            'driver'   => 'pdo_sqlite',
-        ));
+        return DriverManager::getConnection([
+            'memory' => true,
+            'driver' => 'pdo_sqlite',
+        ]);
     }
 }

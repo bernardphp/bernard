@@ -87,7 +87,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->pushMessage('send-newsletter', 'job #3');
 
         foreach (range(3, 1) as $i) {
-            list($message, ) = $this->driver->popMessage('send-newsletter');
+            list($message) = $this->driver->popMessage('send-newsletter');
             $this->assertEquals('job #'.$i, $message);
         }
     }
@@ -109,7 +109,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     {
         $this->driver->createQueue('send-newsletter');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $this->driver->pushMessage('send-newsletter', 'Job #'.$i);
         }
 

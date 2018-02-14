@@ -7,9 +7,7 @@ use IronMQ\IronMQ;
 
 /**
  * Implements a Driver for use with Iron MQ:
- * https://github.com/iron-io/iron_mq_php
- *
- * @package Bernard
+ * https://github.com/iron-io/iron_mq_php.
  */
 final class Driver extends AbstractPrefetchDriver
 {
@@ -31,7 +29,7 @@ final class Driver extends AbstractPrefetchDriver
      */
     public function listQueues()
     {
-        $queueNames = array();
+        $queueNames = [];
         $page = 0;
 
         while ($queues = $this->ironmq->getQueues($page, 100)) {
@@ -42,7 +40,7 @@ final class Driver extends AbstractPrefetchDriver
                 break;
             }
 
-            $page++;
+            ++$page;
         }
 
         return $queueNames;
@@ -87,11 +85,11 @@ final class Driver extends AbstractPrefetchDriver
         $messages = $this->ironmq->getMessages($queueName, $this->prefetch, $timeout, $duration);
 
         if (!$messages) {
-            return array(null, null);
+            return [null, null];
         }
 
         foreach ($messages as $message) {
-            $this->cache->push($queueName, array($message->body, $message->id));
+            $this->cache->push($queueName, [$message->body, $message->id]);
         }
 
         return $this->cache->pop($queueName);
@@ -138,7 +136,7 @@ final class Driver extends AbstractPrefetchDriver
     }
 
     /**
-     * The missing array_pluck but for objects array
+     * The missing array_pluck but for objects array.
      *
      * @param array  $objects
      * @param string $property

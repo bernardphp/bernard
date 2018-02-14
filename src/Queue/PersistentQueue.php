@@ -6,9 +6,6 @@ use Bernard\Driver;
 use Bernard\Envelope;
 use Bernard\Serializer;
 
-/**
- * @package Bernard
- */
 class PersistentQueue extends AbstractQueue
 {
     protected $driver;
@@ -32,7 +29,7 @@ class PersistentQueue extends AbstractQueue
     }
 
     /**
-     * Register with the driver
+     * Register with the driver.
      */
     public function register()
     {
@@ -88,7 +85,7 @@ class PersistentQueue extends AbstractQueue
     /**
      * {@inheritdoc}
      *
-     * @param int $duration Number of seconds to keep polling for messages.
+     * @param int $duration number of seconds to keep polling for messages
      */
     public function dequeue($duration = 5)
     {
@@ -114,6 +111,6 @@ class PersistentQueue extends AbstractQueue
 
         $messages = $this->driver->peekQueue($this->name, $index, $limit);
 
-        return array_map(array($this->serializer, 'unserialize'), $messages);
+        return array_map([$this->serializer, 'unserialize'], $messages);
     }
 }

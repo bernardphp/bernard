@@ -8,7 +8,7 @@ use MongoCollection;
 use MongoConnectionException;
 
 /**
- * @coversDefaultClass Bernard\Driver\MongoDB\Driver
+ * @coversDefaultClass \Bernard\Driver\MongoDB\Driver
  * @group functional
  */
 class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
@@ -28,7 +28,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        if ( ! class_exists('MongoClient')) {
+        if (!class_exists('MongoClient')) {
             $this->markTestSkipped('MongoDB extension is not available.');
         }
 
@@ -45,7 +45,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
 
     public function tearDown()
     {
-        if ( ! $this->messages instanceof MongoCollection) {
+        if (!$this->messages instanceof MongoCollection) {
             return;
         }
 
@@ -98,11 +98,11 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
         $this->driver->pushMessage('foo', 'message1');
         $this->driver->pushMessage('foo', 'message2');
 
-        $this->assertSame(array('message1', 'message2'), $this->driver->peekQueue('foo'));
-        $this->assertSame(array('message2'), $this->driver->peekQueue('foo', 1));
-        $this->assertSame(array(), $this->driver->peekQueue('foo', 2));
-        $this->assertSame(array('message1'), $this->driver->peekQueue('foo', 0, 1));
-        $this->assertSame(array('message2'), $this->driver->peekQueue('foo', 1, 1));
+        $this->assertSame(['message1', 'message2'], $this->driver->peekQueue('foo'));
+        $this->assertSame(['message2'], $this->driver->peekQueue('foo', 1));
+        $this->assertSame([], $this->driver->peekQueue('foo', 2));
+        $this->assertSame(['message1'], $this->driver->peekQueue('foo', 0, 1));
+        $this->assertSame(['message2'], $this->driver->peekQueue('foo', 1, 1));
     }
 
     /**
@@ -145,15 +145,15 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
         $this->driver->createQueue('foo');
         $this->driver->createQueue('foo');
 
-        $this->assertSame(array('foo'), $this->driver->listQueues());
+        $this->assertSame(['foo'], $this->driver->listQueues());
     }
 
     public function testInfo()
     {
-        $info = array(
-            'messages' => self::DATABASE . '.' . self::MESSAGES,
-            'queues' => self::DATABASE . '.' . self::QUEUES,
-        );
+        $info = [
+            'messages' => self::DATABASE.'.'.self::MESSAGES,
+            'queues' => self::DATABASE.'.'.self::QUEUES,
+        ];
 
         $this->assertSame($info, $this->driver->info());
     }

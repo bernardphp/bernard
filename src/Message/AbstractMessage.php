@@ -5,9 +5,6 @@ namespace Bernard\Message;
 use Bernard\Message;
 use Bernard\Util;
 
-/**
- * @package Bernard
- */
 abstract class AbstractMessage implements Message
 {
     /**

@@ -10,14 +10,15 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
     public function testThrowException($exception, $base)
     {
         try {
-            throw new $exception;
+            throw new $exception();
         } catch (\Exception $e) {
             $this->assertInstanceOf('\Bernard\Exception\Exception', $e);
             $this->assertInstanceOf($exception, $e);
             $this->assertInstanceOf($base, $e);
+
             return;
         }
-        $this->fail("Exception not caught");
+        $this->fail('Exception not caught');
     }
 
     public function exceptionProvider()

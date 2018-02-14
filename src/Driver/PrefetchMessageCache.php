@@ -2,9 +2,6 @@
 
 namespace Bernard\Driver;
 
-/**
- * @package Bernard
- */
 class PrefetchMessageCache
 {
     protected $caches = [];

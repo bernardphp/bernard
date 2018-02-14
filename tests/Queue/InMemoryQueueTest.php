@@ -24,18 +24,18 @@ class InMemoryQueueTest extends AbstractQueueTest
     {
         $queue = new InMemoryQueue('send-newsletter');
 
-        $this->assertEquals(array(), $queue->peek(0, 10));
+        $this->assertEquals([], $queue->peek(0, 10));
 
-        $queue->enqueue($envelope  = $this->getEnvelope());
+        $queue->enqueue($envelope = $this->getEnvelope());
         $queue->enqueue($envelope1 = $this->getEnvelope());
         $queue->enqueue($envelope2 = $this->getEnvelope());
         $queue->enqueue($envelope3 = $this->getEnvelope());
 
         $this->assertCount(4, $queue);
-        $this->assertSame(array(
+        $this->assertSame([
             $envelope1,
             $envelope2,
-        ), $queue->peek(1, 2));
+        ], $queue->peek(1, 2));
         $this->assertCount(4, $queue);
     }
 

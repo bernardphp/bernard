@@ -30,21 +30,21 @@ final class DriverTest extends TestCase
     protected function setUp()
     {
         $this->phpAmqpChannel = $this->getMockBuilder('\PhpAmqpLib\Channel\AMQPChannel')
-            ->setMethods(array(
+            ->setMethods([
                 'basic_publish',
                 'basic_get',
                 'basic_ack',
                 'exchange_declare',
                 'queue_declare',
-                'queue_bind'
-            ))
+                'queue_bind',
+            ])
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->phpAmqpConnection = $this->getMockBuilder('\PhpAmqpLib\Connection\AMQPStreamConnection')
-            ->setMethods(array(
+            ->setMethods([
                 'channel',
-            ))
+            ])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -99,7 +99,7 @@ final class DriverTest extends TestCase
         $this->driver = new Driver(
             $this->phpAmqpConnection,
             self::EXCHANGE_NAME,
-            array('delivery_mode' => 2)
+            ['delivery_mode' => 2]
         );
 
         $this->phpAmqpChannel
