@@ -31,7 +31,6 @@ function get_serializer() {
 function get_event_dispatcher() {
     $dispatcher = new EventDispatcher;
     $dispatcher->addSubscriber(new EventListener\ErrorLogSubscriber);
-    $dispatcher->addSubscriber(new EventListener\FailureSubscriber(get_producer()));
 
     return $dispatcher;
 }
