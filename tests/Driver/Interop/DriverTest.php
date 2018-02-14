@@ -1,8 +1,8 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\Interop;
 
-use Bernard\Driver\InteropDriver;
+use Bernard\Driver\Interop\Driver;
 use Interop\Amqp\AmqpContext;
 use Interop\Amqp\AmqpQueue;
 use Interop\Queue\PsrConsumer;
@@ -11,23 +11,23 @@ use Interop\Queue\PsrMessage;
 use Interop\Queue\PsrProducer;
 use Interop\Queue\PsrQueue;
 
-class InteropDriverTest extends \PHPUnit\Framework\TestCase
+class DriverTest extends \PHPUnit\Framework\TestCase
 {
     public function testItImplementsDriverInterface()
     {
-        $this->assertInstanceOf('Bernard\Driver', new InteropDriver($this->createInteropContextMock()));
+        $this->assertInstanceOf('Bernard\Driver', new Driver($this->createInteropContextMock()));
     }
 
     public function testListQueuesMethodDoesNothingAndAlwaysReturnEmptyArray()
     {
-        $driver = new InteropDriver($this->createInteropContextMock());
+        $driver = new Driver($this->createInteropContextMock());
 
         $this->assertSame([], $driver->listQueues());
     }
 
     public function testCreateQueueMethodDoesNothingAndAlwaysReturnNull()
     {
-        $driver = new InteropDriver($this->createInteropContextMock());
+        $driver = new Driver($this->createInteropContextMock());
 
         $this->assertNull($driver->createQueue('aQueueName'));
     }
@@ -63,7 +63,7 @@ class InteropDriverTest extends \PHPUnit\Framework\TestCase
             ->willReturn($producer)
         ;
 
-        $driver = new InteropDriver($context);
+        $driver = new Driver($context);
 
         $driver->pushMessage('theQueueName', 'theBody');
     }
@@ -94,7 +94,7 @@ class InteropDriverTest extends \PHPUnit\Framework\TestCase
             ->willReturn($consumer)
         ;
 
-        $driver = new InteropDriver($context);
+        $driver = new Driver($context);
 
         $this->assertNull($driver->popMessage('theQueueName'));
     }
@@ -131,7 +131,7 @@ class InteropDriverTest extends \PHPUnit\Framework\TestCase
             ->willReturn($consumer)
         ;
 
-        $driver = new InteropDriver($context);
+        $driver = new Driver($context);
 
         $this->assertSame(
             ['theBody', $message],
@@ -170,7 +170,7 @@ class InteropDriverTest extends \PHPUnit\Framework\TestCase
             ->willReturn($consumer)
         ;
 
-        $driver = new InteropDriver($context);
+        $driver = new Driver($context);
 
         $result =  $driver->popMessage('theQueueName');
 
@@ -182,21 +182,21 @@ class InteropDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testPeekQueueMethodDoesNothingAndAlwaysReturnEmptyArray()
     {
-        $driver = new InteropDriver($this->createInteropContextMock());
+        $driver = new Driver($this->createInteropContextMock());
 
         $this->assertSame([], $driver->peekQueue('aQueueName'));
     }
 
     public function testRemoveQueueMethodDoesNothingAndAlwaysReturnNull()
     {
-        $driver = new InteropDriver($this->createInteropContextMock());
+        $driver = new Driver($this->createInteropContextMock());
 
         $this->assertNull($driver->removeQueue('aQueueName'));
     }
 
     public function testInfoMethodDoesNothingAndAlwaysReturnEmptyArray()
     {
-        $driver = new InteropDriver($this->createInteropContextMock());
+        $driver = new Driver($this->createInteropContextMock());
 
         $this->assertNull($driver->removeQueue('aQueueName'));
     }
@@ -223,7 +223,7 @@ class InteropDriverTest extends \PHPUnit\Framework\TestCase
             ->with($this->identicalTo($queue))
         ;
 
-        $driver = new InteropDriver($context);
+        $driver = new Driver($context);
 
         $this->assertNull($driver->createQueue('theQueueName'));
     }
@@ -250,7 +250,7 @@ class InteropDriverTest extends \PHPUnit\Framework\TestCase
             ->with($this->identicalTo($queue))
         ;
 
-        $driver = new InteropDriver($context);
+        $driver = new Driver($context);
 
         $this->assertNull($driver->removeQueue('theQueueName'));
     }
@@ -273,7 +273,7 @@ class InteropDriverTest extends \PHPUnit\Framework\TestCase
             ->willReturn(123)
         ;
 
-        $driver = new InteropDriver($context);
+        $driver = new Driver($context);
 
         $this->assertSame(123, $driver->countMessages('theQueueName'));
     }

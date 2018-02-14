@@ -1,13 +1,13 @@
 <?php
-namespace Bernard\Driver;
 
-use Bernard\Driver;
+namespace Bernard\Driver\Interop;
+
 use Interop\Amqp\AmqpContext;
 use Interop\Amqp\AmqpQueue;
 use Interop\Queue\PsrConsumer;
 use Interop\Queue\PsrContext;
 
-final class InteropDriver implements Driver
+final class Driver implements \Bernard\Driver
 {
     /**
      * @var PsrContext

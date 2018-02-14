@@ -495,7 +495,7 @@ For example we choose enqueue/fs one to demonstrate how it is working.
 
     <?php
 
-    use Bernard\Driver\InteropDriver;
+    use Bernard\Driver\Interop\Driver;
     use Enqueue\Fs\FsConnectionFactory;
 
     $context = (new FsConnectionFactory('file://'.__DIR__.'/queues'))->createContext();
