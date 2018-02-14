@@ -106,7 +106,7 @@ as appropriate for your use case.
     <?php
     // doctrine.php
 
-    use Bernard\Driver\Docrtrine\Command as BernardCommands;
+    use Bernard\Driver\Doctrine\Command as BernardCommands;
     use Doctrine\DBAL\Tools\Console\ConsoleRunner;
     use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
     use Symfony\Component\Console\Application;
