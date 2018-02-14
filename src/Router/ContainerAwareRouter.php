@@ -28,6 +28,7 @@ class ContainerAwareRouter extends SimpleRouter
     protected function get($name)
     {
         $serviceId = parent::get($name);
+        $serviceId = null !== $serviceId ? $serviceId : '';
 
         return $this->container->get($serviceId);
     }
