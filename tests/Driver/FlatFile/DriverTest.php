@@ -1,16 +1,16 @@
 <?php
 
-namespace Bernard\Tests\Driver;
+namespace Bernard\Tests\Driver\FlatFile;
 
-use Bernard\Driver\FlatFileDriver;
+use Bernard\Driver\FlatFile\Driver;
 
 /**
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */
-class FlatFileDriverTest extends \PHPUnit\Framework\TestCase
+class DriverTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var FlatFileDriver
+     * @var Driver
      */
     private $driver;
 
@@ -22,7 +22,7 @@ class FlatFileDriverTest extends \PHPUnit\Framework\TestCase
             mkdir($this->baseDir, 0777, true);
         }
 
-        $this->driver = new FlatFileDriver($this->baseDir);
+        $this->driver = new Driver($this->baseDir);
     }
 
     protected function tearDown()
@@ -73,7 +73,7 @@ class FlatFileDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testPushMessagePermissions()
     {
-        $this->driver = new FlatFileDriver($this->baseDir, 0770);
+        $this->driver = new Driver($this->baseDir, 0770);
         $this->testPushMessage();
         $this->assertEquals('0770', substr(sprintf('%o', fileperms($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter'.\DIRECTORY_SEPARATOR.'1.job')), -4));
     }
@@ -117,18 +117,18 @@ class FlatFileDriverTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(10, glob($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter'.\DIRECTORY_SEPARATOR.'*.job'));
     }
-    
+
     public function testListQueues()
     {
         $this->driver->createQueue('send-newsletter-1');
-        
+
         $this->driver->createQueue('send-newsletter-2');
         $this->driver->pushMessage('send-newsletter-2', 'job #1');
-        
+
         $this->driver->createQueue('send-newsletter-3');
         $this->driver->pushMessage('send-newsletter-3', 'job #1');
         $this->driver->pushMessage('send-newsletter-3', 'job #2');
-        
+
         $this->assertCount(3, $this->driver->listQueues());
     }
 }

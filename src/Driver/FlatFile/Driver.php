@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Driver;
+namespace Bernard\Driver\FlatFile;
 
 /**
  * Flat file driver to provide a simple job queue without any
@@ -8,7 +8,7 @@ namespace Bernard\Driver;
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  */
-class FlatFileDriver implements \Bernard\Driver
+class Driver implements \Bernard\Driver
 {
     private $baseDirectory;
 

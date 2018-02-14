@@ -1,6 +1,6 @@
 <?php
 
-use Bernard\Driver\FlatFileDriver;
+use Bernard\Driver\FlatFile\Driver;
 
 /**
  * Must be defined before including bootstrap.php
@@ -14,7 +14,7 @@ function get_driver() {
         mkdir($baseDir);
     }
 
-    return new FlatFileDriver($baseDir);
+    return new Driver($baseDir);
 }
 
 require 'bootstrap.php';
