@@ -5,8 +5,6 @@ namespace Bernard;
 /**
  * Wraps a Message with metadata that can be used for automatic retry
  * or inspection.
- *
- * @package Bernard
  */
 class Envelope
 {

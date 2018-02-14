@@ -12,7 +12,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('"redis" extension is not loaded.');
         }
 
-        $this->redis = $this->getMockBuilder('Redis')->setMethods(array(
+        $this->redis = $this->getMockBuilder('Redis')->setMethods([
             'lLen',
             'sMembers',
             'lRange',
@@ -23,7 +23,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
             'sContains',
             'rPush',
             'sRem',
-        ))->getMock();
+        ])->getMock();
 
         $this->connection = new Driver($this->redis);
     }
@@ -44,24 +44,23 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function testItGetsAllKeys()
     {
         $this->redis->expects($this->once())->method('sMembers')->with($this->equalTo('queues'))
-            ->will($this->returnValue(array('failed', 'queue1')));
+            ->will($this->returnValue(['failed', 'queue1']));
 
-        $this->assertEquals(array('failed', 'queue1'), $this->connection->listQueues());
+        $this->assertEquals(['failed', 'queue1'], $this->connection->listQueues());
     }
 
     public function testItPeeksInAQueue()
     {
         $this->redis->expects($this->at(0))->method('lRange')
             ->with($this->equalTo('queue:my-queue'), $this->equalTo(10), $this->equalTo(19))
-            ->will($this->returnValue(array('message1')));
+            ->will($this->returnValue(['message1']));
 
         $this->redis->expects($this->at(1))->method('lRange')
             ->with($this->equalTo('queue:send-newsletter'), $this->equalTo(0), $this->equalTo(19))
-            ->will($this->returnValue(array('message2')));
+            ->will($this->returnValue(['message2']));
 
-        $this->assertEquals(array('message1'), $this->connection->peekQueue('my-queue', 10, 10));
-        $this->assertEquals(array('message2'), $this->connection->peekQueue('send-newsletter'));
-
+        $this->assertEquals(['message1'], $this->connection->peekQueue('my-queue', 10, 10));
+        $this->assertEquals(['message2'], $this->connection->peekQueue('send-newsletter'));
     }
 
     public function testItRemovesAQueue()
@@ -88,13 +87,13 @@ class DriverTest extends \PHPUnit\Framework\TestCase
 
     public function testItPopMessages()
     {
-        $this->redis->expects($this->at(0))->method('blPop')->with($this->equalTo(array('queue:send-newsletter')))
-            ->will($this->returnValue(array('my-queue', 'message1')));
+        $this->redis->expects($this->at(0))->method('blPop')->with($this->equalTo(['queue:send-newsletter']))
+            ->will($this->returnValue(['my-queue', 'message1']));
 
-        $this->redis->expects($this->at(1))->method('blPop')->with($this->equalTo(array('queue:ask-forgiveness')), $this->equalTo(30))
-            ->will($this->returnValue(array('my-queue2', 'message2')));
+        $this->redis->expects($this->at(1))->method('blPop')->with($this->equalTo(['queue:ask-forgiveness']), $this->equalTo(30))
+            ->will($this->returnValue(['my-queue2', 'message2']));
 
-        $this->assertEquals(array('message1', null), $this->connection->popMessage('send-newsletter'));
-        $this->assertEquals(array('message2', null), $this->connection->popMessage('ask-forgiveness', 30));
+        $this->assertEquals(['message1', null], $this->connection->popMessage('send-newsletter'));
+        $this->assertEquals(['message2', null], $this->connection->popMessage('ask-forgiveness', 30));
     }
 }

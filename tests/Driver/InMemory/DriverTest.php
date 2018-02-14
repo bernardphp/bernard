@@ -9,24 +9,24 @@ use Bernard\Driver\InMemory\Driver;
  */
 final class DriverTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * @var Driver
-	 */
-	private $driver;
+    /**
+     * @var Driver
+     */
+    private $driver;
 
-	protected function setUp()
-	{
-		$this->driver = new Driver();
-	}
+    protected function setUp()
+    {
+        $this->driver = new Driver();
+    }
 
-	/**
-	 *@test
-	 */
-	function it_lists_queues()
-	{
-		$this->driver->createQueue('queue1');
-		$this->driver->createQueue('queue2');
+    /**
+     *@test
+     */
+    public function it_lists_queues()
+    {
+        $this->driver->createQueue('queue1');
+        $this->driver->createQueue('queue2');
 
-		$this->assertEquals(['queue1', 'queue2'], $this->driver->listQueues());
-	}
+        $this->assertEquals(['queue1', 'queue2'], $this->driver->listQueues());
+    }
 }

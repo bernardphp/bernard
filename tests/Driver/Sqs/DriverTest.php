@@ -10,8 +10,8 @@ use Bernard\Driver\AbstractPrefetchDriver;
 
 class DriverTest extends \PHPUnit\Framework\TestCase
 {
-    const DUMMY_QUEUE_NAME       = 'my-queue';
-    const DUMMY_FIFO_QUEUE_NAME  = 'my-queue.fifo';
+    const DUMMY_QUEUE_NAME = 'my-queue';
+    const DUMMY_FIFO_QUEUE_NAME = 'my-queue.fifo';
     const DUMMY_QUEUE_URL_PREFIX = 'https://sqs.eu-west-1.amazonaws.com/123123';
 
     /** @var \PHPUnit_Framework_MockObject_MockObject */
@@ -24,7 +24,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     {
         $this->sqs = $this->getMockBuilder(SqsClient::class)
             ->disableOriginalConstructor()
-            ->setMethods(array(
+            ->setMethods([
                 'createQueue',
                 'deleteQueue',
                 'getQueueUrl',
@@ -33,7 +33,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
                 'sendMessage',
                 'receiveMessage',
                 'deleteMessage',
-            ))
+            ])
             ->getMock();
 
         $this->driver = new Driver($this->sqs, ['send-newsletter' => 'url']);
@@ -79,7 +79,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
                 'QueueName' => self::DUMMY_FIFO_QUEUE_NAME,
                 'Attributes' => [
                     'FifoQueue' => 'true',
-                ]
+                ],
             ]))
             ->will($this->returnValue(
                 $this->wrapResult([
@@ -99,7 +99,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->sqs
             ->expects($this->once())
             ->method('deleteQueue')
-            ->with($this->equalTo(['QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME]));
+            ->with($this->equalTo(['QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX.'/'.self::DUMMY_QUEUE_NAME]));
 
         $this->driver->removeQueue(self::DUMMY_QUEUE_NAME);
     }
@@ -111,8 +111,8 @@ class DriverTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('getQueueAttributes')
             ->with($this->equalTo([
-                'QueueUrl'       => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME,
-                'AttributeNames' => array('ApproximateNumberOfMessages'),
+                'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX.'/'.self::DUMMY_QUEUE_NAME,
+                'AttributeNames' => ['ApproximateNumberOfMessages'],
             ]))
             ->will($this->returnValue(
                 $this->wrapResult([
@@ -135,7 +135,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function testItGetsAllQueues()
     {
         $driver = new Driver($this->sqs, [
-            'import-users' => 'alreadyknowurl/import_users_prod'
+            'import-users' => 'alreadyknowurl/import_users_prod',
         ]);
 
         $this->sqs
@@ -146,21 +146,21 @@ class DriverTest extends \PHPUnit\Framework\TestCase
                     'https://sqs.eu-west-1.amazonaws.com/123123/failed',
                     'https://sqs.eu-west-1.amazonaws.com/123123/queue1',
                     'alreadyknowurl/import_users_prod',
-                ]
+                ],
             ])));
 
-        $queues = array('import-users', 'failed', 'queue1');
+        $queues = ['import-users', 'failed', 'queue1'];
 
         $this->assertEquals($queues, $driver->listQueues());
     }
 
     public function testItPrefetchesMessages()
     {
-        $query = array(
-            'QueueUrl'            => 'url',
+        $query = [
+            'QueueUrl' => 'url',
             'MaxNumberOfMessages' => 2,
-            'WaitTimeSeconds'     => 5,
-        );
+            'WaitTimeSeconds' => 5,
+        ];
 
         $sqsMessages = $this->wrapResult([
             'Messages' => [
@@ -185,8 +185,8 @@ class DriverTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('sendMessage')
             ->with($this->equalTo([
-                'QueueUrl'    => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME,
-                'MessageBody' => $message
+                'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX.'/'.self::DUMMY_QUEUE_NAME,
+                'MessageBody' => $message,
             ]));
         $this->driver->pushMessage(self::DUMMY_QUEUE_NAME, $message);
     }
@@ -200,11 +200,10 @@ class DriverTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('sendMessage')
             ->with($this->equalTo([
-                'QueueUrl'    => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_FIFO_QUEUE_NAME,
+                'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX.'/'.self::DUMMY_FIFO_QUEUE_NAME,
                 'MessageBody' => $message,
-                'MessageGroupId' => \Bernard\Driver\Sqs\Driver::class . '::pushMessage',
+                'MessageGroupId' => \Bernard\Driver\Sqs\Driver::class.'::pushMessage',
                 'MessageDeduplicationId' => md5($message),
-
             ]));
         $this->driver->pushMessage(self::DUMMY_FIFO_QUEUE_NAME, $message);
     }
@@ -215,42 +214,42 @@ class DriverTest extends \PHPUnit\Framework\TestCase
             ->expects($this->at(0))
             ->method('getQueueUrl')
             ->with($this->equalTo([
-                'QueueName' => self::DUMMY_QUEUE_NAME. '0',
+                'QueueName' => self::DUMMY_QUEUE_NAME.'0',
             ]))
             ->will($this->returnValue($this->wrapResult([
                 'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX
-                    . '/'. self::DUMMY_QUEUE_NAME. '0',
+                    .'/'.self::DUMMY_QUEUE_NAME.'0',
             ])));
         $this->sqs
             ->expects($this->at(1))
             ->method('receiveMessage')
             ->with($this->equalTo([
-                'QueueUrl'            => self::DUMMY_QUEUE_URL_PREFIX. '/'. self::DUMMY_QUEUE_NAME. '0',
+                'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX.'/'.self::DUMMY_QUEUE_NAME.'0',
                 'MaxNumberOfMessages' => 2,
-                'WaitTimeSeconds'     => 5,
+                'WaitTimeSeconds' => 5,
             ]))
             ->will($this->returnValue($this->wrapResult([
                 'Messages' => [
-                    ['Body' => 'message0', 'ReceiptHandle' => 'r0']
-                ]
+                    ['Body' => 'message0', 'ReceiptHandle' => 'r0'],
+                ],
             ])));
 
         $this->sqs
             ->expects($this->at(2))
             ->method('getQueueUrl')
             ->with($this->equalTo([
-                'QueueName' => self::DUMMY_QUEUE_NAME. '1'
+                'QueueName' => self::DUMMY_QUEUE_NAME.'1',
             ]))
             ->will($this->returnValue($this->wrapResult([
-                'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX . '/my-queue1',
+                'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX.'/my-queue1',
             ])));
         $this->sqs
             ->expects($this->at(3))
             ->method('receiveMessage')
             ->with($this->equalTo([
-                'QueueUrl'            => self::DUMMY_QUEUE_URL_PREFIX. '/my-queue1',
+                'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX.'/my-queue1',
                 'MaxNumberOfMessages' => 2,
-                'WaitTimeSeconds'     => 30,
+                'WaitTimeSeconds' => 30,
             ]))
             ->will($this->returnValue($this->wrapResult([
                 'Messages' => [
@@ -282,7 +281,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
             ->with($this->equalTo(['QueueName' => self::DUMMY_QUEUE_NAME]))
             ->will($this->returnValue($this->wrapResult([
                 'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX
-                    . '/'. self::DUMMY_QUEUE_NAME,
+                    .'/'.self::DUMMY_QUEUE_NAME,
             ])));
     }
 
@@ -294,7 +293,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
             ->with($this->equalTo(['QueueName' => self::DUMMY_FIFO_QUEUE_NAME]))
             ->will($this->returnValue($this->wrapResult([
                 'QueueUrl' => self::DUMMY_QUEUE_URL_PREFIX
-                    . '/'. self::DUMMY_FIFO_QUEUE_NAME,
+                    .'/'.self::DUMMY_FIFO_QUEUE_NAME,
             ])));
     }
 

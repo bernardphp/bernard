@@ -11,17 +11,17 @@ class ProducerTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
-        $this->queues = new InMemoryFactory;
-        $this->dispatcher = new EventDispatcher;
+        $this->queues = new InMemoryFactory();
+        $this->dispatcher = new EventDispatcher();
         $this->producer = new Producer($this->queues, $this->dispatcher);
     }
 
     public function testDispatchesEvent()
     {
-        $args = array();
+        $args = [];
 
         $this->dispatcher->addListener('bernard.produce', function ($event) use (&$args) {
-            $args = array('envelope' => $event->getEnvelope(), 'queue' => $event->getQueue());
+            $args = ['envelope' => $event->getEnvelope(), 'queue' => $event->getQueue()];
         });
 
         $message = new PlainMessage('Message');

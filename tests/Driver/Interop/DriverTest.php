@@ -172,7 +172,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
 
         $driver = new Driver($context);
 
-        $result =  $driver->popMessage('theQueueName');
+        $result = $driver->popMessage('theQueueName');
 
         //guard
         $this->assertSame($message, $result[1]);

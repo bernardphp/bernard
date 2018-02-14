@@ -6,9 +6,6 @@ use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Producer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
- * @package Bernard
- */
 class FailureSubscriber implements EventSubscriberInterface
 {
     protected $producer;
@@ -16,7 +13,7 @@ class FailureSubscriber implements EventSubscriberInterface
 
     /**
      * @param Producer $producer
-     * @param string $name
+     * @param string   $name
      */
     public function __construct(Producer $producer, $name = 'failed')
     {

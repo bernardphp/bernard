@@ -4,9 +4,6 @@ namespace Bernard\Router;
 
 use Pimple;
 
-/**
- * @package Bernard
- */
 class PimpleAwareRouter extends SimpleRouter
 {
     protected $pimple;

@@ -8,8 +8,6 @@ use google\appengine\api\taskqueue\PushTask;
  * Simple driver for google AppEngine. Many features are not supported.
  * It takes a list of array('name' => 'endpoint') to route messages to the
  * correct place.
- *
- * @package Bernard
  */
 final class Driver implements \Bernard\Driver
 {
@@ -102,6 +100,6 @@ final class Driver implements \Bernard\Driver
             return $this->queueMap[$queueName];
         }
 
-        return '/_ah/queue/' . $queueName;
+        return '/_ah/queue/'.$queueName;
     }
 }

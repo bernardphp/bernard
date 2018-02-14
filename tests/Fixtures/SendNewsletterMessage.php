@@ -20,12 +20,12 @@ class SendNewsletterMessage extends AbstractMessage implements NormalizableInter
      */
     public $newsletterId = 10;
 
-    public function normalize(NormalizerInterface $normalizer, $format = null, array $context = array())
+    public function normalize(NormalizerInterface $normalizer, $format = null, array $context = [])
     {
         return get_object_vars($this);
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = array())
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
         $this->newsletterId = $data['newsletterId'];
     }

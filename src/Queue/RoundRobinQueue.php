@@ -5,9 +5,6 @@ namespace Bernard\Queue;
 use Bernard\Envelope;
 use Bernard\Queue;
 
-/**
- * @package Bernard
- */
 class RoundRobinQueue implements Queue
 {
     /**
@@ -110,8 +107,8 @@ class RoundRobinQueue implements Queue
             $name = $it->key();
             if ($peeked = $queue->peek($indexes[$name], 1)) {
                 if ($shift < $index) {
-                    $shift++;
-                    $indexes[$name]++;
+                    ++$shift;
+                    ++$indexes[$name];
                 } else {
                     $envelopes[] = array_shift($peeked);
                 }
@@ -131,7 +128,7 @@ class RoundRobinQueue implements Queue
     {
         if (!$this->envelopes->contains($envelope)) {
             throw new \DomainException(
-                'Unrecognized queue specified: ' . $envelope->getName()
+                'Unrecognized queue specified: '.$envelope->getName()
             );
         }
 
@@ -203,6 +200,6 @@ class RoundRobinQueue implements Queue
         if (isset($this->queues[$queue])) {
             return;
         }
-        throw new \DomainException('Unrecognized queue specified: ' . $queue);
+        throw new \DomainException('Unrecognized queue specified: '.$queue);
     }
 }

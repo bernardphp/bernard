@@ -24,9 +24,9 @@ class ProduceCommandTest extends \PHPUnit\Framework\TestCase
         $this->producer->expects($this->once())->method('produce')->with($this->equalTo($message));
 
         $tester = new CommandTester($command);
-        $tester->execute(array(
-            'name' => 'SendNewsletter'
-        ));
+        $tester->execute([
+            'name' => 'SendNewsletter',
+        ]);
     }
 
     /**
@@ -37,23 +37,23 @@ class ProduceCommandTest extends \PHPUnit\Framework\TestCase
         $command = new ProduceCommand($this->producer);
 
         $tester = new CommandTester($command);
-        $tester->execute(array(
-            'name'    => 'SendNewsletter',
-            'message' => '{@*^#"foo":"bar"}'
-        ));
+        $tester->execute([
+            'name' => 'SendNewsletter',
+            'message' => '{@*^#"foo":"bar"}',
+        ]);
     }
 
     public function testItProducesMessageWithData()
     {
         $command = new ProduceCommand($this->producer);
-        $message = new PlainMessage('SendNewsletter', array('foo' => 'bar'));
+        $message = new PlainMessage('SendNewsletter', ['foo' => 'bar']);
 
         $this->producer->expects($this->once())->method('produce')->with($this->equalTo($message));
 
         $tester = new CommandTester($command);
-        $tester->execute(array(
-            'name'    => 'SendNewsletter',
-            'message' => '{"foo":"bar"}'
-        ));
+        $tester->execute([
+            'name' => 'SendNewsletter',
+            'message' => '{"foo":"bar"}',
+        ]);
     }
 }

@@ -18,7 +18,7 @@ class Service
 
     public function createFile()
     {
-        touch(__DIR__ . '/create_file.test');
+        touch(__DIR__.'/create_file.test');
     }
 
     public function importReport(Report $report)

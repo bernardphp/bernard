@@ -11,7 +11,7 @@ class LeagueContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
-        $this->container = new Container;
+        $this->container = new Container();
         $this->container->add('my.service', function () {
             return 'var_dump';
         });
@@ -30,7 +30,7 @@ class LeagueContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
 
     public function testAcceptsInConstructor()
     {
-        $router = new LeagueContainerAwareRouter($this->container, array('SendNewsletter' => 'my.service'));
+        $router = new LeagueContainerAwareRouter($this->container, ['SendNewsletter' => 'my.service']);
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->assertSame($this->container->get('my.service'), $router->map($envelope));

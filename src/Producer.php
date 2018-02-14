@@ -5,9 +5,6 @@ namespace Bernard;
 use Bernard\Event\EnvelopeEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @package Bernard
- */
 class Producer
 {
     protected $queues;

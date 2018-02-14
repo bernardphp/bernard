@@ -7,12 +7,13 @@ use Bernard\Driver\Sqs\Driver;
  * Must be defined before including bootstrap.php
  * as this is the only custom part in the example.
  */
-function get_driver() {
-    $sqs = SqsClient::factory(array(
-        'key'    => getenv('ACCESS_KEY'),
+function get_driver()
+{
+    $sqs = SqsClient::factory([
+        'key' => getenv('ACCESS_KEY'),
         'secret' => getenv('SECRET_KEY'),
-        'region' => getenv('SQS_REGION')
-    ));
+        'region' => getenv('SQS_REGION'),
+    ]);
 
     return new Driver($sqs);
 }

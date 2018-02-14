@@ -4,9 +4,6 @@ namespace Bernard\Router;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @package Bernard
- */
 class ContainerAwareRouter extends SimpleRouter
 {
     private $container;

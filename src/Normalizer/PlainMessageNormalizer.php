@@ -7,9 +7,6 @@ use Bernard\Message\PlainMessage;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-/**
- * @package Bernard
- */
 class PlainMessageNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     /**

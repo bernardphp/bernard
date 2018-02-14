@@ -27,7 +27,6 @@ class FailureSubscriberTest extends \PHPUnit\Framework\TestCase
             ->method('produce')
             ->with($message, 'failures');
 
-        $this->subscriber->onReject(new RejectEnvelopeEvent($envelope, new InMemoryQueue('foo'), new \Exception));
-
+        $this->subscriber->onReject(new RejectEnvelopeEvent($envelope, new InMemoryQueue('foo'), new \Exception()));
     }
 }

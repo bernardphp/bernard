@@ -9,8 +9,6 @@ use Bernard\Serializer;
 /**
  * Knows how to create queues and retrieve them from the used driver.
  * Every queue it creates is saved locally.
- *
- * @package Bernard
  */
 class PersistentFactory implements \Bernard\QueueFactory
 {

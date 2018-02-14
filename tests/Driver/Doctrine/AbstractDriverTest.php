@@ -65,17 +65,17 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->createQueue('send-newsletter');
         $this->driver->createQueue('import-users');
 
-        $this->assertEquals(array('import-users',  'send-newsletter'), $this->driver->listQueues());
+        $this->assertEquals(['import-users',  'send-newsletter'], $this->driver->listQueues());
 
         $this->driver->removeQueue('import-users');
 
-        $this->assertEquals(array('send-newsletter'), $this->driver->listQueues());
+        $this->assertEquals(['send-newsletter'], $this->driver->listQueues());
     }
 
     public function testPushMessageLazilyCreatesQueue()
     {
         $this->driver->pushMessage('send-newsletter', 'something');
-        $this->assertEquals(array('send-newsletter'), $this->driver->listQueues());
+        $this->assertEquals(['send-newsletter'], $this->driver->listQueues());
     }
 
     public function testRemoveQueueRemovesMessages()
@@ -92,6 +92,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
     {
         $messages = array_map(function ($i) {
             $this->driver->pushMessage('send-newsletter', $message = 'my-message-'.$i);
+
             return $message;
         }, range(1, 6));
 
@@ -138,7 +139,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->pushMessage('import', 'message1');
         $this->driver->pushMessage('send-newsletter', 'message2');
 
-        $this->assertEquals(array('import', 'send-newsletter'), $this->driver->listQueues());
+        $this->assertEquals(['import', 'send-newsletter'], $this->driver->listQueues());
     }
 
     public function testRemoveQueue()
@@ -161,11 +162,11 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
     {
         $this->connection = $this->createConnection();
 
-        $schema = new Schema;
+        $schema = new Schema();
 
         MessagesSchema::create($schema);
 
-        array_map(array($this->connection, 'executeQuery'), $schema->toSql($this->connection->getDatabasePlatform()));
+        array_map([$this->connection, 'executeQuery'], $schema->toSql($this->connection->getDatabasePlatform()));
     }
 
     /**

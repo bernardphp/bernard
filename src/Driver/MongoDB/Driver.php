@@ -7,9 +7,7 @@ use MongoDate;
 use MongoId;
 
 /**
- * Driver supporting MongoDB
- *
- * @package Bernard
+ * Driver supporting MongoDB.
  */
 final class Driver implements \Bernard\Driver
 {

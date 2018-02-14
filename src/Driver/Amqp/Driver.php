@@ -71,7 +71,7 @@ final class Driver implements \Bernard\Driver
      */
     public function countMessages($queueName)
     {
-        list(,$messageCount) = $this->getChannel()->queue_declare($queueName, true);
+        list(, $messageCount) = $this->getChannel()->queue_declare($queueName, true);
 
         return $messageCount;
     }

@@ -7,10 +7,9 @@ use Aws\Sqs\SqsClient;
 use Bernard\Driver\AbstractPrefetchDriver;
 
 /**
- * Implements a Driver for use with AWS SQS client API:
- * @link http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html
+ * Implements a Driver for use with AWS SQS client API:.
  *
- * @package Bernard
+ * @see http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html
  */
 final class Driver extends AbstractPrefetchDriver
 {
@@ -59,15 +58,13 @@ final class Driver extends AbstractPrefetchDriver
     /**
      * {@inheritdoc}
      *
-     * @link http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html#createqueue
-     *
-     * @return void
+     * @see http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html#createqueue
      *
      * @throws SqsException
      */
     public function createQueue($queueName)
     {
-        if($this->queueExists($queueName)){
+        if ($this->queueExists($queueName)) {
             return;
         }
 
@@ -75,7 +72,7 @@ final class Driver extends AbstractPrefetchDriver
             'QueueName' => $queueName,
         ];
 
-        if($this->isFifoQueue($queueName)) {
+        if ($this->isFifoQueue($queueName)) {
             $parameters['Attributes'] = [
                 'FifoQueue' => 'true',
             ];
@@ -97,6 +94,7 @@ final class Driver extends AbstractPrefetchDriver
     {
         try {
             $this->resolveUrl($queueName);
+
             return true;
         } catch (\InvalidArgumentException $exception) {
             return false;
@@ -134,7 +132,7 @@ final class Driver extends AbstractPrefetchDriver
             return true;
         }
 
-        return (substr($haystack, -$length) === $needle);
+        return substr($haystack, -$length) === $needle;
     }
 
     /**
@@ -150,7 +148,7 @@ final class Driver extends AbstractPrefetchDriver
         ]);
 
         if (isset($result['Attributes']['ApproximateNumberOfMessages'])) {
-            return (int)$result['Attributes']['ApproximateNumberOfMessages'];
+            return (int) $result['Attributes']['ApproximateNumberOfMessages'];
         }
 
         return 0;
@@ -168,7 +166,7 @@ final class Driver extends AbstractPrefetchDriver
             'MessageBody' => $message,
         ];
 
-        if($this->isFifoQueue($queueName)){
+        if ($this->isFifoQueue($queueName)) {
             $parameters['MessageGroupId'] = __METHOD__;
             $parameters['MessageDeduplicationId'] = md5($message);
         }
@@ -228,7 +226,7 @@ final class Driver extends AbstractPrefetchDriver
     /**
      * {@inheritdoc}
      *
-     * @link http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html#deletequeue
+     * @see http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html#deletequeue
      */
     public function removeQueue($queueName)
     {
@@ -270,6 +268,6 @@ final class Driver extends AbstractPrefetchDriver
             return $this->queueUrls[$queueName] = $queueUrl;
         }
 
-        throw new \InvalidArgumentException('Queue "' . $queueName .'" cannot be resolved to an url.');
+        throw new \InvalidArgumentException('Queue "'.$queueName.'" cannot be resolved to an url.');
     }
 }

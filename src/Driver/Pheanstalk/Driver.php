@@ -5,9 +5,7 @@ namespace Bernard\Driver\Pheanstalk;
 use Pheanstalk\PheanstalkInterface;
 
 /**
- * Implements a Driver for use with https://github.com/pda/pheanstalk
- *
- * @package Bernard
+ * Implements a Driver for use with https://github.com/pda/pheanstalk.
  */
 final class Driver implements \Bernard\Driver
 {
@@ -63,7 +61,7 @@ final class Driver implements \Bernard\Driver
             return [$job->getData(), $job];
         }
 
-        return array(null, null);
+        return [null, null];
     }
 
     /**

@@ -3,8 +3,7 @@
 namespace Bernard\Exception;
 
 /**
- * Interface for exceptions thrown by Bernard
- * @package Bernard
+ * Interface for exceptions thrown by Bernard.
  */
 interface Exception
 {

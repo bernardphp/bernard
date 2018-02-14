@@ -6,10 +6,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\DBAL\DBALException;
 
 /**
- * Inspired by Swarrots ConnectionProcessor (https://github.com/swarrot/swarrot/blob/master/src/Swarrot/Processor/Doctrine/ConnectionProcessor.php)
+ * Inspired by Swarrots ConnectionProcessor (https://github.com/swarrot/swarrot/blob/master/src/Swarrot/Processor/Doctrine/ConnectionProcessor.php).
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
- * @package Bernard
  */
 class ConnectionListener implements EventSubscriberInterface
 {
@@ -20,15 +19,15 @@ class ConnectionListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             'bernard.invoke' => 'onPing',
-        );
+        ];
     }
 
     public function __construct($connections)
     {
         if (!is_array($connections)) {
-            $connections = array($connections);
+            $connections = [$connections];
         }
 
         $this->connections = $connections;

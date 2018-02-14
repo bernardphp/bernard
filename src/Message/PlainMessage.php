@@ -8,8 +8,6 @@ use ArrayAccess;
  * Simple message that gets you started. It has a name an a array of arguments
  * It does not enforce any types or properties so be careful on relying them
  * being there.
- *
- * @package Bernard
  */
 class PlainMessage extends AbstractMessage implements ArrayAccess
 {

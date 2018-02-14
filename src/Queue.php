@@ -2,9 +2,6 @@
 
 namespace Bernard;
 
-/**
- * @package Bernard
- */
 interface Queue extends \Countable
 {
     /**
@@ -40,7 +37,7 @@ interface Queue extends \Countable
     public function acknowledge(Envelope $envelope);
 
     /**
-     * Return the queue textual representation, normally this will be name (not the internal key)
+     * Return the queue textual representation, normally this will be name (not the internal key).
      *
      * @return string
      */

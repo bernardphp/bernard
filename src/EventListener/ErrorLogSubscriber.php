@@ -8,9 +8,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Exception;
 use Throwable;
 
-/**
- * @package Bernard
- */
 class ErrorLogSubscriber implements EventSubscriberInterface
 {
     /**
@@ -23,7 +20,7 @@ class ErrorLogSubscriber implements EventSubscriberInterface
 
     /**
      * @param Envelope $envelope
-     * @param mixed $exception
+     * @param mixed    $exception
      *
      * @return string
      */
@@ -41,8 +38,9 @@ class ErrorLogSubscriber implements EventSubscriberInterface
 
         $replacements = [
             '{type}' => is_object($exception) ? get_class($exception) : gettype($exception),
-            '{envelope}' => $envelope->getName()
+            '{envelope}' => $envelope->getName(),
         ];
+
         return strtr('[bernard] caught unknown error type {type} while processing {envelope}.', $replacements);
     }
 

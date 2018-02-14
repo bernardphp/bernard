@@ -5,9 +5,6 @@ namespace Bernard\Driver\Doctrine\Command;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer as Synchronizer;
 
-/**
- * @package Bernard
- */
 class CreateCommand extends AbstractCommand
 {
     public function __construct()
@@ -16,7 +13,7 @@ class CreateCommand extends AbstractCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getSql(Synchronizer $sync, Schema $schema)
     {
@@ -24,7 +21,7 @@ class CreateCommand extends AbstractCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function applySql(Synchronizer $sync, Schema $schema)
     {

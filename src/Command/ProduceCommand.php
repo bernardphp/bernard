@@ -9,9 +9,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @package Bernard
- */
 class ProduceCommand extends \Symfony\Component\Console\Command\Command
 {
     protected $producer;
@@ -51,7 +48,7 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
             $message = json_decode($input->getArgument('message'), true);
 
             if (json_last_error()) {
-                throw new \RuntimeException('Could not decode invalid JSON [' . json_last_error() . ']');
+                throw new \RuntimeException('Could not decode invalid JSON ['.json_last_error().']');
             }
         }
 

@@ -25,7 +25,7 @@ abstract class BaseCommandTest extends \PHPUnit\Framework\TestCase
             ->method('getConnection')
             ->will($this->returnValue($connection));
 
-        $this->command = $this->getMockBuilder('Bernard\\Driver\\Doctrine\\Command\\' . $this->getShortClassName())
+        $this->command = $this->getMockBuilder('Bernard\\Driver\\Doctrine\\Command\\'.$this->getShortClassName())
             ->setMethods(['getSynchronizer', 'getHelper'])
             ->setConstructorArgs([$connection])
             ->getMock();

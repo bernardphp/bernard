@@ -4,9 +4,6 @@ namespace Bernard\Router;
 
 use League\Container\ContainerInterface;
 
-/**
- * @package Bernard
- */
 class LeagueContainerAwareRouter extends SimpleRouter
 {
     private $container;
@@ -15,7 +12,7 @@ class LeagueContainerAwareRouter extends SimpleRouter
      * @param ContainerInterface $container
      * @param array              $receivers
      */
-    public function __construct(ContainerInterface $container, array $receivers = array())
+    public function __construct(ContainerInterface $container, array $receivers = [])
     {
         $this->container = $container;
 

@@ -36,9 +36,9 @@ class SimpleRouterTest extends \PHPUnit\Framework\TestCase
         $callable = function () {};
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
-        $router = new SimpleRouter(array(
+        $router = new SimpleRouter([
             'SendNewsletter' => $callable,
-        ));
+        ]);
 
         $this->assertSame($callable, $router->map($envelope));
     }
@@ -59,11 +59,11 @@ class SimpleRouterTest extends \PHPUnit\Framework\TestCase
     {
         $callable = function () {};
 
-        return array(
-            array('Bernard\Tests\Fixtures\Service', array('Bernard\Tests\Fixtures\Service', 'sendNewsletter')),
-            array('var_dump', 'var_dump'),
-            array($callable, $callable),
-            array(new \stdClass, array(new \stdClass, 'sendNewsletter'))
-        );
+        return [
+            ['Bernard\Tests\Fixtures\Service', ['Bernard\Tests\Fixtures\Service', 'sendNewsletter']],
+            ['var_dump', 'var_dump'],
+            [$callable, $callable],
+            [new \stdClass(), [new \stdClass(), 'sendNewsletter']],
+        ];
     }
 }

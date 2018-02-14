@@ -2,9 +2,6 @@
 
 namespace Bernard;
 
-/**
- * @package Bernard
- */
 interface Router
 {
     /**

@@ -11,7 +11,7 @@ class ContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
-        $this->container = new Container;
+        $this->container = new Container();
         $this->container->set('my.service', function () {
             return 'var_dump';
         });
@@ -30,7 +30,7 @@ class ContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
 
     public function testAcceptsInConstructor()
     {
-        $router = new ContainerAwareRouter($this->container, array('SendNewsletter' => 'my.service'));
+        $router = new ContainerAwareRouter($this->container, ['SendNewsletter' => 'my.service']);
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $this->assertSame($this->container->get('my.service'), $router->map($envelope));
@@ -40,9 +40,9 @@ class ContainerAwareRouterTest extends \PHPUnit\Framework\TestCase
     {
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
-        $router = new ContainerAwareRouter($this->container, array(
+        $router = new ContainerAwareRouter($this->container, [
             'SendNewsletter' => 'my.service',
-        ));
+        ]);
 
         $this->assertSame($this->container->get('my.service'), $router->map($envelope));
     }
