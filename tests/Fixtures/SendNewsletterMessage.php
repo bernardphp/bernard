@@ -2,7 +2,7 @@
 
 namespace Bernard\Tests\Fixtures;
 
-use Bernard\Message\AbstractMessage;
+use Bernard\Message;
 use JMS\Serializer\Annotation as JMSSerializer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -12,8 +12,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 /**
  * This is a Custom implementation of a Message.
  */
-class SendNewsletterMessage extends AbstractMessage implements NormalizableInterface, DenormalizableInterface
+class SendNewsletterMessage implements Message, NormalizableInterface, DenormalizableInterface
 {
+    use Message\HasName, Message\HasQueue;
+
     /**
      * @JMSSerializer\Type("integer")
      * @JMSSerializer\SerializedName("newsletterId")

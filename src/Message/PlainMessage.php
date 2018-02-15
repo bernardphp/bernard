@@ -3,13 +3,14 @@
 namespace Bernard\Message;
 
 use ArrayAccess;
+use Bernard\Message;
 
 /**
  * Simple message that gets you started. It has a name an a array of arguments
  * It does not enforce any types or properties so be careful on relying them
  * being there.
  */
-class PlainMessage extends AbstractMessage implements ArrayAccess
+class PlainMessage implements Message, ArrayAccess
 {
     protected $name;
     protected $arguments;
