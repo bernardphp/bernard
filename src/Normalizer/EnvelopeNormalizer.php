@@ -3,12 +3,27 @@
 namespace Bernard\Normalizer;
 
 use Assert\Assertion;
+use Assert\AssertionFailedException;
 use Bernard\Envelope;
+use Normalt\Normalizer\AggregateNormalizer;
+use Normalt\Normalizer\AggregateNormalizerAware;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
+use Symfony\Component\Serializer\Exception\RuntimeException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements NormalizerInterface, DenormalizerInterface
+final class EnvelopeNormalizer implements NormalizerInterface, DenormalizerInterface, AggregateNormalizerAware
 {
+    private $aggregate;
+
+    /**
+     * @param AggregateNormalizer $aggregate
+     */
+    public function setAggregateNormalizer(AggregateNormalizer $aggregate)
+    {
+        $this->aggregate = $aggregate;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -26,9 +41,12 @@ class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements Nor
      */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
-        Assertion::choicesNotEmpty($data, ['message', 'class', 'timestamp']);
-
-        Assertion::classExists($data['class']);
+        try {
+            Assertion::choicesNotEmpty($data, ['message', 'class', 'timestamp']);
+            Assertion::classExists($data['class']);
+        } catch (AssertionFailedException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
 
         $envelope = new Envelope($this->aggregate->denormalize($data['message'], $data['class']));
 
@@ -43,7 +61,7 @@ class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements Nor
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return $type === 'Bernard\Envelope';
+        return $type === Envelope::class;
     }
 
     /**
@@ -61,7 +79,12 @@ class EnvelopeNormalizer extends AbstractAggregateNormalizerAware implements Nor
      */
     private function forcePropertyValue(Envelope $envelope, $property, $value)
     {
-        $property = new \ReflectionProperty($envelope, $property);
+        try {
+            $property = new \ReflectionProperty($envelope, $property);
+        } catch (\ReflectionException $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
+
         $property->setAccessible(true);
         $property->setValue($envelope, $value);
     }
