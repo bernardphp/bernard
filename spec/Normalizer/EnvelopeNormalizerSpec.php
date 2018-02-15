@@ -6,51 +6,52 @@ use Bernard\Envelope;
 use Bernard\Message;
 use Normalt\Normalizer\AggregateNormalizer;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class EnvelopeNormalizerSpec extends ObjectBehavior
 {
     function it_is_a_normalizer_and_denormailzer()
     {
-        $this->shouldHaveType('Symfony\Component\Serializer\Normalizer\NormalizerInterface');
-        $this->shouldHaveType('Symfony\Component\Serializer\Normalizer\DenormalizerInterface');
+        $this->shouldImplement(NormalizerInterface::class);
+        $this->shouldImplement(DenormalizerInterface::class);
     }
 
     function it_normalizes_envelope_and_delegates_message_to_aggregate(Envelope $envelope, Message $message, AggregateNormalizer $aggregate)
     {
         $envelope->getMessage()->willReturn($message);
-        $envelope->getClass()->willReturn('Bernard\Message\PlainMessage');
+        $envelope->getClass()->willReturn(Message\PlainMessage::class);
         $envelope->getTimestamp()->willReturn(1337);
 
-        $aggregate->normalize($message)->willReturn(array(
+        $aggregate->normalize($message)->willReturn([
             'key' => 'value',
-        ));
+        ]);
 
         $this->setAggregateNormalizer($aggregate);
 
-        $this->normalize($envelope)->shouldReturn(array(
-            'class'     => 'Bernard\\Message\\PlainMessage',
+        $this->normalize($envelope)->shouldReturn([
+            'class' => Message\PlainMessage::class,
             'timestamp' => 1337,
-            'message'   => array('key' => 'value'),
-        ));
+            'message' => ['key' => 'value'],
+        ]);
     }
 
     function it_denormalizes_envelope_and_delegates_message_to_aggregate(Message $message, AggregateNormalizer $aggregate)
     {
         $this->setAggregateNormalizer($aggregate);
 
-        $aggregate->denormalize(array('key' => 'value'), 'Bernard\\Message\\PlainMessage', null)->willReturn($message);
+        $aggregate->denormalize(['key' => 'value'], Message\PlainMessage::class, null)->willReturn($message);
 
-        $normalized = array(
-            'class'     => 'Bernard\\Message\\PlainMessage',
+        $normalized = [
+            'class' => Message\PlainMessage::class,
             'timestamp' => 1337,
-            'message'   => array('key' => 'value'),
-        );
+            'message' => ['key' => 'value'],
+        ];
 
-        $envelope = $this->denormalize($normalized, 'Bernard\\Envelope');
-        $envelope->shouldHaveType('Bernard\\Envelope');
+        $envelope = $this->denormalize($normalized, Envelope::class);
+        $envelope->shouldHaveType(Envelope::class);
         $envelope->getMessage()->shouldReturn($message);
         $envelope->getTimestamp()->shouldReturn(1337);
-        $envelope->getClass()->shouldReturn('Bernard\\Message\\PlainMessage');
+        $envelope->getClass()->shouldReturn(Message\PlainMessage::class);
     }
 }
