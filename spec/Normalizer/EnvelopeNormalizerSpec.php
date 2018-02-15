@@ -17,11 +17,11 @@ class EnvelopeNormalizerSpec extends ObjectBehavior
         $this->shouldImplement(DenormalizerInterface::class);
     }
 
-    function it_normalizes_envelope_and_delegates_message_to_aggregate(Envelope $envelope, Message $message, AggregateNormalizer $aggregate)
+    function it_normalizes_envelope_and_delegates_message_to_aggregate(AggregateNormalizer $aggregate)
     {
-        $envelope->getMessage()->willReturn($message);
-        $envelope->getClass()->willReturn(Message\PlainMessage::class);
-        $envelope->getTimestamp()->willReturn(1337);
+        $message = new Message\PlainMessage('message');
+        $envelope = new Envelope($message);
+        $time = time();
 
         $aggregate->normalize($message)->willReturn([
             'key' => 'value',
@@ -31,7 +31,7 @@ class EnvelopeNormalizerSpec extends ObjectBehavior
 
         $this->normalize($envelope)->shouldReturn([
             'class' => Message\PlainMessage::class,
-            'timestamp' => 1337,
+            'timestamp' => $time,
             'message' => ['key' => 'value'],
         ]);
     }
