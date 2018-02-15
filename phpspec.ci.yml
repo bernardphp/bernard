@@ -4,7 +4,8 @@ suites:
         psr4_prefix: Bernard
 formatter.name: pretty
 extensions:
-    LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension: ~
-code_coverage:
-    format: clover
-    output: build/spec_coverage.xml
+    LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+        format:
+            - clover
+        output:
+            clover: build/spec_coverage.xml
