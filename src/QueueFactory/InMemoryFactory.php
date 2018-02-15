@@ -10,7 +10,7 @@ use Bernard\Queue\InMemoryQueue;
  */
 class InMemoryFactory implements \Bernard\QueueFactory
 {
-    protected $queues;
+    protected $queues = [];
 
     /**
      * {@inheritdoc}
