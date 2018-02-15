@@ -1,8 +1,12 @@
-sudo: false
-dist: trusty
-
 language: php
 
+dist: trusty
+
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.composer/cache/files
 php:
   - 5.6
   - 7.0
@@ -10,22 +14,44 @@ php:
   - 7.2
 
 env:
-  - COMPOSER_OPTS=""
-  - COMPOSER_OPTS="--prefer-lowest"
+    global:
+        - TEST_COMMAND="composer test"
 
-cache:
-  directories:
-    - $HOME/.composer/cache/files
+matrix:
+    fast_finish: true
+    include:
+        - php: 5.6
+          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci"
 
 services:
   - mongodb
   - mysql
   - postgresql
 
+before_install:
+    - if [[ $COVERAGE != true ]]; then phpenv config-rm xdebug.ini || true; fi
+    - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - export MONGOEXT="mongodb"
+    - if [[ $TRAVIS_PHP_VERSION = "5.6" ]]; then export MONGOEXT="mongo"; fi
+    - echo "extension=$MONGOEXT.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
+install:
+    # To be removed when this issue will be resolved: https://github.com/composer/composer/issues/5355
+    - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable --quiet; fi
+    - travis_retry composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
+
 before_script:
-  - tests/travis.sh
+    - mysql -e "CREATE DATABASE bernard_test;"
+    - psql -c 'CREATE DATABASE bernard_test;' -U postgres
 
 script:
-  - php vendor/bin/phpunit -v
-  - php vendor/bin/phpunit --group functional -v
-  - php vendor/bin/phpspec run
+    - $TEST_COMMAND
+    - composer test-functional
+
+after_success: >
+    if [[ $COVERAGE = true ]]; then
+        wget https://scrutinizer-ci.com/ocular.phar
+
+        php ocular.phar code-coverage:upload --format=php-clover build/spec_coverage.xml
+        php ocular.phar code-coverage:upload --format=php-clover build/unit_coverage.xml
+    fi

@@ -2,20 +2,17 @@
 
 namespace spec\Bernard;
 
+use Bernard\Envelope;
+use Normalt\Normalizer\AggregateNormalizer;
+
 class SerializerSpec extends \PhpSpec\ObjectBehavior
 {
-    /**
-     * @param Normalt\Normalizer\AggregateNormalizer $aggregate
-     */
-    function let($aggregate)
+    function let(AggregateNormalizer $aggregate)
     {
         $this->beConstructedWith($aggregate);
     }
 
-    /**
-     * @param Bernard\Envelope $envelope
-     */
-    function it_serializes_normalized_envelope_into_json($envelope, $aggregate)
+    function it_serializes_normalized_envelope_into_json(Envelope $envelope, AggregateNormalizer $aggregate)
     {
         $aggregate->normalize($envelope, null)->willReturn(array(
             'class' => 'Bernard\\Message\\PlainMessage',
@@ -27,10 +24,7 @@ class SerializerSpec extends \PhpSpec\ObjectBehavior
             ->shouldReturn('{"class":"Bernard\\\\Message\\\\PlainMessage","timestamp":1337,"message":{"name":"Import","arguments":{"arg1":"value"}}}');
     }
 
-    /**
-     * @param Bernard\Envelope $envelope
-     */
-    function it_unserializes_into_envelope($envelope, $aggregate)
+    function it_unserializes_into_envelope(Envelope $envelope, AggregateNormalizer $aggregate)
     {
         $normalized = array(
             'class' => 'Bernard\\Message\\PlainMessage',

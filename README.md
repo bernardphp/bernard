@@ -39,6 +39,21 @@ $ composer require bernard/bernard
 Please see the [official documentation](https://bernard.readthedocs.org).
 
 
+## Testing
+
+We try to follow BDD and TDD, as such we use both [phpspec](http://www.phpspec.net) and [phpunit](https://phpunit.de) to test this library.
+
+```bash
+$ composer test
+```
+
+You can run the functional tests by executing:
+
+```bash
+$ composer test-functional
+```
+
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
