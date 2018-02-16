@@ -1,10 +1,14 @@
 <?php
 
 namespace Bernard\Router;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-use League\Container\ContainerInterface;
-
-class LeagueContainerAwareRouter extends SimpleRouter
+/**
+ * PSR-11 container router implementation.
+ */
+final class ContainerRouter extends SimpleRouter
 {
     private $container;
 
@@ -25,8 +29,13 @@ class LeagueContainerAwareRouter extends SimpleRouter
     protected function get($name)
     {
         $serviceId = parent::get($name);
+        $serviceId = $serviceId ?: '';
 
-        return $this->container->get($serviceId);
+        try {
+            return $this->container->get($serviceId);
+        } catch (NotFoundExceptionInterface $e) {
+            return null;
+        }
     }
 
     /**
