@@ -45,7 +45,7 @@ function get_queue_factory()
 
 function get_producer()
 {
-    return new Producer(get_queue_factory(), get_event_dispatcher());
+    return new Producer(get_queue_factory(), new EventDispatcher());
 }
 
 function get_receivers()
