@@ -1,6 +1,6 @@
 <?php
 
-namespace Bernard\Exception;
+namespace Bernard;
 
 /**
  * Interface for exceptions thrown by Bernard.

@@ -2,6 +2,8 @@
 
 namespace Bernard\Exception;
 
+use Bernard\Exception;
+
 /**
  * Thrown when driver implementation is unavailable.
  */
