@@ -2,10 +2,10 @@
 
 namespace Bernard\Message;
 
-use Bernard\Message;
-use Bernard\Util;
-
-abstract class AbstractMessage implements Message
+/**
+ * Apply this trait to your message when you want it to follow the default message naming pattern.
+ */
+trait HasName
 {
     /**
      * {@inheritdoc}
@@ -19,13 +19,5 @@ abstract class AbstractMessage implements Message
         }
 
         return current(array_reverse(explode('\\', $class)));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getQueue()
-    {
-        return Util::guessQueue($this);
     }
 }

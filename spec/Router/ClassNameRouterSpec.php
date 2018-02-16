@@ -14,7 +14,7 @@ class ClassNameRouterSpec extends ObjectBehavior
     function let()
     {
         $this->beConstructedWith([
-            Message::class => function() {},
+            Message\PlainMessage::class => function() {},
         ]);
     }
 
@@ -28,16 +28,16 @@ class ClassNameRouterSpec extends ObjectBehavior
         $this->shouldImplement(Router::class);
     }
 
-    function it_maps_an_envelope(Envelope $envelope)
+    function it_maps_an_envelope()
     {
-        $envelope->getClass()->willReturn(Message\PlainMessage::class);
+        $envelope = new Envelope(new Message\PlainMessage('SendNewsletter'));
 
         $this->map($envelope)->shouldBeCallable();
     }
 
-    function it_throws_an_exception_when_envelope_cannot_be_mapped(Envelope $envelope)
+    function it_throws_an_exception_when_envelope_cannot_be_mapped(Message $message)
     {
-        $envelope->getClass()->willReturn(\stdClass::class);
+        $envelope = new Envelope($message->getWrappedObject());
 
         $this->shouldThrow(ReceiverNotFoundException::class)->duringMap($envelope);
     }

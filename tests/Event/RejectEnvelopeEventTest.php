@@ -2,7 +2,9 @@
 
 namespace Bernard\Tests\Event;
 
+use Bernard\Envelope;
 use Bernard\Event\RejectEnvelopeEvent;
+use Bernard\Message;
 
 class RejectEnvelopeEventTest extends \PHPUnit\Framework\TestCase
 {
@@ -18,8 +20,9 @@ class RejectEnvelopeEventTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        $this->envelope = $this->getMockBuilder('Bernard\Envelope')
-            ->disableOriginalConstructor()->getMock();
+        $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()
+            ->getMock();
+        $this->envelope = new Envelope($message);
         $this->queue = $this->createMock('Bernard\Queue');
     }
 
