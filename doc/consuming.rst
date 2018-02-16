@@ -24,8 +24,13 @@ object should handle which messages, you are required to register them first.
     $router = new SimpleRouter();
     $router->add('SendNewsletter', new NewsletterMessageHandler);
 
-    // Bernard also comes with a router for Pimple (Silex) which allows you
+    // Bernard also comes with a router for PSR-11 container which allows you
     // to use service ids and have your service object lazy loader.
+    //
+    // $router = new \Bernard\Router\ContainerRouter($container);
+    // $router->add('SendNewsletter', 'my.service.id');
+    //
+    // Pimple (Silex) is also supported.
     //
     // $router = new \Bernard\Router\PimpleAwareRouter($pimple);
     // $router->add('SendNewsletter', 'my.service.id');
@@ -37,7 +42,7 @@ object should handle which messages, you are required to register them first.
 
     // Create a Consumer and start the loop.
     $consumer = new Consumer($router, $eventDispatcher);
-    
+
     // The second argument is optional and is an array
     // of options. Currently only ``max-runtime`` is supported which specifies the max runtime
     // in seconds.
