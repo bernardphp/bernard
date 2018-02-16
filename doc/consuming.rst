@@ -34,11 +34,6 @@ object should handle which messages, you are required to register them first.
     //
     // $router = new \Bernard\Router\PimpleAwareRouter($pimple);
     // $router->add('SendNewsletter', 'my.service.id');
-    //
-    // Symfony DependencyInjection component is also supported.
-    //
-    // $router = new \Bernard\Router\ContainerAwareRouter($container);
-    // $router->add('SendNewsletter', 'my.service.id');
 
     // Create a Consumer and start the loop.
     $consumer = new Consumer($router, $eventDispatcher);

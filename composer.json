@@ -18,7 +18,6 @@
         "pimple/pimple": "~1.0",
         "predis/predis": "~0.8",
         "symfony/console": "^2.7|^3.0|^4.0",
-        "symfony/dependency-injection": "^2.7|^3.0|^4.0",
         "doctrine/dbal": "~2.3",
         "aws/aws-sdk-php": "~2.4|~3.0",
         "pda/pheanstalk": "~3.0",
