@@ -4,14 +4,17 @@ namespace Bernard;
 
 use Bernard\Exception\ReceiverNotFoundException;
 
+/**
+ * Router is responsible for routing a message to it's receiver.
+ */
 interface Router
 {
     /**
-     * Returns the right Receiver (callable) based on the Envelope.
+     * Returns the right Receiver based on the Envelope.
      *
      * @param Envelope $envelope
      *
-     * @return callable
+     * @return Receiver
      *
      * @throws ReceiverNotFoundException
      */

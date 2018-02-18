@@ -4,6 +4,7 @@ namespace Bernard\Router;
 
 use Bernard\Envelope;
 use Bernard\Exception\ReceiverNotFoundException;
+use Bernard\Receiver;
 
 /**
  * Routes a Envelope to a Receiver by using the name of the Envelope.
@@ -41,16 +42,13 @@ class SimpleRouter implements \Bernard\Router
     public function map(Envelope $envelope)
     {
         $receiver = $this->get($envelope->getName());
+        $receiver = $this->resolveReceiver($receiver, $envelope);
 
         if (null === $receiver) {
             throw new ReceiverNotFoundException(sprintf('No receiver found with name "%s".', $envelope->getName()));
         }
 
-        if (is_callable($receiver)) {
-            return $receiver;
-        }
-
-        return [$receiver, lcfirst($envelope->getName())];
+        return $receiver;
     }
 
     /**
@@ -71,5 +69,35 @@ class SimpleRouter implements \Bernard\Router
     protected function get($name)
     {
         return isset($this->receivers[$name]) ? $this->receivers[$name] : null;
+    }
+
+    /**
+     * Resolves a receiver or returns null.
+     *
+     * @param mixed    $receiver
+     * @param Envelope $envelope
+     *
+     * @return Receiver|null
+     */
+    private function resolveReceiver($receiver, Envelope $envelope)
+    {
+        if (null === $receiver) {
+            return null;
+        }
+
+        if ($receiver instanceof Receiver) {
+            return $receiver;
+        }
+
+        if (is_callable($receiver) == false) {
+            $receiver = [$receiver, lcfirst($envelope->getName())];
+        }
+
+        // Receiver is still not a callable which means it's not a valid receiver.
+        if (is_callable($receiver) == false) {
+            return null;
+        }
+
+        return new Receiver\CallableReceiver($receiver);
     }
 }

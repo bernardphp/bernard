@@ -2,6 +2,7 @@
 
 namespace Bernard\Tests;
 
+use Bernard\Receiver;
 use Bernard\Router\SimpleRouter;
 use Bernard\Envelope;
 use Bernard\Message\PlainMessage;
@@ -33,14 +34,14 @@ class SimpleRouterTest extends \PHPUnit\Framework\TestCase
 
     public function testReceiversAreAddedThroughConstructor()
     {
-        $callable = function () {};
+        $receiver = $this->prophesize(Receiver::class)->reveal();
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
         $router = new SimpleRouter([
-            'SendNewsletter' => $callable,
+            'SendNewsletter' => $receiver,
         ]);
 
-        $this->assertSame($callable, $router->map($envelope));
+        $this->assertSame($receiver, $router->map($envelope));
     }
 
     /**
@@ -52,7 +53,7 @@ class SimpleRouterTest extends \PHPUnit\Framework\TestCase
 
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
-        $this->assertEquals($expected, $this->router->map($envelope));
+        $this->assertInstanceOf(Receiver::class, $this->router->map($envelope));
     }
 
     public function provideCallable()
@@ -60,10 +61,8 @@ class SimpleRouterTest extends \PHPUnit\Framework\TestCase
         $callable = function () {};
 
         return [
-            ['Bernard\Tests\Fixtures\Service', ['Bernard\Tests\Fixtures\Service', 'sendNewsletter']],
             ['var_dump', 'var_dump'],
             [$callable, $callable],
-            [new \stdClass(), [new \stdClass(), 'sendNewsletter']],
         ];
     }
 }
