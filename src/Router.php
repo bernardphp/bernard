@@ -2,6 +2,8 @@
 
 namespace Bernard;
 
+use Bernard\Exception\ReceiverNotFoundException;
+
 interface Router
 {
     /**
