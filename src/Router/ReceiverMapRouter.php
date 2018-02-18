@@ -48,7 +48,7 @@ class ReceiverMapRouter implements Router
     /**
      * {@inheritdoc}
      */
-    public function map(Envelope $envelope)
+    public function route(Envelope $envelope)
     {
         $receiver = $this->get($this->getName($envelope));
         $receiver = $this->receiverResolver->resolve($receiver, $envelope);

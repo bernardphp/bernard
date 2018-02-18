@@ -36,7 +36,7 @@ class ClassNameRouterSpec extends ObjectBehavior
             $receiverResolver
         );
 
-        $this->map($envelope)->shouldReturn($receiver);
+        $this->route($envelope)->shouldReturn($receiver);
     }
 
     function it_routes_an_envelope_to_a_receiver_based_on_message_parent(Message $message, Router\ReceiverResolver $receiverResolver, Receiver $receiver)
@@ -53,7 +53,7 @@ class ClassNameRouterSpec extends ObjectBehavior
             $receiverResolver
         );
 
-        $this->map($envelope)->shouldReturn($receiver);
+        $this->route($envelope)->shouldReturn($receiver);
     }
 
     function it_throws_an_exception_when_a_receiver_is_not_accepted(Router\ReceiverResolver $receiverResolver)
@@ -85,6 +85,6 @@ class ClassNameRouterSpec extends ObjectBehavior
             $receiverResolver
         );
 
-        $this->shouldThrow(ReceiverNotFoundException::class)->duringMap($envelope);
+        $this->shouldThrow(ReceiverNotFoundException::class)->duringRoute($envelope);
     }
 }

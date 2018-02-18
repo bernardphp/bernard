@@ -37,7 +37,7 @@ class ReceiverMapRouterSpec extends ObjectBehavior
             $receiverResolver
         );
 
-        $this->map($envelope)->shouldReturn($receiver);
+        $this->route($envelope)->shouldReturn($receiver);
     }
 
     function it_throws_an_exception_when_a_receiver_is_not_accepted(Router\ReceiverResolver $receiverResolver)
@@ -69,6 +69,6 @@ class ReceiverMapRouterSpec extends ObjectBehavior
             $receiverResolver
         );
 
-        $this->shouldThrow(ReceiverNotFoundException::class)->duringMap($envelope);
+        $this->shouldThrow(ReceiverNotFoundException::class)->duringRoute($envelope);
     }
 }

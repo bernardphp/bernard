@@ -51,7 +51,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         /** @var Receiver|ObjectProphecy $receiver */
         $receiver = $this->prophesize(Receiver::class);
         $receiver->receive($message)->shouldBeCalled();
-        $this->router->map($envelope)->willReturn($receiver);
+        $this->router->route($envelope)->willReturn($receiver);
 
         $queue->expects($this->once())
             ->method('dequeue')
@@ -79,7 +79,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         /** @var Receiver|ObjectProphecy $receiver */
         $receiver = $this->prophesize(Receiver::class);
         $receiver->receive($message)->willThrow($exception);
-        $this->router->map($envelope)->willReturn($receiver);
+        $this->router->route($envelope)->willReturn($receiver);
 
         $this->dispatcher->expects($this->at(1))->method('dispatch')
             ->with('bernard.reject', new RejectEnvelopeEvent($envelope, $queue, $exception));
@@ -105,7 +105,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         /** @var Receiver|ObjectProphecy $receiver */
         $receiver = $this->prophesize(Receiver::class);
         $receiver->receive($message)->shouldBeCalled();
-        $this->router->map($envelope)->willReturn($receiver);
+        $this->router->route($envelope)->willReturn($receiver);
 
         $this->consumer->pause();
 
@@ -138,7 +138,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         /** @var Receiver|ObjectProphecy $receiver */
         $receiver = $this->prophesize(Receiver::class);
         $receiver->receive($message)->shouldBeCalled();
-        $this->router->map($envelope)->willReturn($receiver);
+        $this->router->route($envelope)->willReturn($receiver);
 
         $queue = $this->createMock('Bernard\Queue');
         $queue->expects($this->once())->method('dequeue')->will($this->returnValue($envelope));
@@ -163,9 +163,9 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $receiver->receive($message1)->shouldBeCalled();
         $receiver->receive($message2)->shouldBeCalled();
         $receiver->receive($message3)->shouldBeCalled();
-        $this->router->map($envelope1)->willReturn($receiver);
-        $this->router->map($envelope2)->willReturn($receiver);
-        $this->router->map($envelope3)->willReturn($receiver);
+        $this->router->route($envelope1)->willReturn($receiver);
+        $this->router->route($envelope2)->willReturn($receiver);
+        $this->router->route($envelope3)->willReturn($receiver);
 
         $this->assertFalse($this->consumer->tick($queue, ['max-messages' => 1]));
         $this->assertTrue($this->consumer->tick($queue));
@@ -185,8 +185,8 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $receiver = $this->prophesize(Receiver::class);
         $receiver->receive($message1)->shouldBeCalled();
         $receiver->receive($message2)->shouldBeCalled();
-        $this->router->map($envelope1)->willReturn($receiver);
-        $this->router->map($envelope2)->willReturn($receiver);
+        $this->router->route($envelope1)->willReturn($receiver);
+        $this->router->route($envelope2)->willReturn($receiver);
 
         $this->assertTrue($this->consumer->tick($queue, ['stop-when-empty' => true]));
         $this->assertTrue($this->consumer->tick($queue, ['stop-when-empty' => true]));
@@ -203,7 +203,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $queue = new InMemoryQueue('send-newsletter');
         $queue->enqueue($envelope);
 
-        $this->router->map($envelope)->willThrow(ReceiverNotFoundException::class);
+        $this->router->route($envelope)->willThrow(ReceiverNotFoundException::class);
 
         $this->consumer->tick($queue, ['stop-on-error' => true]);
 
@@ -223,7 +223,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         /** @var Receiver|ObjectProphecy $receiver */
         $receiver = $this->prophesize(Receiver::class);
         $receiver->receive($message)->shouldBeCalled();
-        $this->router->map($envelope)->willReturn($receiver);
+        $this->router->route($envelope)->willReturn($receiver);
 
         $this->consumer->tick($queue);
     }
@@ -242,7 +242,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         /** @var Receiver|ObjectProphecy $receiver */
         $receiver = $this->prophesize(Receiver::class);
         $receiver->receive($message)->willThrow(\TypeError::class);
-        $this->router->map($envelope)->willReturn($receiver);
+        $this->router->route($envelope)->willReturn($receiver);
 
         $this->dispatcher->expects(self::at(0))->method('dispatch')->with('bernard.ping');
         $this->dispatcher->expects(self::at(1))->method('dispatch')->with('bernard.invoke');

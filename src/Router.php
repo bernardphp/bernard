@@ -18,5 +18,5 @@ interface Router
      *
      * @throws ReceiverNotFoundException
      */
-    public function map(Envelope $envelope);
+    public function route(Envelope $envelope);
 }

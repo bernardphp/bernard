@@ -127,7 +127,7 @@ class Consumer
         try {
             $this->dispatcher->dispatch(BernardEvents::INVOKE, new EnvelopeEvent($envelope, $queue));
 
-            $receiver = $this->router->map($envelope);
+            $receiver = $this->router->route($envelope);
             $receiver->receive($envelope->getMessage());
 
             // We successfully processed the message.
