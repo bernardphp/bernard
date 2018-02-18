@@ -5,9 +5,8 @@ namespace Bernard\Exception;
 use Bernard\Exception;
 
 /**
- * Is thrown when a Router tries to map a Envelope to a receiver and
- * cannot be done.
+ * Is thrown when a Router cannot map an Envelope to a receiver.
  */
-class ReceiverNotFoundException extends \RuntimeException implements Exception
+final class ReceiverNotFoundException extends \RuntimeException implements Exception
 {
 }
