@@ -3,24 +3,13 @@
 namespace Bernard\Router;
 
 use Bernard\Envelope;
-use Bernard\Exception\ReceiverNotFoundException;
 
-class ClassNameRouter extends SimpleRouter
+/**
+ * Uses the message class name as the message name.
+ * Allows registering catch-all receivers for message parent types.
+ */
+final class ClassNameRouter extends ReceiverMapRouter
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function map(Envelope $envelope)
-    {
-        $receiver = $this->get($envelope->getClass());
-
-        if (!is_callable($receiver)) {
-            throw new ReceiverNotFoundException(sprintf('No receiver found for class "%s".', $envelope->getClass()));
-        }
-
-        return $receiver;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -33,5 +22,13 @@ class ClassNameRouter extends SimpleRouter
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getName(Envelope $envelope)
+    {
+        return $envelope->getClass();
     }
 }

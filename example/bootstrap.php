@@ -5,7 +5,7 @@ use Bernard\EventListener;
 use Bernard\Message;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
-use Bernard\Router\SimpleRouter;
+use Bernard\Router\ReceiverMapRouter;
 use Bernard\Serializer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -50,7 +50,7 @@ function get_producer()
 
 function get_receivers()
 {
-    return new SimpleRouter([
+    return new ReceiverMapRouter([
         'EchoTime' => new EchoTimeService(),
     ]);
 }

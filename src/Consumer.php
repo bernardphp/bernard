@@ -127,8 +127,8 @@ class Consumer
         try {
             $this->dispatcher->dispatch(BernardEvents::INVOKE, new EnvelopeEvent($envelope, $queue));
 
-            // for 5.3 support where a function name is not a callable
-            call_user_func($this->router->map($envelope), $envelope->getMessage());
+            $receiver = $this->router->route($envelope);
+            $receiver->receive($envelope->getMessage());
 
             // We successfully processed the message.
             $queue->acknowledge($envelope);
