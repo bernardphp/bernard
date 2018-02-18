@@ -1,6 +1,7 @@
 <?php
 
 namespace Bernard\Receiver;
+
 use Bernard\Message;
 use Bernard\Receiver;
 

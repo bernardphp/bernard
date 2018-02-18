@@ -7,14 +7,14 @@ use Bernard\Exception\ReceiverNotFoundException;
 use Bernard\Message;
 use Bernard\Receiver;
 use Bernard\Router;
-use Bernard\Router\ClassNameRouter;
+use Bernard\Router\ReceiverMapRouter;
 use PhpSpec\ObjectBehavior;
 
-class ClassNameRouterSpec extends ObjectBehavior
+class ReceiverMapRouterSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType(ClassNameRouter::class);
+        $this->shouldHaveType(ReceiverMapRouter::class);
     }
 
     function it_is_a_router()
@@ -24,6 +24,7 @@ class ClassNameRouterSpec extends ObjectBehavior
 
     function it_routes_an_envelope_to_a_receiver(Message $message, Router\ReceiverResolver $receiverResolver, Receiver $receiver)
     {
+        $message->getName()->willReturn('message');
         $envelope = new Envelope($message->getWrappedObject());
 
         $receiverResolver->accepts('receiver')->willReturn(true);
@@ -31,24 +32,7 @@ class ClassNameRouterSpec extends ObjectBehavior
 
         $this->beConstructedWith(
             [
-                get_class($message->getWrappedObject()) => 'receiver',
-            ],
-            $receiverResolver
-        );
-
-        $this->map($envelope)->shouldReturn($receiver);
-    }
-
-    function it_routes_an_envelope_to_a_receiver_based_on_message_parent(Message $message, Router\ReceiverResolver $receiverResolver, Receiver $receiver)
-    {
-        $envelope = new Envelope($message->getWrappedObject());
-
-        $receiverResolver->accepts('receiver')->willReturn(true);
-        $receiverResolver->resolve('receiver', $envelope)->willReturn($receiver);
-
-        $this->beConstructedWith(
-            [
-                Message::class => 'receiver',
+                'message' => 'receiver',
             ],
             $receiverResolver
         );
@@ -62,7 +46,7 @@ class ClassNameRouterSpec extends ObjectBehavior
 
         $this->beConstructedWith(
             [
-                Message::class => 'receiver',
+                'message' => 'receiver',
             ],
             $receiverResolver
         );
@@ -80,7 +64,7 @@ class ClassNameRouterSpec extends ObjectBehavior
 
         $this->beConstructedWith(
             [
-                get_class($message->getWrappedObject()) => 'receiver',
+                'message' => 'receiver',
             ],
             $receiverResolver
         );

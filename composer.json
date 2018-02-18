@@ -44,7 +44,10 @@
         "psr-4" : { "Bernard\\" : "src/" }
     },
     "autoload-dev" : {
-        "psr-4" : { "Bernard\\Tests\\" : "tests/" }
+        "psr-4" : {
+            "Bernard\\Tests\\" : "tests/",
+            "spec\\Bernard\\" : "spec/"
+        }
     },
     "scripts": {
         "test": [

@@ -8,7 +8,7 @@ use Bernard\Envelope;
  * Uses the message class name as the message name.
  * Allows registering catch-all receivers for message parent types.
  */
-final class ClassNameRouter extends SimpleRouter
+final class ClassNameRouter extends ReceiverMapRouter
 {
     /**
      * {@inheritdoc}
