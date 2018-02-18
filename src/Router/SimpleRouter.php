@@ -5,11 +5,12 @@ namespace Bernard\Router;
 use Bernard\Envelope;
 use Bernard\Exception\ReceiverNotFoundException;
 use Bernard\Receiver;
+use Bernard\Router;
 
 /**
- * Routes a Envelope to a Receiver by using the name of the Envelope.
+ * Routes an Envelope to a Receiver by using the name of the Envelope.
  */
-class SimpleRouter implements \Bernard\Router
+class SimpleRouter implements Router
 {
     protected $receivers = [];
 
@@ -27,7 +28,7 @@ class SimpleRouter implements \Bernard\Router
      * @param string $name
      * @param mixed  $receiver
      */
-    public function add($name, $receiver)
+    private function add($name, $receiver)
     {
         if (!$this->accepts($receiver)) {
             throw new \InvalidArgumentException(sprintf('Given "%s" is not supported.', $receiver));

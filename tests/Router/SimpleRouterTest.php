@@ -19,7 +19,9 @@ class SimpleRouterTest extends \PHPUnit\Framework\TestCase
      */
     public function testThrowsExceptionWhenReceiverIsNotSupported()
     {
-        $this->router->add('SendNewsletter', 1);
+        $this->router = new SimpleRouter([
+            'SendNewsletter' => 1,
+        ]);
     }
 
     /**
@@ -49,7 +51,9 @@ class SimpleRouterTest extends \PHPUnit\Framework\TestCase
      */
     public function testItReturnsCallable($given, $expected)
     {
-        $this->router->add('SendNewsletter', $given);
+        $this->router = new SimpleRouter([
+            'SendNewsletter' => $given,
+        ]);
 
         $envelope = new Envelope(new PlainMessage('SendNewsletter'));
 
