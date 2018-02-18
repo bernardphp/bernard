@@ -27,7 +27,6 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
     public function exceptionProvider()
     {
         return [
-            ['\Bernard\Exception\ReceiverNotFoundException', '\RuntimeException'],
             ['\Bernard\Exception\ServiceUnavailableException', '\RuntimeException'],
         ];
     }
