@@ -27,7 +27,6 @@ class ExceptionTest extends \PHPUnit\Framework\TestCase
     public function exceptionProvider()
     {
         return [
-            ['\Bernard\Exception\InvalidOperationException', '\Exception'],
             ['\Bernard\Exception\NotImplementedException', '\BadMethodCallException'],
             ['\Bernard\Exception\QueueNotFoundException', '\RuntimeException'],
             ['\Bernard\Exception\ReceiverNotFoundException', '\RuntimeException'],
