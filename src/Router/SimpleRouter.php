@@ -8,7 +8,7 @@ use Bernard\Receiver;
 use Bernard\Router;
 
 /**
- * Routes an Envelope to a Receiver by using the name of the Envelope.
+ * Routes an Envelope to a Receiver by an internal receiver map.
  */
 class SimpleRouter implements Router
 {
@@ -42,7 +42,7 @@ class SimpleRouter implements Router
      */
     public function map(Envelope $envelope)
     {
-        $receiver = $this->get($envelope->getName());
+        $receiver = $this->get($this->getName($envelope));
         $receiver = $this->resolveReceiver($receiver, $envelope);
 
         if (null === $receiver) {
@@ -70,6 +70,18 @@ class SimpleRouter implements Router
     protected function get($name)
     {
         return isset($this->receivers[$name]) ? $this->receivers[$name] : null;
+    }
+
+    /**
+     * Returns the (message) name to look for in the receiver map.
+     *
+     * @param Envelope $envelope
+     *
+     * @return string
+     */
+    protected function getName(Envelope $envelope)
+    {
+        return $envelope->getName();
     }
 
     /**
