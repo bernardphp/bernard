@@ -23,6 +23,7 @@
         "php-amqplib/php-amqplib": "~2.5",
         "phpspec/phpspec": "^3.0 || ^4.0",
         "leanphp/phpspec-code-coverage": "^3.0 || ^4.0",
+        "doctrine/instantiator": "^1.0.5",
         "phpunit/phpunit": "^5.5 || ^6.0 || ^7.0",
         "iron-io/iron_mq": "~4.0",
         "queue-interop/queue-interop": "^0.6",
