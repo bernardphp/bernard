@@ -50,7 +50,7 @@ class ContainerReceiverResolverSpec extends ObjectBehavior
 
     function it_returns_a_callable_receiver_when_the_receiver_is_callable(Message $message, ContainerInterface $container)
     {
-        $container->get('my.service')->willReturn(function(Message $message) {});
+        $container->get('my.service')->willReturn(function (Message $message) {});
 
         $this->resolve('my.service', new Envelope($message->getWrappedObject()))->shouldHaveType(Receiver\CallableReceiver::class);
     }

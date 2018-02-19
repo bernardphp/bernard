@@ -23,7 +23,7 @@ class SimpleReceiverResolverSpec extends ObjectBehavior
 
     function it_accepts_a_callable_receiver()
     {
-        $callable = function(Message $message) {};
+        $callable = function (Message $message) {};
 
         $this->accepts($callable)->shouldReturn(true);
     }
@@ -50,7 +50,7 @@ class SimpleReceiverResolverSpec extends ObjectBehavior
 
     function it_returns_a_callable_receiver_when_the_receiver_is_callable(Message $message)
     {
-        $callable = function(Message $message) {};
+        $callable = function (Message $message) {};
         $this->resolve($callable, new Envelope($message->getWrappedObject()))->shouldHaveType(Receiver\CallableReceiver::class);
     }
 

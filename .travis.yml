@@ -1,17 +1,22 @@
 language: php
 
-dist: trusty
-
 sudo: false
 
 cache:
     directories:
         - $HOME/.composer/cache/files
+
 php:
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
+    - 5.6
+    - 7.0
+    - 7.1
+    - 7.2
+    - nightly
+
+services:
+    - mongodb
+    - mysql
+    - postgresql
 
 env:
     global:
@@ -19,14 +24,11 @@ env:
 
 matrix:
     fast_finish: true
+    allow_failures:
+        - php: nightly
     include:
         - php: 5.6
-          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci"
-
-services:
-  - mongodb
-  - mysql
-  - postgresql
+          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-coverage"
 
 before_install:
     - if [[ $COVERAGE != true ]]; then phpenv config-rm xdebug.ini || true; fi

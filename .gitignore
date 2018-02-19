@@ -1,8 +1,8 @@
-/build/
+.php_cs
+.php_cs.cache
 /_build/
+/build/
 /composer.lock
 /phpspec.yml
 /phpunit.xml
-/.php_cs
-/.php_cs.cache
 /vendor/
