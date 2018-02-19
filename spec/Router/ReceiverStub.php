@@ -6,11 +6,9 @@ class ReceiverStub
 {
     public static function staticMessageName($message)
     {
-
     }
 
     public static function messageName($message)
     {
-
     }
 }

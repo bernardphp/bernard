@@ -11,7 +11,7 @@ class CallableReceiverSpec extends ObjectBehavior
 {
     function let()
     {
-        $this->beConstructedWith(function() {});
+        $this->beConstructedWith(function () {});
     }
 
     function it_is_initializable()
@@ -26,7 +26,7 @@ class CallableReceiverSpec extends ObjectBehavior
 
     function it_receives_a_message(Message $message)
     {
-        $this->beConstructedWith(function(Message $message) {
+        $this->beConstructedWith(function (Message $message) {
             $message->getName();
         });
 

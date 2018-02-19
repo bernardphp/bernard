@@ -1,7 +1,6 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude('spec')
     ->in(__DIR__)
 ;
 
@@ -10,6 +9,7 @@ return PhpCsFixer\Config::create()
         '@Symfony' => true,
         'array_syntax' => ['syntax' => 'short'],
         'yoda_style' => false,
+        'visibility_required' => [],
     ])
     ->setFinder($finder)
 ;
