@@ -17,7 +17,7 @@ final class PlainMessageTest extends \PHPUnit\Framework\TestCase
             'key3' => null,
         ]);
 
-        $this->assertTrue(isset($message['key1']));
+        $this->assertArrayHasKey('key1', $message);
 
         $this->assertEquals(1, $message['key1']);
         $this->assertEquals([1, 2, 3, 4], $message['key2']);

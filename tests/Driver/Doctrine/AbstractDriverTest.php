@@ -55,7 +55,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
 
         $this->driver->popMessage('non-existent-queue', 0.001);
 
-        $this->assertTrue((microtime(true) - $microtime) >= 0.001);
+        $this->assertGreaterThanOrEqual(0.001, microtime(true) - $microtime);
     }
 
     public function testCreateAndRemoveQueue()
