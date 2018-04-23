@@ -114,10 +114,10 @@ class DoctrineDriver implements \Bernard\Driver
      */
     public function peekQueue($queueName, $index = 0, $limit = 20)
     {
-        $parameters = [$queueName, $limit, $index];
-        $types = ['string', 'integer', 'integer'];
+        $parameters = [$queueName, true, $limit, $index];
+        $types = ['string', 'boolean', 'integer', 'integer'];
 
-        $query = 'SELECT message FROM bernard_messages WHERE queue = ? ORDER BY sentAt LIMIT ? OFFSET ?';
+        $query = 'SELECT message FROM bernard_messages WHERE queue = ? AND visible = ? ORDER BY sentAt LIMIT ? OFFSET ?';
 
         return $this
             ->connection
