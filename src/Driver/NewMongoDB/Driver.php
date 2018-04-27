@@ -2,15 +2,13 @@
 
 namespace Bernard\Driver\NewMongoDB;
 
-//use MongoCollection;
-//use MongoDate;
-//use MongoId;
-
 use MongoDB\Collection;
+use MongoDB\BSON\UTCDateTime;
+use MongoDB\BSON\ObjectID;
 
 /**
  * Driver supporting MongoDB.
- */
+*/
 final class Driver implements \Bernard\Driver
 {
     private $messages;
@@ -40,8 +38,9 @@ final class Driver implements \Bernard\Driver
     public function createQueue($queueName)
     {
         $data = ['_id' => (string) $queueName];
+        $updateData = ['$set' => $data];
 
-        $this->queues->update($data, $data, ['upsert' => true]);
+        $this->queues->updateOne($data, $updateData, ['upsert' => true]);
     }
 
     /**
@@ -63,11 +62,11 @@ final class Driver implements \Bernard\Driver
         $data = [
             'queue' => (string) $queueName,
             'message' => (string) $message,
-            'sentAt' => new MongoDate(),
+            'sentAt' => new UTCDateTime(),
             'visible' => true,
         ];
 
-        $this->messages->insert($data);
+        $this->messages->insertOne($data);
     }
 
     /**
@@ -78,11 +77,10 @@ final class Driver implements \Bernard\Driver
         $runtime = microtime(true) + $duration;
 
         while (microtime(true) < $runtime) {
-            $result = $this->messages->findAndModify(
+            $result = $this->messages->findOneAndUpdate(
                 ['queue' => (string) $queueName, 'visible' => true],
                 ['$set' => ['visible' => false]],
-                ['message' => 1],
-                ['sort' => ['sentAt' => 1]]
+                ['sort' => ['sentAt' => 1], 'projection' => ['message' => 1]]
             );
 
             if ($result) {
@@ -100,8 +98,8 @@ final class Driver implements \Bernard\Driver
      */
     public function acknowledgeMessage($queueName, $receipt)
     {
-        $this->messages->remove([
-            '_id' => new MongoId((string) $receipt),
+        $this->messages->deleteOne([
+            '_id' => new ObjectId((string) $receipt),
             'queue' => (string) $queueName,
         ]);
     }
@@ -114,18 +112,19 @@ final class Driver implements \Bernard\Driver
         $query = ['queue' => (string) $queueName, 'visible' => true];
         $fields = ['_id' => 0, 'message' => 1];
 
-        $cursor = $this->messages
-            ->find($query, $fields)
-            ->sort(['sentAt' => 1])
-            ->limit($limit)
-            ->skip($index)
-        ;
+        $results = $this->messages
+            ->find(
+                $query,
+                [
+                    'projection' => $fields,
+                    'sort' => ['sentAt' => 1],
+                    'limit' => $limit,
+                    'skip' => $index
+                ]
+            )
+            ->toArray();
 
-        $mapper = function ($result) {
-            return (string) $result['message'];
-        };
-
-        return array_map($mapper, iterator_to_array($cursor, false));
+        return array_map(function($result){return $result['message']; }, $results);
     }
 
     /**
@@ -133,8 +132,8 @@ final class Driver implements \Bernard\Driver
      */
     public function removeQueue($queueName)
     {
-        $this->queues->remove(['_id' => $queueName]);
-        $this->messages->remove(['queue' => (string) $queueName]);
+        $this->queues->deleteOne(['_id' => $queueName]);
+        $this->messages->deleteMany(['queue' => (string) $queueName]);
     }
 
     /**

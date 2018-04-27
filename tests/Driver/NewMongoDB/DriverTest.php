@@ -2,10 +2,12 @@
 
 namespace Bernard\Tests\Driver\NewMongoDB;
 
-use Bernard\Driver\MongoDB\Driver;
+use Bernard\Driver\NewMongoDB\Driver;
 use ArrayIterator;
-use MongoDate;
-use MongoId;
+use MongoDB\Collection;
+use MongoDB\BSON\UTCDateTime;
+use MongoDB\BSON\ObjectID;
+
 
 class DriverTest extends \PHPUnit\Framework\TestCase
 {
@@ -20,7 +22,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        if (!class_exists('MongoCollection')) {
+        if (!class_exists('\MongoDB\Collection')) {
             $this->markTestSkipped('MongoDB extension is not available.');
         }
 
@@ -42,8 +44,8 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function testCreateQueue()
     {
         $this->queues->expects($this->once())
-            ->method('update')
-            ->with(['_id' => 'foo'], ['_id' => 'foo'], ['upsert' => true]);
+            ->method('updateOne')
+            ->with(['_id' => 'foo'], ['$set' => ['_id' => 'foo']], ['upsert' => true]);
 
         $this->driver->createQueue('foo');
     }
@@ -61,12 +63,12 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function testPushMessage()
     {
         $this->messages->expects($this->once())
-            ->method('insert')
+            ->method('insertOne')
             ->with($this->callback(function ($data) {
                 return $data['queue'] === 'foo' &&
-                       $data['message'] === 'message1' &&
-                       $data['sentAt'] instanceof MongoDate &&
-                       $data['visible'] === true;
+                    $data['message'] === 'message1' &&
+                    $data['sentAt'] instanceof UTCDateTime &&
+                    $data['visible'] === true;
             }));
 
         $this->driver->pushMessage('foo', 'message1');
@@ -75,12 +77,11 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function testPopMessageWithFoundMessage()
     {
         $this->messages->expects($this->atLeastOnce())
-            ->method('findAndModify')
+            ->method('findOneAndUpdate')
             ->with(
                 ['queue' => 'foo', 'visible' => true],
                 ['$set' => ['visible' => false]],
-                ['message' => 1],
-                ['sort' => ['sentAt' => 1]]
+                ['sort' => ['sentAt' => 1], 'projection' => ['message' => 1]]
             )
             ->will($this->returnValue(['message' => 'message1', '_id' => '000000000000000000000000']));
 
@@ -95,12 +96,11 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function testPopMessageWithMissingMessage()
     {
         $this->messages->expects($this->atLeastOnce())
-            ->method('findAndModify')
+            ->method('findOneAndUpdate')
             ->with(
                 ['queue' => 'foo', 'visible' => true],
                 ['$set' => ['visible' => false]],
-                ['message' => 1],
-                ['sort' => ['sentAt' => 1]]
+                ['sort' => ['sentAt' => 1], 'projection' => ['message' => 1]]
             )
             ->will($this->returnValue(false));
 
@@ -112,11 +112,11 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function testAcknowledgeMessage()
     {
         $this->messages->expects($this->once())
-            ->method('remove')
+            ->method('deleteOne')
             ->with($this->callback(function ($query) {
-                return $query['_id'] instanceof MongoId &&
-                       (string) $query['_id'] === '000000000000000000000000' &&
-                       $query['queue'] === 'foo';
+                return $query['_id'] instanceof ObjectID &&
+                    (string) $query['_id'] === '000000000000000000000000' &&
+                    $query['queue'] === 'foo';
             }));
 
         $this->driver->acknowledgeMessage('foo', '000000000000000000000000');
@@ -124,34 +124,22 @@ class DriverTest extends \PHPUnit\Framework\TestCase
 
     public function testPeekQueue()
     {
-        $cursor = $this->getMockBuilder('MongoCursor')
+        $ursor = $this->getMockBuilder('CursorStub')
             ->disableOriginalConstructor()
             ->getMock();
 
+        $cursor = new CursorStub();
+
         $this->messages->expects($this->once())
             ->method('find')
-            ->with(['queue' => 'foo', 'visible' => true], ['_id' => 0, 'message' => 1])
+            ->with(['queue' => 'foo', 'visible' => true],
+                   [
+                       'projection' => ['_id' => 0, 'message' => 1],
+                       'sort' => ['sentAt' => 1],
+                       'limit' => 20,
+                       'skip' => 0
+                   ])
             ->will($this->returnValue($cursor));
-
-        $cursor->expects($this->at(0))
-            ->method('sort')
-            ->with(['sentAt' => 1])
-            ->will($this->returnValue($cursor));
-
-        $cursor->expects($this->at(1))
-            ->method('limit')
-            ->with(20)
-            ->will($this->returnValue($cursor));
-
-        /* Rather than mock MongoCursor's iterator interface, take advantage of
-         * the final fluent method call and return an ArrayIterator. */
-        $cursor->expects($this->at(2))
-            ->method('skip')
-            ->with(0)
-            ->will($this->returnValue(new ArrayIterator([
-                ['message' => 'message1'],
-                ['message' => 'message2'],
-            ])));
 
         $this->assertSame(['message1', 'message2'], $this->driver->peekQueue('foo'));
     }
@@ -159,11 +147,11 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     public function testRemoveQueue()
     {
         $this->queues->expects($this->once())
-            ->method('remove')
+            ->method('deleteOne')
             ->with(['_id' => 'foo']);
 
         $this->messages->expects($this->once())
-            ->method('remove')
+            ->method('deleteMany')
             ->with(['queue' => 'foo']);
 
         $this->driver->removeQueue('foo');
@@ -189,7 +177,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
 
     private function getMockMongoCollection()
     {
-        return $this->getMockBuilder('MongoCollection')
+        return $this->getMockBuilder('\MongoDB\Collection')
             ->disableOriginalConstructor()
             ->getMock();
     }

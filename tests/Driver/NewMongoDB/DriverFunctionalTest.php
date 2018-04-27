@@ -3,9 +3,6 @@
 namespace Bernard\Tests\Driver\NewMongoDB;
 
 use Bernard\Driver\NewMongoDB\Driver;
-//use MongoClient;
-//use MongoCollection;
-//use MongoConnectionException;
 use MongoDB\Client;
 
 /**
@@ -127,6 +124,8 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(1, $queues);
         $this->assertNotContains('foo', $queues);
         $this->assertContains('bar', $queues);
+
+        $this->driver->removeQueue('bar');
     }
 
     public function testRemoveQueueDeletesMessages()
