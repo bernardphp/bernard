@@ -9,6 +9,7 @@
         "php": "^5.6 || ^7.0",
         "beberlei/assert": "^2.1",
         "bernard/normalt": "^1.0",
+        "mongodb/mongodb": "~1.1",
         "symfony/event-dispatcher": "^3.0 || ^4.0"
     },
     "require-dev" : {
