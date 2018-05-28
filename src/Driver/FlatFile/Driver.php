@@ -107,6 +107,7 @@ class Driver implements \Bernard\Driver
                 if (@rename($queueDir.DIRECTORY_SEPARATOR.$id, $queueDir.DIRECTORY_SEPARATOR.$id.'.proceed')) {
                     return [file_get_contents($queueDir.DIRECTORY_SEPARATOR.$id.'.proceed'), $id];
                 }
+
                 return $this->process($queueDir, $id);
             }
 
@@ -124,6 +125,7 @@ class Driver implements \Bernard\Driver
     private function process($queueDir, $id) {
         $name = $queueDir.DIRECTORY_SEPARATOR.$id;
         $newName = $name.'.proceed';
+
         if (!@rename($name, $newName)) {
             throw new InsufficientPermissionsException("Unable to process file: '{$name}'");
         }
