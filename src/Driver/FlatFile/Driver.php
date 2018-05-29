@@ -2,8 +2,6 @@
 
 namespace Bernard\Driver\FlatFile;
 
-use Bernard\Exception\InsufficientPermissionsException;
-
 /**
  * Flat file driver to provide a simple job queue without any
  * database.
@@ -120,6 +118,7 @@ class Driver implements \Bernard\Driver
     /**
      * @param string $queueDir
      * @param string $id
+     * 
      * @return array
      */
     private function process($queueDir, $id) {
@@ -127,8 +126,9 @@ class Driver implements \Bernard\Driver
         $newName = $name.'.proceed';
 
         if (!@rename($name, $newName)) {
-            throw new InsufficientPermissionsException("Unable to process file: '{$name}'");
+            throw new InsufficientPermissionsException('Unable to process file: '.$name);
         }
+
         return [file_get_contents($newName), $id];
     }
 
