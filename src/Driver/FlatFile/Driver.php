@@ -106,7 +106,7 @@ class Driver implements \Bernard\Driver
                     return [file_get_contents($queueDir.DIRECTORY_SEPARATOR.$id.'.proceed'), $id];
                 }
 
-                return $this->process($queueDir, $id);
+                return $this->processFileOrFail($queueDir, $id);
             }
 
             usleep(1000);
@@ -121,7 +121,7 @@ class Driver implements \Bernard\Driver
      * 
      * @return array
      */
-    private function process($queueDir, $id) {
+    private function processFileOrFail($queueDir, $id) {
         $name = $queueDir.DIRECTORY_SEPARATOR.$id;
         $newName = $name.'.proceed';
 
