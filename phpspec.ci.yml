@@ -1,0 +1,11 @@
+suites:
+    main:
+        namespace: Bernard
+        psr4_prefix: Bernard
+formatter.name: pretty
+extensions:
+    LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+        format:
+            - clover
+        output:
+            clover: build/spec_coverage.xml

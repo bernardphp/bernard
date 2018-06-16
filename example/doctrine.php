@@ -1,22 +1,23 @@
 <?php
 
-use Bernard\Driver\DoctrineDriver;
+use Bernard\Driver\Doctrine\Driver;
 use Doctrine\DBAL\DriverManager;
 
 /**
  * Must be defined before including bootstrap.php
  * as this is the only custom part in the example.
  */
-function get_driver() {
-    $connection = DriverManager::getConnection(array(
+function get_driver()
+{
+    $connection = DriverManager::getConnection([
         'dbname' => 'bernard',
         'user' => 'root',
         'password' => null,
         'host' => 'localhost',
         'driver' => 'pdo_mysql',
-    ));
+    ]);
 
-    $doctrineDriver = new DoctrineDriver($connection);
+    $doctrineDriver = new Driver($connection);
 
     //Don't do this in your application. Use a database set up script instead.
     try {
@@ -24,9 +25,9 @@ function get_driver() {
     } catch (\Exception $ex) {
         $schema = new \Doctrine\DBAL\Schema\Schema();
 
-        \Bernard\Doctrine\MessagesSchema::create($schema);
+        \Bernard\Driver\Doctrine\MessagesSchema::create($schema);
 
-        array_map(array($connection, 'executeQuery'), $schema->toSql($connection->getDatabasePlatform()));
+        array_map([$connection, 'executeQuery'], $schema->toSql($connection->getDatabasePlatform()));
     }
 
     return $doctrineDriver;

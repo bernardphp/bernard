@@ -8,13 +8,13 @@ namespace Bernard\Tests\Fixtures;
  */
 class PushTask
 {
-    static $messages = array();
+    public static $messages = [];
 
     protected $url_path;
     protected $query_data;
     protected $options;
 
-    public function __construct($url_path, array $query_data = array(), array $options = array())
+    public function __construct($url_path, array $query_data = [], array $options = [])
     {
         $this->url_path = $url_path;
         $this->query_data = $query_data;

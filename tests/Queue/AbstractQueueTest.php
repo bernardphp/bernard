@@ -11,12 +11,12 @@ abstract class AbstractQueueTest extends \PHPUnit\Framework\TestCase
      * @expectedException \Bernard\Exception\InvalidOperationexception
      * @expectedExceptionMessage Queue "send-newsletter" is closed.
      */
-    public function testNotAllowedWhenClosed($method, array $arguments = array())
+    public function testNotAllowedWhenClosed($method, array $arguments = [])
     {
         $queue = $this->createQueue('send-newsletter');
         $queue->close();
 
-        call_user_func_array(array($queue, $method), $arguments);
+        call_user_func_array([$queue, $method], $arguments);
     }
 
     public function testNameAsToString()
@@ -29,17 +29,17 @@ abstract class AbstractQueueTest extends \PHPUnit\Framework\TestCase
 
     public function dataClosedMethods()
     {
-        return array(
-            array('peek', array(0, 10)),
-            array('count'),
-            array('dequeue'),
-            array('enqueue', array(
-                new Envelope($this->createMock('Bernard\Message'))
-            )),
-            array('acknowledge', array(
-                new Envelope($this->createMock('Bernard\Message'))
-            )),
-        );
+        return [
+            ['peek', [0, 10]],
+            ['count'],
+            ['dequeue'],
+            ['enqueue', [
+                new Envelope($this->createMock('Bernard\Message')),
+            ]],
+            ['acknowledge', [
+                new Envelope($this->createMock('Bernard\Message')),
+            ]],
+        ];
     }
 
     abstract protected function createQueue($name);

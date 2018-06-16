@@ -5,14 +5,12 @@ namespace Bernard;
 /**
  * Wraps a Message with metadata that can be used for automatic retry
  * or inspection.
- *
- * @package Bernard
  */
-class Envelope
+final class Envelope
 {
-    protected $message;
-    protected $class;
-    protected $timestamp;
+    private $message;
+    private $class;
+    private $timestamp;
 
     /**
      * @param Message $message

@@ -69,7 +69,7 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
     {
         $builder = $this->getMockBuilder('Bernard\\Queue\\InMemoryQueue')->setMethods(['close']);
         $queues = [];
-        for ($name = 1; $name <= 3; $name++) {
+        for ($name = 1; $name <= 3; ++$name) {
             $queue = $builder->setConstructorArgs([$name])->getMock();
             $queue
                 ->expects($this->once())

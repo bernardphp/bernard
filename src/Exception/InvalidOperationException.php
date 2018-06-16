@@ -2,9 +2,12 @@
 
 namespace Bernard\Exception;
 
+use Bernard\Exception;
+
 /**
- * @package Bernard
+ * Thrown when someone tries to do an illegal operation on a queue
+ * (eg. enqueue a message when the queue is already closed)
  */
-class InvalidOperationException extends \Exception implements Exception
+final class InvalidOperationException extends \Exception implements Exception
 {
 }

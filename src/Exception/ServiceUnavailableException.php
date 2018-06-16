@@ -2,10 +2,11 @@
 
 namespace Bernard\Exception;
 
+use Bernard\Exception;
+
 /**
- * Thrown when driver implementation is unavailable
- * @package Bernard
+ * Thrown when a service behind the driver implementation is unavailable.
  */
-class ServiceUnavailableException extends \RuntimeException implements Exception
+final class ServiceUnavailableException extends \RuntimeException implements Exception
 {
 }

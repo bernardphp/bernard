@@ -2,7 +2,7 @@ Producing messages
 ==================
 
 Any message sent to Bernard must be an instance of ``Bernard\Message``,
-which has a ``getName`` and ``getQueue`` method. ``getName`` is used when working on
+which has a ``getName``. ``getName`` is used when working on
 messages and identifies the worker service that should work on it.
 
 A message is given to a producer that sends the message to the right queue.

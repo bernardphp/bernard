@@ -2,11 +2,14 @@
 
 namespace Bernard\Tests\EventListener;
 
+use Bernard\Envelope;
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\EventListener\ErrorLogSubscriber;
+use Bernard\Message;
 
 class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
 {
+    private $message;
     private $envelope;
     private $queue;
     private $producer;
@@ -20,8 +23,9 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped("HHVM does not support `ini_set('error_log', '/path/to/log')`");
         }
 
-        $this->envelope = $this->getMockBuilder('Bernard\Envelope')
-            ->disableOriginalConstructor()->getMock();
+        $this->message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()
+            ->getMock();
+        $this->envelope = new Envelope($this->message);
         $this->queue = $this->createMock('Bernard\Queue');
         $this->producer = $this->getMockBuilder('Bernard\Producer')->disableOriginalConstructor()->getMock();
         $this->subscriber = new ErrorLogSubscriber($this->producer, 'failures');
@@ -48,8 +52,7 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testOnRejectException()
     {
-
-        $this->envelope->expects($this->once())
+        $this->message->expects($this->once())
             ->method('getName')
             ->willReturn('foo');
         $error = new \Exception('bar');
@@ -65,7 +68,7 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
      */
     public function testOnRejectError()
     {
-        $this->envelope->expects($this->once())
+        $this->message->expects($this->once())
             ->method('getName')
             ->willReturn('foo');
         $error = new \TypeError('bar');
@@ -78,10 +81,10 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testOnRejectObject()
     {
-        $this->envelope->expects($this->once())
+        $this->message->expects($this->once())
             ->method('getName')
             ->willReturn('foo');
-        $error = new \stdClass;
+        $error = new \stdClass();
         $event = new RejectEnvelopeEvent($this->envelope, $this->queue, $error);
         $expected = ' [bernard] caught unknown error type stdClass while processing foo.';
         $this->subscriber->onReject($event);

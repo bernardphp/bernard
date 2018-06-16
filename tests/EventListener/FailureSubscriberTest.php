@@ -5,7 +5,7 @@ namespace Bernard\Tests\EventListener;
 use Bernard\Envelope;
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\EventListener\FailureSubscriber;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\Queue\InMemoryQueue;
 
 class FailureSubscriberTest extends \PHPUnit\Framework\TestCase
@@ -21,13 +21,12 @@ class FailureSubscriberTest extends \PHPUnit\Framework\TestCase
 
     public function testAcknowledgeMessageAndEnqueue()
     {
-        $envelope = new Envelope($message = new DefaultMessage('bar'));
+        $envelope = new Envelope($message = new PlainMessage('bar'));
 
         $this->producer->expects($this->once())
             ->method('produce')
             ->with($message, 'failures');
 
-        $this->subscriber->onReject(new RejectEnvelopeEvent($envelope, new InMemoryQueue('foo'), new \Exception));
-
+        $this->subscriber->onReject(new RejectEnvelopeEvent($envelope, new InMemoryQueue('foo'), new \Exception()));
     }
 }

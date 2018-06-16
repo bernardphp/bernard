@@ -1,33 +1,32 @@
 {
     "name": "bernard/bernard",
     "description": "Message queue abstraction layer",
+    "license": "MIT",
     "keywords": ["message queue", "message", "queue", "bernard"],
     "homepage": "https://github.com/bernardphp/bernard",
     "type": "library",
-    "license": "MIT",
-
     "require": {
         "php": "^5.6 || ^7.0",
-        "bernard/normalt": "~1.0",
-        "symfony/event-dispatcher": "^2.7|^3.0",
-        "beberlei/assert": "~2.1"
+        "beberlei/assert": "^2.1",
+        "bernard/normalt": "^1.0",
+        "symfony/event-dispatcher": "^3.0 || ^4.0"
     },
     "require-dev" : {
-        "psr/log": "~1.0",
-        "pimple/pimple": "~1.0",
-        "predis/predis": "~0.8",
-        "symfony/console": "^2.7|^3.0",
-        "symfony/dependency-injection": "^2.7|^3.0",
-        "doctrine/dbal": "~2.3",
-        "aws/aws-sdk-php": "~2.4|~3.0",
-        "pda/pheanstalk": "~3.0",
-        "php-amqplib/php-amqplib": "~2.5",
-        "phpspec/phpspec": "^2.4",
-        "phpunit/phpunit": "^5.5|^6.0",
-        "iron-io/iron_mq": "~4.0",
-        "league/container": "~2.3",
+        "aws/aws-sdk-php": "^3.0",
+        "doctrine/dbal": "^2.5",
+        "doctrine/instantiator": "^1.0.5",
+        "iron-io/iron_mq": "^4.0",
+        "leanphp/phpspec-code-coverage": "^3.0 || ^4.0",
+        "pda/pheanstalk": "^3.0",
+        "php-amqplib/php-amqplib": "^2.5",
+        "phpspec/phpspec": "^3.0 || ^4.0",
+        "phpunit/phpunit": "^5.7 || ^6.0 || ^7.0",
+        "predis/predis": "^1.0",
+        "psr/container": "^1.0",
+        "psr/log": "^1.0",
+        "queue-interop/amqp-interop": "^0.6",
         "queue-interop/queue-interop": "^0.6",
-        "queue-interop/amqp-interop": "^0.6"
+        "symfony/console": "^3.0 || ^4.0"
     },
     "suggest": {
         "php-amqplib/php-amqplib": "Allow sending messages to an AMQP server using php-amqplib",
@@ -40,17 +39,35 @@
         "queue-interop/queue-interop": "Allow sending messages using queue interop compatible transports",
         "queue-interop/amqp-interop": "Allow sending messages using amqp interop compatible transports"
     },
-
     "autoload" : {
         "psr-4" : { "Bernard\\" : "src/" }
     },
     "autoload-dev" : {
-        "psr-4" : { "Bernard\\Tests\\" : "tests/" }
+        "psr-4" : {
+            "Bernard\\Tests\\" : "tests/",
+            "spec\\Bernard\\" : "spec/"
+        }
     },
-
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "clean": "rm -rf build/ vendor/",
+        "test": [
+            "vendor/bin/phpspec run",
+            "vendor/bin/phpunit -v"
+        ],
+        "test-coverage": [
+            "vendor/bin/phpspec run -c phpspec.ci.yml",
+            "vendor/bin/phpunit -v --coverage-text --coverage-clover=build/unit_coverage.xml"
+        ],
+        "test-functional": "php vendor/bin/phpunit -v --group functional"
+    },
     "extra" : {
         "branch-alias" : {
             "dev-master" : "1.0.x-dev"
         }
-    }
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
 }

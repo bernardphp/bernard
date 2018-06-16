@@ -1,47 +1,107 @@
 Consuming Messages
 ==================
 
-A single message represents a job that needs to be performed, and as described
-earlier, a message's name is used to determine which service object should
-receive that message.
+Consuming messages has two requirements:
 
-A service object can be any object that has a method corresponding to the name of the
-message with the first letter lower cased. So ``new PlainMessage('SendNewsletter')`` will trigger a
-call to ``$serviceObject->sendNewsletter($message)``. For the system to know which service
-object should handle which messages, you are required to register them first.
+* the system needs to know how messages should be handled
+* the system needs to provide extension points for certain events
+
+The first requirement is fulfilled by message routing, the second is by the event dispatcher system.
 
 .. code-block:: php
 
     <?php
 
-    use Bernard\Router\SimpleRouter;
-    use Bernard\Consumer;
+    use Symfony\Component\EventDispatcher\EventDispatcher;
 
-    // .. create driver and a queuefactory
-    // NewsletterMessageHandler is a pseudo service object that responds to
-    // sendNewsletter.
+    // $router = see bellow
+    $eventDispatcher = new EventDispatcher();
 
-    $router = new SimpleRouter();
-    $router->add('SendNewsletter', new NewsletterMessageHandler);
+    // Create a Consumer and start the loop.
+    $consumer = new Consumer($router, $eventDispatcher);
 
-    // Bernard also comes with a router for Pimple (Silex) which allows you
-    // to use service ids and have your service object lazy loader.
-    //
-    // $router = new \Bernard\Router\PimpleAwareRouter($pimple);
-    // $router->add('SendNewsletter', 'my.service.id');
-    //
-    // Symfony DependencyInjection component is also supported.
-    //
-    // $router = new \Bernard\Router\ContainerAwareRouter($container);
-    // $router->add('SendNewsletter', 'my.service.id');
-
-    // Create a Consumer and start the loop. The second argument is optional and is an array
+    // The second argument is optional and is an array
     // of options. Currently only ``max-runtime`` is supported which specifies the max runtime
     // in seconds.
-    $consumer = new Consumer($router, $eventDispatcher);
     $consumer->consume($queueFactory->create('send-newsletter'), array(
         'max-runtime' => 900,
     ));
+
+
+Routing
+-------
+
+A single message represents a job that needs to be performed, and as described
+earlier, by default a message's name is used to determine which receiver should
+receive that message.
+
+A receiver can be any of the following:
+
+* callable
+* class with a static method with the name of the message with the first letter lower cased
+* object with a method with the name of the message with the first letter lower cased
+* object implementing the ``Bernard\Receiver`` interface
+
+
+For the system to know which receiver should handle which messages, you are required to register them first.
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Router\ReceiverMapRouter;
+    use Bernard\Consumer;
+
+    // create driver and a queuefactory
+    // NewsletterMessageHandler is a pseudo receiver that has a sendNewsletter method.
+
+    $router = new ReceiverMapRouter([
+        'SendNewsletter' => new NewsletterMessageHandler(),
+    ]);
+
+
+Message routing can also happen based on the message class instead of the message name.
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Router\ClassNameRouter;
+    use Bernard\Consumer;
+
+    // create driver and a queuefactory
+    // NewsletterMessageHandler is a pseudo receiver that has a sendNewsletter method.
+    // NewsletterMessage is a pseudo message
+
+    $router = new ClassNameRouter([
+        NewsletterMessage::class => new NewsletterMessageHandler(),
+    ]);
+
+
+In some cases the above described receiver rules might not be enough.
+The provided router implementations also accept a receiver resolver which can be used for example to resolve
+receivers from a Dependency Injection container. A good example for that is the PSR-11 container resolver
+implementation that comes with this package.
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Router\ReceiverMapRouter;
+    use Bernard\Router\ContainerReceiverResolver;
+    use Bernard\Consumer;
+
+    // create driver and a queuefactory
+    // NewsletterMessageHandler is a pseudo receiver that has a sendNewsletter method.
+    // $container = your PSR-11 compatible container
+
+    $router = new ReceiverMapRouter(
+        [
+            'SendNewsletter' => NewsletterMessageHandler::class,
+        ],
+        new ContainerReceiverResolver($container),
+    );
+
 
 Commandline Interface
 ---------------------

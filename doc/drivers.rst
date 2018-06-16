@@ -38,9 +38,9 @@ preconfigured.
 
     <?php
 
-    use Bernard\Driver\AppEngineDriver;
+    use Bernard\Driver\AppEngine\Driver;
 
-    $driver = new AppEngineDriver(array(
+    $driver = new Driver(array(
         'queue-name' => '/url_endpoint',
     ));
 
@@ -106,7 +106,7 @@ as appropriate for your use case.
     <?php
     // doctrine.php
 
-    use Bernard\Command\Doctrine as BernardCommands;
+    use Bernard\Driver\Doctrine\Command as BernardCommands;
     use Doctrine\DBAL\Tools\Console\ConsoleRunner;
     use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
     use Symfony\Component\Console\Application;
@@ -114,9 +114,9 @@ as appropriate for your use case.
 
     $connection = ...;
     $commands = [
-        new BernardCommands\CreateCommand,
-        new BernardCommands\DropCommand,
-        new BernardCommands\UpdateCommand,
+        new BernardCommands\CreateCommand(),
+        new BernardCommands\DropCommand(),
+        new BernardCommands\UpdateCommand(),
     ];
 
     // To create a new application from scratch ...
@@ -147,7 +147,7 @@ Alternatively, use the following method for creating the tables manually.
 
     <?php
 
-    use Bernard\Doctrine\MessagesSchema;
+    use Bernard\Driver\Doctrine\MessagesSchema;
     use Doctrine\DBAL\Schema\Schema;
 
     MessagesSchema::create($schema = new Schema);
@@ -175,7 +175,7 @@ And here is the setup of the driver for doctrine dbal:
 
     <?php
 
-    use Bernard\Driver\DoctrineDriver;
+    use Bernard\Driver\Doctrine\Driver;
     use Doctrine\DBAL\DriverManager;
 
     $connection = DriverManager::getConnection(array(
@@ -186,7 +186,7 @@ And here is the setup of the driver for doctrine dbal:
     ));
 
 
-    $driver = new DoctrineDriver($connection);
+    $driver = new Driver($connection);
 
 Flatfile
 --------
@@ -197,9 +197,9 @@ The flat file driver provides a simple job queue without any database
 
     <?php
 
-    use Bernard\Driver\FlatFileDriver;
+    use Bernard\Driver\FlatFile\Driver;
 
-    $driver = new FlatFileDriver('/dir/to/store/messages');
+    $driver = new Driver('/dir/to/store/messages');
 
 IronMQ
 ------
@@ -230,7 +230,7 @@ in the drivers constructor.
 
     <?php
 
-    use Bernard\Driver\IronMqDriver;
+    use Bernard\Driver\IronMQ\Driver;
 
     $connection = new IronMQ(array(
         'token'      => 'your-ironmq-token',
@@ -238,10 +238,10 @@ in the drivers constructor.
     ));
 
 
-    $driver = new IronMqDriver($connection);
+    $driver = new Driver($connection);
 
     // or with a prefetching number
-    $driver = new IronMqDriver($connection, 5);
+    $driver = new Driver($connection, 5);
 
 It is also possible to use push queues with some additional logic. Basically,
 it is needed to deserialize the message in the request and route it to the
@@ -296,7 +296,7 @@ corresponding to the queue and message collections, respectively.
     <?php
 
     $mongoClient = new \MongoClient();
-    $driver = new \Bernard\Driver\MongoDBDriver(
+    $driver = new \Bernard\Driver\MongoDB\Driver(
         $mongoClient->selectCollection('bernardDatabase', 'queues'),
         $mongoClient->selectCollection('bernardDatabase', 'messages'),
     );
@@ -341,12 +341,12 @@ Requires the installation of pda/pheanstalk. Add the following to your
 
     <?php
 
-    use Bernard\Driver\PheanstalkDriver;
+    use Bernard\Driver\Pheanstalk\Driver;
     use Pheanstalk\Pheanstalk;
 
     $pheanstalk = new Pheanstalk('localhost');
 
-    $driver = new PheanstalkDriver($pheanstalk);
+    $driver = new Driver($pheanstalk);
 
 PhpAmqp / RabbitMQ
 ------------------
@@ -389,13 +389,13 @@ your ``composer.json`` file, to make sure it is installed:
 
     <?php
 
-    use Bernard\Driver\PhpRedisDriver;
+    use Bernard\Driver\PhpRedis\Driver;
 
     $redis = new Redis();
     $redis->connect('127.0.0.1', 6379);
     $redis->setOption(Redis::OPT_PREFIX, 'bernard:');
 
-    $driver = new PhpRedisDriver($redis);
+    $driver = new Driver($redis);
 
 Predis
 ------
@@ -415,14 +415,14 @@ Requires the installation of predis. Add the following to your
 
     <?php
 
-    use Bernard\Driver\PredisDriver;
+    use Bernard\Driver\Predis\Driver;
     use Predis\Client;
 
     $predis = new Client('tcp://localhost', array(
         'prefix' => 'bernard:',
     ));
 
-    $driver = new PredisDriver($predis);
+    $driver = new Driver($predis);
 
 Amazon SQS
 ----------
@@ -459,7 +459,7 @@ require a HTTP request to amazon to be resolved.
     <?php
 
     use Aws\Sqs\SqsClient;
-    use Bernard\Driver\SqsDriver;
+    use Bernard\Driver\Sqs\Driver;
 
     $connection = SqsClient::factory(array(
         'key'    => 'your-aws-access-key',
@@ -467,13 +467,13 @@ require a HTTP request to amazon to be resolved.
         'region' => 'the-aws-region-you-choose'
     ));
 
-    $driver = new SqsDriver($connection);
+    $driver = new Driver($connection);
 
     // or with prefetching
-    $driver = new SqsDriver($connection, array(), 5);
+    $driver = new Driver($connection, array(), 5);
 
     // or with aliased queue urls
-    $driver = new SqsDriver($connection, array(
+    $driver = new Driver($connection, array(
         'queue-name' => 'queue-url',
     ));
 
@@ -495,7 +495,7 @@ For example we choose enqueue/fs one to demonstrate how it is working.
 
     <?php
 
-    use Bernard\Driver\InteropDriver;
+    use Bernard\Driver\Interop\Driver;
     use Enqueue\Fs\FsConnectionFactory;
 
     $context = (new FsConnectionFactory('file://'.__DIR__.'/queues'))->createContext();

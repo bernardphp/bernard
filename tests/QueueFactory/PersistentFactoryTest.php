@@ -34,6 +34,9 @@ class PersistentFactoryTest extends \PHPUnit\Framework\TestCase
      */
     public function testRemoveClosesQueue()
     {
+        $this->connection->expects($this->once())->method('listQueues')
+            ->will($this->returnValue([]));
+
         $queue = $this->factory->create('send-newsletter');
 
         $this->assertTrue($this->factory->exists('send-newsletter'));
@@ -54,7 +57,7 @@ class PersistentFactoryTest extends \PHPUnit\Framework\TestCase
     public function testItsCountable()
     {
         $this->connection->expects($this->once())->method('listQueues')
-            ->will($this->returnValue(array('failed', 'something', 'queue-ness')));
+            ->will($this->returnValue(['failed', 'something', 'queue-ness']));
 
         $this->assertCount(3, $this->factory);
     }
@@ -62,7 +65,7 @@ class PersistentFactoryTest extends \PHPUnit\Framework\TestCase
     public function testItGetsAllQueues()
     {
         $this->connection->expects($this->once())->method('listQueues')
-            ->will($this->returnValue(array('queue1', 'queue2')));
+            ->will($this->returnValue(['queue1', 'queue2']));
 
         $all = $this->factory->all();
 

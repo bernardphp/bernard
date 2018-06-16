@@ -5,9 +5,7 @@ namespace Bernard\Queue;
 use Bernard\Envelope;
 
 /**
- * Wrapper around SplQueue
- *
- * @package Bernard
+ * Wrapper around SplQueue.
  */
 class InMemoryQueue extends AbstractQueue
 {
@@ -67,7 +65,7 @@ class InMemoryQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        $envelopes = array();
+        $envelopes = [];
         $queue = clone $this->queue;
         $key = 0;
 

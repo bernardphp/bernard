@@ -5,12 +5,29 @@ namespace Bernard\Tests\Normalizer;
 use Bernard\Message\PlainMessage;
 use Bernard\Normalizer\PlainMessageNormalizer;
 
-class PlainMessageNormalizerTest extends \PHPUnit\Framework\TestCase
+final class PlainMessageNormalizerTest extends \PHPUnit\Framework\TestCase
 {
-    public function testDenormalize()
+    /**
+     * @test
+     */
+    public function it_normalizes_a_message()
     {
-        $sut = new PlainMessageNormalizer();
-        $normalized = $sut->denormalize(['name' => 'foobar', 'arguments' => []], null);
-        $this->assertTrue($normalized instanceof PlainMessage);
+        $normalizer = new PlainMessageNormalizer();
+
+        $normalized = $normalizer->normalize(new PlainMessage('foobar'));
+
+        $this->assertEquals(['name' => 'foobar', 'arguments' => []], $normalized);
+    }
+
+    /**
+     * @test
+     */
+    public function it_denormalizes_a_normalized_message()
+    {
+        $normalizer = new PlainMessageNormalizer();
+
+        $denormalized = $normalizer->denormalize(['name' => 'foobar', 'arguments' => []], null);
+
+        $this->assertInstanceOf(PlainMessage::class, $denormalized);
     }
 }

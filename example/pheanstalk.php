@@ -1,16 +1,17 @@
 <?php
 
 use Pheanstalk\Pheanstalk;
-use Bernard\Driver\PheanstalkDriver;
+use Bernard\Driver\Pheanstalk\Driver;
 
 /**
  * Must be defined before including bootstrap.php
  * as this is the only custom part in the example.
  */
-function get_driver() {
+function get_driver()
+{
     $pheanstalk = new Pheanstalk('localhost');
 
-    return new PheanstalkDriver($pheanstalk);
+    return new Driver($pheanstalk);
 }
 
 require 'bootstrap.php';

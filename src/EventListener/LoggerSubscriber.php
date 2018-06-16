@@ -7,9 +7,6 @@ use Bernard\Event\RejectEnvelopeEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
- * @package Bernard
- */
 class LoggerSubscriber implements EventSubscriberInterface
 {
     protected $logger;

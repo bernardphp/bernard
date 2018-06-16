@@ -4,9 +4,6 @@ namespace Bernard;
 
 use Normalt\Normalizer\AggregateNormalizer;
 
-/**
- * @package Bernard
- */
 class Serializer
 {
     protected $aggregate;

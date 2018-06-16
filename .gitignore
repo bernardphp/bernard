@@ -1,6 +1,8 @@
-composer.lock
-vendor
-phpunit.xml
-coverage
-_build
-.idea
+.php_cs
+.php_cs.cache
+/_build/
+/build/
+/composer.lock
+/phpspec.yml
+/phpunit.xml
+/vendor/
