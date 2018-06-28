@@ -46,15 +46,17 @@ class RoundRobinQueue implements Queue
 
     /**
      * {@inheritdoc}
+     *
+     * @param int $duration Number of seconds to keep polling for messages.
      */
-    public function dequeue()
+    public function dequeue($duration = 5)
     {
         $envelope = null;
         $checked = [];
 
         while (count($checked) < count($this->queues)) {
             $queue = current($this->queues);
-            $envelope = $queue->dequeue();
+            $envelope = $queue->dequeue($duration);
             if (false === next($this->queues)) {
                 reset($this->queues);
             }
