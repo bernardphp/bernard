@@ -14,14 +14,17 @@ class Driver implements \Bernard\Driver
 
     private $permissions;
 
+    private $queueType;
+
     /**
      * @param string $baseDirectory The base directory
      * @param int    $permissions   permissions to create the file with
      */
-    public function __construct($baseDirectory, $permissions = 0740)
+    public function __construct($baseDirectory, $permissions = 0740, $options = null)
     {
         $this->baseDirectory = $baseDirectory;
         $this->permissions = $permissions;
+        $this->queueType = isset($options['queueType']) && in_array($options['queueType'], ['lifo', 'fifo']) ? $options['queueType'] : 'lifo';
     }
 
     /**
@@ -101,7 +104,7 @@ class Driver implements \Bernard\Driver
 
         while (microtime(true) < $runtime) {
             if ($files) {
-                $id = array_pop($files);
+                $id = $this->queueType === 'fifo' ? array_shift($files) : array_pop($files);
                 if (@rename($queueDir.DIRECTORY_SEPARATOR.$id, $queueDir.DIRECTORY_SEPARATOR.$id.'.proceed')) {
                     return [file_get_contents($queueDir.DIRECTORY_SEPARATOR.$id.'.proceed'), $id];
                 }
@@ -118,7 +121,7 @@ class Driver implements \Bernard\Driver
     /**
      * @param string $queueDir
      * @param string $id
-     * 
+     *
      * @return array
      */
     private function processFileOrFail($queueDir, $id) {
@@ -158,7 +161,9 @@ class Driver implements \Bernard\Driver
         $files = array_keys(iterator_to_array($it));
 
         natsort($files);
-        $files = array_reverse($files);
+        if ($this->queueType === 'life') {
+            $files = array_reverse($files);
+        }
 
         $files = array_slice($files, $index, $limit);
 
