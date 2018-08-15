@@ -55,7 +55,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
 
         $this->driver->popMessage('non-existent-queue', 0.001);
 
-        $this->assertTrue((microtime(true) - $microtime) >= 0.001);
+        $this->assertGreaterThanOrEqual(0.001, microtime(true) - $microtime);
     }
 
     public function testCreateAndRemoveQueue()
@@ -132,6 +132,21 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->acknowledgeMessage('send-newsletter', $id);
 
         $this->assertEquals(1, $this->driver->countMessages('send-newsletter'));
+    }
+
+    public function testPeekMessagesExcludesPoppedMessages()
+    {
+        $this->driver->pushMessage('send-newsletter', 'my-message-1');
+        $this->driver->pushMessage('send-newsletter', 'my-message-2');
+        $this->driver->pushMessage('send-newsletter', 'my-message-3');
+
+        $this->assertCount(3, $this->driver->peekQueue('send-newsletter'));
+        $this->assertEquals(3, $this->driver->countMessages('send-newsletter'));
+
+        $this->driver->popMessage('send-newsletter');
+
+        $this->assertCount(2, $this->driver->peekQueue('send-newsletter'));
+        $this->assertEquals(2, $this->driver->countMessages('send-newsletter'));
     }
 
     public function testListQueues()
