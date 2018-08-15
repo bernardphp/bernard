@@ -99,20 +99,21 @@ final class Driver implements \Bernard\Driver
      */
     public function popMessage($queueName, $duration = 5)
     {
-        $runtime = microtime(true) + $duration;
+        $startAt = microtime(true);
 
-        while (microtime(true) < $runtime) {
+        while (true) {
             $message = $this->getChannel()->basic_get($queueName);
 
             if ($message) {
                 return [$message->body, $message->get('delivery_tag')];
             }
 
-            // sleep for 10 ms to prevent hammering CPU
             usleep(10000);
-        }
 
-        return [null, null];
+            if ((microtime(true) - $startAt) >= $duration) {
+                return [null, null];
+            }
+        }
     }
 
     /**
