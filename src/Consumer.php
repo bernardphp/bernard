@@ -135,10 +135,12 @@ class Consumer
 
             $this->dispatcher->dispatch(BernardEvents::ACKNOWLEDGE, new EnvelopeEvent($envelope, $queue));
 
-        } catch (\Exception $exception) {
-            $this->rejectDispatch($exception, $envelope, $queue);
         } catch (\Throwable $error) {
+            // php 7
             $this->rejectDispatch($error, $envelope, $queue);
+        } catch (\Exception $exception) {
+            // php 5
+            $this->rejectDispatch($exception, $envelope, $queue);
         }
     }
 
