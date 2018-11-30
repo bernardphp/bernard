@@ -39,8 +39,6 @@ class Consumer
      */
     public function consume(Queue $queue, array $options = [])
     {
-        declare(ticks=1);
-
         $this->bind();
 
         while ($this->tick($queue, $options)) {
@@ -59,6 +57,8 @@ class Consumer
      */
     public function tick(Queue $queue, array $options = [])
     {
+		pcntl_signal_dispatch();
+
         $this->configure($options);
 
         if ($this->shutdown) {
