@@ -42,7 +42,7 @@ class Consumer
         $this->bind();
 
         while ($this->tick($queue, $options)) {
-            // NO op
+			pcntl_signal_dispatch();
         }
     }
 
@@ -57,8 +57,6 @@ class Consumer
      */
     public function tick(Queue $queue, array $options = [])
     {
-		pcntl_signal_dispatch();
-
         $this->configure($options);
 
         if ($this->shutdown) {
