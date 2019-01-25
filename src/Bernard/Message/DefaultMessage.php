@@ -19,7 +19,7 @@ class DefaultMessage extends AbstractMessage
             $this->$k = $v;
         }
 
-        $this->name = preg_replace('/(^([0-9]+))|([^[:alnum:]-_+])/i', '', $name);
+        $this->name = preg_replace('/(^([0-9]+))|([^[:alnum:]\-_+])/i', '', $name);
     }
 
     /**
