@@ -94,10 +94,7 @@ class Driver implements \Bernard\Driver
         $runtime = microtime(true) + $duration;
         $queueDir = $this->getQueueDirectory($queueName);
 
-        $it = new \GlobIterator($queueDir.DIRECTORY_SEPARATOR.'*.job', \FilesystemIterator::KEY_AS_FILENAME);
-        $files = array_keys(iterator_to_array($it));
-
-        natsort($files);
+        $files = $this->getJobFiles($queueName);
 
         while (microtime(true) < $runtime) {
             if ($files) {
@@ -107,6 +104,9 @@ class Driver implements \Bernard\Driver
                 }
 
                 return $this->processFileOrFail($queueDir, $id);
+            } else {
+                // In order to notice that a new message received, update the list.
+                $files = $this->getJobFiles($queueName);
             }
 
             usleep(1000);
@@ -243,5 +243,22 @@ class Driver implements \Bernard\Driver
         $file->flock(LOCK_UN);
 
         return $filename;
+    }
+
+    /**
+     * @param string $queueName
+     *
+     * @return string[]
+     */
+    private function getJobFiles($queueName)
+    {
+        $it = new \GlobIterator(
+            $this->getQueueDirectory($queueName) . DIRECTORY_SEPARATOR . '*.job',
+            \FilesystemIterator::KEY_AS_FILENAME
+        );
+        $files = array_keys(iterator_to_array($it));
+        natsort($files);
+
+        return $files;
     }
 }

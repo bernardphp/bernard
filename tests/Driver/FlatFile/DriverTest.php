@@ -92,6 +92,27 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         }
     }
 
+    public function testPopMessageWhichPushedAfterTheInitialCollect()
+    {
+        $this->driver->createQueue('send-newsletter');
+
+        $pid = pcntl_fork();
+
+        if ($pid === -1) {
+            $this->fail('Failed to fork the currently running process: ' . pcntl_strerror(pcntl_get_last_error()));
+        } elseif ($pid === 0) {
+            // Child process pushes a message after the initial collect
+            sleep(5);
+            $this->driver->pushMessage('send-newsletter', 'test');
+            exit;
+        }
+
+        list($message, ) = $this->driver->popMessage('send-newsletter', 10);
+        $this->assertSame('test', $message);
+
+        pcntl_waitpid($pid, $status);
+    }
+
     public function testAcknowledgeMessage()
     {
         $this->driver->createQueue('send-newsletter');
