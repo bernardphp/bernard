@@ -31,6 +31,13 @@ class Producer
         $queue = $this->queues->create($queueName);
         $queue->enqueue($envelope = new Envelope($message));
 
-        $this->dispatcher->dispatch(BernardEvents::PRODUCE, new EnvelopeEvent($envelope, $queue));
+        $this->dispatch(BernardEvents::PRODUCE, new EnvelopeEvent($envelope, $queue));
+    }
+
+    private function dispatch($eventName, EnvelopeEvent $event)
+    {
+        $this->dispatcher instanceof \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+           ? $this->dispatcher->dispatch($event, $eventName)
+           : $this->dispatcher->dispatch($eventName, $event);
     }
 }
