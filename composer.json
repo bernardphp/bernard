@@ -1,9 +1,8 @@
 {
-    "name": "bernard/bernard",
+    "name": "helsner/bernard",
     "description": "Message queue abstraction layer",
     "license": "MIT",
     "keywords": ["message queue", "message", "queue", "bernard"],
-    "homepage": "https://github.com/bernardphp/bernard",
     "type": "library",
     "require": {
         "php": "^5.6 || ^7.0",
