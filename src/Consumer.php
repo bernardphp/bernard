@@ -187,7 +187,7 @@ class Consumer
         // Previously failing jobs handling have been moved to a middleware.
         //
         // Emit an event to let others log that exception
-        $this->dispatcher->dispatch(new RejectEnvelopeEvent($envelope, $queue, $exception), new RejectEnvelopeEvent($envelope, $queue, $exception));
+        $this->dispatcher->dispatch(new RejectEnvelopeEvent($envelope, $queue, $exception));
 
         if ($this->options['stop-on-error']) {
             throw $exception;
