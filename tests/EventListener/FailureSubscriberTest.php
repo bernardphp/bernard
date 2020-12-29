@@ -13,7 +13,7 @@ class FailureSubscriberTest extends \PHPUnit\Framework\TestCase
     private $producer;
     private $subscriber;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->producer = $this->getMockBuilder('Bernard\Producer')->disableOriginalConstructor()->getMock();
         $this->subscriber = new FailureSubscriber($this->producer, 'failures');

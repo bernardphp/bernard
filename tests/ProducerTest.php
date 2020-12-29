@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ProducerTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->queues = new InMemoryFactory();
         $this->dispatcher = new EventDispatcher();

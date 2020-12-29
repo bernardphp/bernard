@@ -27,7 +27,7 @@ final class DriverTest extends TestCase
 
     const EXCHANGE_NAME = 'foo-exchange';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->phpAmqpChannel = $this->getMockBuilder('\PhpAmqpLib\Channel\AMQPChannel')
             ->setMethods([

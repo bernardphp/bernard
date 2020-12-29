@@ -5,10 +5,9 @@ namespace Bernard\Tests\EventListener;
 use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\EventListener\LoggerSubscriber;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class LoggerSubscriberTest extends TestCase
+class LoggerSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     public function testLogsInfoOnProduce()
     {
@@ -46,7 +45,7 @@ class LoggerSubscriberTest extends TestCase
             'bernard.reject' => ['onReject'],
         ];
 
-        TestCase::assertInternalType('array', $events);
-        TestCase::assertEquals($expectedEvents, $events);
+        $this->assertIsArray($events);
+        $this->assertEquals($expectedEvents, $events);
     }
 }

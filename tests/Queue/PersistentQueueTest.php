@@ -7,7 +7,7 @@ use Bernard\Queue\PersistentQueue;
 
 class PersistentQueueTest extends AbstractQueueTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->driver = $this->createMock('Bernard\Driver');
         $this->serializer = $this->createMock('Bernard\Serializer');
@@ -80,7 +80,7 @@ class PersistentQueueTest extends AbstractQueueTest
         $queue = $this->createQueue('send-newsletter');
 
         $this->assertSame($messageWrapper, $queue->dequeue());
-        $this->assertInternalType('null', $queue->dequeue());
+        $this->assertNull($queue->dequeue());
     }
 
     /**

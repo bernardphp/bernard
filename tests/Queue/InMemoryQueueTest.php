@@ -17,7 +17,7 @@ class InMemoryQueueTest extends AbstractQueueTest
         $this->assertCount(1, $queue);
         $this->assertSame($envelope, $queue->dequeue());
         $this->assertCount(0, $queue);
-        $this->assertInternalType('null', $queue->dequeue());
+        $this->assertNull($queue->dequeue());
     }
 
     public function testPeek()

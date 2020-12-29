@@ -6,7 +6,7 @@ use Bernard\QueueFactory\PersistentFactory;
 
 class PersistentFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->connection = $this->getMockBuilder('Bernard\Driver')
             ->disableOriginalConstructor()->getMock();
@@ -29,11 +29,10 @@ class PersistentFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($queue, $this->factory->create('send-newsletter'));
     }
 
-    /**
-     * @expectedException \Bernard\Exception\InvalidOperationException
-     */
     public function testRemoveClosesQueue()
     {
+        $this->expectException(\Bernard\Exception\InvalidOperationException::class);
+
         $this->connection->expects($this->once())->method('listQueues')
             ->will($this->returnValue([]));
 

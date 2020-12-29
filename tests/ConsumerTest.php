@@ -31,7 +31,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
      */
     private $consumer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->router = $this->prophesize(Router::class);
 
@@ -193,11 +193,10 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->consumer->tick($queue, ['stop-when-empty' => true]));
     }
 
-    /**
-     * @expectedException \Bernard\Exception\ReceiverNotFoundException
-     */
     public function testStopOnError()
     {
+        $this->expectException(\Bernard\Exception\ReceiverNotFoundException::class);
+
         $envelope = new Envelope($message = new PlainMessage('DifferentMessageKey'));
 
         $queue = new InMemoryQueue('send-newsletter');
@@ -230,10 +229,11 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @requires PHP 7.0
-     * @expectedException \TypeError
      */
     public function testWillRejectDispatchOnThrowableError()
     {
+        $this->expectException(\TypeError::class);
+
         $envelope = new Envelope($message = new PlainMessage('ImportReport'));
 
         $queue = new InMemoryQueue('send-newsletter');

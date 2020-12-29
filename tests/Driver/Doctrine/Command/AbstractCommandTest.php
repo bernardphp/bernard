@@ -9,7 +9,7 @@ class AbstractCommandTest extends \PHPUnit\Framework\TestCase
 {
     protected $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $connection = $this->getMockBuilder('Doctrine\\DBAL\\Connection')
             ->disableOriginalConstructor()->getMock();

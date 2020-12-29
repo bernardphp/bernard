@@ -20,7 +20,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     /** @var Driver */
     private $driver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sqs = $this->getMockBuilder(SqsClient::class)
             ->disableOriginalConstructor()
@@ -123,12 +123,11 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(4, $this->driver->countMessages(self::DUMMY_QUEUE_NAME));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Queue "unknown" cannot be resolved to an url.
-     */
     public function testUnresolveableQueueNameThrowsException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Queue "unknown" cannot be resolved to an url.');
+
         $this->driver->popMessage('unknown');
     }
 

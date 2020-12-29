@@ -17,7 +17,7 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
     private $iniErrorLog;
     private $errorLogFile;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (defined('HHVM_VERSION')) {
             $this->markTestSkipped("HHVM does not support `ini_set('error_log', '/path/to/log')`");
@@ -35,7 +35,7 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
         ini_set('error_log', $this->errorLogFile);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         ini_set('error_log', $this->iniErrorLog);
         unlink($this->errorLogFile);

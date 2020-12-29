@@ -10,21 +10,21 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     /** @var Driver */
     private $driver;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // Very ugly hack! But AppEngine SDK isn't available outside appengine
         // environment.
         class_alias('Bernard\Tests\Fixtures\PushTask', 'google\appengine\api\taskqueue\PushTask');
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->driver = new Driver([
             'send-newsletter' => '/url_endpoint',
         ]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         PushTask::$messages = [];
     }

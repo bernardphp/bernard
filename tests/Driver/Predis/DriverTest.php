@@ -7,7 +7,7 @@ use Predis\Client;
 
 class DriverTest extends \Bernard\Tests\Driver\PhpRedis\DriverTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         // Because predis uses __call all methods that needs mocking must be
         // explicitly defined.
