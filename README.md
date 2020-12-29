@@ -5,9 +5,7 @@
 </p>
 
 [![Latest Version](https://img.shields.io/github/release/bernardphp/bernard.svg?style=flat-square)](https://github.com/bernardphp/bernard/releases)
-[![Build Status](https://img.shields.io/travis/bernardphp/bernard.svg?style=flat-square)](https://travis-ci.org/bernardphp/bernard)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/bernardphp/bernard.svg?style=flat-square)](https://scrutinizer-ci.com/g/bernardphp/bernard)
-[![Quality Score](https://img.shields.io/scrutinizer/g/bernardphp/bernard.svg?style=flat-square)](https://scrutinizer-ci.com/g/bernardphp/bernard)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bernardphp/bernard/CI?style=flat-square)](https://github.com/bernardphp/bernard/actions?query=workflow%3ACI)
 [![Total Downloads](https://img.shields.io/packagist/dt/bernard/bernard.svg?style=flat-square)](https://packagist.org/packages/bernard/bernard)
 
 Bernard makes it super easy and enjoyable to do background processing in PHP.
