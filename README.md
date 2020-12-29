@@ -10,6 +10,9 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/bernardphp/bernard.svg?style=flat-square)](https://scrutinizer-ci.com/g/bernardphp/bernard)
 [![Total Downloads](https://img.shields.io/packagist/dt/bernard/bernard.svg?style=flat-square)](https://packagist.org/packages/bernard/bernard)
 
+> **Important!**
+> This is a development branch for a 1.x version which was never released.
+
 Bernard makes it super easy and enjoyable to do background processing in PHP.
 It does this by utilizing queues and long running processes.
 It supports normal queueing drivers but also implements simple ones with Redis and Doctrine.
