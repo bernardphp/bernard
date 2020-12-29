@@ -7,7 +7,7 @@ use Doctrine\DBAL\DBALException;
 
 class ConnectionListenerTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->connection = $this->prophesize('Doctrine\DBAL\Connection');
 

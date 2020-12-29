@@ -14,7 +14,7 @@ final class DriverTest extends \PHPUnit\Framework\TestCase
      */
     private $driver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->driver = new Driver();
     }

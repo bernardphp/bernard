@@ -8,7 +8,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ConsumeCommandTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->queues = new InMemoryFactory();
         $this->consumer = $this->getMockBuilder('Bernard\Consumer')

@@ -6,7 +6,7 @@ use Bernard\QueueFactory\InMemoryFactory;
 
 class InMemoryFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = new InMemoryFactory();
     }
@@ -16,11 +16,10 @@ class InMemoryFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Bernard\QueueFactory', $this->factory);
     }
 
-    /**
-     * @expectedException \Bernard\Exception\InvalidOperationException
-     */
     public function testRemoveClosesQueue()
     {
+        $this->expectException(\Bernard\Exception\InvalidOperationException::class);
+
         $queue = $this->factory->create('queue');
 
         $this->assertTrue($this->factory->exists('queue'));

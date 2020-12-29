@@ -14,7 +14,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     /** @var Driver */
     private $driver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->pheanstalk = $this->getMockBuilder(Pheanstalk::class)
             ->setMethods([

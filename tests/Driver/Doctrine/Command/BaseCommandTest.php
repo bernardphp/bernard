@@ -10,7 +10,7 @@ abstract class BaseCommandTest extends \PHPUnit\Framework\TestCase
 
     protected $sync;
 
-    public function setUp()
+    public function setUp(): void
     {
         $connection = $this->getMockBuilder('Doctrine\\DBAL\\Connection')
             ->disableOriginalConstructor()->getMock();

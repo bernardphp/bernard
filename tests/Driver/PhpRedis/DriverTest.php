@@ -6,7 +6,7 @@ use Bernard\Driver\PhpRedis\Driver;
 
 class DriverTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         if (!extension_loaded('redis')) {
             $this->markTestSkipped('"redis" extension is not loaded.');

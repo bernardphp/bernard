@@ -14,7 +14,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
      */
     private $driver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->baseDir = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'bernard-flat';
 
@@ -25,7 +25,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->driver = new Driver($this->baseDir);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ((strtoupper(substr(\PHP_OS, 0, 3)) === 'WIN')) {
             system('rd /s /q '.$this->baseDir);
@@ -96,7 +96,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     {
         $this->driver->createQueue('send-newsletter');
 
-        $pid = pcntl_fork();
+        $pid = \pcntl_fork();
 
         if ($pid === -1) {
             $this->fail('Failed to fork the currently running process: ' . pcntl_strerror(pcntl_get_last_error()));

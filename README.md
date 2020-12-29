@@ -5,6 +5,7 @@
 </p>
 
 [![Latest Version](https://img.shields.io/github/release/bernardphp/bernard.svg?style=flat-square)](https://github.com/bernardphp/bernard/releases)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.4-8892BF.svg?style=flat-square)](https://php.net/)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bernardphp/bernard/CI?style=flat-square)](https://github.com/bernardphp/bernard/actions?query=workflow%3ACI)
 [![Total Downloads](https://img.shields.io/packagist/dt/bernard/bernard.svg?style=flat-square)](https://packagist.org/packages/bernard/bernard)
 

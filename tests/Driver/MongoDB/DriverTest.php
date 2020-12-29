@@ -18,7 +18,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     /** @var Driver */
     private $driver;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (!class_exists('MongoCollection')) {
             $this->markTestSkipped('MongoDB extension is not available.');
