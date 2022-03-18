@@ -148,6 +148,7 @@ class RoundRobinQueue implements Queue
     /**
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return array_sum(array_map('count', $this->queues));
