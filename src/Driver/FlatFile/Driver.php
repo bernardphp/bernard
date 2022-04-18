@@ -109,7 +109,14 @@ class Driver implements \Bernard\Driver
                 $files = $this->getJobFiles($queueName);
             }
 
-            usleep(1000);
+            $nano = time_nanosleep(0, 1000000);
+            if ($nano === false) {
+                // fallback when time_nanosleep fails
+                usleep(1000);
+            } elseif (is_array($nano)) {
+                // Interrupted by a pcntl_signal
+                return array(null, null);
+            }
         }
 
         return [null, null];

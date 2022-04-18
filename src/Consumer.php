@@ -36,15 +36,14 @@ class Consumer
      *
      * @param Queue $queue
      * @param array $options
+     * @throws \Throwable
      */
     public function consume(Queue $queue, array $options = [])
     {
-        declare(ticks=1);
-
         $this->bind();
 
         while ($this->tick($queue, $options)) {
-            // NO op
+            pcntl_signal_dispatch();
         }
     }
 
@@ -56,6 +55,7 @@ class Consumer
      * @param array $options
      *
      * @return bool
+     * @throws \Throwable
      */
     public function tick(Queue $queue, array $options = [])
     {
@@ -134,15 +134,19 @@ class Consumer
             $queue->acknowledge($envelope);
 
             $this->dispatcher->dispatch(BernardEvents::ACKNOWLEDGE, new EnvelopeEvent($envelope, $queue));
+
         } catch (\Throwable $error) {
+            // php 7
             $this->rejectDispatch($error, $envelope, $queue);
         } catch (\Exception $exception) {
+            // php 5
             $this->rejectDispatch($exception, $envelope, $queue);
         }
     }
 
     /**
      * @param array $options
+     * @return array
      */
     protected function configure(array $options)
     {
@@ -153,6 +157,8 @@ class Consumer
         $this->options = array_filter($options) + $this->options;
         $this->options['max-runtime'] += microtime(true);
         $this->configured = true;
+
+        return $this->options;
     }
 
     /**

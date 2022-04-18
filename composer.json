@@ -9,7 +9,8 @@
         "php": ">=7.4",
         "beberlei/assert": "^2.1 || ^3.0",
         "bernard/normalt": "^1.0",
-        "symfony/event-dispatcher": "^3.0 || ^4.0"
+        "symfony/event-dispatcher": "^3.0 || ^4.0",
+        "ext-pcntl": "*"
     },
     "require-dev" : {
         "doctrine/dbal": "^2.5",

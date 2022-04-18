@@ -14,6 +14,8 @@ class DriverTest extends \PHPUnit\Framework\TestCase
      */
     private $driver;
 
+    private $baseDir;
+
     protected function setUp(): void
     {
         $this->baseDir = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'bernard-flat';
@@ -49,7 +51,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
 
         $this->driver->removeQueue('send-newsletter');
 
-        $this->assertDirectoryNotExists($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter');
+        $this->assertDirectoryDoesNotExist($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter');
     }
 
     public function testRemoveQueueWithPoppedMessage()
@@ -60,7 +62,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
 
         $this->driver->removeQueue('send-newsletter');
 
-        $this->assertDirectoryNotExists($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter');
+        $this->assertDirectoryDoesNotExist($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter');
     }
 
     public function testPushMessage()
