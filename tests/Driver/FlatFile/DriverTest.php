@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Driver\FlatFile;
 
 use Bernard\Driver\FlatFile\Driver;
@@ -34,7 +36,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $this->driver->createQueue('send-newsletter');
         $this->driver->createQueue('send-newsletter');
@@ -42,7 +44,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->assertDirectoryExists($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter');
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $this->driver->createQueue('send-newsletter');
         $this->driver->pushMessage('send-newsletter', 'test');
@@ -52,7 +54,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->assertDirectoryNotExists($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter');
     }
 
-    public function testRemoveQueueWithPoppedMessage()
+    public function testRemoveQueueWithPoppedMessage(): void
     {
         $this->driver->createQueue('send-newsletter');
         $this->driver->pushMessage('send-newsletter', 'test');
@@ -63,7 +65,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->assertDirectoryNotExists($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter');
     }
 
-    public function testPushMessage()
+    public function testPushMessage(): void
     {
         $this->driver->createQueue('send-newsletter');
         $this->driver->pushMessage('send-newsletter', 'test');
@@ -71,14 +73,14 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(1, glob($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter'.\DIRECTORY_SEPARATOR.'*.job'));
     }
 
-    public function testPushMessagePermissions()
+    public function testPushMessagePermissions(): void
     {
         $this->driver = new Driver($this->baseDir, 0770);
         $this->testPushMessage();
         $this->assertEquals('0770', substr(sprintf('%o', fileperms($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter'.\DIRECTORY_SEPARATOR.'1.job')), -4));
     }
 
-    public function testPopMessage()
+    public function testPopMessage(): void
     {
         $this->driver->createQueue('send-newsletter');
 
@@ -87,19 +89,19 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->pushMessage('send-newsletter', 'job #3');
 
         foreach (range(3, 1) as $i) {
-            list($message) = $this->driver->popMessage('send-newsletter');
-            $this->assertEquals('job #'.$i, $message);
+            $driverMessage = $this->driver->popMessage('send-newsletter');
+            $this->assertEquals('job #'.$i, $driverMessage->message);
         }
     }
 
-    public function testPopMessageWhichPushedAfterTheInitialCollect()
+    public function testPopMessageWhichPushedAfterTheInitialCollect(): void
     {
         $this->driver->createQueue('send-newsletter');
 
-        $pid = \pcntl_fork();
+        $pid = pcntl_fork();
 
         if ($pid === -1) {
-            $this->fail('Failed to fork the currently running process: ' . pcntl_strerror(pcntl_get_last_error()));
+            $this->fail('Failed to fork the currently running process: '.pcntl_strerror(pcntl_get_last_error()));
         } elseif ($pid === 0) {
             // Child process pushes a message after the initial collect
             sleep(5);
@@ -107,26 +109,26 @@ class DriverTest extends \PHPUnit\Framework\TestCase
             exit;
         }
 
-        list($message, ) = $this->driver->popMessage('send-newsletter', 10);
-        $this->assertSame('test', $message);
+        $driverMessage = $this->driver->popMessage('send-newsletter', 10);
+        $this->assertSame('test', $driverMessage->message);
 
         pcntl_waitpid($pid, $status);
     }
 
-    public function testAcknowledgeMessage()
+    public function testAcknowledgeMessage(): void
     {
         $this->driver->createQueue('send-newsletter');
 
         $this->driver->pushMessage('send-newsletter', 'job #1');
 
-        $message = $this->driver->popMessage('send-newsletter');
+        $driverMessage = $this->driver->popMessage('send-newsletter');
 
-        $this->driver->acknowledgeMessage('send-newsletter', $message[1]);
+        $this->driver->acknowledgeMessage('send-newsletter', $driverMessage->receipt);
 
         $this->assertCount(0, glob($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter'.\DIRECTORY_SEPARATOR.'*.job'));
     }
 
-    public function testPeekQueue()
+    public function testPeekQueue(): void
     {
         $this->driver->createQueue('send-newsletter');
 
@@ -139,7 +141,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(10, glob($this->baseDir.\DIRECTORY_SEPARATOR.'send-newsletter'.\DIRECTORY_SEPARATOR.'*.job'));
     }
 
-    public function testListQueues()
+    public function testListQueues(): void
     {
         $this->driver->createQueue('send-newsletter-1');
 
