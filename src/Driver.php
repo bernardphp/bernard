@@ -36,7 +36,7 @@ interface Driver
      *
      * If no message is available wait for $duration seconds.
      */
-    public function popMessage(string $queueName, int $duration = 5): ?DriverMessage;
+    public function popMessage(string $queueName, int $duration = 5): ?Driver\Message;
 
     /**
      * If the driver supports it, this will be called when a message have been successfully processed.

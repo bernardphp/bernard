@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bernard\Driver\Doctrine;
 
+use Bernard\Driver\Message;
 use Doctrine\DBAL\Connection;
 
 final class Driver implements \Bernard\Driver
@@ -52,7 +53,7 @@ final class Driver implements \Bernard\Driver
         $this->connection->insert('bernard_messages', $data, $types);
     }
 
-    public function popMessage(string $queueName, int $duration = 5): ?\Bernard\DriverMessage
+    public function popMessage(string $queueName, int $duration = 5): ?Message
     {
         $runtime = microtime(true) + $duration;
 
@@ -74,12 +75,14 @@ final class Driver implements \Bernard\Driver
             // sleep for 10 ms
             usleep(10000);
         }
+
+        return null;
     }
 
     /**
      * Execute the actual query and process the response.
      */
-    private function doPopMessage(string $queueName): ?\Bernard\DriverMessage
+    private function doPopMessage(string $queueName): ?Message
     {
         $query = 'SELECT id, message FROM bernard_messages
                   WHERE queue = :queue AND visible = :visible
@@ -93,7 +96,7 @@ final class Driver implements \Bernard\Driver
         if ($id) {
             $this->connection->update('bernard_messages', ['visible' => 0], compact('id'));
 
-            return new \Bernard\DriverMessage($message, $id);
+            return new Message($message, $id);
         }
     }
 

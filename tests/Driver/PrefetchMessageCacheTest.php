@@ -10,7 +10,7 @@ class PrefetchMessageCacheTest extends \PHPUnit\Framework\TestCase
 {
     public function testPushesAndPop(): void
     {
-        $driverMessage = new \Bernard\DriverMessage('message1', 'r0');
+        $driverMessage = new \Bernard\Driver\Message('message1', 'r0');
 
         $cache = new PrefetchMessageCache();
         $cache->push('my-queue', $driverMessage);
