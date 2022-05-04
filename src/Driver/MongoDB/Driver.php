@@ -1,66 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Driver\MongoDB;
 
 use MongoCollection;
 use MongoDate;
 use MongoId;
 
-/**
- * Driver supporting MongoDB.
- */
 final class Driver implements \Bernard\Driver
 {
-    private $messages;
-    private $queues;
+    private MongoCollection $queues;
 
-    /**
-     * @param MongoCollection $queues   Collection where queues will be stored
-     * @param MongoCollection $messages Collection where messages will be stored
-     */
+    private MongoCollection $messages;
+
     public function __construct(MongoCollection $queues, MongoCollection $messages)
     {
         $this->queues = $queues;
         $this->messages = $messages;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function listQueues()
+    public function listQueues(): array
     {
         return $this->queues->distinct('_id');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function createQueue($queueName)
+    public function createQueue(string $queueName): void
     {
-        $data = ['_id' => (string) $queueName];
+        $data = ['_id' => $queueName];
 
         $this->queues->update($data, $data, ['upsert' => true]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function countMessages($queueName)
+    public function removeQueue(string $queueName): void
     {
-        return $this->messages->count([
-            'queue' => (string) $queueName,
-            'visible' => true,
-        ]);
+        $this->queues->remove(['_id' => $queueName]);
+        $this->messages->remove(['queue' => $queueName]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function pushMessage($queueName, $message)
+    public function pushMessage(string $queueName, string $message): void
     {
         $data = [
-            'queue' => (string) $queueName,
-            'message' => (string) $message,
+            'queue' => $queueName,
+            'message' => $message,
             'sentAt' => new MongoDate(),
             'visible' => true,
         ];
@@ -68,81 +50,65 @@ final class Driver implements \Bernard\Driver
         $this->messages->insert($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function popMessage($queueName, $duration = 5)
+    public function popMessage(string $queueName, int $duration = 5): ?\Bernard\DriverMessage
     {
         $runtime = microtime(true) + $duration;
 
         while (microtime(true) < $runtime) {
             $result = $this->messages->findAndModify(
-                ['queue' => (string) $queueName, 'visible' => true],
+                ['queue' => $queueName, 'visible' => true],
                 ['$set' => ['visible' => false]],
                 ['message' => 1],
                 ['sort' => ['sentAt' => 1]]
             );
 
             if ($result) {
-                return [(string) $result['message'], (string) $result['_id']];
+                return new \Bernard\DriverMessage((string) $result['message'], (string) $result['_id']);
             }
 
             usleep(10000);
         }
 
-        return [null, null];
+        return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function acknowledgeMessage($queueName, $receipt)
+    public function acknowledgeMessage(string $queueName, mixed $receipt): void
     {
         $this->messages->remove([
             '_id' => new MongoId((string) $receipt),
-            'queue' => (string) $queueName,
+            'queue' => $queueName,
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function peekQueue($queueName, $index = 0, $limit = 20)
+    public function info(): array
     {
-        $query = ['queue' => (string) $queueName, 'visible' => true];
+        return [
+            'queues' => (string) $this->queues,
+            'messages' => (string) $this->messages,
+        ];
+    }
+
+    public function countMessages(string $queueName): int
+    {
+        return $this->messages->count([
+            'queue' => $queueName,
+            'visible' => true,
+        ]);
+    }
+
+    public function peekQueue(string $queueName, int $index = 0, int $limit = 20): array
+    {
+        $query = ['queue' => $queueName, 'visible' => true];
         $fields = ['_id' => 0, 'message' => 1];
 
         $cursor = $this->messages
             ->find($query, $fields)
             ->sort(['sentAt' => 1])
             ->limit($limit)
-            ->skip($index)
-        ;
+            ->skip($index);
 
-        $mapper = function ($result) {
-            return (string) $result['message'];
-        };
+        $mapper = fn ($result) => (string) $result['message'];
 
         return array_map($mapper, iterator_to_array($cursor, false));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeQueue($queueName)
-    {
-        $this->queues->remove(['_id' => $queueName]);
-        $this->messages->remove(['queue' => (string) $queueName]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function info()
-    {
-        return [
-            'messages' => (string) $this->messages,
-            'queues' => (string) $this->queues,
-        ];
     }
 }
