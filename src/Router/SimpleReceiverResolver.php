@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Router;
 
 use Bernard\Envelope;
@@ -15,7 +17,7 @@ class SimpleReceiverResolver implements ReceiverResolver
      */
     public function accepts($receiver)
     {
-        return is_callable($receiver) || is_object($receiver) || class_exists($receiver);
+        return \is_callable($receiver) || \is_object($receiver) || class_exists($receiver);
     }
 
     /**
@@ -31,12 +33,12 @@ class SimpleReceiverResolver implements ReceiverResolver
             return $receiver;
         }
 
-        if (is_callable($receiver) == false) {
+        if (\is_callable($receiver) == false) {
             $receiver = [$receiver, lcfirst($envelope->getName())];
         }
 
         // Receiver is still not a callable which means it's not a valid receiver.
-        if (is_callable($receiver) == false) {
+        if (\is_callable($receiver) == false) {
             return null;
         }
 

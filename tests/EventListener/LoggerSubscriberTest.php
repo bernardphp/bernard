@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\EventListener;
 
 use Bernard\Event\EnvelopeEvent;
@@ -9,7 +11,9 @@ use Psr\Log\LoggerInterface;
 
 class LoggerSubscriberTest extends \PHPUnit\Framework\TestCase
 {
-    public function testLogsInfoOnProduce()
+    use \Prophecy\PhpUnit\ProphecyTrait;
+
+    public function testLogsInfoOnProduce(): void
     {
         $loggerMock = $this->getMockBuilder(LoggerInterface::class)->getMock();
         $loggerMock->expects($this->once())->method('info');
@@ -18,7 +22,7 @@ class LoggerSubscriberTest extends \PHPUnit\Framework\TestCase
         $subscriber->onProduce($this->prophesize(EnvelopeEvent::class)->reveal());
     }
 
-    public function testsLogsInfoOnInvoke()
+    public function testsLogsInfoOnInvoke(): void
     {
         $loggerMock = $this->getMockBuilder(LoggerInterface::class)->getMock();
         $loggerMock->expects($this->once())->method('info');
@@ -27,7 +31,7 @@ class LoggerSubscriberTest extends \PHPUnit\Framework\TestCase
         $subscriber->onInvoke($this->prophesize(EnvelopeEvent::class)->reveal());
     }
 
-    public function testLogsErrorOnReject()
+    public function testLogsErrorOnReject(): void
     {
         $loggerMock = $this->getMockBuilder(LoggerInterface::class)->getMock();
         $loggerMock->expects($this->once())->method('error');
@@ -36,7 +40,7 @@ class LoggerSubscriberTest extends \PHPUnit\Framework\TestCase
         $subscriber->onReject($this->prophesize(RejectEnvelopeEvent::class)->reveal());
     }
 
-    public function testGetSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         $events = LoggerSubscriber::getSubscribedEvents();
         $expectedEvents = [

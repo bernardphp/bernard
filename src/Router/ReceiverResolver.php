@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Router;
 
 use Bernard\Envelope;
@@ -22,8 +24,7 @@ interface ReceiverResolver
     /**
      * Resolves a receiver or returns null if it cannot be resolved.
      *
-     * @param mixed    $receiver
-     * @param Envelope $envelope
+     * @param mixed $receiver
      *
      * @return Receiver|null
      */

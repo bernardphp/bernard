@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\EventListener;
 
 use Bernard\Envelope;
@@ -17,9 +19,9 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
     private $iniErrorLog;
     private $errorLogFile;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        if (defined('HHVM_VERSION')) {
+        if (\defined('HHVM_VERSION')) {
             $this->markTestSkipped("HHVM does not support `ini_set('error_log', '/path/to/log')`");
         }
 
@@ -29,19 +31,19 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
         $this->queue = $this->createMock('Bernard\Queue');
         $this->producer = $this->getMockBuilder('Bernard\Producer')->disableOriginalConstructor()->getMock();
         $this->subscriber = new ErrorLogSubscriber($this->producer, 'failures');
-        $this->iniErrorLog = ini_get('error_log');
+        $this->iniErrorLog = \ini_get('error_log');
         $this->errorLogFile = tempnam(sys_get_temp_dir(), 'phpunit');
         ini_set('error_log', $this->errorLogFile);
         ini_set('error_log', $this->errorLogFile);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         ini_set('error_log', $this->iniErrorLog);
         unlink($this->errorLogFile);
     }
 
-    public function testGetSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         $expected = [
             'bernard.reject' => ['onReject'],
@@ -50,7 +52,7 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testOnRejectException()
+    public function testOnRejectException(): void
     {
         $this->message->expects($this->once())
             ->method('getName')
@@ -66,7 +68,7 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
     /**
      * @requires PHP 7.0
      */
-    public function testOnRejectError()
+    public function testOnRejectError(): void
     {
         $this->message->expects($this->once())
             ->method('getName')
@@ -79,7 +81,7 @@ class ErrorLogSubscriberTest extends \PHPUnit\Framework\TestCase
         $this->assertStringEndsWith($expected, $actual);
     }
 
-    public function testOnRejectObject()
+    public function testOnRejectObject(): void
     {
         $this->message->expects($this->once())
             ->method('getName')

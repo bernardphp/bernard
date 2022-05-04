@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard;
 
 /**
@@ -9,8 +11,6 @@ interface Receiver
 {
     /**
      * Receives and handles a message.
-     *
-     * @param Message $message
      */
     public function receive(Message $message);
 }

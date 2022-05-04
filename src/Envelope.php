@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard;
 
 /**
@@ -12,13 +14,10 @@ final class Envelope
     private $class;
     private $timestamp;
 
-    /**
-     * @param Message $message
-     */
     public function __construct(Message $message)
     {
         $this->message = $message;
-        $this->class = get_class($message);
+        $this->class = $message::class;
         $this->timestamp = time();
     }
 

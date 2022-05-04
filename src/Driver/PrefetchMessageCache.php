@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Bernard\Driver;
 
+use Bernard\DriverMessage;
+
 /**
  * @internal
  */
@@ -14,7 +16,7 @@ final class PrefetchMessageCache
     /**
      * Pushes a $message to the bottom of the cache.
      */
-    public function push(string $queueName, \Bernard\DriverMessage $message): void
+    public function push(string $queueName, DriverMessage $message): void
     {
         $cache = $this->get($queueName);
         $cache->enqueue($message);
@@ -24,7 +26,7 @@ final class PrefetchMessageCache
      * Get the next message in line. Or nothing if there is no more
      * in the cache.
      */
-    public function pop(string $queueName): ?\Bernard\DriverMessage
+    public function pop(string $queueName): ?DriverMessage
     {
         $cache = $this->get($queueName);
 

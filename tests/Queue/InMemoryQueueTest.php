@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Queue;
 
 use Bernard\Envelope;
@@ -7,7 +9,7 @@ use Bernard\Queue\InMemoryQueue;
 
 class InMemoryQueueTest extends AbstractQueueTest
 {
-    public function testDequeue()
+    public function testDequeue(): void
     {
         $envelope = new Envelope($this->createMock('Bernard\Message'));
 
@@ -20,7 +22,7 @@ class InMemoryQueueTest extends AbstractQueueTest
         $this->assertNull($queue->dequeue());
     }
 
-    public function testPeek()
+    public function testPeek(): void
     {
         $queue = new InMemoryQueue('send-newsletter');
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Driver\MongoDB;
 
 use Bernard\Driver\MongoDB\Driver;
@@ -13,9 +15,9 @@ use MongoConnectionException;
  */
 class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
 {
-    const DATABASE = 'bernardQueueTest';
-    const MESSAGES = 'bernardMessages';
-    const QUEUES = 'bernardQueues';
+    public const DATABASE = 'bernardQueueTest';
+    public const MESSAGES = 'bernardMessages';
+    public const QUEUES = 'bernardQueues';
 
     /** @var MongoCollection */
     private $messages;
@@ -26,7 +28,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
     /** @var Driver */
     private $driver;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         if (!class_exists('MongoClient')) {
             $this->markTestSkipped('MongoDB extension is not available.');
@@ -43,7 +45,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
         $this->driver = new Driver($this->queues, $this->messages);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         if (!$this->messages instanceof MongoCollection) {
             return;
@@ -60,7 +62,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
      * @covers ::popMessage()
      * @covers ::pushMessage()
      */
-    public function testMessageLifecycle()
+    public function testMessageLifecycle(): void
     {
         $this->assertEquals(0, $this->driver->countMessages('foo'));
 
@@ -70,17 +72,17 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
         $this->driver->pushMessage('foo', 'message2');
         $this->assertEquals(2, $this->driver->countMessages('foo'));
 
-        list($message1, $receipt1) = $this->driver->popMessage('foo');
+        [$message1, $receipt1] = $this->driver->popMessage('foo');
         $this->assertSame('message1', $message1, 'The first message pushed is popped first');
         $this->assertRegExp('/^[a-f\d]{24}$/i', $receipt1, 'The message receipt is an ObjectId');
         $this->assertEquals(1, $this->driver->countMessages('foo'));
 
-        list($message2, $receipt2) = $this->driver->popMessage('foo');
+        [$message2, $receipt2] = $this->driver->popMessage('foo');
         $this->assertSame('message2', $message2, 'The second message pushed is popped second');
         $this->assertRegExp('/^[a-f\d]{24}$/i', $receipt2, 'The message receipt is an ObjectId');
         $this->assertEquals(0, $this->driver->countMessages('foo'));
 
-        list($message3, $receipt3) = $this->driver->popMessage('foo', 1);
+        [$message3, $receipt3] = $this->driver->popMessage('foo', 1);
         $this->assertNull($message3, 'Null message is returned when popping an empty queue');
         $this->assertNull($receipt3, 'Null receipt is returned when popping an empty queue');
 
@@ -93,7 +95,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, $this->messages->count(), 'Acknowledged messages are removed from the database');
     }
 
-    public function testPeekQueue()
+    public function testPeekQueue(): void
     {
         $this->driver->pushMessage('foo', 'message1');
         $this->driver->pushMessage('foo', 'message2');
@@ -110,7 +112,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
      * @covers ::listQueues()
      * @covers ::removeQueue()
      */
-    public function testQueueLifecycle()
+    public function testQueueLifecycle(): void
     {
         $this->driver->createQueue('foo');
         $this->driver->createQueue('bar');
@@ -128,7 +130,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
         $this->assertContains('bar', $queues);
     }
 
-    public function testRemoveQueueDeletesMessages()
+    public function testRemoveQueueDeletesMessages(): void
     {
         $this->driver->pushMessage('foo', 'message1');
         $this->driver->pushMessage('foo', 'message2');
@@ -140,7 +142,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, $this->messages->count());
     }
 
-    public function testCreateQueueWithDuplicateNameIsNoop()
+    public function testCreateQueueWithDuplicateNameIsNoop(): void
     {
         $this->driver->createQueue('foo');
         $this->driver->createQueue('foo');
@@ -148,7 +150,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(['foo'], $this->driver->listQueues());
     }
 
-    public function testInfo()
+    public function testInfo(): void
     {
         $info = [
             'messages' => self::DATABASE.'.'.self::MESSAGES,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Driver\Doctrine\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
@@ -10,7 +12,7 @@ abstract class BaseCommandTest extends \PHPUnit\Framework\TestCase
 
     protected $sync;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $connection = $this->getMockBuilder('Doctrine\\DBAL\\Connection')
             ->disableOriginalConstructor()->getMock();
@@ -23,7 +25,7 @@ abstract class BaseCommandTest extends \PHPUnit\Framework\TestCase
         $helper
             ->expects($this->any())
             ->method('getConnection')
-            ->will($this->returnValue($connection));
+            ->willReturn($connection);
 
         $this->command = $this->getMockBuilder('Bernard\\Driver\\Doctrine\\Command\\'.$this->getShortClassName())
             ->setMethods(['getSynchronizer', 'getHelper'])
@@ -33,21 +35,21 @@ abstract class BaseCommandTest extends \PHPUnit\Framework\TestCase
             ->expects($this->any())
             ->method('getSynchronizer')
             ->with($connection)
-            ->will($this->returnValue($this->sync));
+            ->willReturn($this->sync);
         $this->command
             ->expects($this->any())
             ->method('getHelper')
             ->with('connection')
-            ->will($this->returnValue($helper));
+            ->willReturn($helper);
     }
 
-    public function testExecuteWithDumpSql()
+    public function testExecuteWithDumpSql(): void
     {
         $this->sync
             ->expects($this->once())
             ->method($this->getSqlMethod())
             ->with($this->isInstanceOf('Doctrine\\DBAL\\Schema\\Schema'))
-            ->will($this->returnValue([]));
+            ->willReturn([]);
 
         $tester = new CommandTester($this->command);
         $tester->execute([
@@ -55,7 +57,7 @@ abstract class BaseCommandTest extends \PHPUnit\Framework\TestCase
         ]);
     }
 
-    public function testExecuteWithoutDumpSql()
+    public function testExecuteWithoutDumpSql(): void
     {
         $this->sync
             ->expects($this->once())

@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Normalizer;
 
 use Assert\Assertion;
 use Assert\AssertionFailedException;
 use Bernard\Message\PlainMessage;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class PlainMessageNormalizer implements NormalizerInterface, DenormalizerInterface
 {

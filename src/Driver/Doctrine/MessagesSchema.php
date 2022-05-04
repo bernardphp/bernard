@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Driver\Doctrine;
 
 use Doctrine\DBAL\Schema\Schema;
@@ -8,10 +10,8 @@ class MessagesSchema
 {
     /**
      * Creates tables on the current schema given.
-     *
-     * @param Schema $schema
      */
-    public static function create(Schema $schema)
+    public static function create(Schema $schema): void
     {
         static::createQueueTable($schema);
         static::createMessagesTable($schema);
@@ -19,10 +19,8 @@ class MessagesSchema
 
     /**
      * Creates queue table on the current schema given.
-     *
-     * @param Schema $schema
      */
-    protected static function createQueueTable(Schema $schema)
+    protected static function createQueueTable(Schema $schema): void
     {
         $table = $schema->createTable('bernard_queues');
         $table->addColumn('name', 'string');
@@ -31,10 +29,8 @@ class MessagesSchema
 
     /**
      * Creates message table on the current schema given.
-     *
-     * @param Schema $schema
      */
-    protected static function createMessagesTable(Schema $schema)
+    protected static function createMessagesTable(Schema $schema): void
     {
         $table = $schema->createTable('bernard_messages');
         $table->addColumn('id', 'integer', [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Message;
 
 use Bernard\Message;
@@ -17,7 +19,6 @@ final class PlainMessage implements Message, \ArrayAccess
 
     /**
      * @param string $name
-     * @param array  $arguments
      */
     public function __construct($name, array $arguments = [])
     {
@@ -62,7 +63,7 @@ final class PlainMessage implements Message, \ArrayAccess
      */
     public function has($name)
     {
-        return array_key_exists($name, $this->arguments);
+        return \array_key_exists($name, $this->arguments);
     }
 
     public function offsetGet($offset)
@@ -75,12 +76,12 @@ final class PlainMessage implements Message, \ArrayAccess
         return $this->has($offset);
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \LogicException('Message is immutable');
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \LogicException('Message is immutable');
     }
@@ -95,12 +96,12 @@ final class PlainMessage implements Message, \ArrayAccess
         return $this->has($property);
     }
 
-    public function __set($property, $value)
+    public function __set($property, $value): void
     {
         throw new \LogicException('Message is immutable');
     }
 
-    public function __unset($property)
+    public function __unset($property): void
     {
         throw new \LogicException('Message is immutable');
     }

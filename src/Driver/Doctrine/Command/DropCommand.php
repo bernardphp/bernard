@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Driver\Doctrine\Command;
 
 use Doctrine\DBAL\Schema\Schema;
@@ -23,7 +25,7 @@ class DropCommand extends AbstractCommand
     /**
      * {@inheritdoc}
      */
-    protected function applySql(Synchronizer $sync, Schema $schema)
+    protected function applySql(Synchronizer $sync, Schema $schema): void
     {
         $sync->dropSchema($schema);
     }

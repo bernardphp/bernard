@@ -21,6 +21,7 @@
         "doctrine/instantiator": "^1.0.5",
         "friends-of-phpspec/phpspec-code-coverage": "^6.0",
         "phpspec/phpspec": "^7.0",
+        "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
         "psr/container": "^1.0",
         "psr/log": "^1.0",
