@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Driver\MongoDB;
 
-use Bernard\Driver\MongoDB\Driver;
 use ArrayIterator;
+use Bernard\Driver\MongoDB\Driver;
 use MongoDate;
 use MongoId;
 
@@ -18,7 +20,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     /** @var Driver */
     private $driver;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         if (!class_exists('MongoCollection')) {
             $this->markTestSkipped('MongoDB extension is not available.');
@@ -29,17 +31,17 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->driver = new Driver($this->queues, $this->messages);
     }
 
-    public function testListQueues()
+    public function testListQueues(): void
     {
         $this->queues->expects($this->once())
             ->method('distinct')
             ->with('_id')
-            ->will($this->returnValue(['foo', 'bar']));
+            ->willReturn(['foo', 'bar']);
 
         $this->assertSame(['foo', 'bar'], $this->driver->listQueues());
     }
 
-    public function testCreateQueue()
+    public function testCreateQueue(): void
     {
         $this->queues->expects($this->once())
             ->method('update')
@@ -48,17 +50,17 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->createQueue('foo');
     }
 
-    public function testCountMessages()
+    public function testCountMessages(): void
     {
         $this->messages->expects($this->once())
             ->method('count')
             ->with(['queue' => 'foo', 'visible' => true])
-            ->will($this->returnValue(2));
+            ->willReturn(2);
 
         $this->assertSame(2, $this->driver->countMessages('foo'));
     }
 
-    public function testPushMessage()
+    public function testPushMessage(): void
     {
         $this->messages->expects($this->once())
             ->method('insert')
@@ -72,7 +74,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->pushMessage('foo', 'message1');
     }
 
-    public function testPopMessageWithFoundMessage()
+    public function testPopMessageWithFoundMessage(): void
     {
         $this->messages->expects($this->atLeastOnce())
             ->method('findAndModify')
@@ -82,9 +84,9 @@ class DriverTest extends \PHPUnit\Framework\TestCase
                 ['message' => 1],
                 ['sort' => ['sentAt' => 1]]
             )
-            ->will($this->returnValue(['message' => 'message1', '_id' => '000000000000000000000000']));
+            ->willReturn(['message' => 'message1', '_id' => '000000000000000000000000']);
 
-        list($message, $receipt) = $this->driver->popMessage('foo');
+        [$message, $receipt] = $this->driver->popMessage('foo');
         $this->assertSame('message1', $message);
         $this->assertSame('000000000000000000000000', $receipt);
     }
@@ -92,7 +94,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
     /**
      * @medium
      */
-    public function testPopMessageWithMissingMessage()
+    public function testPopMessageWithMissingMessage(): void
     {
         $this->messages->expects($this->atLeastOnce())
             ->method('findAndModify')
@@ -102,14 +104,14 @@ class DriverTest extends \PHPUnit\Framework\TestCase
                 ['message' => 1],
                 ['sort' => ['sentAt' => 1]]
             )
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
-        list($message, $receipt) = $this->driver->popMessage('foo', 1);
+        [$message, $receipt] = $this->driver->popMessage('foo', 1);
         $this->assertNull($message);
         $this->assertNull($receipt);
     }
 
-    public function testAcknowledgeMessage()
+    public function testAcknowledgeMessage(): void
     {
         $this->messages->expects($this->once())
             ->method('remove')
@@ -122,7 +124,7 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->acknowledgeMessage('foo', '000000000000000000000000');
     }
 
-    public function testPeekQueue()
+    public function testPeekQueue(): void
     {
         $cursor = $this->getMockBuilder('MongoCursor')
             ->disableOriginalConstructor()
@@ -131,32 +133,32 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->messages->expects($this->once())
             ->method('find')
             ->with(['queue' => 'foo', 'visible' => true], ['_id' => 0, 'message' => 1])
-            ->will($this->returnValue($cursor));
+            ->willReturn($cursor);
 
         $cursor->expects($this->at(0))
             ->method('sort')
             ->with(['sentAt' => 1])
-            ->will($this->returnValue($cursor));
+            ->willReturn($cursor);
 
         $cursor->expects($this->at(1))
             ->method('limit')
             ->with(20)
-            ->will($this->returnValue($cursor));
+            ->willReturn($cursor);
 
         /* Rather than mock MongoCursor's iterator interface, take advantage of
          * the final fluent method call and return an ArrayIterator. */
         $cursor->expects($this->at(2))
             ->method('skip')
             ->with(0)
-            ->will($this->returnValue(new ArrayIterator([
+            ->willReturn(new ArrayIterator([
                 ['message' => 'message1'],
                 ['message' => 'message2'],
-            ])));
+            ]));
 
         $this->assertSame(['message1', 'message2'], $this->driver->peekQueue('foo'));
     }
 
-    public function testRemoveQueue()
+    public function testRemoveQueue(): void
     {
         $this->queues->expects($this->once())
             ->method('remove')
@@ -169,15 +171,15 @@ class DriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->removeQueue('foo');
     }
 
-    public function testInfo()
+    public function testInfo(): void
     {
         $this->queues->expects($this->once())
             ->method('__toString')
-            ->will($this->returnValue('db.queues'));
+            ->willReturn('db.queues');
 
         $this->messages->expects($this->once())
             ->method('__toString')
-            ->will($this->returnValue('db.messages'));
+            ->willReturn('db.messages');
 
         $info = [
             'messages' => 'db.messages',

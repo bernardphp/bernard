@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests;
 
 use Bernard\Consumer;
-use Bernard\Exception\ReceiverNotFoundException;
-use Bernard\Queue\InMemoryQueue;
 use Bernard\Envelope;
-use Bernard\Message\PlainMessage;
-use Bernard\Receiver;
-use Bernard\Router;
-use Bernard\Event\RejectEnvelopeEvent;
 use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\PingEvent;
+use Bernard\Event\RejectEnvelopeEvent;
+use Bernard\Exception\ReceiverNotFoundException;
+use Bernard\Message\PlainMessage;
+use Bernard\Queue\InMemoryQueue;
+use Bernard\Receiver;
+use Bernard\Router;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class ConsumerTest extends \PHPUnit\Framework\TestCase
@@ -31,7 +33,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
      */
     private $consumer;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->router = $this->prophesize(Router::class);
 
@@ -40,7 +42,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->consumer = new Consumer($this->router->reveal(), $this->dispatcher);
     }
 
-    public function testEmitsConsumeEvent()
+    public function testEmitsConsumeEvent(): void
     {
         $envelope = new Envelope($message = new PlainMessage('ImportUsers'));
 
@@ -69,7 +71,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->consumer->tick($queue));
     }
 
-    public function testEmitsExceptionEvent()
+    public function testEmitsExceptionEvent(): void
     {
         $exception = new \InvalidArgumentException();
 
@@ -87,7 +89,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->consumer->invoke($envelope, $queue);
     }
 
-    public function testShutdown()
+    public function testShutdown(): void
     {
         $queue = new InMemoryQueue('queue');
 
@@ -96,7 +98,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->consumer->tick($queue));
     }
 
-    public function testPauseResume()
+    public function testPauseResume(): void
     {
         $envelope = new Envelope($message = new PlainMessage('ImportUsers'));
         $queue = new InMemoryQueue('queue');
@@ -116,22 +118,22 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->consumer->tick($queue));
     }
 
-    public function testMaxRuntime()
+    public function testMaxRuntime(): void
     {
         $queue = new InMemoryQueue('queue');
 
         $this->assertFalse($this->consumer->tick($queue, [
-            'max-runtime' => -1 * PHP_INT_MAX,
+            'max-runtime' => -1 * \PHP_INT_MAX,
         ]));
     }
 
-    public function testNoEnvelopeInQueue()
+    public function testNoEnvelopeInQueue(): void
     {
         $queue = new InMemoryQueue('queue');
         $this->assertTrue($this->consumer->tick($queue));
     }
 
-    public function testEnvelopeIsAcknowledged()
+    public function testEnvelopeIsAcknowledged(): void
     {
         $envelope = new Envelope($message = new PlainMessage('ImportUsers'));
 
@@ -141,13 +143,13 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->router->route($envelope)->willReturn($receiver);
 
         $queue = $this->createMock('Bernard\Queue');
-        $queue->expects($this->once())->method('dequeue')->will($this->returnValue($envelope));
+        $queue->expects($this->once())->method('dequeue')->willReturn($envelope);
         $queue->expects($this->once())->method('acknowledge')->with($this->equalTo($envelope));
 
         $this->consumer->tick($queue);
     }
 
-    public function testMaxMessages()
+    public function testMaxMessages(): void
     {
         $envelope1 = new Envelope($message1 = new PlainMessage('ImportUsers'));
         $envelope2 = new Envelope($message2 = new PlainMessage('ImportUsers'));
@@ -172,7 +174,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->consumer->tick($queue, ['max-messages' => 100]));
     }
 
-    public function testStopAfterLastMessage()
+    public function testStopAfterLastMessage(): void
     {
         $envelope1 = new Envelope($message1 = new PlainMessage('ImportUsers'));
         $envelope2 = new Envelope($message2 = new PlainMessage('ImportUsers'));
@@ -193,7 +195,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->consumer->tick($queue, ['stop-when-empty' => true]));
     }
 
-    public function testStopOnError()
+    public function testStopOnError(): void
     {
         $this->expectException(\Bernard\Exception\ReceiverNotFoundException::class);
 
@@ -212,7 +214,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
     /**
      * @group debug
      */
-    public function testEnvelopeWillBeInvoked()
+    public function testEnvelopeWillBeInvoked(): void
     {
         $envelope = new Envelope($message = new PlainMessage('ImportUsers'));
 
@@ -230,7 +232,7 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
     /**
      * @requires PHP 7.0
      */
-    public function testWillRejectDispatchOnThrowableError()
+    public function testWillRejectDispatchOnThrowableError(): void
     {
         $this->expectException(\TypeError::class);
 

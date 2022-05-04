@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Driver;
 
 use Bernard\Driver\PrefetchMessageCache;
 
 class PrefetchMessageCacheTest extends \PHPUnit\Framework\TestCase
 {
-    public function testPushesAndPop()
+    public function testPushesAndPop(): void
     {
         $driverMessage = new \Bernard\DriverMessage('message1', 'r0');
 

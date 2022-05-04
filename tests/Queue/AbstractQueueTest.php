@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Queue;
 
 use Bernard\Envelope;
@@ -9,7 +11,7 @@ abstract class AbstractQueueTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider dataClosedMethods
      */
-    public function testNotAllowedWhenClosed($method, array $arguments = [])
+    public function testNotAllowedWhenClosed($method, array $arguments = []): void
     {
         $this->expectException(\Bernard\Exception\InvalidOperationException::class);
         $this->expectExceptionMessage('Queue "send-newsletter" is closed.');
@@ -17,10 +19,10 @@ abstract class AbstractQueueTest extends \PHPUnit\Framework\TestCase
         $queue = $this->createQueue('send-newsletter');
         $queue->close();
 
-        call_user_func_array([$queue, $method], $arguments);
+        \call_user_func_array([$queue, $method], $arguments);
     }
 
-    public function testNameAsToString()
+    public function testNameAsToString(): void
     {
         $queue = $this->createQueue('long-name');
 

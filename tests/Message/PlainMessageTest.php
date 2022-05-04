@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Message;
 
 use Bernard\Message\PlainMessage;
 
 final class PlainMessageTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @test
-     */
-    public function it_has_arguments()
+    public function testItHasArguments(): void
     {
         $message = new PlainMessage('SendNewsletter', [
             'key1' => 1,
@@ -30,18 +29,12 @@ final class PlainMessageTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($message->key3);
     }
 
-    /**
-     * @test
-     */
-    public function it_implements_ArrayAccess()
+    public function testItImplementsArrayAccess(): void
     {
         $this->assertInstanceOf(\ArrayAccess::class, new PlainMessage('SendNewsletter'));
     }
 
-    /**
-     * @test
-     */
-    public function it_is_immutable_to_magic_set()
+    public function testItIsImmutableToMagicSet(): void
     {
         $this->expectException(\LogicException::class);
 
@@ -49,10 +42,7 @@ final class PlainMessageTest extends \PHPUnit\Framework\TestCase
         $message->key1 = 1;
     }
 
-    /**
-     * @test
-     */
-    public function it_is_immutable_to_magic_unset()
+    public function testItIsImmutableToMagicUnset(): void
     {
         $this->expectException(\LogicException::class);
 
@@ -60,10 +50,7 @@ final class PlainMessageTest extends \PHPUnit\Framework\TestCase
         unset($message->key1);
     }
 
-    /**
-     * @test
-     */
-    public function it_is_immutable_to_offset_set()
+    public function testItIsImmutableToOffsetSet(): void
     {
         $this->expectException(\LogicException::class);
 
@@ -71,10 +58,7 @@ final class PlainMessageTest extends \PHPUnit\Framework\TestCase
         $message['key1'] = 1;
     }
 
-    /**
-     * @test
-     */
-    public function it_is_immutable_to_offset_unset()
+    public function testItIsImmutableToOffsetUnset(): void
     {
         $this->expectException(\LogicException::class);
 

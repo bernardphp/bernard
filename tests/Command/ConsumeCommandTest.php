@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Command;
 
 use Bernard\Command\ConsumeCommand;
@@ -8,7 +10,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ConsumeCommandTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->queues = new InMemoryFactory();
         $this->consumer = $this->getMockBuilder('Bernard\Consumer')
@@ -18,7 +20,7 @@ class ConsumeCommandTest extends \PHPUnit\Framework\TestCase
     /**
      * @medium
      */
-    public function testItConsumes()
+    public function testItConsumes(): void
     {
         $command = new ConsumeCommand($this->consumer, $this->queues);
         $queue = $this->queues->create('send-newsletter');
@@ -40,7 +42,7 @@ class ConsumeCommandTest extends \PHPUnit\Framework\TestCase
         ]);
     }
 
-    public function testItConsumesRoundRobin()
+    public function testItConsumesRoundRobin(): void
     {
         $command = new ConsumeCommand($this->consumer, $this->queues);
 

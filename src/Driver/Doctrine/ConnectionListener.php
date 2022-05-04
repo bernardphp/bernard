@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Driver\Doctrine;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\DBAL\DBALException;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Inspired by Swarrots ConnectionProcessor (https://github.com/swarrot/swarrot/blob/master/src/Swarrot/Processor/Doctrine/ConnectionProcessor.php).
@@ -26,14 +28,14 @@ class ConnectionListener implements EventSubscriberInterface
 
     public function __construct($connections)
     {
-        if (!is_array($connections)) {
+        if (!\is_array($connections)) {
             $connections = [$connections];
         }
 
         $this->connections = $connections;
     }
 
-    public function onPing()
+    public function onPing(): void
     {
         foreach ($this->connections as $connection) {
             if (!$connection->isConnected()) {

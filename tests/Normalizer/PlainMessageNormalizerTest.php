@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Normalizer;
 
 use Bernard\Message\PlainMessage;
@@ -7,10 +9,7 @@ use Bernard\Normalizer\PlainMessageNormalizer;
 
 final class PlainMessageNormalizerTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @test
-     */
-    public function it_normalizes_a_message()
+    public function testItNormalizesAMessage(): void
     {
         $normalizer = new PlainMessageNormalizer();
 
@@ -19,10 +18,7 @@ final class PlainMessageNormalizerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['name' => 'foobar', 'arguments' => []], $normalized);
     }
 
-    /**
-     * @test
-     */
-    public function it_denormalizes_a_normalized_message()
+    public function testItDenormalizesANormalizedMessage(): void
     {
         $normalizer = new PlainMessageNormalizer();
 

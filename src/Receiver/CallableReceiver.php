@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Receiver;
 
 use Bernard\Message;
@@ -20,8 +22,8 @@ final class CallableReceiver implements Receiver
     /**
      * {@inheritdoc}
      */
-    public function receive(Message $message)
+    public function receive(Message $message): void
     {
-        call_user_func($this->callable, $message);
+        \call_user_func($this->callable, $message);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Event;
 
 use Bernard\Queue;
@@ -9,9 +11,6 @@ class PingEvent extends Event
 {
     protected $queue;
 
-    /**
-     * @param Queue $queue
-     */
     public function __construct(Queue $queue)
     {
         $this->queue = $queue;
