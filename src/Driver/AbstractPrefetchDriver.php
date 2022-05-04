@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Driver;
 
 /**
@@ -8,15 +10,13 @@ namespace Bernard\Driver;
  */
 abstract class AbstractPrefetchDriver implements \Bernard\Driver
 {
-    protected $prefetch;
-    protected $cache;
+    protected ?int $prefetch;
 
-    /**
-     * @param int|null $prefetch
-     */
-    public function __construct($prefetch = null)
+    protected PrefetchMessageCache $cache;
+
+    public function __construct(?int $prefetch = null)
     {
-        $this->prefetch = $prefetch ? (int) $prefetch : 2;
+        $this->prefetch = $prefetch ?? 2;
         $this->cache = new PrefetchMessageCache();
     }
 }

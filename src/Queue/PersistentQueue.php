@@ -91,12 +91,12 @@ class PersistentQueue extends AbstractQueue
     {
         $this->errorIfClosed();
 
-        list($serialized, $receipt) = $this->driver->popMessage($this->name, $duration);
+        $driverMessage = $this->driver->popMessage($this->name, $duration);
 
-        if ($serialized) {
-            $envelope = $this->serializer->unserialize($serialized);
+        if ($driverMessage) {
+            $envelope = $this->serializer->unserialize($driverMessage->message);
 
-            $this->receipts->attach($envelope, $receipt);
+            $this->receipts->attach($envelope, $driverMessage->receipt);
 
             return $envelope;
         }

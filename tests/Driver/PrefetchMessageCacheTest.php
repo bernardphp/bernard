@@ -8,10 +8,12 @@ class PrefetchMessageCacheTest extends \PHPUnit\Framework\TestCase
 {
     public function testPushesAndPop()
     {
-        $cache = new PrefetchMessageCache();
-        $cache->push('my-queue', ['message1', 'r0']);
+        $driverMessage = new \Bernard\DriverMessage('message1', 'r0');
 
-        $this->assertEquals(['message1', 'r0'], $cache->pop('my-queue'));
+        $cache = new PrefetchMessageCache();
+        $cache->push('my-queue', $driverMessage);
+
+        $this->assertEquals($driverMessage, $cache->pop('my-queue'));
         $this->assertNull($cache->pop('my-queue'));
     }
 }
