@@ -18,6 +18,8 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 class ConsumerTest extends \PHPUnit\Framework\TestCase
 {
+    use \Prophecy\PhpUnit\ProphecyTrait;
+
     /**
      * @var Router|ObjectProphecy
      */

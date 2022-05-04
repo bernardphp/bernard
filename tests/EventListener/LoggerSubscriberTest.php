@@ -11,6 +11,8 @@ use Psr\Log\LoggerInterface;
 
 class LoggerSubscriberTest extends \PHPUnit\Framework\TestCase
 {
+    use \Prophecy\PhpUnit\ProphecyTrait;
+
     public function testLogsInfoOnProduce(): void
     {
         $loggerMock = $this->getMockBuilder(LoggerInterface::class)->getMock();
