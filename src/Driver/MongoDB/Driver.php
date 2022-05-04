@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bernard\Driver\MongoDB;
 
+use Bernard\Driver\Message;
 use MongoCollection;
 use MongoDate;
 use MongoId;
@@ -50,7 +51,7 @@ final class Driver implements \Bernard\Driver
         $this->messages->insert($data);
     }
 
-    public function popMessage(string $queueName, int $duration = 5): ?\Bernard\DriverMessage
+    public function popMessage(string $queueName, int $duration = 5): ?Message
     {
         $runtime = microtime(true) + $duration;
 
@@ -63,7 +64,7 @@ final class Driver implements \Bernard\Driver
             );
 
             if ($result) {
-                return new \Bernard\DriverMessage((string) $result['message'], (string) $result['_id']);
+                return new Message((string) $result['message'], (string) $result['_id']);
             }
 
             usleep(10000);

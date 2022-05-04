@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Bernard\Driver\FlatFile;
 
+use Bernard\Driver\Message;
+
 /**
  * Flat file driver to provide a simple job queue without any
  * database.
@@ -77,7 +79,7 @@ final class Driver implements \Bernard\Driver
         chmod($queueDir.\DIRECTORY_SEPARATOR.$filename, $this->permissions);
     }
 
-    public function popMessage(string $queueName, int $duration = 5): ?\Bernard\DriverMessage
+    public function popMessage(string $queueName, int $duration = 5): ?Message
     {
         $runtime = microtime(true) + $duration;
         $queueDir = $this->getQueueDirectory($queueName);
@@ -88,7 +90,7 @@ final class Driver implements \Bernard\Driver
             if ($files) {
                 $id = array_pop($files);
                 if (@rename($queueDir.\DIRECTORY_SEPARATOR.$id, $queueDir.\DIRECTORY_SEPARATOR.$id.'.proceed')) {
-                    return new \Bernard\DriverMessage(file_get_contents($queueDir.\DIRECTORY_SEPARATOR.$id.'.proceed'), $id);
+                    return new Message(file_get_contents($queueDir.\DIRECTORY_SEPARATOR.$id.'.proceed'), $id);
                 }
 
                 return $this->processFileOrFail($queueDir, $id);
@@ -101,7 +103,7 @@ final class Driver implements \Bernard\Driver
         }
     }
 
-    private function processFileOrFail(string $queueDir, string $id): \Bernard\DriverMessage
+    private function processFileOrFail(string $queueDir, string $id): Message
     {
         $name = $queueDir.\DIRECTORY_SEPARATOR.$id;
         $newName = $name.'.proceed';
@@ -110,7 +112,7 @@ final class Driver implements \Bernard\Driver
             throw new InsufficientPermissionsException('Unable to process file: '.$name);
         }
 
-        return new \Bernard\DriverMessage(file_get_contents($newName), $id);
+        return new Message(file_get_contents($newName), $id);
     }
 
     public function acknowledgeMessage(string $queueName, mixed $receipt): void

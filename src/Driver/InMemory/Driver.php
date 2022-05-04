@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Bernard\Driver\InMemory;
 
+use Bernard\Driver\Message;
+
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
@@ -35,13 +37,13 @@ final class Driver implements \Bernard\Driver
         $this->queues[$queueName][] = $message;
     }
 
-    public function popMessage(string $queueName, int $duration = 5): ?\Bernard\DriverMessage
+    public function popMessage(string $queueName, int $duration = 5): ?Message
     {
         if (!\array_key_exists($queueName, $this->queues) || \count($this->queues[$queueName]) < 1) {
             return null;
         }
 
-        return new \Bernard\DriverMessage(array_shift($this->queues[$queueName]));
+        return new Message(array_shift($this->queues[$queueName]));
     }
 
     public function acknowledgeMessage(string $queueName, mixed $receipt): void

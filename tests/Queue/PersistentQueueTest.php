@@ -36,7 +36,7 @@ class PersistentQueueTest extends AbstractQueueTest
             ->with($this->equalTo('send-newsletter'), $this->equalTo('receipt'));
 
         $this->driver->expects($this->once())->method('popMessage')->with($this->equalTo('send-newsletter'))
-            ->willReturn(new \Bernard\DriverMessage('message', 'receipt'));
+            ->willReturn(new \Bernard\Driver\Message('message', 'receipt'));
 
         $this->serializer->expects($this->once())->method('unserialize')
             ->willReturn($envelope);
@@ -71,7 +71,7 @@ class PersistentQueueTest extends AbstractQueueTest
         $messageWrapper = new Envelope($this->createMock('Bernard\Message'));
 
         $this->driver->expects($this->at(1))->method('popMessage')->with($this->equalTo('send-newsletter'))
-            ->willReturn(new \Bernard\DriverMessage('serialized', null));
+            ->willReturn(new \Bernard\Driver\Message('serialized', null));
 
         $this->driver->expects($this->at(2))->method('popMessage')->with($this->equalTo('send-newsletter'))
             ->willReturn(null);
