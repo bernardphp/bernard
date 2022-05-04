@@ -2,16 +2,21 @@
     "name": "bernard/bernard",
     "description": "Message queue abstraction layer",
     "license": "MIT",
-    "keywords": ["message queue", "message", "queue", "bernard"],
+    "keywords": [
+        "message queue",
+        "message",
+        "queue",
+        "bernard"
+    ],
     "homepage": "https://github.com/bernardphp/bernard",
     "type": "library",
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
         "beberlei/assert": "^2.1 || ^3.0",
         "bernard/normalt": "^1.0",
         "symfony/event-dispatcher": "^3.0 || ^4.0"
     },
-    "require-dev" : {
+    "require-dev": {
         "doctrine/dbal": "^2.5",
         "doctrine/instantiator": "^1.0.5",
         "friends-of-phpspec/phpspec-code-coverage": "^6.0",
@@ -25,13 +30,15 @@
         "doctrine/dbal": "Allow sending messages to simulated message queue in a database via doctrine dbal",
         "mongodb/mongodb": "Allow sending messages to a MongoDB server via PHP Driver"
     },
-    "autoload" : {
-        "psr-4" : { "Bernard\\" : "src/" }
+    "autoload": {
+        "psr-4": {
+            "Bernard\\": "src/"
+        }
     },
-    "autoload-dev" : {
-        "psr-4" : {
-            "Bernard\\Tests\\" : "tests/",
-            "spec\\Bernard\\" : "spec/"
+    "autoload-dev": {
+        "psr-4": {
+            "Bernard\\Tests\\": "tests/",
+            "spec\\Bernard\\": "spec/"
         }
     },
     "config": {
@@ -49,9 +56,9 @@
         ],
         "test-functional": "php vendor/bin/phpunit -v --group functional"
     },
-    "extra" : {
-        "branch-alias" : {
-            "dev-master" : "2.0.x-dev"
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
         }
     },
     "prefer-stable": true,
