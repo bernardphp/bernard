@@ -6,6 +6,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\PingEvent;
 use Bernard\Event\RejectEnvelopeEvent;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class Consumer
 {
@@ -73,7 +74,7 @@ class Consumer
             return true;
         }
 
-        $this->dispatcher->dispatch(BernardEvents::PING, new PingEvent($queue));
+        $this->dispatch(BernardEvents::PING, new PingEvent($queue));
 
         if (!$envelope = $queue->dequeue()) {
             return !$this->options['stop-when-empty'];
@@ -125,7 +126,7 @@ class Consumer
     public function invoke(Envelope $envelope, Queue $queue)
     {
         try {
-            $this->dispatcher->dispatch(BernardEvents::INVOKE, new EnvelopeEvent($envelope, $queue));
+            $this->dispatch(BernardEvents::INVOKE, new EnvelopeEvent($envelope, $queue));
 
             $receiver = $this->router->route($envelope);
             $receiver->receive($envelope->getMessage());
@@ -133,7 +134,7 @@ class Consumer
             // We successfully processed the message.
             $queue->acknowledge($envelope);
 
-            $this->dispatcher->dispatch(BernardEvents::ACKNOWLEDGE, new EnvelopeEvent($envelope, $queue));
+            $this->dispatch(BernardEvents::ACKNOWLEDGE, new EnvelopeEvent($envelope, $queue));
         } catch (\Throwable $error) {
             $this->rejectDispatch($error, $envelope, $queue);
         } catch (\Exception $exception) {
@@ -187,10 +188,17 @@ class Consumer
         // Previously failing jobs handling have been moved to a middleware.
         //
         // Emit an event to let others log that exception
-        $this->dispatcher->dispatch(BernardEvents::REJECT, new RejectEnvelopeEvent($envelope, $queue, $exception));
+        $this->dispatch(BernardEvents::REJECT, new RejectEnvelopeEvent($envelope, $queue, $exception));
 
         if ($this->options['stop-on-error']) {
             throw $exception;
         }
+    }
+
+    private function dispatch($eventName, Event $event)
+    {
+        $this->dispatcher instanceof \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+            ? $this->dispatcher->dispatch($event, $eventName)
+            : $this->dispatcher->dispatch($eventName, $event);
     }
 }

@@ -53,5 +53,7 @@ class ProduceCommand extends \Symfony\Component\Console\Command\Command
         }
 
         $this->producer->produce(new PlainMessage($name, $message), $queue);
+
+        return 0;
     }
 }

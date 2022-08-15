@@ -38,13 +38,15 @@ abstract class AbstractCommand extends Command
         if ($input->getOption('dump-sql')) {
             $output->writeln(implode(';'.PHP_EOL, $this->getSql($sync, $schema)).';');
 
-            return;
+            return 0;
         }
 
         $output->writeln('<comment>ATTENTION</comment>: This operation should not be executed in a production environment.'.PHP_EOL);
         $output->writeln('Applying database schema changes...');
         $this->applySql($sync, $schema);
         $output->writeln('Schema changes applied successfully!');
+
+        return 0;
     }
 
     /**

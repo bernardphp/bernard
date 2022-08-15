@@ -18,7 +18,7 @@ class EnvelopeEventTest extends \PHPUnit\Framework\TestCase
 
     public function testIsEvent()
     {
-        $this->assertInstanceOf('Symfony\Component\EventDispatcher\Event', new EnvelopeEvent($this->envelope, $this->queue));
+        $this->assertInstanceOf('Symfony\Contracts\EventDispatcher\Event', new EnvelopeEvent($this->envelope, $this->queue));
     }
 
     public function hasEnvelopeAndQueue()

@@ -50,6 +50,8 @@ class ConsumeCommand extends \Symfony\Component\Console\Command\Command
         $queue = $this->getQueue($input->getArgument('queue'));
 
         $this->consumer->consume($queue, $input->getOptions());
+
+        return 0;
     }
 
     /**

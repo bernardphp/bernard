@@ -58,13 +58,34 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
             ->willReturn($envelope);
 
         $this->dispatcher->expects($this->at(0))->method('dispatch')
-            ->with('bernard.ping', new PingEvent($queue));
+            ->with(
+                $this->callback(function ($parameter) use ($queue) {
+                    return $parameter == 'bernard.ping' || $parameter == new PingEvent($queue);
+                }),
+                $this->callback(function ($parameter) use ($queue) {
+                    return $parameter == 'bernard.ping' || $parameter == new PingEvent($queue);
+                }),
+            );
 
         $this->dispatcher->expects($this->at(1))->method('dispatch')
-            ->with('bernard.invoke', new EnvelopeEvent($envelope, $queue));
+            ->with(
+                $this->callback(function ($parameter) use ($envelope, $queue) {
+                    return $parameter == 'bernard.invoke' || $parameter == new EnvelopeEvent($envelope, $queue);
+                }),
+                $this->callback(function ($parameter) use ($envelope, $queue) {
+                    return $parameter == 'bernard.invoke' || $parameter == new EnvelopeEvent($envelope, $queue);
+                }),
+            );
 
         $this->dispatcher->expects($this->at(2))->method('dispatch')
-            ->with('bernard.acknowledge', new EnvelopeEvent($envelope, $queue));
+            ->with(
+                $this->callback(function ($parameter) use ($envelope, $queue) {
+                    return $parameter == 'bernard.acknowledge' || $parameter == new EnvelopeEvent($envelope, $queue);
+                }),
+                $this->callback(function ($parameter) use ($envelope, $queue) {
+                    return $parameter == 'bernard.acknowledge' || $parameter == new EnvelopeEvent($envelope, $queue);
+                }),
+            );
 
         $this->assertTrue($this->consumer->tick($queue));
     }
@@ -82,7 +103,22 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $this->router->route($envelope)->willReturn($receiver);
 
         $this->dispatcher->expects($this->at(1))->method('dispatch')
-            ->with('bernard.reject', new RejectEnvelopeEvent($envelope, $queue, $exception));
+            ->with(
+                $this->callback(function ($parameter) use ($envelope, $queue, $exception) {
+                    return $parameter == 'bernard.reject' || $parameter == new RejectEnvelopeEvent(
+                            $envelope,
+                            $queue,
+                            $exception
+                        );
+                }),
+                $this->callback(function ($parameter) use ($envelope, $queue, $exception) {
+                    return $parameter == 'bernard.reject' || $parameter == new RejectEnvelopeEvent(
+                            $envelope,
+                            $queue,
+                            $exception
+                        );
+                }),
+            );
 
         $this->consumer->invoke($envelope, $queue);
     }
@@ -244,20 +280,46 @@ class ConsumerTest extends \PHPUnit\Framework\TestCase
         $receiver->receive($message)->willThrow(\TypeError::class);
         $this->router->route($envelope)->willReturn($receiver);
 
-        $this->dispatcher->expects(self::at(0))->method('dispatch')->with('bernard.ping');
-        $this->dispatcher->expects(self::at(1))->method('dispatch')->with('bernard.invoke');
+        $this->dispatcher->expects(self::at(0))->method('dispatch')
+            ->with(
+                $this->callback(function ($parameter) use ($queue) {
+                    return $parameter == 'bernard.ping' || $parameter == new PingEvent($queue);
+                }),
+                $this->callback(function ($parameter) use ($queue) {
+                    return $parameter == 'bernard.ping' || $parameter == new PingEvent($queue);
+                }),
+            );
+        $this->dispatcher->expects(self::at(1))->method('dispatch')
+            ->with(
+                $this->callback(function ($parameter) use ($envelope, $queue) {
+                    return $parameter == 'bernard.invoke' || $parameter == new EnvelopeEvent($envelope, $queue);
+                }),
+                $this->callback(function ($parameter) use ($envelope, $queue) {
+                    return $parameter == 'bernard.invoke' || $parameter == new EnvelopeEvent($envelope, $queue);
+                }),
+            );
 
         $this
             ->dispatcher
             ->expects(self::at(2))
             ->method('dispatch')
             ->with(
-                'bernard.reject',
-                self::callback(function (RejectEnvelopeEvent $rejectEnvelope) {
-                    self::assertInstanceOf('TypeError', $rejectEnvelope->getException());
+                $this->callback(function ($parameter) use ($envelope, $queue) {
+                    return $parameter == 'bernard.reject'
+                        || $this->callback(function (RejectEnvelopeEvent $rejectEnvelope) {
+                            $this->assertInstanceOf('TypeError', $rejectEnvelope->getException());
 
-                    return true;
-                })
+                            return true;
+                        });
+                }),
+                $this->callback(function ($parameter) use ($envelope, $queue) {
+                    return $parameter == 'bernard.reject'
+                        || $this->callback(function (RejectEnvelopeEvent $rejectEnvelope) {
+                            $this->assertInstanceOf('TypeError', $rejectEnvelope->getException());
+
+                            return true;
+                        });
+                }),
             );
 
         $this->consumer->tick($queue, ['stop-on-error' => true]);
