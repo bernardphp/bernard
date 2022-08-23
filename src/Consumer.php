@@ -8,7 +8,7 @@ use Bernard\Event\EnvelopeEvent;
 use Bernard\Event\PingEvent;
 use Bernard\Event\RejectEnvelopeEvent;
 use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class Consumer
 {
