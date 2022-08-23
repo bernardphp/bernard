@@ -13,10 +13,16 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: PHP-CS-Fixer
-        uses: docker://oskarstark/php-cs-fixer-ga:2.16.6
-        continue-on-error: true
+      - name: Set up Nix
+        uses: cachix/install-nix-action@v17
         with:
-          args: --dry-run --diff-format udiff
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download dependencies
+        run: nix develop -c composer update --no-interaction --no-progress
+
+      - name: Run PHP CS Fixer
+        run: nix develop -c php-cs-fixer fix --diff --dry-run

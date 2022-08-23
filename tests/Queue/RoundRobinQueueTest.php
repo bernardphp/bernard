@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Queue;
 
 use Bernard\Envelope;
@@ -19,7 +21,7 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
      */
     protected $round;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->queues = [
             new InMemoryQueue('1'),
@@ -30,7 +32,7 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
         $this->round = new RoundRobinQueue($this->queues);
     }
 
-    public function testEnqueueWithUnrecognizedQueue()
+    public function testEnqueueWithUnrecognizedQueue(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Unrecognized queue specified: foo');
@@ -38,19 +40,19 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
         $this->round->enqueue($this->getEnvelope('foo'));
     }
 
-    public function testEnqueueWithRecognizedQueue()
+    public function testEnqueueWithRecognizedQueue(): void
     {
         $envelope = $this->getEnvelope('2');
         $this->round->enqueue($envelope);
         $this->assertSame($envelope, $this->round->dequeue());
     }
 
-    public function testDequeueWithEmptyQueue()
+    public function testDequeueWithEmptyQueue(): void
     {
         $this->assertNull($this->round->dequeue());
     }
 
-    public function testDequeueRoundRobin()
+    public function testDequeueRoundRobin(): void
     {
         foreach ([
             $envelope_1_1 = $this->getEnvelope('1'),
@@ -64,7 +66,7 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($envelope_1_2, $this->round->dequeue());
     }
 
-    public function testClose()
+    public function testClose(): void
     {
         $builder = $this->getMockBuilder('Bernard\\Queue\\InMemoryQueue')->setMethods(['close']);
         $queues = [];
@@ -80,7 +82,7 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
         $round->close();
     }
 
-    public function testPeek()
+    public function testPeek(): void
     {
         foreach ([
             $envelope_1_1 = $this->getEnvelope('1'),
@@ -92,7 +94,7 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
         $this->assertSame([$envelope_3_1], $this->round->peek(1, 1));
     }
 
-    public function testAcknowledgeWithUnrecognizedQueue()
+    public function testAcknowledgeWithUnrecognizedQueue(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Unrecognized queue specified: foo');
@@ -104,7 +106,7 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
         $this->round->acknowledge($dequeued);
     }
 
-    public function testAcknowledgeWithRecognizedQueue()
+    public function testAcknowledgeWithRecognizedQueue(): void
     {
         $builder = $this->getMockBuilder('Bernard\\Queue\\InMemoryQueue')->setMethods(['acknowledge']);
         $envelope = $this->getEnvelope('2');
@@ -126,7 +128,7 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
         $round->acknowledge($envelope);
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $this->round->enqueue($this->getEnvelope('1'));
         $this->round->enqueue($this->getEnvelope('2'));
@@ -141,7 +143,7 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('3', (string) $this->round);
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->round->enqueue($this->getEnvelope('1'));
         $this->round->enqueue($this->getEnvelope('2'));

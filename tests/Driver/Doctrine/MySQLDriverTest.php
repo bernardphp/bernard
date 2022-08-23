@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Driver\Doctrine;
 
 use Doctrine\DBAL\DriverManager;
@@ -11,10 +13,10 @@ class MySQLDriverTest extends AbstractDriverTest
 {
     protected function isSupported()
     {
-        return in_array('mysql', \PDO::getAvailableDrivers());
+        return \in_array('mysql', \PDO::getAvailableDrivers());
     }
 
-    public function testInfo()
+    public function testInfo(): void
     {
         $params = [
             'driver' => 'pdo_mysql',

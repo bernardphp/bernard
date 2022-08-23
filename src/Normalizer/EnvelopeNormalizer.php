@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Normalizer;
 
 use Assert\Assertion;
@@ -9,17 +11,14 @@ use Normalt\Normalizer\AggregateNormalizer;
 use Normalt\Normalizer\AggregateNormalizerAware;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Exception\RuntimeException;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class EnvelopeNormalizer implements NormalizerInterface, DenormalizerInterface, AggregateNormalizerAware
 {
     private $aggregate;
 
-    /**
-     * @param AggregateNormalizer $aggregate
-     */
-    public function setAggregateNormalizer(AggregateNormalizer $aggregate)
+    public function setAggregateNormalizer(AggregateNormalizer $aggregate): void
     {
         $this->aggregate = $aggregate;
     }
@@ -73,11 +72,10 @@ final class EnvelopeNormalizer implements NormalizerInterface, DenormalizerInter
     }
 
     /**
-     * @param Envelope $envelope
-     * @param string   $property
-     * @param mixed    $value
+     * @param string $property
+     * @param mixed  $value
      */
-    private function forcePropertyValue(Envelope $envelope, $property, $value)
+    private function forcePropertyValue(Envelope $envelope, $property, $value): void
     {
         try {
             $property = new \ReflectionProperty($envelope, $property);

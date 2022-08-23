@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Event;
 
 use Bernard\Envelope;
@@ -8,7 +10,7 @@ use Bernard\Message;
 
 class EnvelopeEventTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()
             ->getMock();
@@ -16,12 +18,12 @@ class EnvelopeEventTest extends \PHPUnit\Framework\TestCase
         $this->queue = $this->createMock('Bernard\Queue');
     }
 
-    public function testIsEvent()
+    public function testIsEvent(): void
     {
         $this->assertInstanceOf('Symfony\Contracts\EventDispatcher\Event', new EnvelopeEvent($this->envelope, $this->queue));
     }
 
-    public function hasEnvelopeAndQueue()
+    public function hasEnvelopeAndQueue(): void
     {
         $event = new EnvelopeEvent($this->envelope, $this->queue);
 

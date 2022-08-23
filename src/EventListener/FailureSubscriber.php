@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\EventListener;
 
 use Bernard\Event\RejectEnvelopeEvent;
@@ -12,8 +14,7 @@ class FailureSubscriber implements EventSubscriberInterface
     protected $name;
 
     /**
-     * @param Producer $producer
-     * @param string   $name
+     * @param string $name
      */
     public function __construct(Producer $producer, $name = 'failed')
     {
@@ -21,10 +22,7 @@ class FailureSubscriber implements EventSubscriberInterface
         $this->name = $name;
     }
 
-    /**
-     * @param RejectEnvelopeEvent $event
-     */
-    public function onReject(RejectEnvelopeEvent $event)
+    public function onReject(RejectEnvelopeEvent $event): void
     {
         $envelope = $event->getEnvelope();
         $message = $envelope->getMessage();

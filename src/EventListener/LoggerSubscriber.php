@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\EventListener;
 
 use Bernard\Event\EnvelopeEvent;
@@ -11,18 +13,12 @@ class LoggerSubscriber implements EventSubscriberInterface
 {
     protected $logger;
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
-    /**
-     * @param EnvelopeEvent $event
-     */
-    public function onProduce(EnvelopeEvent $event)
+    public function onProduce(EnvelopeEvent $event): void
     {
         $this->logger->info('[bernard] produced {envelope} onto {queue}.', [
             'envelope' => $event->getEnvelope(),
@@ -30,20 +26,14 @@ class LoggerSubscriber implements EventSubscriberInterface
         ]);
     }
 
-    /**
-     * @param EnvelopeEvent $event
-     */
-    public function onInvoke(EnvelopeEvent $event)
+    public function onInvoke(EnvelopeEvent $event): void
     {
         $this->logger->info('[bernard] invoking receiver for {envelope}.', [
             'envelope' => $event->getEnvelope(),
         ]);
     }
 
-    /**
-     * @param RejectEnvelopeEvent $event
-     */
-    public function onReject(RejectEnvelopeEvent $event)
+    public function onReject(RejectEnvelopeEvent $event): void
     {
         $this->logger->error('[bernard] caught exception {exception} while processing {envelope}.', [
             'envelope' => $event->getEnvelope(),

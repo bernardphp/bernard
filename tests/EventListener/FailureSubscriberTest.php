@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\EventListener;
 
 use Bernard\Envelope;
@@ -13,13 +15,13 @@ class FailureSubscriberTest extends \PHPUnit\Framework\TestCase
     private $producer;
     private $subscriber;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->producer = $this->getMockBuilder('Bernard\Producer')->disableOriginalConstructor()->getMock();
         $this->subscriber = new FailureSubscriber($this->producer, 'failures');
     }
 
-    public function testAcknowledgeMessageAndEnqueue()
+    public function testAcknowledgeMessageAndEnqueue(): void
     {
         $envelope = new Envelope($message = new PlainMessage('bar'));
 

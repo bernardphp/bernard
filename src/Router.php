@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard;
 
 use Bernard\Exception\ReceiverNotFoundException;
@@ -11,8 +13,6 @@ interface Router
 {
     /**
      * Returns the right Receiver based on the Envelope.
-     *
-     * @param Envelope $envelope
      *
      * @return Receiver
      *

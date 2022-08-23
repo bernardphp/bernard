@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\QueueFactory;
 
 use Bernard\Driver;
@@ -16,10 +18,6 @@ class PersistentFactory implements \Bernard\QueueFactory
     protected $driver;
     protected $serializer;
 
-    /**
-     * @param Driver     $driver
-     * @param Serializer $serializer
-     */
     public function __construct(Driver $driver, Serializer $serializer)
     {
         $this->queues = [];
@@ -57,21 +55,22 @@ class PersistentFactory implements \Bernard\QueueFactory
      */
     public function exists($queueName)
     {
-        return isset($this->queues[$queueName]) ?: in_array($queueName, $this->driver->listQueues());
+        return isset($this->queues[$queueName]) ?: \in_array($queueName, $this->driver->listQueues());
     }
 
     /**
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
-        return count($this->driver->listQueues());
+        return \count($this->driver->listQueues());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove($queueName)
+    public function remove($queueName): void
     {
         if (!$this->exists($queueName)) {
             return;

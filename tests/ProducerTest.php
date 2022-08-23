@@ -1,26 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests;
 
-use Bernard\Producer;
 use Bernard\Message\PlainMessage;
+use Bernard\Producer;
 use Bernard\QueueFactory\InMemoryFactory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ProducerTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->queues = new InMemoryFactory();
         $this->dispatcher = new EventDispatcher();
         $this->producer = new Producer($this->queues, $this->dispatcher);
     }
 
-    public function testDispatchesEvent()
+    public function testDispatchesEvent(): void
     {
         $args = [];
 
-        $this->dispatcher->addListener('bernard.produce', function ($event) use (&$args) {
+        $this->dispatcher->addListener('bernard.produce', function ($event) use (&$args): void {
             $args = ['envelope' => $event->getEnvelope(), 'queue' => $event->getQueue()];
         });
 
@@ -32,7 +34,7 @@ class ProducerTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->queues->create('my-queue'), $args['queue']);
     }
 
-    public function testItDelegatesMessagesToQueue()
+    public function testItDelegatesMessagesToQueue(): void
     {
         $message = new PlainMessage('SendNewsletter');
 
@@ -43,7 +45,7 @@ class ProducerTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($message, $envelope->getMessage());
     }
 
-    public function testItUsesGivenQueueName()
+    public function testItUsesGivenQueueName(): void
     {
         $message = new PlainMessage('SendNewsletter');
 

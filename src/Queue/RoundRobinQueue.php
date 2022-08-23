@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Queue;
 
 use Bernard\Envelope;
@@ -37,7 +39,7 @@ class RoundRobinQueue implements Queue
     /**
      * {@inheritdoc}
      */
-    public function enqueue(Envelope $envelope)
+    public function enqueue(Envelope $envelope): void
     {
         $this->verifyEnvelope($envelope);
 
@@ -52,7 +54,7 @@ class RoundRobinQueue implements Queue
         $envelope = null;
         $checked = [];
 
-        while (count($checked) < count($this->queues)) {
+        while (\count($checked) < \count($this->queues)) {
             $queue = current($this->queues);
             $envelope = $queue->dequeue();
             if (false === next($this->queues)) {
@@ -72,7 +74,7 @@ class RoundRobinQueue implements Queue
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): void
     {
         if ($this->closed) {
             return;
@@ -102,7 +104,7 @@ class RoundRobinQueue implements Queue
             // noop
         }
 
-        while (count($envelopes) < $limit && count($drained) < $it->count()) {
+        while (\count($envelopes) < $limit && \count($drained) < $it->count()) {
             $queue = $it->current();
             $name = $it->key();
             if ($peeked = $queue->peek($indexes[$name], 1)) {
@@ -124,12 +126,10 @@ class RoundRobinQueue implements Queue
     /**
      * {@inheritdoc}
      */
-    public function acknowledge(Envelope $envelope)
+    public function acknowledge(Envelope $envelope): void
     {
         if (!$this->envelopes->contains($envelope)) {
-            throw new \DomainException(
-                'Unrecognized queue specified: '.$envelope->getName()
-            );
+            throw new \DomainException('Unrecognized queue specified: '.$envelope->getName());
         }
 
         $queue = $this->envelopes[$envelope];
@@ -148,6 +148,7 @@ class RoundRobinQueue implements Queue
     /**
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return array_sum(array_map('count', $this->queues));
@@ -156,7 +157,7 @@ class RoundRobinQueue implements Queue
     /**
      * @param Queue[] $queues
      */
-    protected function validateQueues(array $queues)
+    protected function validateQueues(array $queues): void
     {
         if (empty($queues)) {
             throw new \DomainException('$queues cannot be empty');
@@ -164,9 +165,7 @@ class RoundRobinQueue implements Queue
 
         $filtered = array_filter(
             $queues,
-            function ($queue) {
-                return !$queue instanceof Queue;
-            }
+            fn ($queue) => !$queue instanceof Queue
         );
         if (!empty($filtered)) {
             throw new \DomainException('All elements of $queues must implement Queue');
@@ -182,19 +181,14 @@ class RoundRobinQueue implements Queue
     {
         return array_combine(
             array_map(
-                function ($queue) {
-                    return (string) $queue;
-                },
+                fn ($queue) => (string) $queue,
                 $queues
             ),
             $queues
         );
     }
 
-    /**
-     * @param Envelope $envelope
-     */
-    protected function verifyEnvelope(Envelope $envelope)
+    protected function verifyEnvelope(Envelope $envelope): void
     {
         $queue = $envelope->getName();
         if (isset($this->queues[$queue])) {

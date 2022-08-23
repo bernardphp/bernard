@@ -1,28 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Driver\Doctrine;
 
+use Bernard\Driver\Message;
 use Doctrine\DBAL\Connection;
 
-/**
- * Driver supporting Doctrine DBAL.
- */
 final class Driver implements \Bernard\Driver
 {
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * {@inheritdoc}
-     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function listQueues()
+    public function listQueues(): array
     {
         $statement = $this->connection->prepare('SELECT name FROM bernard_queues');
         $statement->execute();
@@ -30,10 +24,7 @@ final class Driver implements \Bernard\Driver
         return $statement->fetchAll(\PDO::FETCH_COLUMN);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function createQueue($queueName)
+    public function createQueue(string $queueName): void
     {
         try {
             $this->connection->insert('bernard_queues', ['name' => $queueName]);
@@ -43,23 +34,13 @@ final class Driver implements \Bernard\Driver
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function countMessages($queueName)
+    public function removeQueue(string $queueName): void
     {
-        $query = 'SELECT COUNT(id) FROM bernard_messages WHERE queue = :queue AND visible = :visible';
-
-        return (int) $this->connection->fetchColumn($query, [
-            'queue' => $queueName,
-            'visible' => true,
-        ]);
+        $this->connection->delete('bernard_messages', ['queue' => $queueName]);
+        $this->connection->delete('bernard_queues', ['name' => $queueName]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function pushMessage($queueName, $message)
+    public function pushMessage(string $queueName, string $message): void
     {
         $types = ['string', 'string', 'datetime'];
         $data = [
@@ -72,10 +53,7 @@ final class Driver implements \Bernard\Driver
         $this->connection->insert('bernard_messages', $data, $types);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function popMessage($queueName, $duration = 5)
+    public function popMessage(string $queueName, int $duration = 5): ?Message
     {
         $runtime = microtime(true) + $duration;
 
@@ -94,23 +72,59 @@ final class Driver implements \Bernard\Driver
                 return $message;
             }
 
-            //sleep for 10 ms
+            // sleep for 10 ms
             usleep(10000);
         }
+
+        return null;
     }
 
     /**
-     * {@inheritdoc}
+     * Execute the actual query and process the response.
      */
-    public function acknowledgeMessage($queueName, $receipt)
+    private function doPopMessage(string $queueName): ?Message
+    {
+        $query = 'SELECT id, message FROM bernard_messages
+                  WHERE queue = :queue AND visible = :visible
+                  ORDER BY sentAt LIMIT 1 '.$this->connection->getDatabasePlatform()->getForUpdateSql();
+
+        [$id, $message] = $this->connection->fetchArray($query, [
+            'queue' => $queueName,
+            'visible' => true,
+        ]);
+
+        if ($id) {
+            $this->connection->update('bernard_messages', ['visible' => 0], compact('id'));
+
+            return new Message($message, $id);
+        }
+    }
+
+    public function acknowledgeMessage(string $queueName, mixed $receipt): void
     {
         $this->connection->delete('bernard_messages', ['id' => $receipt, 'queue' => $queueName]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function peekQueue($queueName, $index = 0, $limit = 20)
+    public function info(): array
+    {
+        $params = $this->connection->getParams();
+
+        unset($params['user'], $params['password']);
+
+        return $params;
+    }
+
+    public function countMessages(string $queueName): int
+    {
+        $query = 'SELECT COUNT(id) FROM bernard_messages WHERE queue = :queue AND visible = :visible';
+
+        return (int) $this->connection->fetchColumn($query, [
+            'queue' => $queueName,
+            'visible' => true,
+        ]);
+    }
+
+    public function peekQueue(string $queueName, int $index = 0, int $limit = 20): array
     {
         $parameters = [$queueName, true, $limit, $index];
         $types = ['string', 'boolean', 'integer', 'integer'];
@@ -120,53 +134,6 @@ final class Driver implements \Bernard\Driver
         return $this
             ->connection
             ->executeQuery($query, $parameters, $types)
-            ->fetchAll(\PDO::FETCH_COLUMN)
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeQueue($queueName)
-    {
-        $this->connection->delete('bernard_messages', ['queue' => $queueName]);
-        $this->connection->delete('bernard_queues', ['name' => $queueName]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function info()
-    {
-        $params = $this->connection->getParams();
-
-        unset($params['user'], $params['password']);
-
-        return $params;
-    }
-
-    /**
-     * Execute the actual query and process the response.
-     *
-     * @param string $queueName
-     *
-     * @return array|null
-     */
-    private function doPopMessage($queueName)
-    {
-        $query = 'SELECT id, message FROM bernard_messages
-                  WHERE queue = :queue AND visible = :visible
-                  ORDER BY sentAt LIMIT 1 '.$this->connection->getDatabasePlatform()->getForUpdateSql();
-
-        list($id, $message) = $this->connection->fetchArray($query, [
-            'queue' => $queueName,
-            'visible' => true,
-        ]);
-
-        if ($id) {
-            $this->connection->update('bernard_messages', ['visible' => 0], compact('id'));
-
-            return [$message, $id];
-        }
+            ->fetchAll(\PDO::FETCH_COLUMN);
     }
 }

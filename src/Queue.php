@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard;
 
 interface Queue extends \Countable
 {
-    /**
-     * @param Envelope $envelope
-     */
     public function enqueue(Envelope $envelope);
 
     /**
@@ -31,8 +30,6 @@ interface Queue extends \Countable
     /**
      * SQS requires that a message will be acknowledged or it will be moved back
      * into the queue.
-     *
-     * @param Envelope $envelope
      */
     public function acknowledge(Envelope $envelope);
 

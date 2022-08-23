@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Router;
 
 use Bernard\Envelope;
@@ -15,10 +17,6 @@ class ReceiverMapRouter implements Router
 
     private $receiverResolver;
 
-    /**
-     * @param array                 $receivers
-     * @param ReceiverResolver|null $receiverResolver
-     */
     public function __construct(array $receivers = [], ReceiverResolver $receiverResolver = null)
     {
         if ($receiverResolver === null) {
@@ -36,7 +34,7 @@ class ReceiverMapRouter implements Router
      * @param string $name
      * @param mixed  $receiver
      */
-    private function add($name, $receiver)
+    private function add($name, $receiver): void
     {
         if (!$this->receiverResolver->accepts($receiver)) {
             throw new \InvalidArgumentException(sprintf('Receiver "%s" is not supported.', $receiver));
@@ -67,13 +65,11 @@ class ReceiverMapRouter implements Router
      */
     protected function get($name)
     {
-        return isset($this->receivers[$name]) ? $this->receivers[$name] : null;
+        return $this->receivers[$name] ?? null;
     }
 
     /**
      * Returns the (message) name to look for in the receiver map.
-     *
-     * @param Envelope $envelope
      *
      * @return string
      */

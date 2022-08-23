@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Event;
 
 use Bernard\Envelope;
@@ -10,8 +12,6 @@ class RejectEnvelopeEvent extends EnvelopeEvent
     protected $exception;
 
     /**
-     * @param Envelope              $envelope
-     * @param Queue                 $queue
      * @param \Exception|\Throwable $exception
      */
     public function __construct(Envelope $envelope, Queue $queue, $exception)

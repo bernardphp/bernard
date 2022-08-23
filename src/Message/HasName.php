@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Message;
 
 /**
@@ -12,7 +14,7 @@ trait HasName
      */
     public function getName()
     {
-        $class = get_class($this);
+        $class = static::class;
 
         if (substr($class, -7) == 'Message') {
             $class = substr($class, 0, -7);

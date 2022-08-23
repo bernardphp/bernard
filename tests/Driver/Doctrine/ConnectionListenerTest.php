@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Driver\Doctrine;
 
 use Bernard\Driver\Doctrine\ConnectionListener;
@@ -7,6 +9,8 @@ use Doctrine\DBAL\DBALException;
 
 class ConnectionListenerTest extends \PHPUnit\Framework\TestCase
 {
+    use \Prophecy\PhpUnit\ProphecyTrait;
+
     protected function setUp(): void
     {
         $this->connection = $this->prophesize('Doctrine\DBAL\Connection');
@@ -14,7 +18,7 @@ class ConnectionListenerTest extends \PHPUnit\Framework\TestCase
         $this->listener = new ConnectionListener($this->connection->reveal());
     }
 
-    public function testPing()
+    public function testPing(): void
     {
         $this->connection->isConnected()->willReturn(true);
 
@@ -27,14 +31,14 @@ class ConnectionListenerTest extends \PHPUnit\Framework\TestCase
         $this->listener->onPing();
     }
 
-    public function testPingOnNotConnectedConnection()
+    public function testPingOnNotConnectedConnection(): void
     {
         $this->connection->isConnected()->willReturn(false);
 
         $this->listener->onPing();
     }
 
-    public function testCloseConnectionIfPingFails()
+    public function testCloseConnectionIfPingFails(): void
     {
         $this->connection->isConnected()->willReturn(true);
         $this->connection->query('SELECT 1')->willThrow(new DBALException());

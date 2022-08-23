@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Driver\InMemory;
 
 use Bernard\Driver\InMemory\Driver;
@@ -22,7 +24,7 @@ final class DriverTest extends \PHPUnit\Framework\TestCase
     /**
      *@test
      */
-    public function it_lists_queues()
+    public function testItListsQueues(): void
     {
         $this->driver->createQueue('queue1');
         $this->driver->createQueue('queue2');

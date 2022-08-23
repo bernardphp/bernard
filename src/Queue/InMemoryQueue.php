@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Queue;
 
 use Bernard\Envelope;
@@ -35,7 +37,7 @@ class InMemoryQueue extends AbstractQueue
     /**
      * {@inheritdoc}
      */
-    public function enqueue(Envelope $envelope)
+    public function enqueue(Envelope $envelope): void
     {
         $this->errorIfClosed();
 
@@ -69,7 +71,7 @@ class InMemoryQueue extends AbstractQueue
         $queue = clone $this->queue;
         $key = 0;
 
-        while ($queue->count() && count($envelopes) < $limit && $envelope = $queue->dequeue()) {
+        while ($queue->count() && \count($envelopes) < $limit && $envelope = $queue->dequeue()) {
             if ($key++ < $index) {
                 continue;
             }

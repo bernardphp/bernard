@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Driver\Doctrine\Command;
 
 use Bernard\Driver\Doctrine\Command\AbstractCommand;
@@ -9,7 +11,7 @@ class AbstractCommandTest extends \PHPUnit\Framework\TestCase
 {
     protected $command;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $connection = $this->getMockBuilder('Doctrine\\DBAL\\Connection')
             ->disableOriginalConstructor()->getMock();
@@ -19,7 +21,7 @@ class AbstractCommandTest extends \PHPUnit\Framework\TestCase
         $helper
             ->expects($this->any())
             ->method('getConnection')
-            ->will($this->returnValue($connection));
+            ->willReturn($connection);
 
         $this->command = $this->getMockBuilder(AbstractCommand::class)
             ->setMethods(['getSql', 'applySql', 'getHelper'])
@@ -29,10 +31,10 @@ class AbstractCommandTest extends \PHPUnit\Framework\TestCase
             ->expects($this->any())
             ->method('getHelper')
             ->with('connection')
-            ->will($this->returnValue($helper));
+            ->willReturn($helper);
     }
 
-    public function testExecuteWithDumpSql()
+    public function testExecuteWithDumpSql(): void
     {
         $this->command
             ->expects($this->once())
@@ -41,7 +43,7 @@ class AbstractCommandTest extends \PHPUnit\Framework\TestCase
                 $this->isInstanceOf('Doctrine\\DBAL\\Schema\\Synchronizer\\SingleDatabaseSynchronizer'),
                 $this->isInstanceOf('Doctrine\\DBAL\\Schema\\Schema')
             )
-            ->will($this->returnValue([]));
+            ->willReturn([]);
 
         $tester = new CommandTester($this->command);
         $tester->execute([
@@ -49,7 +51,7 @@ class AbstractCommandTest extends \PHPUnit\Framework\TestCase
         ]);
     }
 
-    public function testExecuteWithoutDumpSql()
+    public function testExecuteWithoutDumpSql(): void
     {
         $this->command
             ->expects($this->once())

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Driver\Doctrine\Command;
 
 use Bernard\Driver\Doctrine\MessagesSchema;
@@ -21,7 +23,7 @@ abstract class AbstractCommand extends Command
     /**
      * {@inheritdoc}
      */
-    public function configure()
+    public function configure(): void
     {
         $this->addOption('dump-sql', null, InputOption::VALUE_NONE, 'Output generated SQL statements instead of applying them');
     }
@@ -29,19 +31,19 @@ abstract class AbstractCommand extends Command
     /**
      * {@inheritdoc}
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): void
     {
         $schema = new Schema();
         MessagesSchema::create($schema);
         $sync = $this->getSynchronizer($this->getHelper('connection')->getConnection());
 
         if ($input->getOption('dump-sql')) {
-            $output->writeln(implode(';'.PHP_EOL, $this->getSql($sync, $schema)).';');
+            $output->writeln(implode(';'.\PHP_EOL, $this->getSql($sync, $schema)).';');
 
             return 0;
         }
 
-        $output->writeln('<comment>ATTENTION</comment>: This operation should not be executed in a production environment.'.PHP_EOL);
+        $output->writeln('<comment>ATTENTION</comment>: This operation should not be executed in a production environment.'.\PHP_EOL);
         $output->writeln('Applying database schema changes...');
         $this->applySql($sync, $schema);
         $output->writeln('Schema changes applied successfully!');
@@ -58,16 +60,9 @@ abstract class AbstractCommand extends Command
     }
 
     /**
-     * @param \Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer $sync
-     * @param \Doctrine\DBAL\Schema\Schema                                  $schema
-     *
      * @return array
      */
     abstract protected function getSql(Synchronizer $sync, Schema $schema);
 
-    /**
-     * @param \Doctrine\DBAL\Schema\Synchronizer\SingleDatabaseSynchronizer $sync
-     * @param \Doctrine\DBAL\Schema\Schema                                  $schema
-     */
     abstract protected function applySql(Synchronizer $sync, Schema $schema);
 }

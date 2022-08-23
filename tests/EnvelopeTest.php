@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests;
 
-use Bernard\Message\PlainMessage;
 use Bernard\Envelope;
+use Bernard\Message\PlainMessage;
 
 final class EnvelopeTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @test
-     */
-    public function it_wraps_a_message_with_metadata()
+    public function testItWrapsAMessageWithMetadata(): void
     {
         $envelope = new Envelope($message = new PlainMessage('SendNewsletter'));
 

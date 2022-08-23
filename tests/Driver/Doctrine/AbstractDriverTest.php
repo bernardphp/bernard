@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard\Tests\Driver\Doctrine;
 
-use Bernard\Driver\Doctrine\MessagesSchema;
 use Bernard\Driver\Doctrine\Driver;
+use Bernard\Driver\Doctrine\MessagesSchema;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 
@@ -19,9 +21,9 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
      */
     protected $driver;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        if (defined('HHVM_VERSION')) {
+        if (\defined('HHVM_VERSION')) {
             $this->markTestSkipped('Doctrine have incompatibility issues with HHVM.');
         }
 
@@ -49,7 +51,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testPopMessageWithInterval()
+    public function testPopMessageWithInterval(): void
     {
         $microtime = microtime(true);
 
@@ -58,7 +60,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertGreaterThanOrEqual(0.001, microtime(true) - $microtime);
     }
 
-    public function testCreateAndRemoveQueue()
+    public function testCreateAndRemoveQueue(): void
     {
         // Duplicates are not taking into account.
         $this->driver->createQueue('import-users');
@@ -72,13 +74,13 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['send-newsletter'], $this->driver->listQueues());
     }
 
-    public function testPushMessageLazilyCreatesQueue()
+    public function testPushMessageLazilyCreatesQueue(): void
     {
         $this->driver->pushMessage('send-newsletter', 'something');
         $this->assertEquals(['send-newsletter'], $this->driver->listQueues());
     }
 
-    public function testRemoveQueueRemovesMessages()
+    public function testRemoveQueueRemovesMessages(): void
     {
         $this->driver->pushMessage('send-newsletter', 'something');
         $this->assertEquals(1, $this->driver->countMessages('send-newsletter'));
@@ -88,7 +90,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, $this->driver->countMessages('send-newsletter'));
     }
 
-    public function testItIsAQueue()
+    public function testItIsAQueue(): void
     {
         $messages = array_map(function ($i) {
             $this->driver->pushMessage('send-newsletter', $message = 'my-message-'.$i);
@@ -96,7 +98,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
             return $message;
         }, range(1, 6));
 
-        $assertPeek = function (array $peeked, $expectedCount) use ($messages) {
+        $assertPeek = function (array $peeked, $expectedCount) use ($messages): void {
             self::assertCount($expectedCount, $peeked);
             foreach ($peeked as $peek) {
                 self::assertContains($peek, $messages);
@@ -111,16 +113,16 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $this->driver->peekQueue('import-users'));
 
         // popping
-        list($message, $id) = $this->driver->popMessage('send-newsletter');
+        [$message, $id] = $this->driver->popMessage('send-newsletter');
         self::assertContains($message, $messages);
-        list($message, $id) = $this->driver->popMessage('send-newsletter');
+        [$message, $id] = $this->driver->popMessage('send-newsletter');
         self::assertContains($message, $messages);
 
         // No messages when all are invisible
         $this->assertNull($this->driver->popMessage('import-users', 0.0001));
     }
 
-    public function testCountMessages()
+    public function testCountMessages(): void
     {
         $this->assertEquals(0, $this->driver->countMessages('import-users'));
 
@@ -128,13 +130,13 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->driver->pushMessage('send-newsletter', 'my-message-2');
         $this->assertEquals(2, $this->driver->countMessages('send-newsletter'));
 
-        list($message, $id) = $this->driver->popMessage('send-newsletter');
+        [$message, $id] = $this->driver->popMessage('send-newsletter');
         $this->driver->acknowledgeMessage('send-newsletter', $id);
 
         $this->assertEquals(1, $this->driver->countMessages('send-newsletter'));
     }
 
-    public function testPeekMessagesExcludesPoppedMessages()
+    public function testPeekMessagesExcludesPoppedMessages(): void
     {
         $this->driver->pushMessage('send-newsletter', 'my-message-1');
         $this->driver->pushMessage('send-newsletter', 'my-message-2');
@@ -149,7 +151,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(2, $this->driver->countMessages('send-newsletter'));
     }
 
-    public function testListQueues()
+    public function testListQueues(): void
     {
         $this->driver->pushMessage('import', 'message1');
         $this->driver->pushMessage('send-newsletter', 'message2');
@@ -157,7 +159,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['import', 'send-newsletter'], $this->driver->listQueues());
     }
 
-    public function testRemoveQueue()
+    public function testRemoveQueue(): void
     {
         $this->driver->pushMessage('import', 'message1');
         $this->driver->pushMessage('import', 'message2');
@@ -168,12 +170,12 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(0, $this->driver->countMessages('import'));
     }
 
-    protected function insertMessage($queue, $message)
+    protected function insertMessage($queue, $message): void
     {
         $this->connection->insert('messages', compact('queue', 'message'));
     }
 
-    protected function setUpDatabase()
+    protected function setUpDatabase(): void
     {
         $this->connection = $this->createConnection();
 

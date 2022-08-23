@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Bernard;
 
 class Util
 {
     /**
      * Guesses the name of the queue.
-     *
-     * @param Message $message
      *
      * @return string
      */
