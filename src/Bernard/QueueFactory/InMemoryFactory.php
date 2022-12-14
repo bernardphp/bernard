@@ -38,7 +38,7 @@ class InMemoryFactory implements \Bernard\QueueFactory
     /**
      * @return integer
      */
-    public function count()
+    public function count(): int
     {
         return count($this->queues);
     }
