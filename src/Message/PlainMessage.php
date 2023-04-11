@@ -9,18 +9,15 @@ use Bernard\Message;
 /**
  * Simple message that gets you started.
  * It has a name and an array of arguments.
- * It does not enforce any types or properties so be careful on relying them
+ * It does not enforce any types or properties so be careful relying on them
  * being there.
  */
 final class PlainMessage implements Message, \ArrayAccess
 {
-    private $name;
-    private $arguments;
+    private string $name;
+    private array $arguments;
 
-    /**
-     * @param string $name
-     */
-    public function __construct($name, array $arguments = [])
+    public function __construct(string $name, array $arguments = [])
     {
         $this->name = $name;
         $this->arguments = $arguments;
@@ -29,59 +26,48 @@ final class PlainMessage implements Message, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
 
-    /**
-     * @return array
-     */
-    public function all()
+    public function all() : array
     {
         return $this->arguments;
     }
 
     /**
      * Returns the argument if found or null.
-     *
-     * @param string $name
-     *
-     * @return mixed
      */
-    public function get($name)
+    public function get(string $name) : mixed
     {
         return $this->has($name) ? $this->arguments[$name] : null;
     }
 
     /**
      * Checks whether the arguments contain the given key.
-     *
-     * @param string $name
-     *
-     * @return bool
      */
-    public function has($name)
+    public function has(string $name) : bool
     {
         return \array_key_exists($name, $this->arguments);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset) : mixed
     {
         return $this->get($offset);
     }
 
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset) : bool
     {
         return $this->has($offset);
     }
 
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         throw new \LogicException('Message is immutable');
     }
 
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         throw new \LogicException('Message is immutable');
     }

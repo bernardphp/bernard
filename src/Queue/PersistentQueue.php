@@ -7,23 +7,21 @@ namespace Bernard\Queue;
 use Bernard\Driver;
 use Bernard\Envelope;
 use Bernard\Serializer;
+use SplObjectStorage;
 
 class PersistentQueue extends AbstractQueue
 {
-    protected $driver;
-    protected $serializer;
-    protected $receipts;
-
-    /**
-     * @param string $name
-     */
-    public function __construct($name, Driver $driver, Serializer $serializer)
+    protected Driver $driver;
+    protected Serializer $serializer;
+    protected SplObjectStorage $receipts;
+    
+    public function __construct(string $name, Driver $driver, Serializer $serializer)
     {
         parent::__construct($name);
 
         $this->driver = $driver;
         $this->serializer = $serializer;
-        $this->receipts = new \SplObjectStorage();
+        $this->receipts = new SplObjectStorage();
 
         $this->register();
     }
@@ -41,7 +39,7 @@ class PersistentQueue extends AbstractQueue
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count() : int
     {
         $this->errorIfClosed();
 
