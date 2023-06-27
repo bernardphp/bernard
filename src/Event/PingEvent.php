@@ -3,7 +3,7 @@
 namespace Bernard\Event;
 
 use Bernard\Queue;
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 class PingEvent extends Event
 {

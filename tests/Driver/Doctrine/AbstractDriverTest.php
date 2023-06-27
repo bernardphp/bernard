@@ -19,7 +19,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
      */
     protected $driver;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (defined('HHVM_VERSION')) {
             $this->markTestSkipped('Doctrine have incompatibility issues with HHVM.');
@@ -33,7 +33,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         $this->driver = new Driver($this->connection);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->connection->getDatabasePlatform() instanceof MySqlPlatform) {
             $this->connection->exec('SET FOREIGN_KEY_CHECKS = 0');
@@ -117,7 +117,7 @@ abstract class AbstractDriverTest extends \PHPUnit\Framework\TestCase
         self::assertContains($message, $messages);
 
         // No messages when all are invisible
-        $this->assertInternalType('null', $this->driver->popMessage('import-users', 0.0001));
+        $this->assertNull($this->driver->popMessage('import-users', 0.0001));
     }
 
     public function testCountMessages()

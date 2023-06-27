@@ -18,7 +18,7 @@ class RejectEnvelopeEventTest extends \PHPUnit\Framework\TestCase
      */
     private $queue;
 
-    public function setUp()
+    public function setUp(): void
     {
         $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()
             ->getMock();

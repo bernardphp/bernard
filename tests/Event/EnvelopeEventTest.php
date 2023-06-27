@@ -8,7 +8,7 @@ use Bernard\Message;
 
 class EnvelopeEventTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $message = $this->getMockBuilder(Message::class)->disableOriginalConstructor()
             ->getMock();

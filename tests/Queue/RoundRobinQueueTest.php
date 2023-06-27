@@ -19,7 +19,7 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
      */
     protected $round;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->queues = [
             new InMemoryQueue('1'),
@@ -30,12 +30,11 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
         $this->round = new RoundRobinQueue($this->queues);
     }
 
-    /**
-     * @expectedException \DomainException
-     * @expectedExceptionMessage Unrecognized queue specified: foo
-     */
     public function testEnqueueWithUnrecognizedQueue()
     {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Unrecognized queue specified: foo');
+
         $this->round->enqueue($this->getEnvelope('foo'));
     }
 
@@ -93,12 +92,11 @@ class RoundRobinQueueTest extends \PHPUnit\Framework\TestCase
         $this->assertSame([$envelope_3_1], $this->round->peek(1, 1));
     }
 
-    /**
-     * @expectedException \DomainException
-     * @expectedExceptionMessage Unrecognized queue specified: foo
-     */
     public function testAcknowledgeWithUnrecognizedQueue()
     {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Unrecognized queue specified: foo');
+
         $envelope = $this->getEnvelope('foo');
         $this->round->enqueue($envelope);
         $dequeued = $this->round->dequeue($envelope);

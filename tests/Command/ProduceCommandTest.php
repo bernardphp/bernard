@@ -10,7 +10,7 @@ class ProduceCommandTest extends \PHPUnit\Framework\TestCase
 {
     protected $producer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->producer = $this->getMockBuilder('Bernard\Producer')
             ->disableOriginalConstructor()->getMock();
@@ -29,11 +29,10 @@ class ProduceCommandTest extends \PHPUnit\Framework\TestCase
         ]);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testInvalidJsonThrowsException()
     {
+        $this->expectException(\RuntimeException::class);
+
         $command = new ProduceCommand($this->producer);
 
         $tester = new CommandTester($command);

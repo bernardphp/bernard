@@ -26,7 +26,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
     /** @var Driver */
     private $driver;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (!class_exists('MongoClient')) {
             $this->markTestSkipped('MongoDB extension is not available.');
@@ -43,7 +43,7 @@ class DriverFunctionalTest extends \PHPUnit\Framework\TestCase
         $this->driver = new Driver($this->queues, $this->messages);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if (!$this->messages instanceof MongoCollection) {
             return;

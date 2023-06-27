@@ -8,11 +8,12 @@ abstract class AbstractQueueTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider dataClosedMethods
-     * @expectedException \Bernard\Exception\InvalidOperationexception
-     * @expectedExceptionMessage Queue "send-newsletter" is closed.
      */
     public function testNotAllowedWhenClosed($method, array $arguments = [])
     {
+        $this->expectException(\Bernard\Exception\InvalidOperationException::class);
+        $this->expectExceptionMessage('Queue "send-newsletter" is closed.');
+
         $queue = $this->createQueue('send-newsletter');
         $queue->close();
 
