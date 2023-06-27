@@ -73,7 +73,7 @@ class Consumer
             return true;
         }
 
-        $this->dispatcher->dispatch(BernardEvents::PING, new PingEvent($queue));
+        $this->dispatcher->dispatch(new PingEvent($queue));
 
         if (!$envelope = $queue->dequeue()) {
             return !$this->options['stop-when-empty'];
@@ -125,7 +125,7 @@ class Consumer
     public function invoke(Envelope $envelope, Queue $queue)
     {
         try {
-            $this->dispatcher->dispatch(BernardEvents::INVOKE, new EnvelopeEvent($envelope, $queue));
+            $this->dispatcher->dispatch(new EnvelopeEvent($envelope, $queue));
 
             $receiver = $this->router->route($envelope);
             $receiver->receive($envelope->getMessage());
@@ -133,7 +133,7 @@ class Consumer
             // We successfully processed the message.
             $queue->acknowledge($envelope);
 
-            $this->dispatcher->dispatch(BernardEvents::ACKNOWLEDGE, new EnvelopeEvent($envelope, $queue));
+            $this->dispatcher->dispatch(new EnvelopeEvent($envelope, $queue));
         } catch (\Throwable $error) {
             $this->rejectDispatch($error, $envelope, $queue);
         } catch (\Exception $exception) {
@@ -187,7 +187,7 @@ class Consumer
         // Previously failing jobs handling have been moved to a middleware.
         //
         // Emit an event to let others log that exception
-        $this->dispatcher->dispatch(BernardEvents::REJECT, new RejectEnvelopeEvent($envelope, $queue, $exception));
+        $this->dispatcher->dispatch(new RejectEnvelopeEvent($envelope, $queue, $exception));
 
         if ($this->options['stop-on-error']) {
             throw $exception;
